@@ -1,91 +1,80 @@
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:tsnpdcl_employee/utils/alerts.dart';
+import 'package:tsnpdcl_employee/utils/const.dart';
 
 class AuthViewmodel extends ChangeNotifier {
   // Current View Context
   final BuildContext context;
 
-  // Controllers for Employee ID and Password
+  // Controllers for Employee login
   final TextEditingController empIdController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController empPassController = TextEditingController();
+
+  // Controllers for Corporate Login
+  final TextEditingController userNameController = TextEditingController();
+  final TextEditingController userPassController = TextEditingController();
 
   // State variables
   bool isChecked = false; // For the checkbox
   bool isLoading = false; // For showing progress indicator
 
-  AuthViewmodel({required this.context,});
+  // Form Keys
+  final employeeFormKey = GlobalKey<FormState>(); // For Employee
+  final corporateFormKey = GlobalKey<FormState>(); // For Corporate
 
-  // Validation method
-  String? validate() {
-    if (empIdController.text.length < 5) {
-      return "Please enter a valid employee ID";
-    } else if (passwordController.text.isEmpty) {
-      return "Password cannot be left blank";
-    }
-    return null;
+  // App version
+  String appVersion = 'Unknown';
+
+  AuthViewmodel({required this.context,}) {
+    _initPackageInfo();
+  }
+
+  // Package Info method
+  Future<void> _initPackageInfo() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    //_appVersion = '${packageInfo.version}+${packageInfo.buildNumber}';
+    appVersion = packageInfo.version;
+    packageInfo = await PackageInfo.fromPlatform();
+    appVersion = packageInfo.version;
+    notifyListeners();
   }
 
   // API call simulation
-  Future<void> authenticateUser(BuildContext context) async {
-    final validationMessage = validate();
-    if (validationMessage != null) {
-      // Show validation error
-      showErrorToast(validationMessage);
-      return;
-    }
+  Future<void> authenticateEmployee() async {
+    if (employeeFormKey.currentState!.validate()) {
+      employeeFormKey.currentState!.save();
+      notifyListeners();
 
-    // Simulate API call
-    isLoading = true;
-    notifyListeners();
-
-    await Future.delayed(const Duration(seconds: 2));
-
-    // Simulating success/failure
-    isLoading = false;
-    notifyListeners();
-
-    const isSuccess = true; // Change based on API response
-    if (isSuccess) {
-      showSuccessToast("Success!");
-      if(context.mounted) {
-        Navigator.pop(context); // Close auth screen
-      }
+      notifyListeners();
+    } else if (empIdController.text.isEmpty && empPassController.text.isEmpty) {
+      AlertUtils.showSnackBar(context, "Please enter valid employee ID and password", isTrue);
+    } else if (empIdController.text.length < 5) {
+      AlertUtils.showSnackBar(context, "Please enter a valid employee ID", isTrue);
+    } else if (empPassController.text.isEmpty) {
+      AlertUtils.showSnackBar(context, "Password cannot be left blank", isTrue);
     } else {
-      if(context.mounted) {
-        showErrorDialog(context, "Unable to authenticate. Try again.");
-      }
+      AlertUtils.showSnackBar(context, "Check all fields", isTrue);
     }
   }
 
-  // Helper functions for showing UI feedback
-  void showErrorToast(String message) {
-    // Show a toast message for errors
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: Colors.red),
-    );
+  // API call simulation
+  Future<void> authenticateUser() async {
+    if (corporateFormKey.currentState!.validate()) {
+      corporateFormKey.currentState!.save();
+      notifyListeners();
+
+      notifyListeners();
+    } else if (userNameController.text.isEmpty && userPassController.text.isEmpty) {
+      AlertUtils.showSnackBar(context, "Please enter valid user name and password", isTrue);
+    } else if (userNameController.text.length < 2) {
+      AlertUtils.showSnackBar(context, "Please enter a valid user name", isTrue);
+    } else if (userPassController.text.isEmpty) {
+      AlertUtils.showSnackBar(context, "Password cannot be left blank", isTrue);
+    } else {
+      AlertUtils.showSnackBar(context, "Check all fields", isTrue);
+    }
   }
 
-  void showSuccessToast(String message) {
-    // Show a toast message for success
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: Colors.green),
-    );
-  }
 
-  void showErrorDialog(BuildContext context, String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Error"),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("OK"),
-            ),
-          ],
-        );
-      },
-    );
-  }
 }

@@ -1,6 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:tsnpdcl_employee/utils/const.dart';
+
+// Define an enum for message types
+enum AlertType { success, info, warning, error, custom }
 
 class AlertUtils {
   static responseToast(BuildContext context, int code) {
@@ -56,22 +60,53 @@ class AlertUtils {
       SnackBar(
         content: Row(
           children: [
-            Icon(isAlert ? Icons.error : Icons.check_circle , color: Colors.white), // Your icon here
-            const SizedBox(width: 8), // Space between icon and text
+            Icon(_getIcon(AlertType.error), color: Colors.white),
+            const SizedBox(width: 8),
             Expanded(
-              child: Text(message),
+              child: Text(message, style: const TextStyle(color: Colors.white)),
             ),
           ],
         ),
-        //backgroundColor: Colors.black87,
-        duration: const Duration(seconds: 2),
-        backgroundColor: isAlert ? Colors.red[800] : Colors.green[800],
+        backgroundColor: _getColor(AlertType.success),
         behavior: SnackBarBehavior.floating,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10)),
+        action: SnackBarAction(
+          label: 'Close',
+          textColor: Colors.white,
+          onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
         ),
       ),
     );
+  }
+
+  static Color? _getColor(AlertType type) {
+    switch (type) {
+      case AlertType.success:
+        return Color(0xffe5f9f1);
+      case AlertType.info:
+        return Colors.blue.shade400;
+      case AlertType.warning:
+        return Colors.orange.shade400;
+      case AlertType.error:
+        return Color(0xfffee7e7);
+      case AlertType.custom:
+        return Colors.purple.shade400;
+    }
+  }
+
+  // Map SnackbarType to specific icons
+  static IconData _getIcon(AlertType type) {
+    switch (type) {
+      case AlertType.success:
+        return Icons.supervised_user_circle;
+      case AlertType.info:
+        return Icons.info;
+      case AlertType.warning:
+        return Icons.warning;
+      case AlertType.error:
+        return Icons.error;
+      case AlertType.custom:
+        return Icons.send;
+    }
   }
 
   static printValue(String tag, String message) {
