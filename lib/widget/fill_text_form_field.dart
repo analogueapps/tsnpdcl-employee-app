@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/const.dart';
 
 
@@ -57,7 +58,11 @@ class _FillTextFormFieldState extends State<FillTextFormField> {
       ),
       textCapitalization: TextCapitalization.sentences,
       decoration: InputDecoration(
-        border: const OutlineInputBorder(),
+        border: const OutlineInputBorder(
+          borderSide: BorderSide(
+            color: CommonColors.colorPrimary
+          )
+        ),
         labelStyle: const TextStyle(fontFamily: appFontFamily),
         hintStyle: const TextStyle(fontFamily: appFontFamily),
         labelText: widget.labelText,

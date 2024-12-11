@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:tsnpdcl_employee/utils/alerts.dart';
 import 'package:tsnpdcl_employee/utils/const.dart';
+import 'package:tsnpdcl_employee/utils/general_routes.dart';
+import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 
 class AuthViewmodel extends ChangeNotifier {
   // Current View Context
@@ -45,7 +47,7 @@ class AuthViewmodel extends ChangeNotifier {
     if (employeeFormKey.currentState!.validate()) {
       employeeFormKey.currentState!.save();
       notifyListeners();
-
+      Navigation.instance.pushAndRemoveUntil(Routes.universalDashboardScreen);
       notifyListeners();
     } else if (empIdController.text.isEmpty && empPassController.text.isEmpty) {
       AlertUtils.showSnackBar(context, "Please enter valid employee ID and password", isTrue);

@@ -24,104 +24,106 @@ class CorporateLoginScreen extends StatelessWidget {
           backgroundColor: Colors.transparent,
           elevation: 0,
         ),
-        body: SafeArea(
-          child: Consumer<AuthViewmodel>(
-            builder: (context, viewModel, child) {
-              return Padding(
-                padding: const EdgeInsets.all(doubleSixteen),
-                child: Form(
-                  key: viewModel.corporateFormKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      SvgPicture.asset(
-                        Assets.appLogo,
-                        height: doubleHundred,
-                        width: doubleHundred,
-                      ),
-                      Card(
-                        color: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(doubleTen),
+        body: SingleChildScrollView(
+          child: SafeArea(
+            child: Consumer<AuthViewmodel>(
+              builder: (context, viewModel, child) {
+                return Padding(
+                  padding: const EdgeInsets.all(doubleSixteen),
+                  child: Form(
+                    key: viewModel.corporateFormKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        SvgPicture.asset(
+                          Assets.appLogo,
+                          height: doubleHundred,
+                          width: doubleHundred,
                         ),
-                        elevation: doubleFour,
-                        child: Padding(
-                          padding: const EdgeInsets.all(doubleSixteen),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(
-                                height: doubleTen,
-                              ),
-                              FillTextFormField(
-                                controller: viewModel.userNameController,
-                                labelText: 'Username',
-                                keyboardType: TextInputType.text  ,
-                                prefixIcon: const Icon(Icons.person_rounded),
-                                suffixIcon: null,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "User name cannot be left blank";
-                                  } else if (value.length < 2) {
-                                    return "Please enter valid user name";
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(
-                                height: doubleTwenty,
-                              ),
-                              FillTextFormField(
-                                controller: viewModel.userPassController,
-                                labelText: 'Password',
-                                keyboardType: TextInputType.visiblePassword,
-                                prefixIcon: const Icon(Icons.lock_rounded),
-                                suffixIcon: null,
-                                isObscure: isTrue,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "Password cannot be left blank";
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(height: doubleSixteen),
-                              Center(
-                                child: PrimaryButton(
-                                    text: 'login',
-                                    onPressed: () {
-                                      viewModel.authenticateUser();
-                                    }
+                        Card(
+                          color: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(doubleTen),
+                          ),
+                          elevation: doubleFour,
+                          child: Padding(
+                            padding: const EdgeInsets.all(doubleSixteen),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(
+                                  height: doubleTen,
                                 ),
-                              ),
-                              const SizedBox(height: doubleSixteen),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigation.instance.pushBack();
-                                    },
-                                    child: const Text(
-                                      "Employee Login",
-                                      style: TextStyle(
-                                        color: CommonColors.colorPrimary,
-                                        fontSize: normalSize,
-                                        fontWeight: FontWeight.w600,
+                                FillTextFormField(
+                                  controller: viewModel.userNameController,
+                                  labelText: 'Username',
+                                  keyboardType: TextInputType.text  ,
+                                  prefixIcon: const Icon(Icons.person_rounded),
+                                  suffixIcon: null,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "User name cannot be left blank";
+                                    } else if (value.length < 2) {
+                                      return "Please enter valid user name";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(
+                                  height: doubleTwenty,
+                                ),
+                                FillTextFormField(
+                                  controller: viewModel.userPassController,
+                                  labelText: 'Password',
+                                  keyboardType: TextInputType.visiblePassword,
+                                  prefixIcon: const Icon(Icons.lock_rounded),
+                                  suffixIcon: null,
+                                  isObscure: isTrue,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "Password cannot be left blank";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(height: doubleSixteen),
+                                Center(
+                                  child: PrimaryButton(
+                                      text: 'login',
+                                      onPressed: () {
+                                        viewModel.authenticateUser();
+                                      }
+                                  ),
+                                ),
+                                const SizedBox(height: doubleSixteen),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigation.instance.pushBack();
+                                      },
+                                      child: const Text(
+                                        "Employee Login",
+                                        style: TextStyle(
+                                          color: CommonColors.colorPrimary,
+                                          fontSize: normalSize,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
         ),
         bottomNavigationBar: Consumer<AuthViewmodel>(
