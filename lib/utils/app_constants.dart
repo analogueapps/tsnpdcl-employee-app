@@ -8,22 +8,6 @@ const appVersion = 'Version ';
 const appName = 'NPDCL EMPLOYEE';
 const appFontFamily = 'Inter';
 
-
-
-/// Regex
-final RegExp nameRegExp = RegExp(r"^[A-Za-z][A-Za-z\s\-]*$");
-final RegExp emailRegExp =
-    RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
-final RegExp passwordRegExp = RegExp(
-    r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$');
-final RegExp aadhaarRegex = RegExp(r'^\d{12}$');
-final RegExp passportRegex = RegExp(r'^[A-Z0-9]{8}$');
-final RegExp drivingLicenseRegex = RegExp(r'^[A-Z0-9]{10,15}$');
-final RegExp numberRegex = RegExp(r'^\d+$');
-final RegExp addressRegex = RegExp(
-    r'^[0-9]{1,5}( [a-zA-Z.]+){1,4},?( [a-zA-Z]+){1,3},? [A-Z]{2},? [0-9]{5}$');
-final RegExp pincodeRegex = RegExp(r'^\d{6}$');
-
 /// bool vales
 const isTrue = true;
 const isFalse = false;

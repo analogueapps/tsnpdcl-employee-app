@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "744583032069",
+    "project_id": "aits-tsnpdcl-employee",
+    "storage_bucket": "aits-tsnpdcl-employee.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:744583032069:android:0eda7e4bbbed3bc8721b6c",
+        "android_client_info": {
+          "package_name": "com.aits.tsnpdcl_employee"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbJVk8VzegTwn_NjbufRF9x_oSRk7nGyk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

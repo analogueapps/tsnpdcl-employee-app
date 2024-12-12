@@ -5,6 +5,7 @@ import 'package:tsnpdcl_employee/utils/common_colors.dart';
 class Assets {
   static const String appLogo = 'assets/images/npdcl_logo.svg';
 
+  // universal dashboard
   static const String updateApp = 'assets/images/app.png';
   static const String searchConsumer = 'assets/images/graph.png';
   static const String lineClearance = 'assets/images/man_on_work_removebg_preview.png';
@@ -51,6 +52,11 @@ class Assets {
   static const String account = 'assets/images/profile.png';
   static const String logout = 'assets/images/logout.png';
 
+  // line clearance menu
+  static const String lcMasterData = 'assets/images/database_file.png';
+  static const String pendingAeAde = 'assets/images/workplace.png';
+  static const String ongoingLc = 'assets/images/electrician.png';
+  static const String closedLc = 'assets/images/successful.png';
 
   static OutlineInputBorder squareInputBorder(){ //return type is OutlineInputBorder
     return const OutlineInputBorder( //Outline border type for TextFiled

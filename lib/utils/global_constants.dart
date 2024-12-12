@@ -1,0 +1,63 @@
+class GlobalConstants {
+  // dashboard name
+  static const String dashboardName = "T.G.N.P.D.C.L";
+
+  // Global dashboard title
+  static const String updateAppTitle = "Update app";
+  static const String searchConsumerTitle = "Search consumer";
+  static const String lineClearanceTitle = "Line clearance";
+  static const String assetMappingTitle = "Asset mapping";
+  static const String ganeshPandalInfoTitle = "Ganesh pandal info";
+  static const String onlinePrTitle = "Online pr";
+  static const String measureDistTitle = "Measure dist.";
+  static const String consumerDetailsTitle = "Consumer details";
+  static const String gruhaJyothiTitle = "Gruha jyothi";
+  static const String dtrMaintenanceTitle = "Dtr maintenance";
+  static const String dtrFailureTitle = "Dtr failure";
+  static const String failureDtrInspectionTitle = "Failure dtr(s) inspection";
+  static const String ssMaintenanceTitle = "Ss maintenance";
+  static const String pmiOfLinesTitle = "Pmi of lines";
+  static const String rfssTitle = "RFSS";
+  static const String schedulesTitle = "Schedules";
+  static const String mappingOfNonAglServicesTitle = "Mapping of non-agl services";
+  static const String tongTesterReadingsTitle = "Tong tester readings";
+  static const String uscNoTitle = "Uscno<=>scno";
+  static const String gisIdsTitle = "Gis ids";
+  static const String uploadCasteCertificateTitle = "Upload caste certificate";
+  static const String meesevaTitle = "Meeseva(new meter releases)";
+  static const String exceptionalsTitle = "Exceptionals";
+  static const String ltmtTitle = "Ltmt";
+  static const String electroMechTitle = "Electro-mech meters replacement";
+  static const String poleTrackerTitle = "Pole tracker";
+  static const String dtrMasterTitle = "Dtr master";
+  static const String dListTitle = "D'list";
+  static const String dListReportTitle = "D'list report";
+  static const String middlePolesTitle = "Middle poles";
+  static const String maintenanceTitle = "Maintenance";
+  static const String checkReadingsTitle = "Check readings";
+  static const String bsUdcInspectionTitle = "Bs udc inspection";
+  static const String interruptionsTitle = "Interruptions";
+  static const String manageStaffTitle = "Manage staff";
+  static const String newServicesTitle = "New services(schemes)";
+  static const String ctPtFailureTitle = "Ct pt failure/replacement";
+  static const String pdmsTitle = "Pdms";
+  static const String reportsTitle = "Reports";
+  static const String checkMeasurementTitle = "Check measurement(lines)";
+  static const String foccTitle = "Focc";
+  static const String ebsTitle = "Ebs";
+  static const String matsTitle = "Mats";
+  static const String accountTitle = "Account";
+  static const String logoutTitle = "Logout";
+
+  // Line clearance
+  static const String lcMasterDataTitle = "Lc master data";
+  static const String pendingAeAde = "Pending at ae/ade";
+  static const String ongoingLc = "On going lc(s)";
+  static const String closedLc = "Closed lc(s)";
+
+  // Online pr menu
+  static const String onlineCollection = "Online collection";
+  static const String issueDuplicateReceipt = "Issue duplicate receipt";
+  static const String printLastPr = "Print last pr";
+  static const String reports = "Reports";
+}

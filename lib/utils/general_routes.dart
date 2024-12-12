@@ -5,4 +5,8 @@ class Routes {
 
   // DASHBOARD
   static const String universalDashboardScreen = 'universal_dashboard_screen';
+  // INSIDE DASHBOARD MENUS
+  static const String searchConsumerScreen = 'search_consumer_screen';
+  static const String lineClearanceScreen = 'line_clearance_screen';
+  static const String onlinePrMenuScreen = 'online_pr_menu_screen';
 }

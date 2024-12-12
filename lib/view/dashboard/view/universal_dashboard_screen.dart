@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tsnpdcl_employee/dialogs/global_alert_dialog.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
-import 'package:tsnpdcl_employee/utils/const.dart';
+import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/general_assets.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
+import 'package:tsnpdcl_employee/utils/global_constants.dart';
 import 'package:tsnpdcl_employee/view/dashboard/viewmodel/universal_dashboard_viewmodel.dart';
 
 class UniversalDashboardScreen extends StatelessWidget {
@@ -16,12 +18,11 @@ class UniversalDashboardScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: CommonColors.colorPrimary,
         title: const Text(
-          "T.G.N.P.D.C.L",
+          GlobalConstants.dashboardName,
           style: TextStyle(
               color: Colors.white,
               fontSize: toolbarTitleSize,
-              fontWeight: FontWeight.w700
-          ),
+              fontWeight: FontWeight.w700),
         ),
         iconTheme: const IconThemeData(
           color: Colors.white,
@@ -31,7 +32,6 @@ class UniversalDashboardScreen extends StatelessWidget {
         create: (_) => UniversalDashboardViewModel(),
         child: Consumer<UniversalDashboardViewModel>(
           builder: (context, viewModel, child) {
-
             return Drawer(
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.zero, // Removes the curved corners
@@ -40,16 +40,17 @@ class UniversalDashboardScreen extends StatelessWidget {
                 padding: EdgeInsets.zero,
                 children: <Widget>[
                   UserAccountsDrawerHeader(
-                    decoration: const BoxDecoration(
-                        color: CommonColors.colorPrimary
-                    ),
+                    decoration:
+                        const BoxDecoration(color: CommonColors.colorPrimary),
                     accountName: const Text("Surya M"),
-                    accountEmail: const Text("surya.murugesan@analogueitsolutions.com"),
+                    accountEmail:
+                        const Text("surya.murugesan@analogueitsolutions.com"),
                     currentAccountPicture: Container(
                       width: 80.0, // Set the width for the square shape
                       height: 80.0, // Set the height to make it square
                       decoration: const BoxDecoration(
-                        shape: BoxShape.rectangle, // Set to rectangle (square in this case)
+                        shape: BoxShape
+                            .rectangle, // Set to rectangle (square in this case)
                         image: DecorationImage(
                           image: AssetImage("assets/icons/icon.png"),
                           fit: BoxFit.cover, // Cover the area with the image
@@ -154,19 +155,43 @@ class UniversalDashboardScreen extends StatelessWidget {
                   // ),
                   ...viewModel.sections.map((section) {
                     return ExpansionTile(
-                      title: Text(section.title, style: const TextStyle(fontWeight: FontWeight.w500)),
+                      title: Text(section.title,
+                          style: const TextStyle(fontWeight: FontWeight.w500)),
                       leading: Icon(section.leadingIcon),
-                      children: section.items.map((item) => ListTile(
-                        leading: Image.asset(item.imageAsset, width: 24, height: 24),
-                        title: Text(item.title, style: const TextStyle(fontSize: normalSize, fontWeight: FontWeight.w300)),
-                        onTap: () {
-                          if(item.title == "Logout") {
-
-                          } else {
-                            Navigator.pushNamed(context, item.routeName);
-                          }
-                        },
-                      )).toList(),
+                      children: section.items
+                          .map((item) => ListTile(
+                                leading: Image.asset(item.imageAsset,
+                                    width: 24, height: 24),
+                                title: Text(item.title,
+                                    style: const TextStyle(
+                                        fontSize: normalSize,
+                                        fontWeight: FontWeight.w300)),
+                                onTap: () {
+                                  if (item.title ==
+                                      GlobalConstants.logoutTitle) {
+                                    GlobalAlertDialog.show(
+                                      context: context,
+                                      title: 'Logout',
+                                      message:
+                                          'Are you sure you want to logout?',
+                                      positiveButtonText: 'Yes',
+                                      negativeButtonText: 'No',
+                                      onPositivePressed: () {
+                                        // Add positive action here
+                                        print('User logged out.');
+                                      },
+                                      onNegativePressed: () {
+                                        // Add negative action here
+                                        print('User canceled logout.');
+                                      },
+                                    );
+                                  } else {
+                                    Navigator.pushNamed(
+                                        context, item.routeName);
+                                  }
+                                },
+                              ))
+                          .toList(),
                     );
                   }).toList(),
                 ],
@@ -179,7 +204,6 @@ class UniversalDashboardScreen extends StatelessWidget {
         create: (_) => UniversalDashboardViewModel(),
         child: Consumer<UniversalDashboardViewModel>(
           builder: (context, viewModel, child) {
-
             return Column(
               children: [
                 Material(
@@ -190,7 +214,9 @@ class UniversalDashboardScreen extends StatelessWidget {
                     child: TextField(
                       controller: viewModel.searchController,
                       onChanged: (query) {
-                        Provider.of<UniversalDashboardViewModel>(context, listen: false).filterItems(query);
+                        Provider.of<UniversalDashboardViewModel>(context,
+                                listen: false)
+                            .filterItems(query);
                       },
                       keyboardType: TextInputType.text,
                       decoration: InputDecoration(
@@ -202,11 +228,13 @@ class UniversalDashboardScreen extends StatelessWidget {
                           hintText: "Search Menu...",
                           suffixIcon: GestureDetector(
                             onTap: () {
-                              if(viewModel.searchController.text.isNotEmpty) {
+                              if (viewModel.searchController.text.isNotEmpty) {
                                 viewModel.searchController.clear();
                                 FocusScope.of(context).unfocus();
                                 // Trigger the onChanged logic with an empty string
-                                Provider.of<UniversalDashboardViewModel>(context, listen: false)
+                                Provider.of<UniversalDashboardViewModel>(
+                                        context,
+                                        listen: false)
                                     .filterItems("");
                               }
                             },
@@ -215,7 +243,8 @@ class UniversalDashboardScreen extends StatelessWidget {
                               child: Container(
                                 width: doubleTwentyFour,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(doubleEight),
+                                  borderRadius:
+                                      BorderRadius.circular(doubleEight),
                                   color: CommonColors.colorPrimary,
                                 ),
                                 child: const Center(
@@ -226,8 +255,7 @@ class UniversalDashboardScreen extends StatelessWidget {
                                 ),
                               ),
                             ),
-                          )
-                      ),
+                          )),
                       style: const TextStyle(
                         fontSize: titleSize,
                         fontFamily: appFontFamily,
@@ -236,59 +264,74 @@ class UniversalDashboardScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: doubleTen,),
-                viewModel.filteredItems.isNotEmpty ?
-                Expanded(
-                  child: GridView.builder(
-                    padding: const EdgeInsets.all(8.0),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: numThree, // Number of columns
-                      childAspectRatio: 1,
-                    ),
-                    itemCount: viewModel.filteredItems.length,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      final item = viewModel.filteredItems[index];
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(16.0),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.rectangle,
-                              borderRadius: BorderRadius.circular(12.0),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(1),
-                                  blurRadius: 4,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
-                            ),
-                            child: RepaintBoundary(
-                              child: Image.asset(
-                                item.imageAsset,
-                                height: 40.0,
-                                width: 40.0,
-                                filterQuality: FilterQuality.low,
+                const SizedBox(
+                  height: doubleTen,
+                ),
+                viewModel.filteredItems.isNotEmpty
+                    ? Expanded(
+                        child: GridView.builder(
+                          padding: const EdgeInsets.all(8.0),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: numThree, // Number of columns
+                            childAspectRatio: 1,
+                          ),
+                          itemCount: viewModel.filteredItems.length,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            final item = viewModel.filteredItems[index];
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.pushNamed(context, item.routeName);
+                              },
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(16.0),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      shape: BoxShape.rectangle,
+                                      borderRadius: BorderRadius.circular(12.0),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(1),
+                                          blurRadius: 4,
+                                          offset: const Offset(0, 4),
+                                        ),
+                                      ],
+                                    ),
+                                    child: RepaintBoundary(
+                                      child: Image.asset(
+                                        item.imageAsset,
+                                        height: 40.0,
+                                        width: 40.0,
+                                        filterQuality: FilterQuality.low,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                      height:
+                                          doubleEight), // Add spacing between the image and text
+                                  Text(
+                                    item.title.toUpperCase(),
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w800,
+                                      fontSize:
+                                          regularTextSize, // Specify a font size for better consistency
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ),
-                          const SizedBox(height: 8), // Add spacing between the image and text
-                          Text(
-                            item.title.toUpperCase(),
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w800,
-                              fontSize: regularTextSize, // Specify a font size for better consistency
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                ) : const Expanded(child: Center(child: Text("No menu matches your search."),))
+                            );
+                          },
+                        ),
+                      )
+                    : const Expanded(
+                        child: Center(
+                        child: Text("No menu matches your search."),
+                      ))
               ],
             );
           },
