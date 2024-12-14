@@ -7,6 +7,8 @@ const appVersion = 'Version ';
 
 const appName = 'NPDCL EMPLOYEE';
 const appFontFamily = 'Inter';
+const clickExitToLeave = 'Please click Exit to leave the app.';
+const exit = 'Exit';
 
 /// bool vales
 const isTrue = true;
