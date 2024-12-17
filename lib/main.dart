@@ -1,12 +1,14 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/firebase_options.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/app_router.dart';
 import 'package:tsnpdcl_employee/utils/app_theme.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
+import 'package:tsnpdcl_employee/view/asset_mapping/viewmodel/asset_mapping_viewmodel.dart';
 import 'package:tsnpdcl_employee/view/entry/view/splash_screen.dart';
 
 Future<void> main() async {
@@ -23,6 +25,16 @@ Future<void> main() async {
     ),
   );
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  // runApp(
+  //   MultiProvider(
+  //     providers: [
+  //       ChangeNotifierProvider(
+  //         create: (context) => AssetMappingViewModel(),
+  //       ),
+  //     ],
+  //     child: const MyApp(),
+  //   ),
+  // );
   runApp(const MyApp());
 }
 

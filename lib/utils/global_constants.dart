@@ -60,4 +60,29 @@ class GlobalConstants {
   static const String issueDuplicateReceipt = "Issue duplicate receipt";
   static const String printLastPr = "Print last pr";
   static const String reports = "Reports";
+
+  // Dtr maintenance
+  static const String assignForInspection = "Assign for inspection";
+  static const String underInspection = "Under inspection";
+  static const String inspectionCompleted = "Inspection completed";
+  static const String toBeMaintained = "To be maintained";
+  static const String maintenanceFinished = "Maintenance finished";
+  static const String maintenanceStats = "Maintenance stats";
+
+  // Dtr failure
+  static const String dtrFailureReporting = "Dtr failure reporting";
+  static const String viewFailureReports = "View failure reports";
+  static const String viewRectifiedReports = "View rectified reports";
+
+  // Failure dtr inspection
+  static const String dtrInspection = "Dtr inspection";
+  static const String viewInspectionReports = "View inspection reports";
+  static const String viewClosedReports = "View closed reports";
+
+  // Pdms menu
+  static const String createPoleIndent = "Create pole indent";
+  static const String dis = "D.i's";
+  static const String pendingVerification = "Pending verification";
+  static const String verified = "Verified";
+  static const String mismatch = "Mismatch";
 }

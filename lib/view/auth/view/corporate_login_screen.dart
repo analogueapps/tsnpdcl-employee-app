@@ -59,7 +59,6 @@ class CorporateLoginScreen extends StatelessWidget {
                                   labelText: 'Username',
                                   keyboardType: TextInputType.text  ,
                                   prefixIcon: const Icon(Icons.person_rounded),
-                                  suffixIcon: null,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
                                       return "User name cannot be left blank";
@@ -77,7 +76,6 @@ class CorporateLoginScreen extends StatelessWidget {
                                   labelText: 'Password',
                                   keyboardType: TextInputType.visiblePassword,
                                   prefixIcon: const Icon(Icons.lock_rounded),
-                                  suffixIcon: null,
                                   isObscure: isTrue,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {

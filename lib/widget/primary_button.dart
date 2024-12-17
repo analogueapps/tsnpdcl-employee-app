@@ -4,18 +4,24 @@ import 'package:tsnpdcl_employee/utils/common_colors.dart';
 
 class PrimaryButton extends StatelessWidget {
   final String text;
+  final bool fullWidth;
   final VoidCallback onPressed;
 
   const PrimaryButton({
     super.key,
     required this.text,
+    this.fullWidth = false,
     required this.onPressed,
   });
 
   @override
   Widget build(BuildContext context) {
+    final double buttonWidth = fullWidth
+        ? MediaQuery.of(context).size.width * 0.8
+        : MediaQuery.of(context).size.width * 0.5;
+
     return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.5,
+      width: buttonWidth,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(

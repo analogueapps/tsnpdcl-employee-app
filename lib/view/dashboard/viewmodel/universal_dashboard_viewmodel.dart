@@ -81,15 +81,18 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.dtrMaintenanceTitle,
           imageAsset: Assets.dtrMaintenance,
-          routeName: routeName),
+          routeName: Routes.dtrMaintenanceScreen
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.dtrFailureTitle,
           imageAsset: Assets.dtrFailure,
-          routeName: routeName),
+          routeName: Routes.dtrFailureScreen
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.failureDtrInspectionTitle,
           imageAsset: Assets.failureDtrInspection,
-          routeName: routeName),
+          routeName: Routes.failureDtrInspectionScreen
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.ssMaintenanceTitle,
           imageAsset: Assets.ssMaintenance,
@@ -119,7 +122,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.assetMappingTitle,
           imageAsset: Assets.assetMapping,
-          routeName: routeName),
+          routeName: Routes.assetMappingScreen
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.mappingOfNonAglServicesTitle,
           imageAsset: Assets.mappingOfNonAglServices,
@@ -165,7 +169,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.pdmsTitle,
           imageAsset: Assets.pdms,
-          routeName: routeName),
+          routeName: Routes.pdmsScreen
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.foccTitle,
           imageAsset: Assets.focc,
@@ -199,7 +204,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.ganeshPandalInfoTitle,
           imageAsset: Assets.ganeshPandalInfo,
-          routeName: routeName),
+          routeName: Routes.ganeshPandalInfoScreen
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.mappingOfNonAglServicesTitle,
           imageAsset: Assets.mappingOfNonAglServices,
@@ -289,20 +295,23 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.assetMappingTitle,
           imageAsset: Assets.assetMapping,
-          routeName: routeName),
+          routeName: Routes.assetMappingScreen
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.ganeshPandalInfoTitle,
           imageAsset: Assets.ganeshPandalInfo,
-          routeName: routeName),
+          routeName: Routes.ganeshPandalInfoScreen
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.onlinePrTitle,
           imageAsset: Assets.onlinePr,
           routeName: Routes.onlinePrMenuScreen
-          ),
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.measureDistTitle,
           imageAsset: Assets.measureDist,
-          routeName: routeName),
+          routeName: Routes.measureDistanceScreen
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.consumerDetailsTitle,
           imageAsset: Assets.consumerDetails,
@@ -314,15 +323,18 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.dtrMaintenanceTitle,
           imageAsset: Assets.dtrMaintenance,
-          routeName: routeName),
+          routeName: Routes.dtrMaintenanceScreen
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.dtrFailureTitle,
           imageAsset: Assets.dtrFailure,
-          routeName: routeName),
+          routeName: Routes.dtrFailureScreen
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.failureDtrInspectionTitle,
           imageAsset: Assets.failureDtrInspection,
-          routeName: routeName),
+          routeName: Routes.failureDtrInspectionScreen
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.ssMaintenanceTitle,
           imageAsset: Assets.ssMaintenance,
@@ -426,7 +438,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.pdmsTitle,
           imageAsset: Assets.pdms,
-          routeName: routeName),
+          routeName: Routes.pdmsScreen
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.reportsTitle,
           imageAsset: Assets.reports,
@@ -434,7 +447,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.checkMeasurementTitle,
           imageAsset: Assets.checkMeasurement,
-          routeName: routeName),
+          routeName: Routes.measureDistanceScreen
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.foccTitle,
           imageAsset: Assets.focc,

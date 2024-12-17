@@ -1,7 +1,8 @@
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:tsnpdcl_employee/dialogs/global_alert_dialog.dart';
+import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/general_assets.dart';
@@ -204,25 +205,10 @@ class _UniversalDashboardScreenState extends State<UniversalDashboardScreen> {
                               style: const TextStyle(
                                   fontSize: normalSize,
                                   fontWeight: FontWeight.w300)),
-                          onTap: () {
+                          onTap: () async {
                             if (item.title ==
                                 GlobalConstants.logoutTitle) {
-                              GlobalAlertDialog.show(
-                                context: context,
-                                title: 'Logout',
-                                message:
-                                'Are you sure you want to logout?',
-                                positiveButtonText: 'Yes',
-                                negativeButtonText: 'No',
-                                onPositivePressed: () {
-                                  // Add positive action here
-                                  print('User logged out.');
-                                },
-                                onNegativePressed: () {
-                                  // Add negative action here
-                                  print('User canceled logout.');
-                                },
-                              );
+                              showLogoutDialog(context);
                             } else {
                               Navigator.pushNamed(
                                   context, item.routeName);
@@ -320,7 +306,13 @@ class _UniversalDashboardScreenState extends State<UniversalDashboardScreen> {
                         final item = viewModel.filteredItems[index];
                         return GestureDetector(
                           onTap: () {
-                            Navigator.pushNamed(context, item.routeName);
+                            if (item.title ==
+                                GlobalConstants.logoutTitle) {
+                              showLogoutDialog(context);
+                            } else {
+                              Navigator.pushNamed(
+                                  context, item.routeName);
+                            }
                           },
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,

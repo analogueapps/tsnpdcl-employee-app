@@ -61,7 +61,6 @@ class EmployeeIdLoginScreen extends StatelessWidget {
                                   labelText: 'Employee ID',
                                   keyboardType: TextInputType.number,
                                   prefixIcon: const Icon(Icons.person_rounded),
-                                  suffixIcon: null,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
                                       return "Employee id cannot be left blank";
@@ -79,7 +78,6 @@ class EmployeeIdLoginScreen extends StatelessWidget {
                                   labelText: 'Password',
                                   keyboardType: TextInputType.visiblePassword,
                                   prefixIcon: const Icon(Icons.lock_rounded),
-                                  suffixIcon: null,
                                   isObscure: isTrue,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {

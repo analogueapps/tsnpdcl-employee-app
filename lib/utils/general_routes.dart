@@ -8,5 +8,12 @@ class Routes {
   // INSIDE DASHBOARD MENUS
   static const String searchConsumerScreen = 'search_consumer_screen';
   static const String lineClearanceScreen = 'line_clearance_screen';
+  static const String assetMappingScreen = 'asset_mapping_screen';
+  static const String ganeshPandalInfoScreen = 'ganesh_pandal_info_screen';
   static const String onlinePrMenuScreen = 'online_pr_menu_screen';
+  static const String measureDistanceScreen = 'measure_distance_screen';
+  static const String dtrMaintenanceScreen = 'dtr_maintenance_screen';
+  static const String dtrFailureScreen = 'dtr_failure_screen';
+  static const String failureDtrInspectionScreen = 'failure_dtr_inspection_screen';
+  static const String pdmsScreen = 'pdms_screen';
 }
