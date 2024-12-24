@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:tsnpdcl_employee/utils/general_assets.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
 import 'package:tsnpdcl_employee/view/dashboard/model/universal_dashboard_item.dart';
+import 'package:tsnpdcl_employee/view/line_clearance/model/line_clearance_menu_item.dart';
 
 class LineClearanceViewModel extends ChangeNotifier {
-  final List<UniversalDashboardItem> _lineClearanceItems = [];
+  final List<LineClearanceMenuItem> _lineClearanceItems = [];
 
-  List<UniversalDashboardItem> get lineClearanceItems => _lineClearanceItems;
+  List<LineClearanceMenuItem> get lineClearanceItems => _lineClearanceItems;
 
   // Constructor to initialize the items
   LineClearanceViewModel() {
@@ -18,26 +20,26 @@ class LineClearanceViewModel extends ChangeNotifier {
     const String routeName = '';
 
     _lineClearanceItems.addAll([
-      UniversalDashboardItem(
+      LineClearanceMenuItem(
           title: GlobalConstants.lcMasterDataTitle,
-          imageAsset: Assets.lcMasterData,
-          routeName: routeName
-      ),
-      UniversalDashboardItem(
+          iconAsset: Icons.bar_chart,
+          cardColor: Colors.orange,
+          routeName: routeName),
+      LineClearanceMenuItem(
           title: GlobalConstants.pendingAeAde,
-          imageAsset: Assets.pendingAeAde,
-          routeName: routeName
-      ),
-      UniversalDashboardItem(
+          iconAsset: Icons.pending_actions_outlined,
+          cardColor: Colors.green,
+          routeName: routeName),
+      LineClearanceMenuItem(
           title: GlobalConstants.ongoingLc,
-          imageAsset: Assets.ongoingLc,
-          routeName: routeName
-      ),
-      UniversalDashboardItem(
+          iconAsset: Icons.move_up_outlined,
+          cardColor: Colors.redAccent,
+          routeName: routeName),
+      LineClearanceMenuItem(
           title: GlobalConstants.closedLc,
-          imageAsset: Assets.closedLc,
-          routeName: routeName
-      ),
+          iconAsset: Icons.cancel_outlined,
+          cardColor: Colors.yellow,
+          routeName: routeName),
     ]);
 
     notifyListeners();

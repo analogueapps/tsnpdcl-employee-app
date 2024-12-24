@@ -50,7 +50,7 @@ class LineClearanceScreen extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.all(16.0),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: item.cardColor,
                           shape: BoxShape.rectangle,
                           borderRadius: BorderRadius.circular(12.0),
                           boxShadow: [
@@ -62,11 +62,10 @@ class LineClearanceScreen extends StatelessWidget {
                           ],
                         ),
                         child: RepaintBoundary(
-                          child: Image.asset(
-                            item.imageAsset,
-                            height: 40.0,
-                            width: 40.0,
-                            filterQuality: FilterQuality.low,
+                          child: Icon(
+                            item.iconAsset,
+                            size: 40.0,
+                            color: Colors.white,
                           ),
                         ),
                       ),

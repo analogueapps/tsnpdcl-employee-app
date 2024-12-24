@@ -4,6 +4,7 @@ import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_assets.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
+import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/widget/primary_button.dart';
 
 class GaneshPandalInfoScreen extends StatelessWidget {
@@ -90,7 +91,7 @@ class GaneshPandalInfoScreen extends StatelessWidget {
             text: "Enter new pandal information".toUpperCase(),
             fullWidth: isTrue,
             onPressed: () {
-
+              Navigation.instance.navigateTo(Routes.ganeshPandalInformationScreen);
             }
         ),
       ),

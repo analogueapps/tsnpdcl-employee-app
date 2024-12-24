@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 
 
 class FillTextFormField extends StatefulWidget {
   final TextEditingController controller;
+  final List<TextInputFormatter>? inputFormatters;
   final String labelText;
   final bool isObscure;
   final bool isEnable;
@@ -18,6 +20,7 @@ class FillTextFormField extends StatefulWidget {
   const FillTextFormField({
     super.key,
     required this.controller,
+    this.inputFormatters,
     required this.labelText,
     this.isObscure = false,
     this.isEnable = true,
@@ -47,6 +50,7 @@ class _FillTextFormFieldState extends State<FillTextFormField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      inputFormatters: widget.inputFormatters,
       controller: widget.controller,
       keyboardType: widget.keyboardType,
       obscureText: _isObscure,

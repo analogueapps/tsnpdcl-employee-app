@@ -7,6 +7,7 @@ import 'package:tsnpdcl_employee/view/dtr_failure/view/dtr_failure_screen.dart';
 import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_maintenance_screen.dart';
 import 'package:tsnpdcl_employee/view/failure_dtr_inspection/view/failure_dtr_inspection_screen.dart';
 import 'package:tsnpdcl_employee/view/ganesh_pandal/view/ganesh_pandal_info_screen.dart';
+import 'package:tsnpdcl_employee/view/ganesh_pandal/view/ganesh_pandal_information_screen.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/view/line_clearance_screen.dart';
 import 'package:tsnpdcl_employee/view/measure_distance/view/measure_distance_screen.dart';
 import 'package:tsnpdcl_employee/view/online_pr_menu/view/online_pr_menu_screen.dart';
@@ -45,6 +46,9 @@ class AppRouter {
             builder: (_) => const FailureDtrInspectionScreen());
       case PdmsScreen.id:
         return MaterialPageRoute(builder: (_) => const PdmsScreen());
+      case GaneshPandalInformationScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => const GaneshPandalInformationScreen());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(
