@@ -20,9 +20,9 @@ const titleSize = 16.0;
 const normalSize = 14.0;
 const regularTextSize = 11.0;
 const btnTextSize = 15.0;
-const toolbarTitleSize = 24.0;
-const movieTitleSize = 18.0;
-const movieDurationSize = 12.0;
+const toolbarTitleSize = 20.0;
+const extraTitleSize = 18.0;
+const extraRegularSize = 12.0;
 const bigTitleSize = 18.0;
 
 /// constants integer numbers

@@ -8,6 +8,8 @@ import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/general_assets.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
+import 'package:tsnpdcl_employee/utils/navigation_service.dart';
+import 'package:tsnpdcl_employee/utils/url_constants.dart';
 import 'package:tsnpdcl_employee/view/dashboard/viewmodel/universal_dashboard_viewmodel.dart';
 
 class UniversalDashboardScreen extends StatefulWidget {
@@ -19,6 +21,7 @@ class UniversalDashboardScreen extends StatefulWidget {
 }
 
 class _UniversalDashboardScreenState extends State<UniversalDashboardScreen> {
+  //final FocusNode _focusNode = FocusNode();
   DateTime? lastPressed;
 
   @override
@@ -206,18 +209,13 @@ class _UniversalDashboardScreenState extends State<UniversalDashboardScreen> {
                                   fontSize: normalSize,
                                   fontWeight: FontWeight.w300)),
                           onTap: () async {
-                            if (item.title ==
-                                GlobalConstants.logoutTitle) {
-                              showLogoutDialog(context);
-                            } else {
-                              Navigator.pushNamed(
-                                  context, item.routeName);
-                            }
+                            FocusScope.of(context).unfocus();
+                            viewModel.menuItemClicked(context, item.title, item.routeName);
                           },
-                        ))
-                            .toList(),
+                        )
+                        ).toList(),
                       );
-                    }).toList(),
+                    }),
                   ],
                 ),
               );
@@ -236,6 +234,7 @@ class _UniversalDashboardScreenState extends State<UniversalDashboardScreen> {
                     child: Padding(
                       padding: const EdgeInsets.all(doubleTwenty),
                       child: TextField(
+                        //focusNode: _focusNode,
                         controller: viewModel.searchController,
                         onChanged: (query) {
                           Provider.of<UniversalDashboardViewModel>(context,
@@ -305,14 +304,9 @@ class _UniversalDashboardScreenState extends State<UniversalDashboardScreen> {
                       itemBuilder: (context, index) {
                         final item = viewModel.filteredItems[index];
                         return GestureDetector(
-                          onTap: () {
-                            if (item.title ==
-                                GlobalConstants.logoutTitle) {
-                              showLogoutDialog(context);
-                            } else {
-                              Navigator.pushNamed(
-                                  context, item.routeName);
-                            }
+                          onTap: () async {
+                            FocusScope.of(context).unfocus();
+                            viewModel.menuItemClicked(context, item.title, item.routeName);
                           },
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,

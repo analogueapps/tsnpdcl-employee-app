@@ -66,7 +66,7 @@ class AlertUtils {
             ),
           ],
         ),
-        backgroundColor: isAlert ? Colors.red.shade400 : Colors.green.shade400,
+        backgroundColor: isAlert ? Colors.red.shade800 : Colors.green.shade800,
         behavior: SnackBarBehavior.floating,
         action: SnackBarAction(
           label: 'Close',

@@ -85,4 +85,27 @@ class GlobalConstants {
   static const String pendingVerification = "Pending verification";
   static const String verified = "Verified";
   static const String mismatch = "Mismatch";
+
+  // Ctpt menu
+  static const String reportCtPtFailure = "Report CT/PT Failure";
+  static const String viewCtPtReportedList = "View CT/PT Reported List";
+  static const String viewCtPtFailureConfirmedList = "View CT/PT Failure Confirmed List";
+  static const String viewCtPtIssuedList = "View CT/PT Issued List";
+  static const String viewCtPtReplacedList = "View CT/PT Replaced List";
+
+  // Meeseva menu
+  static const String daysPendingAbstract = "Days Pending Abstract";
+  static const String lmWiseAbstract = "LM Wise Abstract";
+  static const String searchApplication = "Search Application";
+  static const String pendingFcAllotmentByAe = "Pending F.C Allotment By A.E";
+  static const String underFeasibilityCheckByOm = "Under Feasibility Check By O&M";
+  static const String pendingForFeasibleByAe = "Pending For Feasible By AE";
+  static const String pendingForNotFeasibleByAe = "Pending For Not Feasible By AE";
+  static const String metersToBeAllottedByAde = "Meters To Be Allotted By ADE";
+  static const String pendingForNotFeasibleByAde = "Pending For Not Feasible By AE";
+  static const String metersToBeAllottedByAe = "Meters To Be Allotted By AE";
+  static const String metersToBeFixedByOmStaff = "Meters To Be Fixed By O&M Staff";
+  static const String metersInstalledToBeReleasedByAe = "Meters Installed To Be Released By AE";
+  static const String releasedByAe = "Release By AE";
+  static const String rejected = "Rejected";
 }

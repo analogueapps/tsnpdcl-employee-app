@@ -17,7 +17,7 @@ class PrimaryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double buttonWidth = fullWidth
-        ? MediaQuery.of(context).size.width * 0.8
+        ? MediaQuery.of(context).size.width * 1
         : MediaQuery.of(context).size.width * 0.5;
 
     return SizedBox(

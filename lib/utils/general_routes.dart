@@ -16,6 +16,10 @@ class Routes {
   static const String dtrFailureScreen = 'dtr_failure_screen';
   static const String failureDtrInspectionScreen = 'failure_dtr_inspection_screen';
   static const String pdmsScreen = 'pdms_screen';
+  static const String ctptMenuScreen = 'ctpt_menu_screen';
+  static const String consumerDetailsScreen = 'consumer_details_screen';
+  static const String webViewScreen = 'web_view_screen';
+  static const String meesevaMenuScreen = 'meeseva_menu_screen';
 
   static const String ganeshPandalInformationScreen = 'ganesh_pandal_information_screen';
 

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
+import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/general_assets.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
+import 'package:tsnpdcl_employee/utils/url_constants.dart';
 import 'package:tsnpdcl_employee/view/dashboard/model/drawer_section.dart';
+import 'package:tsnpdcl_employee/view/dashboard/model/global_list_dialog_item.dart';
 import 'package:tsnpdcl_employee/view/dashboard/model/universal_dashboard_item.dart';
 
 class UniversalDashboardViewModel extends ChangeNotifier {
@@ -52,7 +56,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.meesevaTitle,
           imageAsset: Assets.meeseva,
-          routeName: routeName),
+          routeName: Routes.meesevaMenuScreen
+      ),
     ]);
     consumerAndServiceManagement.addAll([
       UniversalDashboardItem(
@@ -63,7 +68,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.consumerDetailsTitle,
           imageAsset: Assets.consumerDetails,
-          routeName: routeName),
+          routeName: Routes.consumerDetailsScreen
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.gruhaJyothiTitle,
           imageAsset: Assets.gruhaJyothi,
@@ -116,7 +122,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.ctPtFailureTitle,
           imageAsset: Assets.ctPtFailure,
-          routeName: routeName),
+          routeName: Routes.ctptMenuScreen
+      ),
     ]);
     mappingAndGIS.addAll([
       UniversalDashboardItem(
@@ -161,7 +168,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.reportsTitle,
           imageAsset: Assets.reports,
-          routeName: routeName),
+          routeName: GlobalConstants.reportsTitle
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.exceptionalsTitle,
           imageAsset: Assets.exceptionals,
@@ -174,7 +182,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.foccTitle,
           imageAsset: Assets.focc,
-          routeName: routeName),
+          routeName: Routes.webViewScreen
+      ),
     ]);
     testingAndReadings.addAll([
       UniversalDashboardItem(
@@ -198,7 +207,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.uscNoTitle,
           imageAsset: Assets.uscNo,
-          routeName: routeName),
+          routeName: Routes.webViewScreen
+      ),
     ]);
     others.addAll([
       UniversalDashboardItem(
@@ -315,7 +325,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.consumerDetailsTitle,
           imageAsset: Assets.consumerDetails,
-          routeName: routeName),
+          routeName: Routes.consumerDetailsScreen
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.gruhaJyothiTitle,
           imageAsset: Assets.gruhaJyothi,
@@ -362,7 +373,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.uscNoTitle,
           imageAsset: Assets.uscNo,
-          routeName: routeName),
+          routeName: Routes.webViewScreen
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.gisIdsTitle,
           imageAsset: Assets.gisIds,
@@ -374,7 +386,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.meesevaTitle,
           imageAsset: Assets.meeseva,
-          routeName: routeName),
+          routeName: Routes.meesevaMenuScreen
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.exceptionalsTitle,
           imageAsset: Assets.exceptionals,
@@ -394,7 +407,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.dtrMasterTitle,
           imageAsset: Assets.dtrMaster,
-          routeName: routeName),
+          routeName: GlobalConstants.dtrMasterTitle
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.dListTitle,
           imageAsset: Assets.dList,
@@ -434,7 +448,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.ctPtFailureTitle,
           imageAsset: Assets.ctPtFailure,
-          routeName: routeName),
+          routeName: Routes.ctptMenuScreen
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.pdmsTitle,
           imageAsset: Assets.pdms,
@@ -443,7 +458,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.reportsTitle,
           imageAsset: Assets.reports,
-          routeName: routeName),
+          routeName: GlobalConstants.reportsTitle
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.checkMeasurementTitle,
           imageAsset: Assets.checkMeasurement,
@@ -452,15 +468,18 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.foccTitle,
           imageAsset: Assets.focc,
-          routeName: routeName),
+          routeName: Routes.webViewScreen
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.ebsTitle,
           imageAsset: Assets.ebs,
-          routeName: routeName),
+          routeName: Routes.webViewScreen
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.matsTitle,
           imageAsset: Assets.mats,
-          routeName: routeName),
+          routeName: Routes.webViewScreen
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.accountTitle,
           imageAsset: Assets.account,
@@ -486,5 +505,74 @@ class UniversalDashboardViewModel extends ChangeNotifier {
           .toList();
     }
     notifyListeners();
+  }
+
+  Future<void> menuItemClicked(BuildContext context, String title, String routeName) async {
+    if (title == GlobalConstants.logoutTitle) {
+      showLogoutDialog(context);
+    } else if (routeName == Routes.webViewScreen) {
+      final urlMapping = {
+        GlobalConstants.uscNoTitle: UrlConstants.onlineLTConsCheckUrl,
+        GlobalConstants.foccTitle: UrlConstants.foccUrl,
+        GlobalConstants.ebsTitle: UrlConstants.ebsUrl,
+        GlobalConstants.matsTitle: UrlConstants.matsUrl,
+      };
+
+      if (urlMapping.containsKey(title)) {
+        var argument = {
+          'title': title,
+          'url': urlMapping[title],
+        };
+        Navigator.pushNamed(context, routeName, arguments: argument);
+      }
+    } else if(routeName == GlobalConstants.reportsTitle) {
+      List<GlobalListDialogItem> globalListDialogItem = [];
+      globalListDialogItem.addAll([
+        GlobalListDialogItem(
+          title: "CT PT Failure Reports",
+          routeName: ""
+        ),
+        GlobalListDialogItem(
+            title: "Middle Poles Reports",
+            routeName: ""
+        ),
+        GlobalListDialogItem(
+            title: "Maintenance Reports",
+            routeName: ""
+        ),
+      ]);
+      showCustomListDialog(context, globalListDialogItem);
+    } else if(routeName == GlobalConstants.dtrMasterTitle) {
+      List<GlobalListDialogItem> globalListDialogItem = [];
+      globalListDialogItem.addAll([
+        GlobalListDialogItem(
+            title: "Create DTR Master(Online)",
+            routeName: ""
+        ),
+        GlobalListDialogItem(
+            title: "View Mapped DTR's",
+            routeName: ""
+        ),
+        GlobalListDialogItem(
+            title: "Create DTR Master(Offline)",
+            routeName: ""
+        ),
+        GlobalListDialogItem(
+            title: "Download For Offline",
+            routeName: ""
+        ),
+        GlobalListDialogItem(
+            title: "View Offline Data",
+            routeName: ""
+        ),
+        GlobalListDialogItem(
+            title: "View Mismatch DTR's",
+            routeName: ""
+        ),
+      ]);
+      showCustomListDialog(context, globalListDialogItem);
+    } else {
+      Navigator.pushNamed(context, routeName);
+    }
   }
 }
