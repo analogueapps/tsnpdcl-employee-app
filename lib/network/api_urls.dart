@@ -1,0 +1,24 @@
+
+// ignore_for_file: constant_identifier_names
+
+class Apis{
+
+  /// API KEY
+  static const API_KEY = "d0bbef01-87c6-4629-9659-d95c59c22a9c";
+
+  /// <<<<<<<<<< *** ALL URLS SECTION WISE *** >>>>>>>>>> ///
+  /// AUTHENTICATION
+  static const ROOT_URL = "http://210.212.223.83:7000/";
+  static const AUTH_URL = "NpdclLoginSdkWebApi/sdk/webapi";
+
+  /// CONSUMER RELATED
+  static const NPDCL_EMP_URL = "NpdclEmployeeWebApi/npemp/api";
+
+  /// LINE RELATED
+  static const SERVER_IP = "http://210.212.223.88";
+  static const SS_END_POINT_BASE_URL = "$SERVER_IP:5656/NPFDAS/ep/ss/";
+  static const GET_SS_OF_SECTION_URL = "getSSOfSection";
+  static const GET_11KV_FEEDER_OF_33KV_SS_URL = "get11kvFeedersOf33KvSS";
+  static const LC_END_POINT_BASE_URL = "$SERVER_IP:5656/NPFDAS/ep/lc/";
+  static const GET_INDUCTION_POINTS_OF_FEEDER_URL = "getInductionPointsOfFeeder";
+}

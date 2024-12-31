@@ -10,6 +10,20 @@ const appFontFamily = 'Inter';
 const clickExitToLeave = 'Please click Exit to leave the app.';
 const exit = 'Exit';
 
+/// APIs
+const successResponseCode = 200;
+const unAuthorizedResponseCode = 401;
+const noInternetMessage =
+    'No Internet Connection. Please check your network and try again.';
+const resMessage = 'message';
+const resError = 'error';
+const resTimeOutMessage = 'Timeout. Please try again later.';
+const resConnectionMessage = 'Connection error. Please check your internet.';
+const resErrorMessage = 'Error. Please try again later.';
+const resSomethingMessage = 'Something went wrong';
+const unAuthorizedAccess = 'Unauthorized access';
+const anErrorOccurred = 'An error occurred';
+
 /// bool vales
 const isTrue = true;
 const isFalse = false;

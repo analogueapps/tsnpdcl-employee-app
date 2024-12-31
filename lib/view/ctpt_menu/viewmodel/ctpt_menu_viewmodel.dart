@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:tsnpdcl_employee/model/sub_menu_list_item.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
-import 'package:tsnpdcl_employee/view/ctpt_menu/model/ctpt_menu_item.dart';
-import 'package:tsnpdcl_employee/view/dtr_failure/model/dtr_failure_menu_item.dart';
-import 'package:tsnpdcl_employee/view/dtr_maintenance/model/dtr_maintenance_menu_item.dart';
-import 'package:tsnpdcl_employee/view/failure_dtr_inspection/model/failure_dtr_inspection_menu_item.dart';
-import 'package:tsnpdcl_employee/view/online_pr_menu/model/online_pr_menu_item.dart';
 
 class CtptMenuViewModel extends ChangeNotifier {
-  final List<CtptMenuItem> _ctptMenuItems = [];
+  final List<SubMenuListItem> _ctptMenuItems = [];
 
-  List<CtptMenuItem> get ctptMenuItems => _ctptMenuItems;
+  List<SubMenuListItem> get ctptMenuItems => _ctptMenuItems;
 
   // Constructor to initialize the items
   CtptMenuViewModel() {
@@ -21,19 +17,19 @@ class CtptMenuViewModel extends ChangeNotifier {
     const String routeName = '';
 
     _ctptMenuItems.addAll([
-      CtptMenuItem(
+      SubMenuListItem(
           title: GlobalConstants.reportCtPtFailure,
           routeName: routeName),
-      CtptMenuItem(
+      SubMenuListItem(
           title: GlobalConstants.viewCtPtReportedList,
           routeName: routeName),
-      CtptMenuItem(
+      SubMenuListItem(
           title: GlobalConstants.viewCtPtFailureConfirmedList,
           routeName: routeName),
-      CtptMenuItem(
+      SubMenuListItem(
           title: GlobalConstants.viewCtPtIssuedList,
           routeName: routeName),
-      CtptMenuItem(
+      SubMenuListItem(
           title: GlobalConstants.viewCtPtReplacedList,
           routeName: routeName),
     ]);

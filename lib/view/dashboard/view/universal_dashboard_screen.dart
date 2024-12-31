@@ -84,12 +84,27 @@ class _UniversalDashboardScreenState extends State<UniversalDashboardScreen> {
                     UserAccountsDrawerHeader(
                       decoration:
                       const BoxDecoration(color: CommonColors.colorPrimary),
-                      accountName: const Text("Surya M"),
-                      accountEmail:
-                      const Text("surya.murugesan@analogueitsolutions.com"),
+                      accountName: Text(
+                          viewModel.npdclUser != null ? "${viewModel.npdclUser!.empName}(${viewModel.npdclUser!.designation}/${viewModel.npdclUser!.secMasterEntity!.section})".toUpperCase() : appName.toUpperCase()
+                      ),
+                      accountEmail: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                              viewModel.npdclUser != null ? "EMP ID:${viewModel.npdclUser!.empId}|SEC.ID:${viewModel.npdclUser!.secMasterEntity!.sectionId}".toUpperCase() : appName.toUpperCase(),
+                            style: const TextStyle(
+                              color: Colors.grey
+                            ),
+                          ),
+                          Text(
+                              viewModel.npdclUser != null ? "Ph:${viewModel.npdclUser!.personalMobileNo}" : appName.toUpperCase(),
+                            style: const TextStyle(
+                                color: Colors.grey
+                            ),
+                          ),
+                        ],
+                      ),
                       currentAccountPicture: Container(
-                        width: 80.0, // Set the width for the square shape
-                        height: 80.0, // Set the height to make it square
                         decoration: const BoxDecoration(
                           shape: BoxShape
                               .rectangle, // Set to rectangle (square in this case)
@@ -99,102 +114,8 @@ class _UniversalDashboardScreenState extends State<UniversalDashboardScreen> {
                           ),
                         ),
                       ),
+                      currentAccountPictureSize: const Size(50, 50),
                     ),
-                    // ExpansionTile(
-                    //   title: const Text("App Management", style: TextStyle(fontWeight: FontWeight.w500),),
-                    //   leading: const Icon(Icons.settings),
-                    //   children: viewModel.appManagement.map((item) => ListTile(
-                    //     leading: Image.asset(item.imageAsset, width: 24, height: 24),
-                    //     title: Text(item.title, style: const TextStyle(fontSize: normalSize, fontWeight: FontWeight.w300),),
-                    //     onTap: () {
-                    //       Navigator.pushNamed(context, item.routeName);
-                    //     },
-                    //   )).toList(),
-                    // ),
-                    //
-                    // ExpansionTile(
-                    //   title: const Text("Consumer and Service Management", style: TextStyle(fontWeight: FontWeight.w500),),
-                    //   leading: const Icon(Icons.person),
-                    //   children: viewModel.consumerAndServiceManagement.map((item) => ListTile(
-                    //     leading: Image.asset(item.imageAsset, width: 24, height: 24),
-                    //     title: Text(item.title, style: const TextStyle(fontSize: normalSize, fontWeight: FontWeight.w300),),
-                    //     onTap: () {
-                    //       Navigator.pushNamed(context, item.routeName);
-                    //     },
-                    //   )).toList(),
-                    // ),
-                    //
-                    // ExpansionTile(
-                    //   title: const Text("Maintenance and Inspections", style: TextStyle(fontWeight: FontWeight.w500),),
-                    //   leading: const Icon(Icons.build),
-                    //   children: viewModel.maintenanceAndInspections.map((item) => ListTile(
-                    //     leading: Image.asset(item.imageAsset, width: 24, height: 24),
-                    //     title: Text(item.title, style: const TextStyle(fontSize: normalSize, fontWeight: FontWeight.w300),),
-                    //     onTap: () {
-                    //       Navigator.pushNamed(context, item.routeName);
-                    //     },
-                    //   )).toList(),
-                    // ),
-                    //
-                    // ExpansionTile(
-                    //   title: const Text("Mapping and GIS", style: TextStyle(fontWeight: FontWeight.w500),),
-                    //   leading: const Icon(Icons.map),
-                    //   children: viewModel.mappingAndGIS.map((item) => ListTile(
-                    //     leading: Image.asset(item.imageAsset, width: 24, height: 24),
-                    //     title: Text(item.title, style: const TextStyle(fontSize: normalSize, fontWeight: FontWeight.w300),),
-                    //     onTap: () {
-                    //       Navigator.pushNamed(context, item.routeName);
-                    //     },
-                    //   )).toList(),
-                    // ),
-                    //
-                    // ExpansionTile(
-                    //   title: const Text("Reports and Schedules", style: TextStyle(fontWeight: FontWeight.w500),),
-                    //   leading: const Icon(Icons.schedule),
-                    //   children: viewModel.reportsAndSchedules.map((item) => ListTile(
-                    //     leading: Image.asset(item.imageAsset, width: 24, height: 24),
-                    //     title: Text(item.title, style: const TextStyle(fontSize: normalSize, fontWeight: FontWeight.w300),),
-                    //     onTap: () {
-                    //       Navigator.pushNamed(context, item.routeName);
-                    //     },
-                    //   )).toList(),
-                    // ),
-                    //
-                    // ExpansionTile(
-                    //   title: const Text("Testing and Readings", style: TextStyle(fontWeight: FontWeight.w500),),
-                    //   leading: const Icon(Icons.receipt),
-                    //   children: viewModel.testingAndReadings.map((item) => ListTile(
-                    //     leading: Image.asset(item.imageAsset, width: 24, height: 24),
-                    //     title: Text(item.title, style: const TextStyle(fontSize: normalSize, fontWeight: FontWeight.w300),),
-                    //     onTap: () {
-                    //       Navigator.pushNamed(context, item.routeName);
-                    //     },
-                    //   )).toList(),
-                    // ),
-                    //
-                    // ExpansionTile(
-                    //   title: const Text("RF and Monitoring", style: TextStyle(fontWeight: FontWeight.w500),),
-                    //   leading: const Icon(Icons.signal_cellular_4_bar),
-                    //   children: viewModel.rFAndMonitoring.map((item) => ListTile(
-                    //     leading: Image.asset(item.imageAsset, width: 24, height: 24),
-                    //     title: Text(item.title, style: const TextStyle(fontSize: normalSize, fontWeight: FontWeight.w300),),
-                    //     onTap: () {
-                    //       Navigator.pushNamed(context, item.routeName);
-                    //     },
-                    //   )).toList(),
-                    // ),
-                    //
-                    // ExpansionTile(
-                    //   title: const Text("Others", style: TextStyle(fontWeight: FontWeight.w500),),
-                    //   leading: const Icon(Icons.more_horiz),
-                    //   children: viewModel.others.map((item) => ListTile(
-                    //     leading: Image.asset(item.imageAsset, width: 24, height: 24),
-                    //     title: Text(item.title, style: const TextStyle(fontSize: normalSize, fontWeight: FontWeight.w300),),
-                    //     onTap: () {
-                    //       Navigator.pushNamed(context, item.routeName);
-                    //     },
-                    //   )).toList(),
-                    // ),
                     ...viewModel.sections.map((section) {
                       return ExpansionTile(
                         title: Text(section.title,
@@ -278,7 +199,8 @@ class _UniversalDashboardScreenState extends State<UniversalDashboardScreen> {
                                   ),
                                 ),
                               ),
-                            )),
+                            )
+                        ),
                         style: const TextStyle(
                           fontSize: titleSize,
                           fontFamily: appFontFamily,

@@ -21,6 +21,15 @@ class Routes {
   static const String webViewScreen = 'web_view_screen';
   static const String meesevaMenuScreen = 'meeseva_menu_screen';
 
+  // CONSUMER
+  static const String dListFormScreen = 'dlist_form_screen';
+
+  // LINE CLEARANCE
+  static const String lcMasterSsListScreen = 'LcMasterSsListScreen';
+  static const String lcMasterFeederListScreen = 'LcMasterFeederListScreen';
+  static const String feederInductionListScreen = 'FeederInductionListScreen';
+
   static const String ganeshPandalInformationScreen = 'ganesh_pandal_information_screen';
+
 
 }

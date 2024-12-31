@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/general_assets.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
@@ -31,7 +32,11 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> onModelReady() async {
-    Navigation.instance.pushAndRemoveUntil(Routes.employeeIdLoginScreen);
+    if(SharedPreferenceHelper.getLoginStatus()) {
+      Navigation.instance.pushAndRemoveUntil(Routes.universalDashboardScreen);
+    } else {
+      Navigation.instance.pushAndRemoveUntil(Routes.employeeIdLoginScreen);
+    }
   }
 
   @override

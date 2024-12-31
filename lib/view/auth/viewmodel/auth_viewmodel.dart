@@ -1,9 +1,18 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
+import 'package:tsnpdcl_employee/dialogs/process_dialog.dart';
+import 'package:tsnpdcl_employee/network/api_provider.dart';
+import 'package:tsnpdcl_employee/network/api_urls.dart';
+import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/alerts.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
+import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
+import 'package:tsnpdcl_employee/view/auth/model/npdcl_user.dart';
 
 class AuthViewmodel extends ChangeNotifier {
   // Current View Context
@@ -47,18 +56,79 @@ class AuthViewmodel extends ChangeNotifier {
     if (employeeFormKey.currentState!.validate()) {
       employeeFormKey.currentState!.save();
       notifyListeners();
-      Navigation.instance.pushAndRemoveUntil(Routes.universalDashboardScreen);
+
+      ProcessDialogHelper.showProcessDialog(
+        context,
+        message: "Authenticating please wait...",
+      );
+
+      final requestData = {
+        "eid": empIdController.text.trim(),
+        "did": await getDeviceId(),
+        "p": empPassController.text.trim(),
+        "api": Apis.API_KEY,
+      };
+
+      final payload = {
+        "path": "/loginEmp",
+        "apiVersion": "1.0",
+        "method": "POST",
+        "data": jsonEncode(requestData),
+      };
+
+      var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.AUTH_URL, payload);
+      if (context.mounted) {
+        ProcessDialogHelper.closeDialog(context);
+      }
+
+      try {
+        if (response != null) {
+          if (response.data is String) {
+            response.data = jsonDecode(response.data); // Parse string to JSON
+          }
+          if (response.statusCode == successResponseCode) {
+            if (response.data['success'] == isTrue) {
+              if(response.data['objectJson'] != null) {
+                final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
+                final List<NpdclUser> user = jsonList.map((json) => NpdclUser.fromJson(json)).toList();
+                await SharedPreferenceHelper.setStringValue(LoginSdkPrefs.tokenPrefKey, user[0].tokenHolder!);
+                await SharedPreferenceHelper.setIntValue(LoginSdkPrefs.tokenTimePrefKey, DateTime.now().millisecondsSinceEpoch);
+                await SharedPreferenceHelper.setStringValue(LoginSdkPrefs.userIdPrefKey, empIdController.text.trim());
+                await SharedPreferenceHelper.setStringValue(LoginSdkPrefs.npdclUserPrefKey, jsonEncode(user));
+                await SharedPreferenceHelper.setLoginStatus(isTrue);
+
+                Navigation.instance.pushAndRemoveUntil(Routes.universalDashboardScreen);
+              }
+            } else {
+              showOkDialog(context, "Alert!", response.data['message'], "OK");
+            }
+          } else {
+            showOkDialog(context, "Alert!", response.data['message'], "OK");
+          }
+        }
+      } catch (e) {
+        showOkDialog(context, "Error", "An error occurred. Please try again.", "OK");
+        rethrow;
+      }
+
       notifyListeners();
-    } else if (empIdController.text.isEmpty && empPassController.text.isEmpty) {
-      AlertUtils.showSnackBar(context, "Please enter valid employee ID and password", isTrue);
-    } else if (empIdController.text.length < 5) {
-      AlertUtils.showSnackBar(context, "Please enter a valid employee ID", isTrue);
-    } else if (empPassController.text.isEmpty) {
-      AlertUtils.showSnackBar(context, "Password cannot be left blank", isTrue);
     } else {
-      AlertUtils.showSnackBar(context, "Check all fields", isTrue);
+      handleEmpValidationErrors();
     }
   }
+
+  void handleEmpValidationErrors() {
+    if (empIdController.text.isEmpty && empPassController.text.isEmpty) {
+      showOkDialog(context, "Alert!", "Please enter valid employee ID and password", "OK");
+    } else if (empIdController.text.length < 5) {
+      showOkDialog(context, "Alert!", "Please enter a valid employee ID", "OK");
+    } else if (empPassController.text.isEmpty) {
+      showOkDialog(context, "Alert!", "Password cannot be left blank", "OK");
+    } else {
+      showOkDialog(context, "Alert!", "Check all fields", "Ok");
+    }
+  }
+
 
   // API call simulation
   Future<void> authenticateUser() async {
@@ -66,17 +136,75 @@ class AuthViewmodel extends ChangeNotifier {
       corporateFormKey.currentState!.save();
       notifyListeners();
 
+      ProcessDialogHelper.showProcessDialog(
+        context,
+        message: "Authenticating please wait...",
+      );
+
+      final requestData = {
+        "eid": userNameController.text.trim(),
+        "did": await getDeviceId(),
+        "p": userPassController.text.trim(),
+        "api": Apis.API_KEY,
+      };
+
+      final payload = {
+        "path": "/loginCorp",
+        "apiVersion": "1.0",
+        "method": "POST",
+        "data": jsonEncode(requestData),
+      };
+
+      var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.AUTH_URL, payload);
+      if (context.mounted) {
+        ProcessDialogHelper.closeDialog(context);
+      }
+
+      try {
+        if (response != null) {
+          if (response.data is String) {
+            response.data = jsonDecode(response.data); // Parse string to JSON
+          }
+          if (response.statusCode == successResponseCode) {
+            if (response.data['success'] == isTrue) {
+              if(response.data['objectJson'] != null) {
+                final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
+                final List<NpdclUser> user = jsonList.map((json) => NpdclUser.fromJson(json)).toList();
+                await SharedPreferenceHelper.setStringValue(LoginSdkPrefs.tokenPrefKey, user[0].tokenHolder!);
+                await SharedPreferenceHelper.setIntValue(LoginSdkPrefs.tokenTimePrefKey, DateTime.now().millisecondsSinceEpoch);
+                await SharedPreferenceHelper.setStringValue(LoginSdkPrefs.userIdPrefKey, empIdController.text.trim());
+                await SharedPreferenceHelper.setStringValue(LoginSdkPrefs.npdclUserPrefKey, jsonEncode(user));
+                await SharedPreferenceHelper.setLoginStatus(isTrue);
+
+                Navigation.instance.pushAndRemoveUntil(Routes.universalDashboardScreen);
+              }
+            } else {
+              showOkDialog(context, "Alert!", response.data['message'], "OK");
+            }
+          } else {
+            showOkDialog(context, "Alert!", response.data['message'], "OK");
+          }
+        }
+      } catch (e) {
+        showOkDialog(context, "Error", "An error occurred. Please try again.", "OK");
+        rethrow;
+      }
+
       notifyListeners();
-    } else if (userNameController.text.isEmpty && userPassController.text.isEmpty) {
-      AlertUtils.showSnackBar(context, "Please enter valid user name and password", isTrue);
-    } else if (userNameController.text.length < 2) {
-      AlertUtils.showSnackBar(context, "Please enter a valid user name", isTrue);
-    } else if (userPassController.text.isEmpty) {
-      AlertUtils.showSnackBar(context, "Password cannot be left blank", isTrue);
     } else {
-      AlertUtils.showSnackBar(context, "Check all fields", isTrue);
+      handleCorporateValidationErrors();
     }
   }
 
-
+  void handleCorporateValidationErrors() {
+    if (userNameController.text.isEmpty && userPassController.text.isEmpty) {
+      showOkDialog(context, "Alert!", "Please enter valid user name and password", "OK");
+    } else if (userNameController.text.length < 2) {
+      showOkDialog(context, "Alert!", "Please enter a valid user name", "OK");
+    } else if (userPassController.text.isEmpty) {
+      showOkDialog(context, "Alert!", "Password cannot be left blank", "OK");
+    } else {
+      showOkDialog(context, "Alert!", "Check all fields", "OK");
+    }
+  }
 }

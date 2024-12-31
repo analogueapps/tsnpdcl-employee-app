@@ -1,10 +1,16 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
+import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
+import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/utils/general_assets.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
+import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/utils/url_constants.dart';
+import 'package:tsnpdcl_employee/view/auth/model/npdcl_user.dart';
 import 'package:tsnpdcl_employee/view/dashboard/model/drawer_section.dart';
 import 'package:tsnpdcl_employee/view/dashboard/model/global_list_dialog_item.dart';
 import 'package:tsnpdcl_employee/view/dashboard/model/universal_dashboard_item.dart';
@@ -30,10 +36,23 @@ class UniversalDashboardViewModel extends ChangeNotifier {
   List<UniversalDashboardItem> rFAndMonitoring = [];
   List<UniversalDashboardItem> others = [];
 
+  // Npdcl User data
+  NpdclUser? _npdclUser;
+  NpdclUser? get npdclUser => _npdclUser;
+
   // Constructor to initialize the items
   UniversalDashboardViewModel() {
     _initializeItems();
     _initializeMenuItems();
+    _initializeData();
+  }
+
+  void _initializeData() {
+    String? prefJson = SharedPreferenceHelper.getStringValue(LoginSdkPrefs.npdclUserPrefKey);
+    final List<dynamic> jsonList = jsonDecode(prefJson);
+    final List<NpdclUser> user = jsonList.map((json) => NpdclUser.fromJson(json)).toList();
+    _npdclUser = user[0];
+    notifyListeners();
   }
 
   void _initializeMenuItems() {
@@ -523,7 +542,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
           'title': title,
           'url': urlMapping[title],
         };
-        Navigator.pushNamed(context, routeName, arguments: argument);
+        //Navigator.pushNamed(context, routeName, arguments: argument);
+        Navigation.instance.navigateTo(routeName, args: argument);
       }
     } else if(routeName == GlobalConstants.reportsTitle) {
       List<GlobalListDialogItem> globalListDialogItem = [];
@@ -572,7 +592,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       ]);
       showCustomListDialog(context, globalListDialogItem);
     } else {
-      Navigator.pushNamed(context, routeName);
+      //Navigator.pushNamed(context, routeName);
+      Navigation.instance.navigateTo(routeName);
     }
   }
 }

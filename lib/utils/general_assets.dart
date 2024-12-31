@@ -57,6 +57,9 @@ class Assets {
   static const String pendingAeAde = 'assets/images/workplace.png';
   static const String ongoingLc = 'assets/images/electrician.png';
   static const String closedLc = 'assets/images/successful.png';
+  static const String electricPoleS = 'assets/images/electric_pole_s.png';
+  static const String electricPoleTower = 'assets/images/electric_pole_tower.png';
+  static const String dtrImage = 'assets/images/dtr_image.png';
 
   static OutlineInputBorder squareInputBorder(){ //return type is OutlineInputBorder
     return const OutlineInputBorder( //Outline border type for TextFiled

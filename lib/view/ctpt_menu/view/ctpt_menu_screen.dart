@@ -4,6 +4,7 @@ import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
+import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/view/ctpt_menu/viewmodel/ctpt_menu_viewmodel.dart';
 import 'package:tsnpdcl_employee/view/dtr_failure/viewmodel/dtr_failure_viewmodel.dart';
 import 'package:tsnpdcl_employee/view/dtr_maintenance/viewmodel/dtr_maintenance_viewmodel.dart';
@@ -48,8 +49,9 @@ class CtptMenuScreen extends StatelessWidget {
                     ),
                   ),
                   onTap: () {
-                    Navigator.pushNamed(
-                        context, viewModel.ctptMenuItems[index].routeName);
+                    // Navigator.pushNamed(
+                    //     context, viewModel.ctptMenuItems[index].routeName);
+                    Navigation.instance.navigateTo(viewModel.ctptMenuItems[index].routeName);
                   },
                 ),
                 separatorBuilder: (_, __) => const Divider(),

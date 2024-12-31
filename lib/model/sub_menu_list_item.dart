@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class CtptMenuItem {
+class SubMenuListItem {
   final String title;
   final String routeName;
 
-  CtptMenuItem(
+  SubMenuListItem(
       {required this.title,
         required this.routeName});
 }

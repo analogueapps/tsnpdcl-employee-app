@@ -12,6 +12,7 @@ class AppTheme {
       titleTextStyle: TextStyle(color: Colors.black),
       color: Colors.white,
       iconTheme: IconThemeData(color: Colors.black),
+      centerTitle: false,
     ),
     textTheme: const TextTheme(
       bodyMedium: TextStyle(color: Colors.black),

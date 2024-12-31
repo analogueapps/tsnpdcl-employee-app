@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:tsnpdcl_employee/model/sub_menu_grid_item.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
-import 'package:tsnpdcl_employee/view/meeseva/model/meeseva_menu_item.dart';
-import 'package:tsnpdcl_employee/view/online_pr_menu/model/online_pr_menu_item.dart';
 
 class MeeseveMenuViewModel extends ChangeNotifier {
-  final List<MeesevaMenuItem> _meesevaMenuItems = [];
+  final List<SubMenuGridItem> _meesevaMenuItems = [];
 
-  List<MeesevaMenuItem> get meesevaMenuItems => _meesevaMenuItems;
+  List<SubMenuGridItem> get meesevaMenuItems => _meesevaMenuItems;
 
   // Constructor to initialize the items
   MeeseveMenuViewModel() {
@@ -18,72 +17,72 @@ class MeeseveMenuViewModel extends ChangeNotifier {
     const String routeName = '';
 
     _meesevaMenuItems.addAll([
-      MeesevaMenuItem(
+      SubMenuGridItem(
           title: GlobalConstants.daysPendingAbstract,
           iconAsset: Icons.assignment_late_rounded,
           cardColor: Colors.orange,
           routeName: routeName),
-      MeesevaMenuItem(
+      SubMenuGridItem(
           title: GlobalConstants.lmWiseAbstract,
           iconAsset: Icons.summarize,
           cardColor: Colors.green,
           routeName: routeName),
-      MeesevaMenuItem(
+      SubMenuGridItem(
           title: GlobalConstants.searchApplication,
           iconAsset: Icons.search_rounded,
           cardColor: Colors.redAccent,
           routeName: routeName),
-      MeesevaMenuItem(
+      SubMenuGridItem(
           title: GlobalConstants.pendingFcAllotmentByAe,
           iconAsset: Icons.pending_actions_rounded,
           cardColor: Colors.blue,
           routeName: routeName),
-      MeesevaMenuItem(
+      SubMenuGridItem(
           title: GlobalConstants.underFeasibilityCheckByOm,
           iconAsset: Icons.hourglass_top_rounded,
           cardColor: Colors.amber,
           routeName: routeName),
-      MeesevaMenuItem(
+      SubMenuGridItem(
           title: GlobalConstants.pendingForFeasibleByAe,
           iconAsset: Icons.check_rounded,
           cardColor: Colors.green,
           routeName: routeName),
-      MeesevaMenuItem(
+      SubMenuGridItem(
           title: GlobalConstants.pendingForNotFeasibleByAe,
           iconAsset: Icons.close_rounded,
           cardColor: Colors.red,
           routeName: routeName),
-      MeesevaMenuItem(
+      SubMenuGridItem(
           title: GlobalConstants.metersToBeAllottedByAde,
           iconAsset: Icons.verified_user_rounded,
           cardColor: Colors.green,
           routeName: routeName),
-      MeesevaMenuItem(
+      SubMenuGridItem(
           title: GlobalConstants.pendingForNotFeasibleByAde,
           iconAsset: Icons.cancel_rounded,
           cardColor: Colors.red,
           routeName: routeName),
-      MeesevaMenuItem(
+      SubMenuGridItem(
           title: GlobalConstants.metersToBeAllottedByAe,
           iconAsset: Icons.local_shipping_rounded,
           cardColor: Colors.cyan,
           routeName: routeName),
-      MeesevaMenuItem(
+      SubMenuGridItem(
           title: GlobalConstants.metersToBeFixedByOmStaff,
           iconAsset: Icons.delivery_dining_rounded,
           cardColor: Colors.purple,
           routeName: routeName),
-      MeesevaMenuItem(
+      SubMenuGridItem(
           title: GlobalConstants.metersInstalledToBeReleasedByAe,
           iconAsset: Icons.where_to_vote_rounded,
           cardColor: Colors.green,
           routeName: routeName),
-      MeesevaMenuItem(
+      SubMenuGridItem(
           title: GlobalConstants.releasedByAe,
           iconAsset: Icons.bolt_rounded,
           cardColor: Colors.yellow,
           routeName: routeName),
-      MeesevaMenuItem(
+      SubMenuGridItem(
           title: GlobalConstants.rejected,
           iconAsset: Icons.cancel_rounded,
           cardColor: Colors.red,

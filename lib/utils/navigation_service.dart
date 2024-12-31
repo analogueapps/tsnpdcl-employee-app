@@ -3,41 +3,51 @@ import 'package:flutter/material.dart';
 class Navigation {
   late GlobalKey<NavigatorState> navigationKey;
 
-  static Navigation instance = Navigation();
+  static final Navigation instance = Navigation();
 
   Navigation() {
     navigationKey = GlobalKey<NavigatorState>();
   }
 
-  Future<dynamic> navigateToReplacement(String routueName, {Object? args}) {
-    return navigationKey.currentState!
-        .pushReplacementNamed(routueName, arguments: args);
+  Future<dynamic> navigateToReplacement(String routeName, {Object? args}) {
+    return _safeNavigation(() => navigationKey.currentState!
+        .pushReplacementNamed(routeName, arguments: args));
   }
 
-  Future<dynamic> pushAndRemoveUntil(String routueName, {Object? args}) {
-    return navigationKey.currentState!
-        .pushNamedAndRemoveUntil(routueName, arguments: args, (route) => false);
+  Future<dynamic> pushAndRemoveUntil(String routeName, {Object? args}) {
+    return _safeNavigation(() => navigationKey.currentState!
+        .pushNamedAndRemoveUntil(routeName, (route) => false, arguments: args));
   }
 
-  Future<dynamic> navigateTo(String routueName, {Object? args, Function(dynamic)? onReturn}) {
-    return navigationKey.currentState!
-        .pushNamed(routueName, arguments: args)
+  Future<dynamic> navigateTo(String routeName, {Object? args, Function(dynamic)? onReturn}) {
+    return _safeNavigation(() => navigationKey.currentState!
+        .pushNamed(routeName, arguments: args)
         .then((result) {
-          if (onReturn != null) {
-            onReturn(result);
-          }
-        });
+      if (onReturn != null) {
+        onReturn(result);
+      }
+    }));
   }
 
-  Future<dynamic> navigateToRoute(MaterialPageRoute routueName) {
-    return navigationKey.currentState!.push(routueName);
+  Future<dynamic> navigateToRoute(MaterialPageRoute routeName) {
+    return _safeNavigation(() => navigationKey.currentState!.push(routeName));
   }
 
-  pushBack() {
-    return navigationKey.currentState!.pop();
+  void pushBack() {
+    if (canPop()) {
+      navigationKey.currentState!.pop();
+    }
   }
 
   bool canPop() {
     return navigationKey.currentState!.canPop();
+  }
+
+  // Helper method to safely execute navigation methods
+  Future<dynamic> _safeNavigation(Future<dynamic> Function() action) async {
+    if (navigationKey.currentState == null) {
+      throw Exception("Navigation state is null. Ensure the navigator key is properly initialized.");
+    }
+    return await action();
   }
 }

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:tsnpdcl_employee/model/sub_menu_grid_item.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
-import 'package:tsnpdcl_employee/view/online_pr_menu/model/online_pr_menu_item.dart';
-import 'package:tsnpdcl_employee/view/pdms/model/pdms_menu_item.dart';
 
 class PdmsViewModel extends ChangeNotifier {
-  final List<PdmsMenuItem> _pdmsMenuItems = [];
+  final List<SubMenuGridItem> _pdmsMenuItems = [];
 
-  List<PdmsMenuItem> get pdmsMenuItems => _pdmsMenuItems;
+  List<SubMenuGridItem> get pdmsMenuItems => _pdmsMenuItems;
 
   // Constructor to initialize the items
   PdmsViewModel() {
@@ -18,27 +17,27 @@ class PdmsViewModel extends ChangeNotifier {
     const String routeName = '';
 
     _pdmsMenuItems.addAll([
-      PdmsMenuItem(
+      SubMenuGridItem(
           title: GlobalConstants.createPoleIndent,
           iconAsset: Icons.list_alt_outlined,
           cardColor: Colors.orange,
           routeName: routeName),
-      PdmsMenuItem(
+      SubMenuGridItem(
           title: GlobalConstants.dis,
           iconAsset: Icons.local_shipping_outlined,
           cardColor: Colors.green,
           routeName: routeName),
-      PdmsMenuItem(
+      SubMenuGridItem(
           title: GlobalConstants.pendingVerification,
           iconAsset: Icons.pending_actions_outlined,
           cardColor: Colors.redAccent,
           routeName: routeName),
-      PdmsMenuItem(
+      SubMenuGridItem(
           title: GlobalConstants.verified,
           iconAsset: Icons.check_outlined,
           cardColor: Colors.yellow,
           routeName: routeName),
-      PdmsMenuItem(
+      SubMenuGridItem(
           title: GlobalConstants.mismatch,
           iconAsset: Icons.close,
           cardColor: Colors.blue,

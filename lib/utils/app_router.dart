@@ -3,6 +3,7 @@ import 'package:tsnpdcl_employee/view/asset_mapping/view/asset_mapping_screen.da
 import 'package:tsnpdcl_employee/view/auth/view/corporate_login_screen.dart';
 import 'package:tsnpdcl_employee/view/auth/view/employee_id_login_screen.dart';
 import 'package:tsnpdcl_employee/view/consumer_details/view/consumer_details_screen.dart';
+import 'package:tsnpdcl_employee/view/consumer_details/view/dlist_form_screen.dart';
 import 'package:tsnpdcl_employee/view/ctpt_menu/view/ctpt_menu_screen.dart';
 import 'package:tsnpdcl_employee/view/dashboard/view/universal_dashboard_screen.dart';
 import 'package:tsnpdcl_employee/view/dtr_failure/view/dtr_failure_screen.dart';
@@ -10,7 +11,10 @@ import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_maintenance_scree
 import 'package:tsnpdcl_employee/view/failure_dtr_inspection/view/failure_dtr_inspection_screen.dart';
 import 'package:tsnpdcl_employee/view/ganesh_pandal/view/ganesh_pandal_info_screen.dart';
 import 'package:tsnpdcl_employee/view/ganesh_pandal/view/ganesh_pandal_information_screen.dart';
+import 'package:tsnpdcl_employee/view/line_clearance/view/feeder_induction_list_screen.dart';
+import 'package:tsnpdcl_employee/view/line_clearance/view/lc_master_feeder_list_screen.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/view/line_clearance_screen.dart';
+import 'package:tsnpdcl_employee/view/line_clearance/view/lc_master_ss_list_screen.dart';
 import 'package:tsnpdcl_employee/view/measure_distance/view/measure_distance_screen.dart';
 import 'package:tsnpdcl_employee/view/meeseva/view/meeseva_menu_screen.dart';
 import 'package:tsnpdcl_employee/view/online_pr_menu/view/online_pr_menu_screen.dart';
@@ -60,9 +64,30 @@ class AppRouter {
                 args: settings.arguments as Map<String, dynamic>));
       case MeesevaMenuScreen.id:
         return MaterialPageRoute(builder: (_) => const MeesevaMenuScreen());
+
+      // Ganesh pandal
       case GaneshPandalInformationScreen.id:
         return MaterialPageRoute(
             builder: (_) => const GaneshPandalInformationScreen());
+
+      // Consumer details
+      case DlistFormScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => DlistFormScreen(
+                form: settings.arguments as String));
+
+      // Line Clearance
+      case LcMasterSsListScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => const LcMasterSsListScreen());
+      case LcMasterFeederListScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => LcMasterFeederListScreen(args: settings.arguments as Map<String, dynamic>));
+      case FeederInductionListScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => FeederInductionListScreen(args: settings.arguments as Map<String, dynamic>));
+
+
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(
