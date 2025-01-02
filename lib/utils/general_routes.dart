@@ -28,6 +28,8 @@ class Routes {
   static const String lcMasterSsListScreen = 'LcMasterSsListScreen';
   static const String lcMasterFeederListScreen = 'LcMasterFeederListScreen';
   static const String feederInductionListScreen = 'FeederInductionListScreen';
+  static const String addInductionPointScreen = 'AddInductionPointScreen';
+  static const String allLcRequestListScreen = 'AllLcRequestListScreen';
 
   static const String ganeshPandalInformationScreen = 'ganesh_pandal_information_screen';
 

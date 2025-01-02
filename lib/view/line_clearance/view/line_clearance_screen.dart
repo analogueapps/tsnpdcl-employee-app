@@ -46,7 +46,11 @@ class LineClearanceScreen extends StatelessWidget {
                 return GestureDetector(
                   onTap: () {
                     // Navigator.pushNamed(context, item.routeName);
-                    Navigation.instance.navigateTo(item.routeName);
+                    if(item.title == GlobalConstants.pendingAeAde) {
+                      Navigation.instance.navigateTo(item.routeName, args: "REQUESTED");
+                    } else {
+                      Navigation.instance.navigateTo(item.routeName);
+                    }
                   },
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,

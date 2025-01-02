@@ -28,7 +28,8 @@ class LineClearanceViewModel extends ChangeNotifier {
           title: GlobalConstants.pendingAeAde,
           iconAsset: Icons.pending_actions_outlined,
           cardColor: Colors.green,
-          routeName: routeName),
+          routeName: Routes.allLcRequestListScreen
+      ),
       SubMenuGridItem(
           title: GlobalConstants.ongoingLc,
           iconAsset: Icons.move_up_outlined,

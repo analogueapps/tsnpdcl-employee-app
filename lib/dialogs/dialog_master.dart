@@ -38,17 +38,46 @@ Future<void> showSessionExpiredDialog(BuildContext context) async {
   }
 }
 
-Future<void> showOkDialog(BuildContext context, String title, String message, String label) async {
+Future<void> showAlertDialog(BuildContext context, String message) async {
   final result = await showOkAlertDialog(
       context: context,
-      title: title,
+      title: "Alert",
       message: message,
-      okLabel: label,
+      okLabel: "OK",
       barrierDismissible: false
   );
 
   if (result == OkCancelResult.ok) {
     Navigation.instance.canPop();
+  }
+}
+
+Future<void> showErrorDialog(BuildContext context, String message) async {
+  final result = await showOkAlertDialog(
+      context: context,
+      title: "Error",
+      message: message,
+      okLabel: "OK",
+      barrierDismissible: false
+  );
+
+  if (result == OkCancelResult.ok) {
+    Navigation.instance.canPop();
+  }
+}
+
+Future<void> showSuccessDialog(BuildContext context, String message, VoidCallback onPressed) async {
+  final result = await showOkAlertDialog(
+      context: context,
+      title: "Success",
+      message: message,
+      okLabel: "OK",
+      barrierDismissible: false
+  );
+
+  if (result == OkCancelResult.ok) {
+    Navigation.instance.canPop();
+    onPressed();
   }
 }
 

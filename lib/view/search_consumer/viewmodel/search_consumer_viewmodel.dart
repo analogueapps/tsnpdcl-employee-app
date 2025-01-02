@@ -99,14 +99,14 @@ class SearchConsumerViewmodel extends ChangeNotifier {
               notifyListeners();
             }
           } else {
-            showOkDialog(context, "Alert!", response.data['message'], "OK");
+            showAlertDialog(context,response.data['message']);
           }
         } else {
-          showOkDialog(context, "Alert!", response.data['message'], "OK");
+          showAlertDialog(context,response.data['message']);
         }
       }
     } catch (e) {
-      showOkDialog(context, "Error", "An error occurred. Please try again.", "OK");
+      showErrorDialog(context,  "An error occurred. Please try again.");
       rethrow;
     }
 

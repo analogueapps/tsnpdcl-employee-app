@@ -11,6 +11,8 @@ import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_maintenance_scree
 import 'package:tsnpdcl_employee/view/failure_dtr_inspection/view/failure_dtr_inspection_screen.dart';
 import 'package:tsnpdcl_employee/view/ganesh_pandal/view/ganesh_pandal_info_screen.dart';
 import 'package:tsnpdcl_employee/view/ganesh_pandal/view/ganesh_pandal_information_screen.dart';
+import 'package:tsnpdcl_employee/view/line_clearance/view/add_induction_point_screen.dart';
+import 'package:tsnpdcl_employee/view/line_clearance/view/all_lc_request_list_screen.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/view/feeder_induction_list_screen.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/view/lc_master_feeder_list_screen.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/view/line_clearance_screen.dart';
@@ -86,6 +88,12 @@ class AppRouter {
       case FeederInductionListScreen.id:
         return MaterialPageRoute(
             builder: (_) => FeederInductionListScreen(args: settings.arguments as Map<String, dynamic>));
+      case AddInductionPointScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => AddInductionPointScreen(args: settings.arguments as Map<String, dynamic>));
+      case AllLcRequestListScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => AllLcRequestListScreen(status: settings.arguments as String));
 
 
       default:

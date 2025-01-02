@@ -21,4 +21,7 @@ class Apis{
   static const GET_11KV_FEEDER_OF_33KV_SS_URL = "get11kvFeedersOf33KvSS";
   static const LC_END_POINT_BASE_URL = "$SERVER_IP:5656/NPFDAS/ep/lc/";
   static const GET_INDUCTION_POINTS_OF_FEEDER_URL = "getInductionPointsOfFeeder";
+  static const ADD_INDUCTION_POINT_URL = "addInductionPoint";
+  static const GET_ALL_LC_REQUEST_LIST_URL = "getAllLcRequests";
+
 }

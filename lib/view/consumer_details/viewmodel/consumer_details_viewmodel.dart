@@ -88,23 +88,23 @@ class ConsumerDetailsViewmodel extends ChangeNotifier {
                   notifyListeners();
                 }
               } else {
-                showOkDialog(context, "Alert!", response.data['message'], "OK");
+                showAlertDialog(context,response.data['message']);
               }
             } else {
-              showOkDialog(context, "Alert!", response.data['message'], "OK");
+              showAlertDialog(context,response.data['message']);
             }
           }
         } catch (e) {
-          showOkDialog(context, "Error", "An error occurred. Please try again.", "OK");
+          showErrorDialog(context,  "An error occurred. Please try again.");
           rethrow;
         }
 
         notifyListeners();
       } else {
-        showOkDialog(context, "Alert", "Enter unique service number", "OK");
+        showAlertDialog(context, "Enter unique service number");
       }
     } else {
-      showOkDialog(context, "Alert", "Please check the type of service", "OK");
+      showAlertDialog(context, "Please check the type of service");
     }
   }
 }

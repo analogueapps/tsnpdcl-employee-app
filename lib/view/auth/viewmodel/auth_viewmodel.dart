@@ -100,14 +100,14 @@ class AuthViewmodel extends ChangeNotifier {
                 Navigation.instance.pushAndRemoveUntil(Routes.universalDashboardScreen);
               }
             } else {
-              showOkDialog(context, "Alert!", response.data['message'], "OK");
+              showAlertDialog(context,response.data['message']);
             }
           } else {
-            showOkDialog(context, "Alert!", response.data['message'], "OK");
+            showAlertDialog(context,response.data['message']);
           }
         }
       } catch (e) {
-        showOkDialog(context, "Error", "An error occurred. Please try again.", "OK");
+        showErrorDialog(context,  "An error occurred. Please try again.");
         rethrow;
       }
 
@@ -119,13 +119,13 @@ class AuthViewmodel extends ChangeNotifier {
 
   void handleEmpValidationErrors() {
     if (empIdController.text.isEmpty && empPassController.text.isEmpty) {
-      showOkDialog(context, "Alert!", "Please enter valid employee ID and password", "OK");
+      showAlertDialog(context,"Please enter valid employee ID and password");
     } else if (empIdController.text.length < 5) {
-      showOkDialog(context, "Alert!", "Please enter a valid employee ID", "OK");
+      showAlertDialog(context,"Please enter a valid employee ID");
     } else if (empPassController.text.isEmpty) {
-      showOkDialog(context, "Alert!", "Password cannot be left blank", "OK");
+      showAlertDialog(context,"Password cannot be left blank");
     } else {
-      showOkDialog(context, "Alert!", "Check all fields", "Ok");
+      showAlertDialog(context,"Check all fields");
     }
   }
 
@@ -179,14 +179,14 @@ class AuthViewmodel extends ChangeNotifier {
                 Navigation.instance.pushAndRemoveUntil(Routes.universalDashboardScreen);
               }
             } else {
-              showOkDialog(context, "Alert!", response.data['message'], "OK");
+              showAlertDialog(context,response.data['message']);
             }
           } else {
-            showOkDialog(context, "Alert!", response.data['message'], "OK");
+            showAlertDialog(context,response.data['message']);
           }
         }
       } catch (e) {
-        showOkDialog(context, "Error", "An error occurred. Please try again.", "OK");
+        showErrorDialog(context,  "An error occurred. Please try again.");
         rethrow;
       }
 
@@ -198,13 +198,13 @@ class AuthViewmodel extends ChangeNotifier {
 
   void handleCorporateValidationErrors() {
     if (userNameController.text.isEmpty && userPassController.text.isEmpty) {
-      showOkDialog(context, "Alert!", "Please enter valid user name and password", "OK");
+      showAlertDialog(context,"Please enter valid user name and password");
     } else if (userNameController.text.length < 2) {
-      showOkDialog(context, "Alert!", "Please enter a valid user name", "OK");
+      showAlertDialog(context,"Please enter a valid user name");
     } else if (userPassController.text.isEmpty) {
-      showOkDialog(context, "Alert!", "Password cannot be left blank", "OK");
+      showAlertDialog(context,"Password cannot be left blank");
     } else {
-      showOkDialog(context, "Alert!", "Check all fields", "OK");
+      showAlertDialog(context,"Check all fields");
     }
   }
 }

@@ -5,6 +5,7 @@ import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_assets.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
+import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/model/induction_points_of_feeder_list.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/viewmodel/line_clearance_viewmodel.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/viewmodel/lc_master_viewmodel.dart';
@@ -144,7 +145,15 @@ class FeederInductionListScreen extends StatelessWidget {
           fullWidth: isTrue,
             text: "ADD/DECLARE NO INDUCTION POINT".toUpperCase(),
             onPressed: () {
-
+              var argument = {
+                'ssCode': args['ssCode'],
+                'ssName': args['ssName'],
+                'fdrCode': args['fdrCode'],
+                'fdrName': args['fdrName'],
+              };
+              Navigation.instance.navigateTo(Routes.addInductionPointScreen, args: argument,onReturn: (result) {
+                Provider.of<LcMasterViewmodel>(context, listen: false).getInductionPointsFeederList();
+              });
             }),
       ),
     );
