@@ -30,8 +30,13 @@ class Routes {
   static const String feederInductionListScreen = 'FeederInductionListScreen';
   static const String addInductionPointScreen = 'AddInductionPointScreen';
   static const String allLcRequestListScreen = 'AllLcRequestListScreen';
+  static const String viewLineClearanceScreen = 'ViewLineClearanceScreen';
+  static const String viewDetailedLcScreen = 'ViewDetailedLcScreen';
 
   static const String ganeshPandalInformationScreen = 'ganesh_pandal_information_screen';
+
+  // WIDGETS
+  static const String pinchZoomImageView = 'PinchZoomImageView';
 
 
 }

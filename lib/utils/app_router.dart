@@ -17,12 +17,14 @@ import 'package:tsnpdcl_employee/view/line_clearance/view/feeder_induction_list_
 import 'package:tsnpdcl_employee/view/line_clearance/view/lc_master_feeder_list_screen.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/view/line_clearance_screen.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/view/lc_master_ss_list_screen.dart';
+import 'package:tsnpdcl_employee/view/line_clearance/view/view_detailed_lc_screen.dart';
 import 'package:tsnpdcl_employee/view/measure_distance/view/measure_distance_screen.dart';
 import 'package:tsnpdcl_employee/view/meeseva/view/meeseva_menu_screen.dart';
 import 'package:tsnpdcl_employee/view/online_pr_menu/view/online_pr_menu_screen.dart';
 import 'package:tsnpdcl_employee/view/pdms/view/pdms_screen.dart';
 import 'package:tsnpdcl_employee/view/search_consumer/view/search_consumer_screen.dart';
 import 'package:tsnpdcl_employee/view/web_view/view/web_view_screen.dart';
+import 'package:tsnpdcl_employee/widget/pinch_zoom_imageview.dart';
 
 class AppRouter {
   static Route generateRoute(RouteSettings settings) {
@@ -94,6 +96,15 @@ class AppRouter {
       case AllLcRequestListScreen.id:
         return MaterialPageRoute(
             builder: (_) => AllLcRequestListScreen(status: settings.arguments as String));
+      case ViewDetailedLcScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => ViewDetailedLcScreen(lcId: settings.arguments as String));
+
+
+      // Widgets
+      case PinchZoomImageView.id:
+        return MaterialPageRoute(
+            builder: (_) => PinchZoomImageView(imageUrl: settings.arguments as String));
 
 
       default:

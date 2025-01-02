@@ -11,6 +11,9 @@ class Apis{
   static const ROOT_URL = "http://210.212.223.83:7000/";
   static const AUTH_URL = "NpdclLoginSdkWebApi/sdk/webapi";
 
+  /// IMAGE
+  static const NPDCL_STORAGE_SERVER_IP = "http://210.212.223.83:7000/NpdclFileStorageWebApi/";
+
   /// CONSUMER RELATED
   static const NPDCL_EMP_URL = "NpdclEmployeeWebApi/npemp/api";
 
@@ -23,5 +26,6 @@ class Apis{
   static const GET_INDUCTION_POINTS_OF_FEEDER_URL = "getInductionPointsOfFeeder";
   static const ADD_INDUCTION_POINT_URL = "addInductionPoint";
   static const GET_ALL_LC_REQUEST_LIST_URL = "getAllLcRequests";
+  static const GET_DETAILED_LC_URL = "getLc";
 
 }

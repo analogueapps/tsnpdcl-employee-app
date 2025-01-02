@@ -1,0 +1,46 @@
+class StatusConstants {
+  static const String REQUESTED = "REQUESTED";
+  static const String APPROVED = "APPROVED";
+  static const String ADE_APPROVED = "ADE_APPROVED";
+  static const String ADE_REJECTED = "ADE_REJECTED";
+  static const String AE_REJECTED = "AE_REJECTED";
+  static const String CB_OPEN = "CB_OPEN";
+  static const String CB_OPEN_LM_AB_OPN = "CB_OPEN_LM_AB_OPN";
+  static const String CB_OPEN_LM_SCADA_BREAKER_LOCAL_DONE = "CB_OPEN_LM_SCADA_BREAKER_LOCAL_DONE";
+  static const String CB_OPEN_FS_LOCAL_EARTH_DONE = "CB_OPEN_FS_LOCAL_EARTH_DONE";
+  static const String CB_OPEN_FS_LOCAL_EARTH_RMVD = "CB_OPEN_FS_LOCAL_EARTH_RMVD";
+  static const String CB_OPEN_LM_SCADA_BREAKER_REMOTE_DONE = "CB_OPEN_LM_SCADA_BREAKER_REMOTE_DONE";
+  static const String CB_OPEN_LM_AB_CLOSED = "CB_OPEN_LM_AB_CLOSED";
+  static const String CB_OPEN_AE_CB_CLSD_REQ = "CB_OPEN_AE_CB_CLSD_REQ";
+  static const String CLOSED = "CLOSED";
+  static const String FORWARD_TO_ADE = "FORWARD_TO_ADE";
+
+  static String getStatusMeaning(String status) {
+    switch (status) {
+      case REQUESTED:
+        return "Requested";
+      case APPROVED:
+        return "Approved";
+      case CB_OPEN:
+        return "C.B Opened";
+      case CB_OPEN_LM_AB_OPN:
+        return "A/B SW. Opened";
+      case CB_OPEN_LM_SCADA_BREAKER_LOCAL_DONE:
+        return "Breaker in Local";
+      case CB_OPEN_FS_LOCAL_EARTH_DONE:
+        return "Earthing Done";
+      case CB_OPEN_FS_LOCAL_EARTH_RMVD:
+        return "Earthing Removed";
+      case CB_OPEN_LM_SCADA_BREAKER_REMOTE_DONE:
+        return "Breaker in Remote";
+      case CB_OPEN_LM_AB_CLOSED:
+        return "A/B SW. Closed";
+      case CB_OPEN_AE_CB_CLSD_REQ:
+        return "CB CLS REQ.";
+      case CLOSED:
+        return "CB Closed";
+      default:
+        return "N/A";
+    }
+  }
+}

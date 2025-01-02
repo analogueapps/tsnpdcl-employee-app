@@ -48,6 +48,10 @@ class LineClearanceScreen extends StatelessWidget {
                     // Navigator.pushNamed(context, item.routeName);
                     if(item.title == GlobalConstants.pendingAeAde) {
                       Navigation.instance.navigateTo(item.routeName, args: "REQUESTED");
+                    } else if(item.title == GlobalConstants.ongoingLc) {
+                      Navigation.instance.navigateTo(item.routeName, args: "PENDING");
+                    } else if(item.title == GlobalConstants.closedLc) {
+                      Navigation.instance.navigateTo(item.routeName, args: "CLOSED");
                     } else {
                       Navigation.instance.navigateTo(item.routeName);
                     }

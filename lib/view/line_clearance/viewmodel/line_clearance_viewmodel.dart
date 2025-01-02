@@ -34,12 +34,14 @@ class LineClearanceViewModel extends ChangeNotifier {
           title: GlobalConstants.ongoingLc,
           iconAsset: Icons.move_up_outlined,
           cardColor: Colors.redAccent,
-          routeName: routeName),
+          routeName: Routes.allLcRequestListScreen
+      ),
       SubMenuGridItem(
           title: GlobalConstants.closedLc,
           iconAsset: Icons.cancel_outlined,
           cardColor: Colors.yellow,
-          routeName: routeName),
+          routeName: Routes.allLcRequestListScreen
+      ),
     ]);
 
     notifyListeners();
