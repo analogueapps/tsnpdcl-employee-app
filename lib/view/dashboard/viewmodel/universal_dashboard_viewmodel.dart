@@ -161,7 +161,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.poleTrackerTitle,
           imageAsset: Assets.poloTracker,
-          routeName: routeName),
+          routeName: GlobalConstants.poleTrackerTitle,
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.middlePolesTitle,
           imageAsset: Assets.middlePoles,
@@ -422,7 +423,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.poleTrackerTitle,
           imageAsset: Assets.poloTracker,
-          routeName: routeName),
+          routeName: GlobalConstants.poleTrackerTitle,
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.dtrMasterTitle,
           imageAsset: Assets.dtrMaster,
@@ -588,6 +590,23 @@ class UniversalDashboardViewModel extends ChangeNotifier {
         GlobalListDialogItem(
             title: "View Mismatch DTR's",
             routeName: ""
+        ),
+      ]);
+      showCustomListDialog(context, globalListDialogItem);
+    } else if(routeName == GlobalConstants.poleTrackerTitle) {
+      List<GlobalListDialogItem> globalListDialogItem = [];
+      globalListDialogItem.addAll([
+        GlobalListDialogItem(
+            title: "Digitize Lines",
+            routeName: ""
+        ),
+        GlobalListDialogItem(
+            title: "View Offline Feeders",
+            routeName: ""
+        ),
+        GlobalListDialogItem(
+            title: "View Sketch",
+            routeName: Routes.poleTrackerSelectionViewSketchScreen,
         ),
       ]);
       showCustomListDialog(context, globalListDialogItem);

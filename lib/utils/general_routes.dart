@@ -33,6 +33,10 @@ class Routes {
   static const String viewLineClearanceScreen = 'ViewLineClearanceScreen';
   static const String viewDetailedLcScreen = 'ViewDetailedLcScreen';
 
+  // POLE TRACKER
+  static const String poleTrackerSelectionViewSketchScreen = "PoleTrackerSelectionViewSketchScreen";
+  static const String viewDigitalSketchScreen = "ViewDigitalSketchScreen";
+
   static const String ganeshPandalInformationScreen = 'ganesh_pandal_information_screen';
 
   // WIDGETS

@@ -100,6 +100,7 @@ Future<void> showCustomListDialog(BuildContext context, List<GlobalListDialogIte
                 onTap: () {
                   //onOptionSelected(index);
                   Navigator.pop(context);
+                  Navigation.instance.navigateTo(globalListDialogItem[index].routeName);
                 },
               );
             },

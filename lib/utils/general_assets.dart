@@ -61,6 +61,15 @@ class Assets {
   static const String electricPoleTower = 'assets/images/electric_pole_tower.png';
   static const String dtrImage = 'assets/images/dtr_image.png';
 
+  // View digital sketch
+  static const String horizontalPole = 'assets/images/horizontal_pole.png';
+  static const String htService = 'assets/images/htservice.png';
+  static const String ss33Kv = 'assets/images/ss33kv.png';
+  static const String ss132Kv = 'assets/images/ss132kv.png';
+  static const String ssIcon = 'assets/images/ss_icon.png';
+  static const String towerPole = 'assets/images/tower_pole.png';
+  static const String dtr = 'assets/images/dtr.png';
+
   static OutlineInputBorder squareInputBorder(){ //return type is OutlineInputBorder
     return const OutlineInputBorder( //Outline border type for TextFiled
         borderRadius: BorderRadius.all(Radius.circular(5)),
