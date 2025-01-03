@@ -84,22 +84,30 @@ class SearchConsumerViewmodel extends ChangeNotifier {
           response.data = jsonDecode(response.data); // Parse string to JSON
         }
         if (response.statusCode == successResponseCode) {
-          if (response.data['success'] == isTrue) {
-            if(response.data['objectJson'] != null) {
-              final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
-              final List<ConsumerMasterResponse> consumer = jsonList.map((json) => ConsumerMasterResponse.fromJson(json)).toList();
-              consumerLocation = consumer[0];
-              markerPosition = LatLng(
-                double.parse(consumerLocation!.latitude!.substring(0, consumerLocation!.latitude!.length - 1)),
-                double.parse(consumerLocation!.longitude!.substring(0, consumerLocation!.longitude!.length - 1)),
-              );
-              _mapController!.animateCamera(
-                CameraUpdate.newLatLng(markerPosition!),
-              );
-              notifyListeners();
+          if (response.data['tokenValid'] == isTrue) {
+            if (response.data['success'] == isTrue) {
+              if (response.data['objectJson'] != null) {
+                final List<dynamic> jsonList = jsonDecode(
+                    response.data['objectJson']);
+                final List<ConsumerMasterResponse> consumer = jsonList.map((
+                    json) => ConsumerMasterResponse.fromJson(json)).toList();
+                consumerLocation = consumer[0];
+                markerPosition = LatLng(
+                  double.parse(consumerLocation!.latitude!.substring(
+                      0, consumerLocation!.latitude!.length - 1)),
+                  double.parse(consumerLocation!.longitude!.substring(
+                      0, consumerLocation!.longitude!.length - 1)),
+                );
+                _mapController!.animateCamera(
+                  CameraUpdate.newLatLng(markerPosition!),
+                );
+                notifyListeners();
+              }
+            } else {
+              showAlertDialog(context, response.data['message']);
             }
           } else {
-            showAlertDialog(context,response.data['message']);
+            showSessionExpiredDialog(context);
           }
         } else {
           showAlertDialog(context,response.data['message']);

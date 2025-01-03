@@ -49,15 +49,15 @@ class AddInductionPointViewModel extends ChangeNotifier {
   void selectCheckbox(String id) {
     clearAllList();
     notifyListeners();
-    if(id == "33KV LINE"){
-      get132KVSSLines();
-    } else if(id == "11KV LINE" || id == "LT LINE") {
-      addCircleList();
-    }
     if (selectedCheckboxId == id) {
       selectedCheckboxId = null; // Uncheck if the same checkbox is clicked
     } else {
       selectedCheckboxId = id;
+      if(id == "33KV LINE"){
+        get132KVSSLines();
+      } else if(id == "11KV LINE" || id == "LT LINE") {
+        addCircleList();
+      }
     }
     notifyListeners(); // Notify the view about the change
   }

@@ -79,16 +79,23 @@ class ConsumerDetailsViewmodel extends ChangeNotifier {
               response.data = jsonDecode(response.data); // Parse string to JSON
             }
             if (response.statusCode == successResponseCode) {
-              if (response.data['success'] == isTrue) {
-                if(response.data['objectJson'] != null) {
-                  final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
-                  final List<DlistFormResponse> listData = jsonList.map((json) => DlistFormResponse.fromJson(json)).toList();
-                  dlistFormResponse = listData[0];
-                  Navigation.instance.navigateTo(Routes.dListFormScreen, args: jsonEncode(dlistFormResponse));
-                  notifyListeners();
+              if (response.data['tokenValid'] == isTrue) {
+                if (response.data['success'] == isTrue) {
+                  if (response.data['objectJson'] != null) {
+                    final List<dynamic> jsonList = jsonDecode(
+                        response.data['objectJson']);
+                    final List<DlistFormResponse> listData = jsonList.map((
+                        json) => DlistFormResponse.fromJson(json)).toList();
+                    dlistFormResponse = listData[0];
+                    Navigation.instance.navigateTo(Routes.dListFormScreen,
+                        args: jsonEncode(dlistFormResponse));
+                    notifyListeners();
+                  }
+                } else {
+                  showAlertDialog(context, response.data['message']);
                 }
               } else {
-                showAlertDialog(context,response.data['message']);
+                showSessionExpiredDialog(context);
               }
             } else {
               showAlertDialog(context,response.data['message']);
