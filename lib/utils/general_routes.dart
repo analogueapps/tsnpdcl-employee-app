@@ -36,6 +36,7 @@ class Routes {
   // POLE TRACKER
   static const String poleTrackerSelectionViewSketchScreen = "PoleTrackerSelectionViewSketchScreen";
   static const String viewDigitalSketchScreen = "ViewDigitalSketchScreen";
+  static const String newProposalScreen = "NewProposalScreen";
 
   static const String ganeshPandalInformationScreen = 'ganesh_pandal_information_screen';
 

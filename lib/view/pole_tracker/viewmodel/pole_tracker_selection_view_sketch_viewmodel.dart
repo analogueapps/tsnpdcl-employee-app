@@ -12,6 +12,7 @@ import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/model/spinner_list.dart';
+import 'package:tsnpdcl_employee/view/pole_tracker/model/new_sketch_prop_entity.dart';
 
 class PoleTrackerSelectionViewSketchViewmodel extends ChangeNotifier {
   // Current View Context
@@ -30,6 +31,8 @@ class PoleTrackerSelectionViewSketchViewmodel extends ChangeNotifier {
   List<SpinnerList> listFeederItem = [];
   String? listFeederSelect;
   String? listFeederSelectBottom;
+
+  NewSketchPropEntity? newSketchPropEntity;
 
   // Constructor to initialize the items
   PoleTrackerSelectionViewSketchViewmodel({required this.context});
@@ -153,6 +156,7 @@ class PoleTrackerSelectionViewSketchViewmodel extends ChangeNotifier {
               if(response.data['objectJson'] != null) {
                 final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
                 final List<SpinnerList> listData = jsonList.map((json) => SpinnerList.fromJson(json)).toList();
+                listFeederItem.add(SpinnerList(optionCode: "NFP", optionName: "New Feeder Proposal"));
                 listFeederItem.addAll(listData);
               }
             } else {
@@ -175,7 +179,17 @@ class PoleTrackerSelectionViewSketchViewmodel extends ChangeNotifier {
 
   void onListFeederItemSelect(String? value) {
     listFeederSelect = value;
-    listFeederSelectBottom= listFeederSelect;
+    listFeederSelectBottom = listFeederSelect;
+    if(listFeederSelect == "NFP") {
+      Navigation.instance.navigateTo(Routes.newProposalScreen, args: listSubStationSelect,onReturn: (result) {
+        if(result != null) {
+          Map<String, dynamic> jsonMap = json.decode(result);
+          newSketchPropEntity = NewSketchPropEntity.fromJson(jsonMap);
+          notifyListeners();
+        }
+      });
+    }
+
     notifyListeners();
   }
 
@@ -319,6 +333,7 @@ class PoleTrackerSelectionViewSketchViewmodel extends ChangeNotifier {
       }
 
       var argument = {
+        'd': json.encode(newSketchPropEntity),
         'ssc': listSubStationSelect,
         'ssn': listSubStationItem.firstWhere((item) => item.optionCode == listSubStationSelect).optionName,
         'fc': listFeederSelect,

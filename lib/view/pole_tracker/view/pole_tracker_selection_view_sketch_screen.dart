@@ -150,6 +150,69 @@ class PoleTrackerSelectionViewSketchScreen extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: doubleTwenty),
+                  Visibility(
+                    visible: viewModel.newSketchPropEntity != null,
+                    child: Column(
+                      children: [
+                        const Text(
+                          "Proposal Description(*)",
+                          style: TextStyle(
+                            color: CommonColors.colorPrimary,
+                          ),
+                        ),
+                        TextFormField(
+                          //controller: widget.controller,
+                          initialValue: viewModel.newSketchPropEntity?.proposalDesc,
+                          keyboardType: TextInputType.none,
+                          enabled: isFalse,
+                          maxLines: 5,
+                          style: const TextStyle(
+                            fontSize: titleSize,
+                            fontFamily: appFontFamily,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: CommonColors.colorPrimary
+                                )
+                            ),
+                            labelStyle: TextStyle(fontFamily: appFontFamily),
+                            hintStyle: TextStyle(fontFamily: appFontFamily),
+                          ),
+                        ),
+                        const SizedBox(height: doubleTwenty),
+                        const Text(
+                          "Estimate No. (If any)",
+                          style: TextStyle(
+                            color: CommonColors.colorPrimary,
+                          ),
+                        ),
+                        TextFormField(
+                          //controller: widget.controller,
+                          initialValue: viewModel.newSketchPropEntity?.estimateNo,
+                          keyboardType: TextInputType.none,
+                          enabled: isFalse,
+                          style: const TextStyle(
+                            fontSize: titleSize,
+                            fontFamily: appFontFamily,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: CommonColors.colorPrimary
+                                )
+                            ),
+                            labelStyle: TextStyle(fontFamily: appFontFamily),
+
+                            hintStyle: TextStyle(fontFamily: appFontFamily),
+                          ),
+                        ),
+                        const SizedBox(height: doubleTwenty),
+                      ],
+                    ),
+                  ),
                   PrimaryButton(
                       fullWidth: isTrue,
                       text: "NEXT",

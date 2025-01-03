@@ -22,6 +22,7 @@ import 'package:tsnpdcl_employee/view/measure_distance/view/measure_distance_scr
 import 'package:tsnpdcl_employee/view/meeseva/view/meeseva_menu_screen.dart';
 import 'package:tsnpdcl_employee/view/online_pr_menu/view/online_pr_menu_screen.dart';
 import 'package:tsnpdcl_employee/view/pdms/view/pdms_screen.dart';
+import 'package:tsnpdcl_employee/view/pole_tracker/view/new_proposal_screen.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/view/pole_tracker_selection_view_sketch_screen.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/view/view_digital_sketch_screen.dart';
 import 'package:tsnpdcl_employee/view/search_consumer/view/search_consumer_screen.dart';
@@ -110,6 +111,9 @@ class AppRouter {
       case ViewDigitalSketchScreen.id:
         return MaterialPageRoute(
             builder: (_) => ViewDigitalSketchScreen(args: settings.arguments as Map<String, dynamic>));
+      case NewProposalScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => NewProposalScreen(ssc: settings.arguments as String));
 
 
 
