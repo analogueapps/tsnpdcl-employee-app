@@ -92,7 +92,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.gruhaJyothiTitle,
           imageAsset: Assets.gruhaJyothi,
-          routeName: routeName),
+          routeName: Routes.gruhaJyothiScreen
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.manageStaffTitle,
           imageAsset: Assets.manageStaff,
@@ -350,7 +351,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.gruhaJyothiTitle,
           imageAsset: Assets.gruhaJyothi,
-          routeName: routeName),
+          routeName: Routes.gruhaJyothiScreen
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.dtrMaintenanceTitle,
           imageAsset: Assets.dtrMaintenance,
@@ -598,11 +600,11 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       globalListDialogItem.addAll([
         GlobalListDialogItem(
             title: "Digitize Lines",
-            routeName: ""
+            routeName: Routes.poleTrackerSelectionScreen,
         ),
         GlobalListDialogItem(
             title: "View Offline Feeders",
-            routeName: ""
+            routeName: Routes.viewOfflineFeedersScreen,
         ),
         GlobalListDialogItem(
             title: "View Sketch",

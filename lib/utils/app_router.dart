@@ -11,6 +11,7 @@ import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_maintenance_scree
 import 'package:tsnpdcl_employee/view/failure_dtr_inspection/view/failure_dtr_inspection_screen.dart';
 import 'package:tsnpdcl_employee/view/ganesh_pandal/view/ganesh_pandal_info_screen.dart';
 import 'package:tsnpdcl_employee/view/ganesh_pandal/view/ganesh_pandal_information_screen.dart';
+import 'package:tsnpdcl_employee/view/gruha_jyothi/view/gruha_jyothi_screen.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/view/add_induction_point_screen.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/view/all_lc_request_list_screen.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/view/feeder_induction_list_screen.dart';
@@ -23,8 +24,13 @@ import 'package:tsnpdcl_employee/view/meeseva/view/meeseva_menu_screen.dart';
 import 'package:tsnpdcl_employee/view/online_pr_menu/view/online_pr_menu_screen.dart';
 import 'package:tsnpdcl_employee/view/pdms/view/pdms_screen.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/view/new_proposal_screen.dart';
+import 'package:tsnpdcl_employee/view/pole_tracker/view/pole_11kv_feeder_mark_screen.dart';
+import 'package:tsnpdcl_employee/view/pole_tracker/view/pole_33kv_proposal_feeder_mark_screen.dart';
+import 'package:tsnpdcl_employee/view/pole_tracker/view/pole_proposal_11kv_feeder_mark_screen.dart';
+import 'package:tsnpdcl_employee/view/pole_tracker/view/pole_tracker_selection_screen.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/view/pole_tracker_selection_view_sketch_screen.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/view/view_digital_sketch_screen.dart';
+import 'package:tsnpdcl_employee/view/pole_tracker/view/view_offline_feeders_screen.dart';
 import 'package:tsnpdcl_employee/view/search_consumer/view/search_consumer_screen.dart';
 import 'package:tsnpdcl_employee/view/web_view/view/web_view_screen.dart';
 import 'package:tsnpdcl_employee/widget/pinch_zoom_imageview.dart';
@@ -114,8 +120,27 @@ class AppRouter {
       case NewProposalScreen.id:
         return MaterialPageRoute(
             builder: (_) => NewProposalScreen(ssc: settings.arguments as String));
+      case PoleTrackerSelectionScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => const PoleTrackerSelectionScreen());
+      case PoleProposal11kvFeederMarkScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => PoleProposal11kvFeederMarkScreen(args: settings.arguments as Map<String, dynamic>));
+      case Pole33kvProposalFeederMarkScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => Pole33kvProposalFeederMarkScreen(args: settings.arguments as Map<String, dynamic>));
+      case Pole11kvFeederMarkScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => Pole11kvFeederMarkScreen(args: settings.arguments as Map<String, dynamic>));
+      case ViewOfflineFeedersScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => const ViewOfflineFeedersScreen());
 
 
+      // BILLING RELATED
+      case GruhaJyothiScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => const GruhaJyothiScreen());
 
       // Widgets
       case PinchZoomImageView.id:

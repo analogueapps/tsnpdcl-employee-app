@@ -37,6 +37,16 @@ class Routes {
   static const String poleTrackerSelectionViewSketchScreen = "PoleTrackerSelectionViewSketchScreen";
   static const String viewDigitalSketchScreen = "ViewDigitalSketchScreen";
   static const String newProposalScreen = "NewProposalScreen";
+  static const String poleTrackerSelectionScreen = "PoleTrackerSelectionScreen";
+  static const String poleProposal11kvFeederMarkScreen = "PoleProposal11kvFeederMarkScreen";
+  static const String pole33kvProposalFeederMarkScreen = "Pole33kvProposalFeederMarkScreen";
+  static const String pole11kvFeederMarkScreen = "Pole11kvFeederMarkScreen";
+  static const String viewOfflineFeedersScreen = "ViewOfflineFeedersScreen";
+
+  // BILLING RELATED
+  static const String gruhaJyothiScreen = "GruhaJyothiScreen";
+
+
 
   static const String ganeshPandalInformationScreen = 'ganesh_pandal_information_screen';
 
