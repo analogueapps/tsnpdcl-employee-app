@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tsnpdcl_employee/model/sub_menu_grid_item.dart';
+import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
 
 class PdmsViewModel extends ChangeNotifier {
@@ -21,7 +22,8 @@ class PdmsViewModel extends ChangeNotifier {
           title: GlobalConstants.createPoleIndent,
           iconAsset: Icons.list_alt_outlined,
           cardColor: Colors.orange,
-          routeName: routeName),
+          routeName: Routes.createPoleIndentsScreen
+      ),
       SubMenuGridItem(
           title: GlobalConstants.dis,
           iconAsset: Icons.local_shipping_outlined,

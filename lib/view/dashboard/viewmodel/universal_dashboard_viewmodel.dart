@@ -97,7 +97,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.manageStaffTitle,
           imageAsset: Assets.manageStaff,
-          routeName: routeName),
+          routeName: Routes.manageStaffsScreen
+      ),
     ]);
     maintenanceAndInspections.addAll([
       UniversalDashboardItem(
@@ -158,7 +159,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.gisIdsTitle,
           imageAsset: Assets.gisIds,
-          routeName: routeName),
+          routeName: GlobalConstants.gisIdsTitle
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.poleTrackerTitle,
           imageAsset: Assets.poloTracker,
@@ -400,7 +402,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.gisIdsTitle,
           imageAsset: Assets.gisIds,
-          routeName: routeName),
+          routeName: GlobalConstants.gisIdsTitle
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.uploadCasteCertificateTitle,
           imageAsset: Assets.uploadCasteCertificate,
@@ -463,7 +466,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.manageStaffTitle,
           imageAsset: Assets.manageStaff,
-          routeName: routeName),
+          routeName: Routes.manageStaffsScreen
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.newServicesTitle,
           imageAsset: Assets.newServices,
@@ -609,6 +613,23 @@ class UniversalDashboardViewModel extends ChangeNotifier {
         GlobalListDialogItem(
             title: "View Sketch",
             routeName: Routes.poleTrackerSelectionViewSketchScreen,
+        ),
+      ]);
+      showCustomListDialog(context, globalListDialogItem);
+    } else if(routeName == GlobalConstants.gisIdsTitle) {
+      List<GlobalListDialogItem> globalListDialogItem = [];
+      globalListDialogItem.addAll([
+        GlobalListDialogItem(
+          title: "View GIS List",
+          routeName: "",
+        ),
+        GlobalListDialogItem(
+          title: "View Offline Forms",
+          routeName: "",
+        ),
+        GlobalListDialogItem(
+          title: "View Offline Forms(Pending)",
+          routeName: "",
         ),
       ]);
       showCustomListDialog(context, globalListDialogItem);

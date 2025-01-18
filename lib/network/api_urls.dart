@@ -28,4 +28,9 @@ class Apis{
   static const GET_ALL_LC_REQUEST_LIST_URL = "getAllLcRequests";
   static const GET_DETAILED_LC_URL = "getLc";
 
+  /// PDMS
+  static const PDMS_END_POINT_BASE_URL = "$SERVER_IP:5656/NPFDAS/ep/pdms/";
+  static const GET_INDENTS_OF_STATUS_URL = "getIndentsOfStatus";
+
+
 }

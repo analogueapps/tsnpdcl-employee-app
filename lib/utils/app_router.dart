@@ -19,9 +19,11 @@ import 'package:tsnpdcl_employee/view/line_clearance/view/lc_master_feeder_list_
 import 'package:tsnpdcl_employee/view/line_clearance/view/line_clearance_screen.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/view/lc_master_ss_list_screen.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/view/view_detailed_lc_screen.dart';
+import 'package:tsnpdcl_employee/view/manage_staff/view/manage_staffs_screen.dart';
 import 'package:tsnpdcl_employee/view/measure_distance/view/measure_distance_screen.dart';
 import 'package:tsnpdcl_employee/view/meeseva/view/meeseva_menu_screen.dart';
 import 'package:tsnpdcl_employee/view/online_pr_menu/view/online_pr_menu_screen.dart';
+import 'package:tsnpdcl_employee/view/pdms/view/create_pole_indents_screen.dart';
 import 'package:tsnpdcl_employee/view/pdms/view/pdms_screen.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/view/new_proposal_screen.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/view/pole_11kv_feeder_mark_screen.dart';
@@ -141,6 +143,16 @@ class AppRouter {
       case GruhaJyothiScreen.id:
         return MaterialPageRoute(
             builder: (_) => const GruhaJyothiScreen());
+
+      // MANAGE STAFF
+      case ManageStaffsScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => const ManageStaffsScreen());
+
+      // PDMS
+      case CreatePoleIndentsScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => const CreatePoleIndentsScreen());
 
       // Widgets
       case PinchZoomImageView.id:

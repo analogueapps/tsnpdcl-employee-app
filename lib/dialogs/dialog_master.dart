@@ -81,6 +81,22 @@ Future<void> showSuccessDialog(BuildContext context, String message, VoidCallbac
   }
 }
 
+Future<void> showAlertActionDialog(BuildContext context, String title, String message, String okLabel, VoidCallback onPressed) async {
+  final result = await showOkCancelAlertDialog(
+      context: context,
+      title: title,
+      message: message,
+      okLabel: okLabel,
+      isDestructiveAction: true,
+      barrierDismissible: false
+  );
+
+  if (result == OkCancelResult.ok) {
+    Navigation.instance.canPop();
+    onPressed();
+  }
+}
+
 // Custom List Items in dialog
 Future<void> showCustomListDialog(BuildContext context, List<GlobalListDialogItem> globalListDialogItem) async {
   return showDialog(

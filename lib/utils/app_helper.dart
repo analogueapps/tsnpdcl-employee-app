@@ -57,5 +57,19 @@ String formatIsoDateForLcDetails(String isoDate) {
   }
 }
 
+String formatIsoDateForPdmsDetails(String isoDate) {
+  try {
+    // Parse the ISO 8601 date string
+    DateTime parsedDate = DateTime.parse(isoDate);
+
+    // Format the date to the desired format: dd/MM/yy HH:mm
+    return DateFormat("dd/MMM/yy").format(parsedDate);
+  } catch (e) {
+    // Handle any parsing errors
+    print("Error formatting date: $e");
+    return 'N/A';
+  }
+}
+
 
 

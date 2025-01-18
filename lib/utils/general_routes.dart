@@ -46,7 +46,11 @@ class Routes {
   // BILLING RELATED
   static const String gruhaJyothiScreen = "GruhaJyothiScreen";
 
+  // MANAGE STAFF
+  static const String manageStaffsScreen = "ManageStaffsScreen";
 
+  // PDMS
+  static const String createPoleIndentsScreen = "CreatePoleIndentsScreen";
 
   static const String ganeshPandalInformationScreen = 'ganesh_pandal_information_screen';
 
