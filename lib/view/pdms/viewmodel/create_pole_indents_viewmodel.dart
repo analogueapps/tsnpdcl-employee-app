@@ -56,7 +56,7 @@ class CreatePoleIndentsViewmodel extends ChangeNotifier {
           response.data = jsonDecode(response.data); // Parse string to JSON
         }
         if (response.statusCode == successResponseCode) {
-          if(response.data['sessionValid'] == isTrue) {
+          //if(response.data['sessionValid'] == isTrue) {
             if (response.data['taskSuccess'] == isTrue) {
               if(response.data['dataList'] != null) {
                 // final List<dynamic> jsonList = jsonDecode(response.data['dataList']);
@@ -75,9 +75,9 @@ class CreatePoleIndentsViewmodel extends ChangeNotifier {
                 notifyListeners();
               }
             }
-          } else {
-            showSessionExpiredDialog(context);
-          }
+          // } else {
+          //   showSessionExpiredDialog(context);
+          // }
         } else {
           showAlertDialog(context,response.data['message']);
         }

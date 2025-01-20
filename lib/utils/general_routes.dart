@@ -51,6 +51,7 @@ class Routes {
 
   // PDMS
   static const String createPoleIndentsScreen = "CreatePoleIndentsScreen";
+  static const String viewDetailedPoleIndentScreen = "ViewDetailedPoleIndentScreen";
 
   static const String ganeshPandalInformationScreen = 'ganesh_pandal_information_screen';
 

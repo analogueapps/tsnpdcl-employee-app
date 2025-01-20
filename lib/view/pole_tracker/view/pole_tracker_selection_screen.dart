@@ -8,7 +8,6 @@ import 'package:tsnpdcl_employee/view/line_clearance/viewmodel/add_induction_poi
 import 'package:tsnpdcl_employee/view/pole_tracker/viewmodel/pole_tracker_selection_view_sketch_viewmodel.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/viewmodel/pole_tracker_selection_viewmodel.dart';
 import 'package:tsnpdcl_employee/widget/primary_button.dart';
-import 'package:tsnpdcl_employee/widget/secondary_button.dart';
 
 class PoleTrackerSelectionScreen extends StatelessWidget {
   static const id = Routes.poleTrackerSelectionScreen;
@@ -374,8 +373,9 @@ class PoleTrackerSelectionScreen extends StatelessWidget {
                       }
                   ),
                   const SizedBox(height: doubleTen,),
-                  SecondaryButton(
+                  PrimaryButton(
                       fullWidth: isTrue,
+                      buttonColor: CommonColors.colorSecondary,
                       text: "SAVE FOR OFFLINE",
                       onPressed: () {
                         //viewModel.onNextClicked();

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
@@ -123,7 +125,7 @@ class CreatePoleIndentsScreen extends StatelessWidget {
                           ),
                           IconButton(
                               onPressed: () {
-                                //Navigation.instance.navigateTo(Routes.viewDetailedLcScreen, args: item.lcId);
+                                Navigation.instance.navigateTo(Routes.viewDetailedPoleIndentScreen, args: jsonEncode(item));
                               },
                               icon: const Icon(Icons.arrow_forward_ios_rounded, size: 14,)
                           )

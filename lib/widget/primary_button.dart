@@ -5,12 +5,14 @@ import 'package:tsnpdcl_employee/utils/common_colors.dart';
 class PrimaryButton extends StatelessWidget {
   final String text;
   final bool fullWidth;
+  final Color buttonColor;
   final VoidCallback onPressed;
 
   const PrimaryButton({
     super.key,
     required this.text,
     this.fullWidth = false,
+    this.buttonColor = CommonColors.colorPrimary,
     required this.onPressed,
   });
 
@@ -25,7 +27,8 @@ class PrimaryButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: CommonColors.colorPrimary,
+          //backgroundColor: CommonColors.colorPrimary,
+          backgroundColor: buttonColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(5),
           ),

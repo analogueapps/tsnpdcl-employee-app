@@ -14,7 +14,6 @@ import 'package:tsnpdcl_employee/view/gruha_jyothi/viewmodel/gruha_jyothi_viewmo
 import 'package:tsnpdcl_employee/view/online_pr_menu/viewmodel/online_pr_menu_viewmodel.dart';
 import 'package:tsnpdcl_employee/widget/fill_text_form_field.dart';
 import 'package:tsnpdcl_employee/widget/primary_button.dart';
-import 'package:tsnpdcl_employee/widget/secondary_button.dart';
 
 class GruhaJyothiScreen extends StatelessWidget {
   static const id = Routes.gruhaJyothiScreen;
@@ -98,8 +97,9 @@ class GruhaJyothiScreen extends StatelessWidget {
                     Visibility(
                       visible: viewModel.gruhaJyothiStatus != null,
                       child: Center(
-                        child: SecondaryButton(
+                        child: PrimaryButton(
                             text: 'Clear',
+                            buttonColor: CommonColors.colorSecondary,
                             onPressed: () {
                               viewModel.clearDetails();
                             }
