@@ -81,12 +81,21 @@ Future<void> showSuccessDialog(BuildContext context, String message, VoidCallbac
   }
 }
 
-Future<void> showAlertActionDialog(BuildContext context, String title, String message, String okLabel, VoidCallback onPressed) async {
+Future<void> showAlertActionDialog({
+  required BuildContext context,
+  required String title,
+  required String message,
+  required String okLabel,
+  String cancelLabel = "Cancel",
+  required VoidCallback onPressed,
+  VoidCallback? onCancelPressed,
+}) async {
   final result = await showOkCancelAlertDialog(
       context: context,
       title: title,
       message: message,
       okLabel: okLabel,
+      cancelLabel: cancelLabel,
       isDestructiveAction: true,
       barrierDismissible: false
   );
@@ -94,6 +103,9 @@ Future<void> showAlertActionDialog(BuildContext context, String title, String me
   if (result == OkCancelResult.ok) {
     Navigation.instance.canPop();
     onPressed();
+  } else if (result == OkCancelResult.cancel && onCancelPressed != null) {
+    Navigation.instance.canPop();
+    onCancelPressed();
   }
 }
 

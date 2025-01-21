@@ -96,9 +96,15 @@ class ManageStaffsScreen extends StatelessWidget {
                               ),
                             ),
                             onPressed: () async {
-                              await showAlertActionDialog(context, "Remove Employee?", "Do you want to remove ${item.name}(${item.designation}) from your section staff?", "Delete", () {
-                                viewModel.removeStaff(item);
-                              },);
+                              await showAlertActionDialog(
+                                context: context,
+                                title: "Remove Employee?",
+                                message: "Do you want to remove ${item.name}(${item.designation}) from your section staff?",
+                                okLabel: "Delete",
+                                onPressed: () {
+                                  viewModel.removeStaff(item);
+                                },
+                              );
                             },
                             child: Text("Remove".toUpperCase(), style: const TextStyle(color: Colors.white),),
                           ),
