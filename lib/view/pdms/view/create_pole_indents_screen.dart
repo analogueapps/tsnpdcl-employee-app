@@ -50,6 +50,17 @@ class CreatePoleIndentsScreen extends StatelessWidget {
               iconTheme: const IconThemeData(
                 color: Colors.white,
               ),
+              actions: [
+                Visibility(
+                  visible: viewModel.npdclUser.wing == "operation" && viewModel.npdclUser.designationCode == 150 || viewModel.npdclUser.designationCode == 155,
+                  child: TextButton(
+                    onPressed: () {
+                      viewModel.createActionClicked();
+                    },
+                    child: const Text('CREATE INDENT',style: TextStyle(color: Colors.white),),
+                  ),
+                )
+              ],
             ),
             body: viewModel.isLoading
                 ? const Center(child: CircularProgressIndicator())

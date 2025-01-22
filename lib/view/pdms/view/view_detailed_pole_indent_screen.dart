@@ -55,6 +55,17 @@ class ViewDetailedPoleIndentScreen extends StatelessWidget {
               iconTheme: const IconThemeData(
                 color: Colors.white,
               ),
+              actions: [
+                Visibility(
+                  visible: viewModel.npdclUser.wing == "operation" && viewModel.npdclUser.designationCode == 150 || viewModel.npdclUser.designationCode == 155 && viewModel.isIndentEditable(),
+                  child: TextButton(
+                    onPressed: () {
+                      viewModel.editActionClicked();
+                    },
+                    child: const Text('EDIT',style: TextStyle(color: Colors.white),),
+                  ),
+                )
+              ],
             ),
             body: SingleChildScrollView(
               child: Column(

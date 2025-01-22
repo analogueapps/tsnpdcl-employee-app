@@ -34,6 +34,7 @@ class Apis{
   static const REQUEST_OTP_URL = "requestOtp";
   static const REQUEST_UN_AUTH_OTP_URL = "requestUnAuthOtp";
   static const VERIFY_OTP_URL = "verifyOTP";
+  static const CREATE_POLE_INDENT_URL = "createPoleIndent";
   static const UPDATE_POLE_INDENT_URL = "updatePoleIndent";
   static const FORWARD_POLE_INDENT_TO_STORES_URL = "forwardPoleIndentToStores";
 

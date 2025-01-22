@@ -13,7 +13,9 @@ import 'package:tsnpdcl_employee/utils/status_codes.dart';
 import 'package:tsnpdcl_employee/view/auth/model/npdcl_user.dart';
 import 'package:tsnpdcl_employee/view/pdms/model/pole_request_indent_entity.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
+import 'package:tsnpdcl_employee/view/pdms/view/forward_or_reject_indent_dialog.dart';
 import 'package:tsnpdcl_employee/view/pdms/view/otp_request_and_validate_dialog.dart';
+import 'package:tsnpdcl_employee/widget/fill_text_form_field.dart';
 import 'package:tsnpdcl_employee/widget/primary_button.dart';
 
 class ViewDetailedPoleIndentViewModel extends ChangeNotifier {
@@ -120,6 +122,21 @@ class ViewDetailedPoleIndentViewModel extends ChangeNotifier {
           );
         }
     );
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   showGeneralDialog(
+    //     context: context,
+    //     barrierDismissible: true,
+    //     barrierLabel: '',
+    //     pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+    //       return ForwardOrRejectIndentDialog(
+    //           poleRequestIndentEntity: poleRequestIndentEntity,
+    //           onActionTaken: (poleRequestIndentEntity) {
+    //
+    //           }
+    //       );
+    //     },
+    //   );
+    // });
   }
 
   void _showApprovalDialog() {
@@ -255,5 +272,271 @@ class ViewDetailedPoleIndentViewModel extends ChangeNotifier {
     }
   }
 
-  void showForwardOrRejectDialog() {}
+  void showForwardOrRejectDialog() {
+
+  }
+
+  bool isIndentEditable() {
+    return (poleRequestIndentEntity.balanceQty != null && poleRequestIndentEntity.balanceQty! > 0) && poleRequestIndentEntity.indentStatus != StatusCodes.PoleIndentStatus.CANCELED;
+  }
+
+  void editActionClicked() {
+    bool isChecked1 = false;
+    bool isChecked2 = false;
+    final TextEditingController textEditingController = TextEditingController();
+
+    showDialog(
+      //barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Text(
+                      "Modify Pole Indent".toUpperCase(),
+                      style: const TextStyle(
+                        fontSize: toolbarTitleSize,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: doubleFifteen,),
+                  Text(
+                    "REQUISITION NO".toUpperCase(),
+                    style: const TextStyle(
+                      fontSize: normalSize,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: doubleFive,),
+                  FillTextFormField(
+                    controller: TextEditingController(text: checkNull(poleRequestIndentEntity.requisitionNo.toString())),
+                    labelText: '',
+                    keyboardType: TextInputType.none,
+                    isEnable: isFalse,
+                  ),
+                  const SizedBox(height: doubleFifteen,),
+                  const Text(
+                    "Choose pole type",
+                    style: TextStyle(
+                      fontSize: normalSize,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: doubleFive,),
+                  FillTextFormField(
+                    controller: TextEditingController(text: checkNull(poleRequestIndentEntity.poleType)),
+                    labelText: '',
+                    keyboardType: TextInputType.none,
+                    isEnable: isFalse,
+                    suffixIcon: const Icon(Icons.arrow_drop_down_rounded),
+                  ),
+                  const Divider(),
+                  Container(
+                    margin: const EdgeInsets.only(top: doubleTen, bottom: doubleTen),
+                    child:  Row(
+                      children: [
+                        const Expanded(
+                          child: Text(
+                            "Indent Quantity",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Center(
+                            child: Text(
+                              checkNull(poleRequestIndentEntity.requestedQty.toString()),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Divider(),
+                  Container(
+                    margin: const EdgeInsets.only(top: doubleTen, bottom: doubleTen),
+                    child:  Row(
+                      children: [
+                        const Expanded(
+                          child: Text(
+                            "Balance Quantity",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Center(
+                            child: Text(
+                              checkNull(poleRequestIndentEntity.balanceQty.toString()),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Divider(),
+                  const Text(
+                    "Quantity",
+                    style: TextStyle(
+                      fontSize: normalSize,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: doubleFive,),
+                  FillTextFormField(
+                    controller: textEditingController,
+                    labelText: '',
+                    keyboardType: TextInputType.number,
+                  ),
+                  const Divider(),
+                  CheckboxListTile(
+                    value: isChecked1, // Boolean variable to track state
+                    onChanged: (bool? value) {
+                      setState(() {
+                        isChecked1 = value ?? false;
+                      });
+                    },
+                    title: const Text(
+                      "Indent Qty is available against the remaining quantity of SAP Requisition",
+                    ),
+                    contentPadding: EdgeInsets.zero,
+                    controlAffinity: ListTileControlAffinity.leading,
+                  ),
+                  CheckboxListTile(
+                    value: isChecked2, // Boolean variable to track state
+                    onChanged: (bool? value) {
+                      setState(() {
+                        isChecked2 = value ?? false;
+                      });
+                    },
+                    title: const Text(
+                      "SAP Requisition has selected Pole Type.",
+                    ),
+                    contentPadding: EdgeInsets.zero,
+                    controlAffinity: ListTileControlAffinity.leading,
+                  ),
+                  const SizedBox(height: doubleFive,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.grey,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                        onPressed: () async {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text("Cancel".toUpperCase(), style: const TextStyle(fontSize: extraRegularSize, color: Colors.white),),
+                      ),
+                      const SizedBox(width: doubleTen,),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                        onPressed: () async {
+                          if (poleRequestIndentEntity.requisitionNo!.isEmpty || poleRequestIndentEntity.requisitionNo!.length < 5) {
+                            showAlertDialog(context, "Please enter SAP Requisition No");
+                          } else if (poleRequestIndentEntity.poleType!.isEmpty) {
+                            showAlertDialog(context, "Please select the Pole Type");
+                          } else if (textEditingController.text.isEmpty) {
+                            showAlertDialog(context, "Please enter quantity");
+                          } else if (textEditingController.text.length > (poleRequestIndentEntity.balanceQty ?? 0)) {
+                            showAlertDialog(context, "Please enter quantity less than available balance quantity (${poleRequestIndentEntity.balanceQty})");
+                          } else if (!isChecked1) {
+                            showAlertDialog(context, "Please check the checkbox");
+                          } else if (!isChecked2) {
+                            showAlertDialog(context, "Please check the checkbox");
+                          } else {
+                            showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (BuildContext context) {
+                                return OtpRequestAndValidateDialog(
+                                  isAuthenticatedOtp: true,
+                                  onComplete: (verified, requestId) {
+                                    updateIndentWithQty(false, int.parse(textEditingController.text));
+                                  },
+                                  onCancelByUser: () {
+
+                                  },
+                                );
+                              },
+                            );
+                          }
+                        },
+                        child: Text("Update Indent".toUpperCase(), style: const TextStyle(fontSize: extraRegularSize, color: Colors.white),),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> updateIndentWithQty(bool cancel, int qty) async {
+    ProcessDialogHelper.showProcessDialog(
+      context,
+      message: "Please wait...",
+    );
+
+    final payload = {
+      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "appId": "in.tsnpdcl.npdclemployee",
+      "indentId": poleRequestIndentEntity.indentId,
+      "cancelIndent": cancel,
+      "qty": qty,
+    };
+
+    var response = await ApiProvider(baseUrl: Apis.PDMS_END_POINT_BASE_URL).postApiCall(context, Apis.UPDATE_POLE_INDENT_URL, payload);
+    if (context.mounted) {
+      ProcessDialogHelper.closeDialog(context);
+    }
+
+    try {
+      if (response != null) {
+        if (response.data is String) {
+          response.data = jsonDecode(response.data); // Parse string to JSON
+        }
+        if (response.statusCode == successResponseCode) {
+          if(response.data['sessionValid'] == isTrue) {
+            if (response.data['taskSuccess'] == isTrue) {
+              await showSuccessDialog(context, response.data['success'], () {
+                Navigation.instance.pushBack();
+              },
+              );
+            } else {
+              showAlertDialog(context, response.data['message']);
+            }
+          } else {
+            showSessionExpiredDialog(context);
+          }
+        } else {
+          showAlertDialog(context,response.data['message']);
+        }
+      }
+    } catch (e) {
+      showErrorDialog(context,  "An error occurred. Please try again.");
+      rethrow;
+    }
+  }
 }

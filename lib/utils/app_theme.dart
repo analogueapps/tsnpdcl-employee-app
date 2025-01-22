@@ -54,5 +54,10 @@ class AppTheme {
       elevation: 5,
       surfaceTintColor: Colors.white,
     ),
+    dialogTheme: const DialogTheme(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.zero, // Set global corner radius
+      ),
+    ),
   );
 }
