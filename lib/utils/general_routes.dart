@@ -53,6 +53,9 @@ class Routes {
   static const String createPoleIndentsScreen = "CreatePoleIndentsScreen";
   static const String viewDetailedPoleIndentScreen = "ViewDetailedPoleIndentScreen";
 
+  // FILTER
+  static const String filterScreen = "FilterScreen";
+
   static const String ganeshPandalInformationScreen = 'ganesh_pandal_information_screen';
 
   // WIDGETS

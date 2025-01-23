@@ -16,13 +16,17 @@ class PoleRequestIndentEntity {
     this.indentDate,
     this.requisitionNo,
     this.requestedQty,
+    this.aeRemovedQty,
     this.balanceQty,
     this.aeOdRecommendedQty,
+    this.approvedQty,
     this.poleType,
     this.aeOdEmpId,
     this.aeOdActionDate,
     this.erstCircleId,
     this.indentStatus,
+    this.remarksByAeOd,
+    this.remarksByAdeStores,
     this.employeeMasterEntityByIndentRaisedAeEmpId,
     this.employeeMasterEntityByAeOdEmpId,
     this.poleRequestIndentTrackEntitiesByIndentId,
@@ -37,13 +41,17 @@ class PoleRequestIndentEntity {
     indentDate = json['indentDate'];
     requisitionNo = json['requisitionNo'];
     requestedQty = json['requestedQty'];
+    aeRemovedQty = json['aeRemovedQty'];
     balanceQty = json['balanceQty'];
     aeOdRecommendedQty = json['aeOdRecommendedQty'];
+    approvedQty = json['approvedQty'];
     poleType = json['poleType'];
     aeOdEmpId = json['aeOdEmpId'];
     aeOdActionDate = json['aeOdActionDate'];
     erstCircleId = json['erstCircleId'];
     indentStatus = json['indentStatus'];
+    remarksByAeOd = json['remarksByAeOd'];
+    remarksByAdeStores = json['remarksByAdeStores'];
     employeeMasterEntityByIndentRaisedAeEmpId =
         json['employeeMasterEntityByIndentRaisedAeEmpId'] != null
             ? EmployeeMasterEntityByIndentRaisedAeEmpId.fromJson(
@@ -71,13 +79,17 @@ class PoleRequestIndentEntity {
   String? indentDate;
   String? requisitionNo;
   num? requestedQty;
+  num? aeRemovedQty;
   num? balanceQty;
   num? aeOdRecommendedQty;
+  num? approvedQty;
   String? poleType;
   String? aeOdEmpId;
   String? aeOdActionDate;
   num? erstCircleId;
   String? indentStatus;
+  String? remarksByAeOd;
+  String? remarksByAdeStores;
   EmployeeMasterEntityByIndentRaisedAeEmpId?
       employeeMasterEntityByIndentRaisedAeEmpId;
   EmployeeMasterEntityByAeOdEmpId? employeeMasterEntityByAeOdEmpId;
@@ -93,13 +105,17 @@ class PoleRequestIndentEntity {
     String? indentDate,
     String? requisitionNo,
     num? requestedQty,
+    num? aeRemovedQty,
     num? balanceQty,
     num? aeOdRecommendedQty,
+    num? approvedQty,
     String? poleType,
     String? aeOdEmpId,
     String? aeOdActionDate,
     num? erstCircleId,
     String? indentStatus,
+    String? remarksByAeOd,
+    String? remarksByAdeStores,
     EmployeeMasterEntityByIndentRaisedAeEmpId?
         employeeMasterEntityByIndentRaisedAeEmpId,
     EmployeeMasterEntityByAeOdEmpId? employeeMasterEntityByAeOdEmpId,
@@ -115,13 +131,17 @@ class PoleRequestIndentEntity {
         indentDate: indentDate ?? this.indentDate,
         requisitionNo: requisitionNo ?? this.requisitionNo,
         requestedQty: requestedQty ?? this.requestedQty,
+        aeRemovedQty: aeRemovedQty ?? this.aeRemovedQty,
         balanceQty: balanceQty ?? this.balanceQty,
         aeOdRecommendedQty: aeOdRecommendedQty ?? this.aeOdRecommendedQty,
+        approvedQty: approvedQty ?? this.approvedQty,
         poleType: poleType ?? this.poleType,
         aeOdEmpId: aeOdEmpId ?? this.aeOdEmpId,
         aeOdActionDate: aeOdActionDate ?? this.aeOdActionDate,
         erstCircleId: erstCircleId ?? this.erstCircleId,
         indentStatus: indentStatus ?? this.indentStatus,
+        remarksByAeOd: remarksByAeOd ?? this.remarksByAeOd,
+        remarksByAdeStores: remarksByAdeStores ?? this.remarksByAdeStores,
         employeeMasterEntityByIndentRaisedAeEmpId:
             employeeMasterEntityByIndentRaisedAeEmpId ??
                 this.employeeMasterEntityByIndentRaisedAeEmpId,
@@ -142,13 +162,17 @@ class PoleRequestIndentEntity {
     map['indentDate'] = indentDate;
     map['requisitionNo'] = requisitionNo;
     map['requestedQty'] = requestedQty;
+    map['aeRemovedQty'] = aeRemovedQty;
     map['balanceQty'] = balanceQty;
     map['aeOdRecommendedQty'] = aeOdRecommendedQty;
+    map['approvedQty'] = approvedQty;
     map['poleType'] = poleType;
     map['aeOdEmpId'] = aeOdEmpId;
     map['aeOdActionDate'] = aeOdActionDate;
     map['erstCircleId'] = erstCircleId;
     map['indentStatus'] = indentStatus;
+    map['remarksByAeOd'] = remarksByAeOd;
+    map['remarksByAdeStores'] = remarksByAdeStores;
     if (employeeMasterEntityByIndentRaisedAeEmpId != null) {
       map['employeeMasterEntityByIndentRaisedAeEmpId'] =
           employeeMasterEntityByIndentRaisedAeEmpId?.toJson();

@@ -152,6 +152,13 @@ class CreatePoleIndentsScreen extends StatelessWidget {
                   );
                 }
             ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                viewModel.filterFabClicked();
+              },
+              backgroundColor: CommonColors.colorPrimary,
+              child: const Icon(Icons.filter_alt_outlined, color: Colors.white,),
+            ),
           );
         },
       ),

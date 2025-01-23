@@ -13,6 +13,7 @@ import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/view/auth/model/npdcl_user.dart';
+import 'package:tsnpdcl_employee/view/filter/model/filter_label_model_list.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/model/all_lc_request_list.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/model/induction_points_of_feeder_list.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/model/lc_master_ss_list.dart';
@@ -29,6 +30,9 @@ class CreatePoleIndentsViewmodel extends ChangeNotifier {
 
   final List<PoleRequestIndentEntity> _createPoleIndentList = [];
   List<PoleRequestIndentEntity> get createPoleIndentList => _createPoleIndentList;
+
+  // Filter list
+  final List<FilterLabelModelList> filterLabelModelList = [];
 
   // Constructor to initialize the items
   CreatePoleIndentsViewmodel({required this.context}) {
@@ -310,6 +314,74 @@ class CreatePoleIndentsViewmodel extends ChangeNotifier {
       showErrorDialog(context,  "An error occurred. Please try again.");
       rethrow;
     }
+  }
+
+  void filterFabClicked() {
+    if(filterLabelModelList.isNotEmpty) {
+      moveToFilterScreen();
+    } else {
+      getFilterData();
+    }
+  }
+
+  Future<void> getFilterData() async {
+    ProcessDialogHelper.showProcessDialog(
+      context,
+      message: "Loading available filters...",
+    );
+
+    final payload = {
+      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "appId": "in.tsnpdcl.npdclemployee",
+      "circleId": npdclUser.secMasterEntity!.circleId
+    };
+
+    var response = await ApiProvider(baseUrl: Apis.PDMS_END_POINT_BASE_URL).postApiCall(context, Apis.GET_INDENTS_FILTER_DATA_URL, payload);
+    if (context.mounted) {
+      ProcessDialogHelper.closeDialog(context);
+    }
+
+    try {
+      if (response != null) {
+        if (response.data is String) {
+          response.data = jsonDecode(response.data); // Parse string to JSON
+        }
+        if (response.statusCode == successResponseCode) {
+          if (response.data['taskSuccess'] == isTrue) {
+            if(response.data['dataList'] != null) {
+              // final List<dynamic> jsonList = jsonDecode(response.data['dataList']);
+              List<dynamic> jsonList;
+
+              // If dataList is a String, decode it; otherwise, it's already a List
+              if (response.data['dataList'] is String) {
+                jsonList = jsonDecode(response.data['dataList']);
+              } else if (response.data['dataList'] is List) {
+                jsonList = response.data['dataList'];
+              } else {
+                jsonList = [];  // Fallback to empty list if the type is unexpected
+              }
+              final List<FilterLabelModelList> dataList = jsonList.map((json) => FilterLabelModelList.fromJson(json)).toList();
+              filterLabelModelList.addAll(dataList);
+              notifyListeners();
+              moveToFilterScreen();
+            }
+          } else {
+            showAlertDialog(context, response.data['message']);
+          }
+        } else {
+          showAlertDialog(context,response.data['message']);
+        }
+      }
+    } catch (e) {
+      showErrorDialog(context,  "An error occurred. Please try again.");
+      rethrow;
+    }
+  }
+
+  void moveToFilterScreen() {
+    Navigation.instance.navigateTo(Routes.filterScreen, args: jsonEncode(filterLabelModelList),onReturn: (result) {
+
+    });
   }
 
 }

@@ -9,6 +9,7 @@ import 'package:tsnpdcl_employee/view/dashboard/view/universal_dashboard_screen.
 import 'package:tsnpdcl_employee/view/dtr_failure/view/dtr_failure_screen.dart';
 import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_maintenance_screen.dart';
 import 'package:tsnpdcl_employee/view/failure_dtr_inspection/view/failure_dtr_inspection_screen.dart';
+import 'package:tsnpdcl_employee/view/filter/view/filter_screen.dart';
 import 'package:tsnpdcl_employee/view/ganesh_pandal/view/ganesh_pandal_info_screen.dart';
 import 'package:tsnpdcl_employee/view/ganesh_pandal/view/ganesh_pandal_information_screen.dart';
 import 'package:tsnpdcl_employee/view/gruha_jyothi/view/gruha_jyothi_screen.dart';
@@ -157,6 +158,11 @@ class AppRouter {
       case ViewDetailedPoleIndentScreen.id:
         return MaterialPageRoute(
             builder: (_) => ViewDetailedPoleIndentScreen(data: settings.arguments as String));
+
+      // FILTER
+      case FilterScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => FilterScreen(data: settings.arguments as String));
 
       // Widgets
       case PinchZoomImageView.id:
