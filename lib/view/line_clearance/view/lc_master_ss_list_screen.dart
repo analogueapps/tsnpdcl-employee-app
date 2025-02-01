@@ -61,7 +61,7 @@ class LcMasterSsListScreen extends StatelessWidget {
                         Navigation.instance.navigateTo(Routes.lcMasterFeederListScreen, args: argument);
                       },
                     ),
-                    separatorBuilder: (_, __) => const Divider(),
+                    separatorBuilder: (_, __) => const Divider(height: 1),
                   );
           },
         ),

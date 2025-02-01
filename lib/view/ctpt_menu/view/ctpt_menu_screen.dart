@@ -54,7 +54,7 @@ class CtptMenuScreen extends StatelessWidget {
                     Navigation.instance.navigateTo(viewModel.ctptMenuItems[index].routeName);
                   },
                 ),
-                separatorBuilder: (_, __) => const Divider(),
+                separatorBuilder: (_, __) => const Divider(height: 1),
               ),
             )
                 : const Expanded(

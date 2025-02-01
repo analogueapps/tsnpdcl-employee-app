@@ -35,7 +35,7 @@ class ViewDetailedLcScreen extends StatelessWidget {
                     "View line clearance".toUpperCase(),
                     style: const TextStyle(
                         color: Colors.white,
-                        fontSize: toolbarTitleSize,
+                        fontSize: titleSize,
                         fontWeight: FontWeight.w700
                     ),
                   ),

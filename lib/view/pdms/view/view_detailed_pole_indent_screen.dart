@@ -43,7 +43,7 @@ class ViewDetailedPoleIndentScreen extends StatelessWidget {
                     "View Indent".toUpperCase(),
                     style: const TextStyle(
                         color: Colors.white,
-                        fontSize: toolbarTitleSize,
+                        fontSize: titleSize,
                         fontWeight: FontWeight.w700),
                   ),
                   Text(

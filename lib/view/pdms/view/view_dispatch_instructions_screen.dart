@@ -1,30 +1,26 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
-import 'package:tsnpdcl_employee/utils/global_constants.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
-import 'package:tsnpdcl_employee/utils/status_constants.dart';
-import 'package:tsnpdcl_employee/view/line_clearance/viewmodel/all_lc_request_list_viewmodel.dart';
-import 'package:tsnpdcl_employee/view/line_clearance/viewmodel/line_clearance_viewmodel.dart';
-import 'package:tsnpdcl_employee/view/line_clearance/viewmodel/lc_master_viewmodel.dart';
+import 'package:tsnpdcl_employee/view/pdms/viewmodel/view_dispatch_instructions_viewmodel.dart';
 
-class AllLcRequestListScreen extends StatelessWidget {
-  static const id = Routes.allLcRequestListScreen;
-  final String status;
+class ViewDispatchInstructionsScreen extends StatelessWidget {
+  static const id = Routes.viewDispatchInstructionsScreen;
 
-  const AllLcRequestListScreen({
+  const ViewDispatchInstructionsScreen({
     super.key,
-    required this.status,
   });
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => AllLcRequestListViewModel(context: context, status: status),
-      child: Consumer<AllLcRequestListViewModel>(
+      create: (_) => ViewDispatchInstructionsViewModel(context: context),
+      child: Consumer<ViewDispatchInstructionsViewModel>(
         builder: (context, viewModel, child) {
           return Scaffold(
             appBar: AppBar(
@@ -33,7 +29,7 @@ class AllLcRequestListScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    "Requested LC's".toUpperCase(),
+                    "View Dispatch Instructions".toUpperCase(),
                     style: const TextStyle(
                         color: Colors.white,
                         fontSize: titleSize,
@@ -41,7 +37,7 @@ class AllLcRequestListScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    viewModel.allLcRequestList.isNotEmpty ? "Showing ${viewModel.allLcRequestList.length} Lc(s)" : "No Ls(s)",
+                    viewModel.poleDispatchInstructionList.isNotEmpty ? "Showing ${viewModel.poleDispatchInstructionList.length} D.I(s)" : "No D.I(s)",
                     style: const TextStyle(fontSize: normalSize, color: Colors.grey),
                   ),
                 ],
@@ -52,12 +48,12 @@ class AllLcRequestListScreen extends StatelessWidget {
             ),
             body: viewModel.isLoading
                 ? const Center(child: CircularProgressIndicator())
-                : viewModel.allLcRequestList.isEmpty
+                : viewModel.poleDispatchInstructionList.isEmpty
                 ? const Center(child: Text("No data founded."),)
                 : ListView.builder(
-                itemCount: viewModel.allLcRequestList.length,
+                itemCount: viewModel.poleDispatchInstructionList.length,
                 itemBuilder: (context, index) {
-                  final item = viewModel.allLcRequestList[index];
+                  final item = viewModel.poleDispatchInstructionList[index];
 
                   return Column(
                     children: [
@@ -73,7 +69,7 @@ class AllLcRequestListScreen extends StatelessWidget {
                                     const SizedBox(width: doubleTen,),
                                     Expanded(
                                       child: Text(
-                                        "#${item.lcId} FDR:${item.fdrCode}",
+                                        "#${checkNull(item.dispatchInstructionId.toString())}",
                                         style: const TextStyle(
                                           fontWeight: FontWeight.w700,
                                           fontSize:
@@ -83,7 +79,7 @@ class AllLcRequestListScreen extends StatelessWidget {
                                     ),
                                     const SizedBox(width: doubleTwenty,),
                                     Text(
-                                      StatusConstants.getStatusMeaning(item.status!),
+                                      checkNull(item.diStatus),
                                       style: const TextStyle(
                                         fontWeight: FontWeight.w600,
                                         color: Colors.red,
@@ -100,7 +96,7 @@ class AllLcRequestListScreen extends StatelessWidget {
                                     const SizedBox(width: doubleTen,),
                                     Expanded(
                                       child: Text(
-                                        "Req. Date:${formatIsoDateForLcRequested(item.requestDate ?? "")}",
+                                        checkNull(item.purchaseOrderNo),
                                         style: const TextStyle(
                                           color: Colors.grey,
                                           fontSize:
@@ -110,7 +106,7 @@ class AllLcRequestListScreen extends StatelessWidget {
                                     ),
                                     const SizedBox(width: doubleTwenty,),
                                     Text(
-                                      "${item.lcPurpose}",
+                                      "Qty:${item.qtyToBeDispatched ?? "0"}",
                                       style: const TextStyle(
                                         color: CommonColors.colorPrimary,
                                         fontSize: regularTextSize,
@@ -124,7 +120,7 @@ class AllLcRequestListScreen extends StatelessWidget {
                           ),
                           IconButton(
                               onPressed: () {
-                                Navigation.instance.navigateTo(Routes.viewDetailedLcScreen, args: item.lcId);
+                                Navigation.instance.navigateTo(Routes.viewDetailedDiTabsScreen, args: jsonEncode(item));
                               },
                               icon: const Icon(Icons.arrow_forward_ios_rounded, size: 14,)
                           )
@@ -139,6 +135,13 @@ class AllLcRequestListScreen extends StatelessWidget {
                     ],
                   );
                 }
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                viewModel.filterFabClicked();
+              },
+              backgroundColor: CommonColors.colorPrimary,
+              child: const Icon(Icons.filter_alt_outlined, color: Colors.white,),
             ),
           );
         },

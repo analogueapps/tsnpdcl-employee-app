@@ -77,7 +77,7 @@ class LcMasterFeederListScreen extends StatelessWidget {
                   Navigation.instance.navigateTo(Routes.feederInductionListScreen, args: argument);
                 },
               ),
-              separatorBuilder: (_, __) => const Divider(),
+              separatorBuilder: (_, __) => const Divider(height: 1),
             );
           },
         ),

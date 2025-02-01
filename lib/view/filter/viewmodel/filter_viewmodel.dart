@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:tsnpdcl_employee/utils/alerts.dart';
 import 'package:tsnpdcl_employee/view/filter/model/filter_label_model_list.dart';
 
 class FilterViewModel extends ChangeNotifier {
@@ -19,6 +20,8 @@ class FilterViewModel extends ChangeNotifier {
   List<OptionList> _originalOptionList = []; // Full list of options
   List<OptionList> _filteredOptionList = []; // Filtered list based on search query
   List<OptionList> get filteredOptionList => _filteredOptionList;
+
+  Map<String, Map<String, OptionList>> hashMapSelectedOptions = {};
 
   // Constructor to initialize the items
   FilterViewModel({required this.context, required this.jsonResponse}) {
@@ -56,10 +59,49 @@ class FilterViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  // void toggleOptionSelection(OptionList option) {
+  //   option.isSelected = !option.isSelected!;
+  //   notifyListeners();
+  //   if (option.isSelected == true) {
+  //     if (!hashMapSelectedOptions.containsKey(
+  //         selectedFilter!.labelCode.toString())) {
+  //       hashMapSelectedOptions[selectedFilter!.labelCode.toString()] =
+  //       {}; // Initialize inner map if not present
+  //     }
+  //     hashMapSelectedOptions[selectedFilter!.labelCode.toString()]![option
+  //         .optionId!] = option;
+  //   } else  if (option.isSelected == false) {
+  //     if (hashMapSelectedOptions.containsKey(option.optionId)) {
+  //       hashMapSelectedOptions[selectedFilter!.labelCode.toString()]!.remove(option.optionId);
+  //       if (hashMapSelectedOptions[selectedFilter!.labelCode.toString()]!.isEmpty) {
+  //         hashMapSelectedOptions.remove(selectedFilter!.labelCode.toString()); // Remove main key if inner map is empty
+  //       }
+  //     }
+  //   }
+  //   notifyListeners();
+  //   print(hashMapSelectedOptions);
+  // }
   void toggleOptionSelection(OptionList option) {
     option.isSelected = !option.isSelected!;
     notifyListeners();
+
+    String mainKey = selectedFilter!.labelCode.toString();
+    String subKey = option.optionId!;
+
+    if (option.isSelected!) {
+      hashMapSelectedOptions.putIfAbsent(mainKey, () => {});
+      hashMapSelectedOptions[mainKey]![subKey] = option;
+    } else {
+      hashMapSelectedOptions[mainKey]?.remove(subKey);
+      if (hashMapSelectedOptions[mainKey]?.isEmpty ?? false) {
+        hashMapSelectedOptions.remove(mainKey);
+      }
+    }
+
+    notifyListeners();
+    print(hashMapSelectedOptions);
   }
+
 
   void clearFilters() {
     for (var filter in filters) {
@@ -67,6 +109,7 @@ class FilterViewModel extends ChangeNotifier {
         option.isSelected = false;
       }
     }
+    hashMapSelectedOptions.clear();
     notifyListeners();
   }
 }

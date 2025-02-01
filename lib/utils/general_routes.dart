@@ -52,6 +52,9 @@ class Routes {
   // PDMS
   static const String createPoleIndentsScreen = "CreatePoleIndentsScreen";
   static const String viewDetailedPoleIndentScreen = "ViewDetailedPoleIndentScreen";
+  static const String viewDispatchInstructionsScreen = "ViewDispatchInstructionsScreen";
+  static const String viewDetailedDiTabsScreen = "ViewDetailedDiTabsScreen";
+  static const String viewDetailedTransportScreen = "ViewDetailedTransportScreen";
 
   // FILTER
   static const String filterScreen = "FilterScreen";

@@ -26,7 +26,10 @@ import 'package:tsnpdcl_employee/view/meeseva/view/meeseva_menu_screen.dart';
 import 'package:tsnpdcl_employee/view/online_pr_menu/view/online_pr_menu_screen.dart';
 import 'package:tsnpdcl_employee/view/pdms/view/create_pole_indents_screen.dart';
 import 'package:tsnpdcl_employee/view/pdms/view/pdms_screen.dart';
+import 'package:tsnpdcl_employee/view/pdms/view/view_detailed_di_tabs_screen.dart';
 import 'package:tsnpdcl_employee/view/pdms/view/view_detailed_pole_indent_screen.dart';
+import 'package:tsnpdcl_employee/view/pdms/view/view_detailed_transport_screen.dart';
+import 'package:tsnpdcl_employee/view/pdms/view/view_dispatch_instructions_screen.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/view/new_proposal_screen.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/view/pole_11kv_feeder_mark_screen.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/view/pole_33kv_proposal_feeder_mark_screen.dart';
@@ -158,6 +161,15 @@ class AppRouter {
       case ViewDetailedPoleIndentScreen.id:
         return MaterialPageRoute(
             builder: (_) => ViewDetailedPoleIndentScreen(data: settings.arguments as String));
+      case ViewDispatchInstructionsScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => const ViewDispatchInstructionsScreen());
+      case ViewDetailedDiTabsScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => ViewDetailedDiTabsScreen(data: settings.arguments as String));
+      case ViewDetailedTransportScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => ViewDetailedTransportScreen(data: settings.arguments as String));
 
       // FILTER
       case FilterScreen.id:

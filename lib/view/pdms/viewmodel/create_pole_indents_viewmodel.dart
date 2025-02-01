@@ -48,6 +48,7 @@ class CreatePoleIndentsViewmodel extends ChangeNotifier {
   }
 
   Future<void> allPoleIndentListFromServer() async {
+    _createPoleIndentList.clear();
     _isLoading = isTrue;
     notifyListeners();
 
@@ -161,14 +162,13 @@ class CreatePoleIndentsViewmodel extends ChangeNotifier {
                   ),
                   const SizedBox(height: doubleFive,),
                   DropdownButton<String>(
+                    isExpanded: true,
                     hint: const Text("Select an item"),
                     value: selectedItem,
-                    items: items.map((String item) {
-                      return DropdownMenuItem<String>(
-                        value: item,
-                        child: Text(item),
-                      );
-                    }).toList(),
+                    items: items.map((item) => DropdownMenuItem<String>(
+                      value: item,
+                      child: Text(item),
+                    )).toList(),
                     onChanged: (String? newValue) {
                       setState(() {
                         selectedItem = newValue;
@@ -380,8 +380,73 @@ class CreatePoleIndentsViewmodel extends ChangeNotifier {
 
   void moveToFilterScreen() {
     Navigation.instance.navigateTo(Routes.filterScreen, args: jsonEncode(filterLabelModelList),onReturn: (result) {
-
+      if(result != null) {
+        getIndentsWithFilter(result);
+      }
     });
+  }
+
+  Future<void> getIndentsWithFilter(dynamic result) async {
+    _createPoleIndentList.clear();
+    _isLoading = isTrue;
+    notifyListeners();
+
+    String? prefJson = SharedPreferenceHelper.getStringValue(LoginSdkPrefs.npdclUserPrefKey);
+    final List<dynamic> jsonList = jsonDecode(prefJson);
+    final List<NpdclUser> user = jsonList.map((json) => NpdclUser.fromJson(json)).toList();
+    NpdclUser npdclUser = user[0];
+
+    final payload = {
+      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "appId": "in.tsnpdcl.npdclemployee",
+      "query": jsonEncode(result),
+      "circleId": npdclUser.secMasterEntity!.circleId
+    };
+
+    var response = await ApiProvider(baseUrl: Apis.PDMS_END_POINT_BASE_URL).postApiCall(context, Apis.GET_FILTERED_INDENTS_DATA_URL, payload);
+    _isLoading = isFalse;
+
+    try {
+      if (response != null) {
+        if (response.data is String) {
+          response.data = jsonDecode(response.data); // Parse string to JSON
+        }
+        if (response.statusCode == successResponseCode) {
+          //if(response.data['sessionValid'] == isTrue) {
+          if (response.data['taskSuccess'] == isTrue) {
+            if(response.data['dataList'] != null) {
+              // final List<dynamic> jsonList = jsonDecode(response.data['dataList']);
+              List<dynamic> jsonList;
+
+              // If dataList is a String, decode it; otherwise, it's already a List
+              if (response.data['dataList'] is String) {
+                jsonList = jsonDecode(response.data['dataList']);
+              } else if (response.data['dataList'] is List) {
+                jsonList = response.data['dataList'];
+              } else {
+                jsonList = [];  // Fallback to empty list if the type is unexpected
+              }
+              final List<PoleRequestIndentEntity> dataList = jsonList.map((json) => PoleRequestIndentEntity.fromJson(json)).toList();
+              _createPoleIndentList.addAll(dataList);
+              notifyListeners();
+              if(_createPoleIndentList.isEmpty) {
+                showAlertDialog(context,response.data['message']);
+              }
+            }
+          }
+          // } else {
+          //   showSessionExpiredDialog(context);
+          // }
+        } else {
+          showAlertDialog(context,response.data['message']);
+        }
+      }
+    } catch (e) {
+      showErrorDialog(context,  "An error occurred. Please try again.");
+      rethrow;
+    }
+
+    notifyListeners();
   }
 
 }

@@ -28,7 +28,8 @@ class PdmsViewModel extends ChangeNotifier {
           title: GlobalConstants.dis,
           iconAsset: Icons.local_shipping_outlined,
           cardColor: Colors.green,
-          routeName: routeName),
+          routeName: Routes.viewDispatchInstructionsScreen
+      ),
       SubMenuGridItem(
           title: GlobalConstants.pendingVerification,
           iconAsset: Icons.pending_actions_outlined,

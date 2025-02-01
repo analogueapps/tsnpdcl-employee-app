@@ -290,6 +290,10 @@ class _OtpRequestAndValidateDialogState
                   jsonList = [];  // Fallback to empty list if the type is unexpected
                 }
                 otpRequestId = jsonList[0];
+                setState(() {
+                  resendOtp = isFalse;
+                  secondsRemaining = millisecondsThirty;
+                });
                 startTimer();
               });
             } else {
@@ -386,6 +390,10 @@ class _OtpRequestAndValidateDialogState
                   jsonList = [];  // Fallback to empty list if the type is unexpected
                 }
                 otpRequestId = jsonList[0];
+                setState(() {
+                  resendOtp = isFalse;
+                  secondsRemaining = millisecondsThirty;
+                });
                 startTimer();
               });
             } else {
@@ -475,20 +483,21 @@ class _OtpRequestAndValidateDialogState
               widget.onComplete(isTrue,otpRequestId!);
               Navigator.of(context).pop();
             } else {
-              showAlertActionDialog(
-                  context: context,
-                  title: "ERROR",
-                  message: response.data['message'],
-                  okLabel: "EXIT",
-                  cancelLabel: "RETRY",
-                  onPressed: () {
-                    widget.onCancelByUser();
-                    Navigator.of(context).pop();
-                  },
-                  onCancelPressed: () {
-                    getOtp();
-                  }
-              );
+              // showAlertActionDialog(
+              //     context: context,
+              //     title: "ERROR",
+              //     message: response.data['message'],
+              //     okLabel: "EXIT",
+              //     cancelLabel: "RETRY",
+              //     onPressed: () {
+              //       widget.onCancelByUser();
+              //       Navigator.of(context).pop();
+              //     },
+              //     onCancelPressed: () {
+              //       getOtp();
+              //     }
+              // );
+              showErrorDialog(context, response.data['message']);
             }
           } else {
             showSessionExpiredDialog(context);
@@ -497,37 +506,38 @@ class _OtpRequestAndValidateDialogState
           showAlertDialog(context,response.data['message']);
         }
       } else {
-        showAlertActionDialog(
-            context: context,
-            title: "ERROR",
-            message: "Received NULL response from server",
-            okLabel: "EXIT",
-            cancelLabel: "RETRY",
-            onPressed: () {
-              widget.onCancelByUser();
-              Navigator.of(context).pop();
-            },
-            onCancelPressed: () {
-              getOtp();
-            }
-        );
+        // showAlertActionDialog(
+        //     context: context,
+        //     title: "ERROR",
+        //     message: "Received NULL response from server",
+        //     okLabel: "EXIT",
+        //     cancelLabel: "RETRY",
+        //     onPressed: () {
+        //       widget.onCancelByUser();
+        //       Navigator.of(context).pop();
+        //     },
+        //     onCancelPressed: () {
+        //       getOtp();
+        //     }
+        // );
+        showErrorDialog(context, "Received NULL response from server",);
       }
     } catch (e) {
       showErrorDialog(context,  "An error occurred. Please try again.");
-      showAlertActionDialog(
-          context: context,
-          title: "ERROR",
-          message: "An error occurred. Please try again.",
-          okLabel: "EXIT",
-          cancelLabel: "RETRY",
-          onPressed: () {
-            widget.onCancelByUser();
-            Navigator.of(context).pop();
-          },
-          onCancelPressed: () {
-            getOtp();
-          }
-      );
+      // showAlertActionDialog(
+      //     context: context,
+      //     title: "ERROR",
+      //     message: "An error occurred. Please try again.",
+      //     okLabel: "EXIT",
+      //     cancelLabel: "RETRY",
+      //     onPressed: () {
+      //       widget.onCancelByUser();
+      //       Navigator.of(context).pop();
+      //     },
+      //     onCancelPressed: () {
+      //       getOtp();
+      //     }
+      // );
       rethrow;
     }
   }

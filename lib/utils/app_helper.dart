@@ -72,5 +72,35 @@ String formatIsoDateForPdmsDetails(String isoDate) {
   }
 }
 
+String formatIsoDateForDiDetails(String isoDate) {
+  try {
+    // Parse the ISO 8601 date string
+    //DateTime parsedDate = DateTime.parse(isoDate);
+    DateTime parsedDate = DateFormat("MMM dd, yyyy h:mm:ss a").parse(isoDate);
+
+    // Format the date to the desired format: dd/MM/yy HH:mm
+    return DateFormat("dd/MMM/yyyy HH:mm").format(parsedDate);
+  } catch (e) {
+    // Handle any parsing errors
+    print("Error formatting date: $e");
+    return 'N/A';
+  }
+}
+
+String formatIsoDateForDiShippingDetails(String isoDate) {
+  try {
+    // Parse the ISO 8601 date string
+    //DateTime parsedDate = DateTime.parse(isoDate);
+    DateTime parsedDate = DateFormat("MMM dd, yyyy h:mm:ss a").parse(isoDate);
+
+    // Format the date to the desired format: dd/MM/yy HH:mm
+    return DateFormat("dd/MMM/yyyy").format(parsedDate);
+  } catch (e) {
+    // Handle any parsing errors
+    print("Error formatting date: $e");
+    return 'N/A';
+  }
+}
+
 
 

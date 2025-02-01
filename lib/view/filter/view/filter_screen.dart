@@ -2,10 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/view/filter/viewmodel/filter_viewmodel.dart';
+import 'package:tsnpdcl_employee/widget/primary_button.dart';
 
 
 class FilterScreen extends StatelessWidget {
@@ -103,8 +105,8 @@ class FilterScreen extends StatelessWidget {
                         child: viewModel.filteredOptionList.isEmpty
                             ? const Center(child: Text('No filter options found'))
                             : ListView.separated(
-                                shrinkWrap: true,
                                 itemCount: viewModel.filteredOptionList.length,
+                                separatorBuilder: (BuildContext context, int index) => const Divider(height: 1),
                                 itemBuilder: (context, index) {
                                   final option = viewModel.filteredOptionList[index];
                                   return CheckboxListTile(
@@ -116,11 +118,6 @@ class FilterScreen extends StatelessWidget {
                                       viewModel.toggleOptionSelection(option);
                                     },
                                   );
-                                }, separatorBuilder: (BuildContext context, int index) {
-                                    return const Divider(
-                                      thickness: 0.5,
-                                      color: Colors.grey,
-                                    );
                                 },
                         ),
                       ),
@@ -130,13 +127,27 @@ class FilterScreen extends StatelessWidget {
               ],
             ),
             bottomNavigationBar: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  // Apply filter logic
-                },
-                child: const Text('APPLY FILTER'),
-              ),
+              padding: const EdgeInsets.all(doubleTwenty),
+              child: Row(
+                children: [
+                  Expanded(
+                      child: Text(
+                        viewModel.hashMapSelectedOptions.isNotEmpty ? "(${viewModel.hashMapSelectedOptions.length}) Filters" : "(0) Filters"
+                      ),
+                  ),
+                  Expanded(child: PrimaryButton(
+                      text: "Apply Filter".toUpperCase(),
+                      fullWidth: isTrue,
+                      onPressed: () {
+                        if(viewModel.hashMapSelectedOptions.isNotEmpty) {
+                          Navigator.pop(context, viewModel.hashMapSelectedOptions);
+                        } else {
+                          showAlertDialog(context,"Please select at least filter criteria and try again");
+                        }
+                      }
+                  ),)
+                ],
+              )
             ),
           );
         },

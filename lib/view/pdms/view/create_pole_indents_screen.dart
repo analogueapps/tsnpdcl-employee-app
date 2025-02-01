@@ -37,7 +37,7 @@ class CreatePoleIndentsScreen extends StatelessWidget {
                     "Pole Indents".toUpperCase(),
                     style: const TextStyle(
                         color: Colors.white,
-                        fontSize: toolbarTitleSize,
+                        fontSize: titleSize,
                         fontWeight: FontWeight.w700
                     ),
                   ),
@@ -142,7 +142,7 @@ class CreatePoleIndentsScreen extends StatelessWidget {
                           )
                         ],
                       ),
-                      const SizedBox(height: doubleTen,),
+                      const SizedBox(height: doubleFive,),
                       const Divider(
                         color: Colors.grey,
                         thickness: 1,

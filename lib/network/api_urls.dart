@@ -32,12 +32,17 @@ class Apis{
   static const PDMS_END_POINT_BASE_URL = "$SERVER_IP:5656/NPFDAS/ep/pdms/";
   static const GET_INDENTS_OF_STATUS_URL = "getIndentsOfStatus";
   static const GET_INDENTS_FILTER_DATA_URL = "getIndentsFilterData";
+  static const GET_FILTERED_INDENTS_DATA_URL = "getFilteredIndents";
   static const REQUEST_OTP_URL = "requestOtp";
   static const REQUEST_UN_AUTH_OTP_URL = "requestUnAuthOtp";
   static const VERIFY_OTP_URL = "verifyOTP";
   static const CREATE_POLE_INDENT_URL = "createPoleIndent";
   static const UPDATE_POLE_INDENT_URL = "updatePoleIndent";
   static const FORWARD_POLE_INDENT_TO_STORES_URL = "forwardPoleIndentToStores";
-
+  static const GET_DIS_OF_STATUS_URL = "getDisOfStatus";
+  static const GET_DIS_FILTER_DATA_URL = "getDisFilterData";
+  static const GET_FILTERED_DIS_DATA_URL = "getFilteredDis";
+  static const SAVE_FORM_13_DATA_URL = "saveForm13Data";
+  static const REQUEST_DI_DOWNLOAD_LINK_URL = "requestDIDownloadLink";
 
 }
