@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:tsnpdcl_employee/model/sub_menu_grid_item.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
+import 'package:tsnpdcl_employee/utils/navigation_service.dart';
+import 'package:tsnpdcl_employee/utils/status_constants.dart';
 
 class PdmsViewModel extends ChangeNotifier {
   final List<SubMenuGridItem> _pdmsMenuItems = [];
@@ -34,19 +36,38 @@ class PdmsViewModel extends ChangeNotifier {
           title: GlobalConstants.pendingVerification,
           iconAsset: Icons.pending_actions_outlined,
           cardColor: Colors.redAccent,
-          routeName: routeName),
+          routeName: Routes.viewPoleDumpedLocationScreen,
+      ),
       SubMenuGridItem(
           title: GlobalConstants.verified,
           iconAsset: Icons.check_outlined,
           cardColor: Colors.yellow,
-          routeName: routeName),
+          routeName: Routes.viewPoleDumpedLocationScreen,
+      ),
       SubMenuGridItem(
           title: GlobalConstants.mismatch,
           iconAsset: Icons.close,
           cardColor: Colors.blue,
-          routeName: routeName),
+          routeName: Routes.viewPoleDumpedLocationScreen,
+      ),
     ]);
 
     notifyListeners();
+  }
+
+  Future<void> menuItemClicked(BuildContext context, String title, String routeName) async {
+    if (routeName == Routes.viewPoleDumpedLocationScreen) {
+      String status = '';
+      if (title == GlobalConstants.pendingVerification) {
+        status = StatusConstants.PENDING_DUMPS;
+      } else if (title == GlobalConstants.verified) {
+        status = StatusConstants.VERIFED_DUMPS;
+      } else if (title == GlobalConstants.mismatch) {
+        status = StatusConstants.MISMATCH_DUMPS;
+      }
+      Navigation.instance.navigateTo(routeName, args: status);
+    } else {
+      Navigation.instance.navigateTo(routeName);
+    }
   }
 }

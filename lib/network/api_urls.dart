@@ -44,5 +44,11 @@ class Apis{
   static const GET_FILTERED_DIS_DATA_URL = "getFilteredDis";
   static const SAVE_FORM_13_DATA_URL = "saveForm13Data";
   static const REQUEST_DI_DOWNLOAD_LINK_URL = "requestDIDownloadLink";
+  static const GET_POLE_DUMPED_LOCATION_URL = "getPoleDumpLocations";
+
+  /// REPORTS
+  static const GET_CTPT_BAR_GRAPH_DATA_URL = "getCtPtBarGraphData";
+  static const GET_MIDDLE_POLES_BAR_GRAPH_DATA_URL = "getMiddlePolesBarGraphData";
+  static const GET_MAINTENANCE_BAR_GRAPH_DATA_URL = "getMaintenanceBarGraphData";
 
 }

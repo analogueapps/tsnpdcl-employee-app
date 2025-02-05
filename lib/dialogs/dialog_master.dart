@@ -1,5 +1,6 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
@@ -128,7 +129,15 @@ Future<void> showCustomListDialog(BuildContext context, List<GlobalListDialogIte
                 onTap: () {
                   //onOptionSelected(index);
                   Navigator.pop(context);
-                  Navigation.instance.navigateTo(globalListDialogItem[index].routeName);
+                  if(globalListDialogItem[index].title == "CT PT Failure Reports") {
+                    Navigation.instance.navigateTo(globalListDialogItem[index].routeName, args: Apis.GET_CTPT_BAR_GRAPH_DATA_URL);
+                  } else if(globalListDialogItem[index].title == "Middle Poles Reports") {
+                    Navigation.instance.navigateTo(globalListDialogItem[index].routeName, args: Apis.GET_MIDDLE_POLES_BAR_GRAPH_DATA_URL);
+                  } else if(globalListDialogItem[index].title == "Maintenance Reports") {
+                    Navigation.instance.navigateTo(globalListDialogItem[index].routeName, args: Apis.GET_MAINTENANCE_BAR_GRAPH_DATA_URL);
+                  } else {
+                    Navigation.instance.navigateTo(globalListDialogItem[index].routeName);
+                  }
                 },
               );
             },

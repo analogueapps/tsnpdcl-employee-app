@@ -46,7 +46,8 @@ class PdmsScreen extends StatelessWidget {
                 final item = viewModel.pdmsMenuItems[index];
                 return GestureDetector(
                   onTap: () {
-                    Navigation.instance.navigateTo(item.routeName);
+                    //Navigation.instance.navigateTo(item.routeName);
+                    viewModel.menuItemClicked(context, item.title, item.routeName);
                   },
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,

@@ -27,9 +27,11 @@ import 'package:tsnpdcl_employee/view/online_pr_menu/view/online_pr_menu_screen.
 import 'package:tsnpdcl_employee/view/pdms/view/create_pole_indents_screen.dart';
 import 'package:tsnpdcl_employee/view/pdms/view/pdms_screen.dart';
 import 'package:tsnpdcl_employee/view/pdms/view/view_detailed_di_tabs_screen.dart';
+import 'package:tsnpdcl_employee/view/pdms/view/view_detailed_pole_dumped_location_screen.dart';
 import 'package:tsnpdcl_employee/view/pdms/view/view_detailed_pole_indent_screen.dart';
 import 'package:tsnpdcl_employee/view/pdms/view/view_detailed_transport_screen.dart';
 import 'package:tsnpdcl_employee/view/pdms/view/view_dispatch_instructions_screen.dart';
+import 'package:tsnpdcl_employee/view/pdms/view/view_pole_dumped_location_screen.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/view/new_proposal_screen.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/view/pole_11kv_feeder_mark_screen.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/view/pole_33kv_proposal_feeder_mark_screen.dart';
@@ -38,6 +40,7 @@ import 'package:tsnpdcl_employee/view/pole_tracker/view/pole_tracker_selection_s
 import 'package:tsnpdcl_employee/view/pole_tracker/view/pole_tracker_selection_view_sketch_screen.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/view/view_digital_sketch_screen.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/view/view_offline_feeders_screen.dart';
+import 'package:tsnpdcl_employee/view/reports/view/reports_screen.dart';
 import 'package:tsnpdcl_employee/view/search_consumer/view/search_consumer_screen.dart';
 import 'package:tsnpdcl_employee/view/web_view/view/web_view_screen.dart';
 import 'package:tsnpdcl_employee/widget/pinch_zoom_imageview.dart';
@@ -170,6 +173,17 @@ class AppRouter {
       case ViewDetailedTransportScreen.id:
         return MaterialPageRoute(
             builder: (_) => ViewDetailedTransportScreen(data: settings.arguments as String));
+      case ViewPoleDumpedLocationScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => ViewPoleDumpedLocationScreen(status: settings.arguments as String));
+      case ViewDetailedPoleDumpedLocationScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => ViewDetailedPoleDumpedLocationScreen(data: settings.arguments as String));
+
+      // REPORTS
+      case ReportsScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => ReportsScreen(path: settings.arguments as String));
 
       // FILTER
       case FilterScreen.id:

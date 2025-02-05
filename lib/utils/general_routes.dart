@@ -55,6 +55,12 @@ class Routes {
   static const String viewDispatchInstructionsScreen = "ViewDispatchInstructionsScreen";
   static const String viewDetailedDiTabsScreen = "ViewDetailedDiTabsScreen";
   static const String viewDetailedTransportScreen = "ViewDetailedTransportScreen";
+  static const String viewPoleDumpedLocationScreen = "ViewPoleDumpedLocationScreen";
+  static const String viewDetailedPoleDumpedLocationScreen = "ViewDetailedPoleDumpedLocationScreen";
+
+  // REPORTS
+  static const String reportsScreen = "ReportsScreen";
+
 
   // FILTER
   static const String filterScreen = "FilterScreen";

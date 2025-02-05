@@ -558,15 +558,15 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       globalListDialogItem.addAll([
         GlobalListDialogItem(
           title: "CT PT Failure Reports",
-          routeName: ""
+          routeName: Routes.reportsScreen
         ),
         GlobalListDialogItem(
             title: "Middle Poles Reports",
-            routeName: ""
+            routeName: Routes.reportsScreen
         ),
         GlobalListDialogItem(
             title: "Maintenance Reports",
-            routeName: ""
+            routeName: Routes.reportsScreen
         ),
       ]);
       showCustomListDialog(context, globalListDialogItem);

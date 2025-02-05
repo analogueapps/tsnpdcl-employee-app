@@ -43,4 +43,21 @@ class StatusConstants {
         return "N/A";
     }
   }
+
+  static const String PENDING_DUMPS = "pending";
+  static const String VERIFED_DUMPS = "verified";
+  static const String MISMATCH_DUMPS = "mismatch";
+
+  static String getPoleDumpedLocationTitle(String status) {
+    switch (status) {
+      case PENDING_DUMPS:
+        return "Verification Pending";
+      case VERIFED_DUMPS:
+        return "Verified Dumps";
+      case MISMATCH_DUMPS:
+        return "Mismatched Dumps";
+      default:
+        return "N/A";
+    }
+  }
 }
