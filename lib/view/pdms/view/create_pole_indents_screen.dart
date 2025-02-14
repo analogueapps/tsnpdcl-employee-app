@@ -71,84 +71,89 @@ class CreatePoleIndentsScreen extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final item = viewModel.createPoleIndentList[index];
 
-                  return Column(
-                    children: [
-                      const SizedBox(height: doubleFive,),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(width: doubleTen,),
-                                    Expanded(
-                                      child: Text(
-                                        "#${checkNull(item.sectionId)} SEC:${checkNull(item.section)}",
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.w700,
-                                          fontSize:
-                                          normalSize,
+                  return GestureDetector(
+                    onTap: () {
+                      Navigation.instance.navigateTo(Routes.viewDetailedPoleIndentScreen, args: jsonEncode(item));
+                    },
+                    child: Column(
+                      children: [
+                        const SizedBox(height: doubleFive,),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(width: doubleTen,),
+                                      Expanded(
+                                        child: Text(
+                                          "#${checkNull(item.sectionId)} SEC:${checkNull(item.section)}",
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize:
+                                            normalSize,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    const SizedBox(width: doubleTwenty,),
-                                    Text(
-                                      checkNull(item.indentStatus),
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.red,
-                                        fontSize: regularTextSize,
-                                      ),
-                                      textAlign: TextAlign.right,
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: doubleFive,),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(width: doubleTen,),
-                                    Expanded(
-                                      child: Text(
-                                        "Date:${formatIsoDateForPdmsDetails(checkNull(item.indentDate))}",
+                                      const SizedBox(width: doubleTwenty,),
+                                      Text(
+                                        checkNull(item.indentStatus),
                                         style: const TextStyle(
-                                          color: Colors.grey,
-                                          fontSize:
-                                          normalSize,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.red,
+                                          fontSize: regularTextSize,
+                                        ),
+                                        textAlign: TextAlign.right,
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: doubleFive,),
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(width: doubleTen,),
+                                      Expanded(
+                                        child: Text(
+                                          "Date:${formatIsoDateForPdmsDetails(checkNull(item.indentDate))}",
+                                          style: const TextStyle(
+                                            color: Colors.grey,
+                                            fontSize:
+                                            normalSize,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    const SizedBox(width: doubleTwenty,),
-                                    Text(
-                                      "Indent Qty:${item.requestedQty ?? "0"}",
-                                      style: const TextStyle(
-                                        color: CommonColors.colorPrimary,
-                                        fontSize: regularTextSize,
+                                      const SizedBox(width: doubleTwenty,),
+                                      Text(
+                                        "Indent Qty:${item.requestedQty ?? "0"}",
+                                        style: const TextStyle(
+                                          color: CommonColors.colorPrimary,
+                                          fontSize: regularTextSize,
+                                        ),
+                                        textAlign: TextAlign.right,
                                       ),
-                                      textAlign: TextAlign.right,
-                                    ),
-                                  ],
-                                )
-                              ],
+                                    ],
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
-                          IconButton(
-                              onPressed: () {
-                                Navigation.instance.navigateTo(Routes.viewDetailedPoleIndentScreen, args: jsonEncode(item));
-                              },
-                              icon: const Icon(Icons.arrow_forward_ios_rounded, size: 14,)
-                          )
-                        ],
-                      ),
-                      const SizedBox(height: doubleFive,),
-                      const Divider(
-                        color: Colors.grey,
-                        thickness: 1,
-                        height: 1,
-                      ),
-                    ],
+                            IconButton(
+                                onPressed: () {
+                                  Navigation.instance.navigateTo(Routes.viewDetailedPoleIndentScreen, args: jsonEncode(item));
+                                },
+                                icon: const Icon(Icons.arrow_forward_ios_rounded, size: 14,)
+                            )
+                          ],
+                        ),
+                        const SizedBox(height: doubleFive,),
+                        const Divider(
+                          color: Colors.grey,
+                          thickness: 1,
+                          height: 1,
+                        ),
+                      ],
+                    ),
                   );
                 }
             ),

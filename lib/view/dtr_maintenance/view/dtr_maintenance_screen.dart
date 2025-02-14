@@ -4,6 +4,7 @@ import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
+import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/view/dtr_maintenance/viewmodel/dtr_maintenance_viewmodel.dart';
 import 'package:tsnpdcl_employee/view/online_pr_menu/viewmodel/online_pr_menu_viewmodel.dart';
 
@@ -32,19 +33,22 @@ class DtrMaintenanceScreen extends StatelessWidget {
         child: Consumer<DtrMaintenanceViewModel>(
           builder: (context, viewModel, child) {
             return viewModel.dtrMaintenanceMenuItems.isNotEmpty
-                ? Expanded(
-              child: GridView.builder(
-                padding: const EdgeInsets.all(8.0),
-                gridDelegate:
-                const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: numThree, // Number of columns
-                  childAspectRatio: 1,
-                ),
-                itemCount: viewModel.dtrMaintenanceMenuItems.length,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  final item = viewModel.dtrMaintenanceMenuItems[index];
-                  return Column(
+                ? GridView.builder(
+              padding: const EdgeInsets.all(8.0),
+              gridDelegate:
+              const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: numThree, // Number of columns
+                childAspectRatio: 1,
+              ),
+              itemCount: viewModel.dtrMaintenanceMenuItems.length,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                final item = viewModel.dtrMaintenanceMenuItems[index];
+                return GestureDetector(
+                  onTap: () {
+                    viewModel.menuItemClicked(context, item.title, item.routeName);
+                  },
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Container(
@@ -82,9 +86,9 @@ class DtrMaintenanceScreen extends StatelessWidget {
                         ),
                       ),
                     ],
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             )
                 : const Expanded(
                 child: Center(

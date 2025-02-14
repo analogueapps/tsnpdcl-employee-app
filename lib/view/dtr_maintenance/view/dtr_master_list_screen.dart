@@ -1,46 +1,31 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
-import 'package:tsnpdcl_employee/utils/navigation_service.dart';
-import 'package:tsnpdcl_employee/view/pdms/viewmodel/view_dispatch_instructions_viewmodel.dart';
+import 'package:tsnpdcl_employee/view/dtr_maintenance/viewmodel/dtr_master_list_viewmodel.dart';
 
-class ViewDispatchInstructionsScreen extends StatelessWidget {
-  static const id = Routes.viewDispatchInstructionsScreen;
-
-  const ViewDispatchInstructionsScreen({
-    super.key,
-  });
+class DtrMasterListScreen extends StatelessWidget {
+  static const id = Routes.dtrMasterListScreen;
+  const DtrMasterListScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => ViewDispatchInstructionsViewModel(context: context),
-      child: Consumer<ViewDispatchInstructionsViewModel>(
+      create: (_) => DtrMasterListViewmodel(context: context),
+      child: Consumer<DtrMasterListViewmodel>(
         builder: (context, viewModel, child) {
           return Scaffold(
             appBar: AppBar(
               backgroundColor: CommonColors.colorPrimary,
-              title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "View Dispatch Instructions".toUpperCase(),
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: titleSize,
-                        fontWeight: FontWeight.w700
-                    ),
-                  ),
-                  Text(
-                    viewModel.poleDispatchInstructionList.isNotEmpty ? "Showing ${viewModel.poleDispatchInstructionList.length} D.I(s)" : "No D.I(s)",
-                    style: const TextStyle(fontSize: normalSize, color: Colors.grey),
-                  ),
-                ],
+              title: Text(
+                "Assign DTR Inspection".toUpperCase(),
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: titleSize,
+                    fontWeight: FontWeight.w700
+                ),
               ),
               iconTheme: const IconThemeData(
                 color: Colors.white,
@@ -48,16 +33,16 @@ class ViewDispatchInstructionsScreen extends StatelessWidget {
             ),
             body: viewModel.isLoading
                 ? const Center(child: CircularProgressIndicator())
-                : viewModel.poleDispatchInstructionList.isEmpty
+                : viewModel.dtrStructureIndexList.isEmpty
                 ? const Center(child: Text("No data founded."),)
                 : ListView.builder(
-                itemCount: viewModel.poleDispatchInstructionList.length,
+                itemCount: viewModel.dtrStructureIndexList.length,
                 itemBuilder: (context, index) {
-                  final item = viewModel.poleDispatchInstructionList[index];
+                  final item = viewModel.dtrStructureIndexList[index];
 
                   return GestureDetector(
                     onTap: () {
-                      Navigation.instance.navigateTo(Routes.viewDetailedDiTabsScreen, args: jsonEncode(item));
+                      viewModel.containerClicked(item);
                     },
                     child: Column(
                       children: [
@@ -73,23 +58,13 @@ class ViewDispatchInstructionsScreen extends StatelessWidget {
                                       const SizedBox(width: doubleTen,),
                                       Expanded(
                                         child: Text(
-                                          "#${checkNull(item.dispatchInstructionId.toString())}",
+                                          checkNull(item.structureCode),
                                           style: const TextStyle(
                                             fontWeight: FontWeight.w700,
                                             fontSize:
                                             normalSize,
                                           ),
                                         ),
-                                      ),
-                                      const SizedBox(width: doubleTwenty,),
-                                      Text(
-                                        checkNull(item.diStatus),
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.red,
-                                          fontSize: regularTextSize,
-                                        ),
-                                        textAlign: TextAlign.right,
                                       ),
                                     ],
                                   ),
@@ -98,36 +73,35 @@ class ViewDispatchInstructionsScreen extends StatelessWidget {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       const SizedBox(width: doubleTen,),
-                                      Expanded(
-                                        child: Text(
-                                          checkNull(item.purchaseOrderNo),
-                                          style: const TextStyle(
-                                            color: Colors.grey,
-                                            fontSize:
-                                            normalSize,
-                                          ),
+                                      const Text(
+                                        "Last Maintenance Date: ",
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: regularTextSize,
+                                          fontWeight: FontWeight.w300
                                         ),
                                       ),
-                                      const SizedBox(width: doubleTwenty,),
                                       Text(
-                                        "Qty:${item.qtyToBeDispatched ?? "0"}",
-                                        style: const TextStyle(
-                                          color: CommonColors.colorPrimary,
-                                          fontSize: regularTextSize,
+                                        checkNull(item.lastMaintainedDate),
+                                        style: TextStyle(
+                                          color: checkNull(item.lastMaintainedDate) != "NEVER" ? CommonColors.successGreen : CommonColors.deepRed,
+                                            fontSize: regularTextSize,
+                                            fontWeight: FontWeight.w600
                                         ),
-                                        textAlign: TextAlign.right,
                                       ),
                                     ],
                                   )
                                 ],
                               ),
                             ),
-                            IconButton(
-                                onPressed: () {
-                                  Navigation.instance.navigateTo(Routes.viewDetailedDiTabsScreen, args: jsonEncode(item));
-                                },
-                                icon: const Icon(Icons.arrow_forward_ios_rounded, size: 14,)
-                            )
+                            Text(
+                              item.maintenanceCount.toString() ?? "0",
+                              style: const TextStyle(
+                                fontSize: extraRegularSize,
+                                fontWeight: FontWeight.w900
+                              ),
+                            ),
+                            const SizedBox(width: doubleTen,),
                           ],
                         ),
                         const SizedBox(height: doubleFive,),

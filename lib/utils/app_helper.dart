@@ -102,5 +102,22 @@ String formatIsoDateForDiShippingDetails(String isoDate) {
   }
 }
 
+String formatIsoDateForDtrInspectionDetails(String isoDate) {
+  try {
+    /// Parse the input string to DateTime
+    DateTime dateTime = DateTime.parse(isoDate);
+
+    // Convert to IST (UTC+5:30)
+    dateTime = dateTime.toUtc().add(const Duration(hours: 5, minutes: 30));
+
+    // Format the date
+    return DateFormat("dd/MM/yyyy hh:mm a").format(dateTime);
+  } catch (e) {
+    // Handle any parsing errors
+    print("Error formatting date: $e");
+    return 'N/A';
+  }
+}
+
 
 

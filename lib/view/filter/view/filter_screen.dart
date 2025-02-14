@@ -52,25 +52,35 @@ class FilterScreen extends StatelessWidget {
               children: [
                 Expanded(
                   flex: 2,
-                  child: ListView.builder(
-                    itemCount: viewModel.filters.length,
-                    itemBuilder: (context, index) {
-                      final filter = viewModel.filters[index];
-                      return GestureDetector(
-                        onTap: () {
-                          viewModel.selectFilter(filter);
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(doubleFifteen),
-                          color: viewModel.selectedFilter == filter
-                              ? Colors.grey.shade100
-                              : Colors.transparent,
-                          child: Text(
-                            filter.labelName!,
+                  child: Container(
+                    height: double.infinity,
+                    color: Colors.grey.shade100,
+                    child: ListView.builder(
+                      itemCount: viewModel.filters.length,
+                      itemBuilder: (context, index) {
+                        final filter = viewModel.filters[index];
+                        return GestureDetector(
+                          onTap: () {
+                            viewModel.selectFilter(filter);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(doubleFifteen),
+                            color: viewModel.selectedFilter == filter
+                                ? Colors.white
+                                : Colors.transparent,
+                            child: Text(
+                              filter.labelName!,
+                              style: TextStyle(
+                                color: viewModel.selectedFilter == filter
+                                    ? CommonColors.colorPrimary
+                                    : Colors.black,
+                                fontWeight: FontWeight.w700,
+                              )
+                            ),
                           ),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   ),
                 ),
                 Expanded(
@@ -112,7 +122,8 @@ class FilterScreen extends StatelessWidget {
                                   return CheckboxListTile(
                                     controlAffinity: ListTileControlAffinity.leading,
                                     contentPadding: EdgeInsets.zero,
-                                    title: Text(option.optionName!),
+                                    visualDensity: const VisualDensity(horizontal: -4, vertical: -2), // Reduce space
+                                    title: Text(option.optionName!, style: const TextStyle(fontSize: extraRegularSize, fontWeight: FontWeight.w700),),
                                     value: option.isSelected,
                                     onChanged: (value) {
                                       viewModel.toggleOptionSelection(option);

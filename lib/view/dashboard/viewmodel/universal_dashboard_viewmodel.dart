@@ -196,7 +196,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.exceptionalsTitle,
           imageAsset: Assets.exceptionals,
-          routeName: routeName),
+          routeName: Routes.exceptionalsScreen
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.pdmsTitle,
           imageAsset: Assets.pdms,
@@ -234,11 +235,11 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       ),
     ]);
     others.addAll([
-      UniversalDashboardItem(
-          title: GlobalConstants.ganeshPandalInfoTitle,
-          imageAsset: Assets.ganeshPandalInfo,
-          routeName: Routes.ganeshPandalInfoScreen
-      ),
+      // UniversalDashboardItem(
+      //     title: GlobalConstants.ganeshPandalInfoTitle,
+      //     imageAsset: Assets.ganeshPandalInfo,
+      //     routeName: Routes.ganeshPandalInfoScreen
+      // ),
       UniversalDashboardItem(
           title: GlobalConstants.mappingOfNonAglServicesTitle,
           imageAsset: Assets.mappingOfNonAglServices,
@@ -330,11 +331,11 @@ class UniversalDashboardViewModel extends ChangeNotifier {
           imageAsset: Assets.assetMapping,
           routeName: Routes.assetMappingScreen
       ),
-      UniversalDashboardItem(
-          title: GlobalConstants.ganeshPandalInfoTitle,
-          imageAsset: Assets.ganeshPandalInfo,
-          routeName: Routes.ganeshPandalInfoScreen
-      ),
+      // UniversalDashboardItem(
+      //     title: GlobalConstants.ganeshPandalInfoTitle,
+      //     imageAsset: Assets.ganeshPandalInfo,
+      //     routeName: Routes.ganeshPandalInfoScreen
+      // ),
       UniversalDashboardItem(
           title: GlobalConstants.onlinePrTitle,
           imageAsset: Assets.onlinePr,
@@ -416,7 +417,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.exceptionalsTitle,
           imageAsset: Assets.exceptionals,
-          routeName: routeName),
+          routeName: Routes.exceptionalsScreen
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.ltmtTitle,
           imageAsset: Assets.ltmt,

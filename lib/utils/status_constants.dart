@@ -60,4 +60,24 @@ class StatusConstants {
         return "N/A";
     }
   }
+
+  static const String TYPE_PENDING_INSPECTION = "pendingInspection";
+  static const String TYPE_INSPECTION_DONE = "inspectionDone";
+  static const String TYPE_TO_BE_MAINTAINED = "toBeMaintained";
+  static const String TYPE_MAINTENANCE_DONE = "maintenanceDone";
+
+  static String getDTRInspectionListScreenTitle(String status) {
+    switch (status) {
+      case TYPE_PENDING_INSPECTION:
+        return "Under Inspection";
+      case TYPE_INSPECTION_DONE:
+        return "Inspection Completed";
+      case TYPE_TO_BE_MAINTAINED:
+        return "Maintenance Due";
+      case TYPE_MAINTENANCE_DONE:
+        return "Maintenance Completed";
+      default:
+        return "N/A";
+    }
+  }
 }

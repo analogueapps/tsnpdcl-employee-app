@@ -7,7 +7,10 @@ import 'package:tsnpdcl_employee/view/consumer_details/view/dlist_form_screen.da
 import 'package:tsnpdcl_employee/view/ctpt_menu/view/ctpt_menu_screen.dart';
 import 'package:tsnpdcl_employee/view/dashboard/view/universal_dashboard_screen.dart';
 import 'package:tsnpdcl_employee/view/dtr_failure/view/dtr_failure_screen.dart';
+import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_inspection_list_screen.dart';
 import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_maintenance_screen.dart';
+import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_master_list_screen.dart';
+import 'package:tsnpdcl_employee/view/exceptionals/view/exceptionals_screen.dart';
 import 'package:tsnpdcl_employee/view/failure_dtr_inspection/view/failure_dtr_inspection_screen.dart';
 import 'package:tsnpdcl_employee/view/filter/view/filter_screen.dart';
 import 'package:tsnpdcl_employee/view/ganesh_pandal/view/ganesh_pandal_info_screen.dart';
@@ -189,6 +192,19 @@ class AppRouter {
       case FilterScreen.id:
         return MaterialPageRoute(
             builder: (_) => FilterScreen(data: settings.arguments as String));
+
+      // EXCEPTIONALS
+      case ExceptionalsScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => const ExceptionalsScreen());
+
+      // DTR MAINTENANCE
+      case DtrMasterListScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => const DtrMasterListScreen());
+      case DtrInspectionListScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => DtrInspectionListScreen(status: settings.arguments as String));
 
       // Widgets
       case PinchZoomImageView.id:

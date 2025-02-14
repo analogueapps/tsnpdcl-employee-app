@@ -61,9 +61,15 @@ class Routes {
   // REPORTS
   static const String reportsScreen = "ReportsScreen";
 
+  // EXCEPTIONALS
+  static const String exceptionalsScreen = "ExceptionalsScreen";
 
   // FILTER
   static const String filterScreen = "FilterScreen";
+
+  // DTR MAINTENANCE
+  static const String dtrMasterListScreen = "DtrMasterListScreen";
+  static const String dtrInspectionListScreen = "DtrInspectionListScreen";
 
   static const String ganeshPandalInformationScreen = 'ganesh_pandal_information_screen';
 

@@ -9,6 +9,7 @@ import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
+import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
@@ -119,147 +120,155 @@ class CreatePoleIndentsViewmodel extends ChangeNotifier {
     String? selectedItem;
 
     showDialog(
-      //barrierDismissible: false,
+      barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: Text(
-                      "Create Pole Indent".toUpperCase(),
+              titlePadding: EdgeInsets.zero,
+              title: Container(
+                width: double.infinity,
+                color: CommonColors.colorPrimary,
+                padding: const EdgeInsets.symmetric(vertical: doubleFifteen),
+                child: Text(
+                  "Create Pole Indent".toUpperCase(),
+                  textAlign: TextAlign.center, // Center align the text
+                  style: const TextStyle(
+                    color: Colors.white, // Text color
+                    fontWeight: FontWeight.w600, // Optional: Bold text
+                    fontSize: titleSize, // Optional: Font size
+                  ),
+                ),
+              ),
+              content: SizedBox(
+                width: MediaQuery.of(context).size.width * pointEight, // 80% of screen width
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "REQUISITION NO".toUpperCase(),
                       style: const TextStyle(
-                        fontSize: toolbarTitleSize,
-                        fontWeight: FontWeight.w700,
+                        fontSize: normalSize,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
-                  ),
-                  const SizedBox(height: doubleFifteen,),
-                  Text(
-                    "REQUISITION NO".toUpperCase(),
-                    style: const TextStyle(
-                      fontSize: normalSize,
-                      fontWeight: FontWeight.w500,
+                    const SizedBox(height: doubleFive,),
+                    FillTextFormField(
+                      controller: requisitionNoTextEditingController,
+                      labelText: '',
+                      keyboardType: TextInputType.text,
                     ),
-                  ),
-                  const SizedBox(height: doubleFive,),
-                  FillTextFormField(
-                    controller: requisitionNoTextEditingController,
-                    labelText: '',
-                    keyboardType: TextInputType.text,
-                  ),
-                  const SizedBox(height: doubleFifteen,),
-                  const Text(
-                    "Choose pole type",
-                    style: TextStyle(
-                      fontSize: normalSize,
-                      fontWeight: FontWeight.w500,
+                    const SizedBox(height: doubleFifteen,),
+                    const Text(
+                      "Choose pole type",
+                      style: TextStyle(
+                        fontSize: normalSize,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: doubleFive,),
-                  DropdownButton<String>(
-                    isExpanded: true,
-                    hint: const Text("Select an item"),
-                    value: selectedItem,
-                    items: items.map((item) => DropdownMenuItem<String>(
-                      value: item,
-                      child: Text(item),
-                    )).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        selectedItem = newValue;
-                      });
-                    },
-                  ),
-                  const Divider(),
-                  const Text(
-                    "Quantity",
-                    style: TextStyle(
-                      fontSize: normalSize,
-                      fontWeight: FontWeight.w500,
+                    const SizedBox(height: doubleFive,),
+                    DropdownButton<String>(
+                      isExpanded: true,
+                      hint: const Text("Select an item"),
+                      value: selectedItem,
+                      items: items.map((item) => DropdownMenuItem<String>(
+                        value: item,
+                        child: Text(item),
+                      )).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedItem = newValue;
+                        });
+                      },
                     ),
-                  ),
-                  const SizedBox(height: doubleFive,),
-                  FillTextFormField(
-                    controller: quantityTextEditingController,
-                    labelText: '',
-                    keyboardType: TextInputType.number,
-                  ),
-                  const Divider(),
-                  CheckboxListTile(
-                    value: isChecked1, // Boolean variable to track state
-                    onChanged: (bool? value) {
-                      setState(() {
-                        isChecked1 = value ?? false;
-                      });
-                    },
-                    title: const Text(
-                      "Indent Qty is available against the remaining quantity of SAP Requisition",
+                    const Divider(),
+                    const Text(
+                      "Quantity",
+                      style: TextStyle(
+                        fontSize: normalSize,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                    contentPadding: EdgeInsets.zero,
-                    controlAffinity: ListTileControlAffinity.leading,
-                  ),
-                  CheckboxListTile(
-                    value: isChecked2, // Boolean variable to track state
-                    onChanged: (bool? value) {
-                      setState(() {
-                        isChecked2 = value ?? false;
-                      });
-                    },
-                    title: const Text(
-                      "SAP Requisition has selected Pole Type.",
+                    const SizedBox(height: doubleFive,),
+                    FillTextFormField(
+                      controller: quantityTextEditingController,
+                      labelText: '',
+                      keyboardType: TextInputType.number,
                     ),
-                    contentPadding: EdgeInsets.zero,
-                    controlAffinity: ListTileControlAffinity.leading,
-                  ),
-                  const SizedBox(height: doubleFive,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.grey,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
+                    const Divider(),
+                    CheckboxListTile(
+                      value: isChecked1, // Boolean variable to track state
+                      onChanged: (bool? value) {
+                        setState(() {
+                          isChecked1 = value ?? false;
+                        });
+                      },
+                      title: const Text(
+                        "Indent Qty is available against the remaining quantity of SAP Requisition",
+                      ),
+                      contentPadding: EdgeInsets.zero,
+                      controlAffinity: ListTileControlAffinity.leading,
+                    ),
+                    CheckboxListTile(
+                      value: isChecked2, // Boolean variable to track state
+                      onChanged: (bool? value) {
+                        setState(() {
+                          isChecked2 = value ?? false;
+                        });
+                      },
+                      title: const Text(
+                        "SAP Requisition has selected Pole Type.",
+                      ),
+                      contentPadding: EdgeInsets.zero,
+                      controlAffinity: ListTileControlAffinity.leading,
+                    ),
+                    const SizedBox(height: doubleFive,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.grey,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
                           ),
+                          onPressed: () async {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text("Cancel".toUpperCase(), style: const TextStyle(fontSize: extraRegularSize, color: Colors.white),),
                         ),
-                        onPressed: () async {
-                          Navigator.of(context).pop();
-                        },
-                        child: Text("Cancel".toUpperCase(), style: const TextStyle(fontSize: extraRegularSize, color: Colors.white),),
-                      ),
-                      const SizedBox(width: doubleTen,),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
+                        const SizedBox(width: doubleTen,),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
                           ),
+                          onPressed: () async {
+                            if (requisitionNoTextEditingController.text.isEmpty || requisitionNoTextEditingController.text.length < 5) {
+                              showAlertDialog(context, "Please enter SAP Requisition No");
+                            } else if (selectedItem == null || selectedItem!.isEmpty) {
+                              showAlertDialog(context, "Please select the Pole Type");
+                            } else if (quantityTextEditingController.text.isEmpty) {
+                              showAlertDialog(context, "Please enter quantity");
+                            } else if (!isChecked1) {
+                              showAlertDialog(context, "Please check the checkbox");
+                            } else if (!isChecked2) {
+                              showAlertDialog(context, "Please check the checkbox");
+                            } else {
+                              createIndent(requisitionNoTextEditingController.text, selectedItem!, quantityTextEditingController.text);
+                            }
+                          },
+                          child: Text("Create Indent".toUpperCase(), style: const TextStyle(fontSize: extraRegularSize, color: Colors.white),),
                         ),
-                        onPressed: () async {
-                          if (requisitionNoTextEditingController.text.isEmpty || requisitionNoTextEditingController.text.length < 5) {
-                            showAlertDialog(context, "Please enter SAP Requisition No");
-                          } else if (selectedItem == null || selectedItem!.isEmpty) {
-                            showAlertDialog(context, "Please select the Pole Type");
-                          } else if (quantityTextEditingController.text.isEmpty) {
-                            showAlertDialog(context, "Please enter quantity");
-                          } else if (!isChecked1) {
-                            showAlertDialog(context, "Please check the checkbox");
-                          } else if (!isChecked2) {
-                            showAlertDialog(context, "Please check the checkbox");
-                          } else {
-                            createIndent(requisitionNoTextEditingController.text, selectedItem!, quantityTextEditingController.text);
-                          }
-                        },
-                        child: Text("Create Indent".toUpperCase(), style: const TextStyle(fontSize: extraRegularSize, color: Colors.white),),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
             );
           },

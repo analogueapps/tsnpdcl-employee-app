@@ -36,120 +36,123 @@ class DispatchInstructionsDetailsViewModel extends ChangeNotifier {
     }
 
     showDialog(
-      //barrierDismissible: false,
+      barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          "Total Form-13 Issued Qty".toUpperCase(),
-                          style: const TextStyle(
-                            fontSize: normalSize,
-                            fontWeight: FontWeight.w500,
+              content: SizedBox(
+                width: MediaQuery.of(context).size.width * pointEight, // 80% of screen width
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "Total Form-13 Issued Qty".toUpperCase(),
+                            style: const TextStyle(
+                              fontSize: normalSize,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(width: doubleFive,),
-                      Expanded(
-                        child: Text(
-                          NumberFormat("00").format(verifiedCount),
-                          textAlign: TextAlign.end,
-                          style: const TextStyle(
-                            color: CommonColors.successGreen,
+                        const SizedBox(width: doubleFive,),
+                        Expanded(
+                          child: Text(
+                            NumberFormat("00").format(verifiedCount),
+                            textAlign: TextAlign.end,
+                            style: const TextStyle(
+                              color: CommonColors.successGreen,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: doubleTen,),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          "Form-13 Issuing Quantity".toUpperCase(),
-                          style: const TextStyle(
-                            fontSize: normalSize,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: doubleFive,),
-                      Expanded(
-                        child: Text(
-                          textAlign: TextAlign.end,
-                          NumberFormat("00").format(verifiedCount),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: doubleTen,),
-                  Container(
-                    padding: const EdgeInsets.all(doubleFive),
-                    alignment: Alignment.center,
-                    decoration: const BoxDecoration(color: Color(0xfffff3cd)),
-                    child: const Text(
-                      'Please note that entering the quantity of Form-13 issued here will not affect in SAP. Kindly issue Form-13 in SAP first, then enter the issued quantity here and submit to ensure synchronization.',
-
+                      ],
                     ),
-                  ),
-                  const SizedBox(height: doubleFive,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.grey,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
+                    const SizedBox(height: doubleTen,),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "Form-13 Issuing Quantity".toUpperCase(),
+                            style: const TextStyle(
+                              fontSize: normalSize,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
-                        onPressed: () async {
-                          Navigator.of(context).pop();
-                        },
-                        child: Text("Cancel".toUpperCase(), style: const TextStyle(fontSize: extraRegularSize, color: Colors.white),),
-                      ),
-                      const SizedBox(width: doubleTen,),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
+                        const SizedBox(width: doubleFive,),
+                        Expanded(
+                          child: Text(
+                            textAlign: TextAlign.end,
+                            NumberFormat("00").format(verifiedCount),
                           ),
                         ),
-                        onPressed: () async {
-                          if (verifiedCount ==0) {
-                            showErrorDialog(context, "You cannot issue Form-13 when verified quantity is zero");
-                          } else {
-                            showDialog(
-                              barrierDismissible: false,
-                              context: context,
-                              builder: (BuildContext context) {
-                                return OtpRequestAndValidateDialog(
-                                  isAuthenticatedOtp: true,
-                                  onComplete: (verified, requestId) {
-                                    saveForm13Data();
-                                  },
-                                  onCancelByUser: () {
+                      ],
+                    ),
+                    const SizedBox(height: doubleTen,),
+                    Container(
+                      padding: const EdgeInsets.all(doubleFive),
+                      alignment: Alignment.center,
+                      decoration: const BoxDecoration(color: Color(0xfffff3cd)),
+                      child: const Text(
+                        'Please note that entering the quantity of Form-13 issued here will not affect in SAP. Kindly issue Form-13 in SAP first, then enter the issued quantity here and submit to ensure synchronization.',
 
-                                  },
-                                );
-                              },
-                            );
-                          }
-                        },
-                        child: Text("Ok".toUpperCase(), style: const TextStyle(fontSize: extraRegularSize, color: Colors.white),),
                       ),
-                    ],
-                  ),
-                ],
+                    ),
+                    const SizedBox(height: doubleFive,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.grey,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                          onPressed: () async {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text("Cancel".toUpperCase(), style: const TextStyle(fontSize: extraRegularSize, color: Colors.white),),
+                        ),
+                        const SizedBox(width: doubleTen,),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                          onPressed: () async {
+                            if (verifiedCount ==0) {
+                              showErrorDialog(context, "You cannot issue Form-13 when verified quantity is zero");
+                            } else {
+                              showDialog(
+                                barrierDismissible: false,
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return OtpRequestAndValidateDialog(
+                                    isAuthenticatedOtp: true,
+                                    onComplete: (verified, requestId) {
+                                      saveForm13Data();
+                                    },
+                                    onCancelByUser: () {
+
+                                    },
+                                  );
+                                },
+                              );
+                            }
+                          },
+                          child: Text("Ok".toUpperCase(), style: const TextStyle(fontSize: extraRegularSize, color: Colors.white),),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             );
           },
