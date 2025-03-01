@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
 import 'package:tsnpdcl_employee/dialogs/process_dialog.dart';
 import 'package:tsnpdcl_employee/network/api_provider.dart';
@@ -9,6 +10,7 @@ import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
+import 'package:tsnpdcl_employee/utils/general_assets.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/view/auth/model/npdcl_user.dart';
@@ -299,14 +301,19 @@ class DtrMasterListViewmodel extends ChangeNotifier {
   void assignDtrInspectionDialog(DtrStructureIndexModel item) {
     // Selected item
     String? selectedItem;
+    DateTime? selectedDate;
 
     showDialog(
-      barrierDismissible: false,
+      barrierDismissible: true,
       context: context,
       builder: (BuildContext context) {
+        // return Dialog(
+        //   child: AssignDtrInspectionDialog(),
+        // );
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
+              contentPadding: EdgeInsets.zero,
               titlePadding: EdgeInsets.zero,
               title: Container(
                 width: double.infinity,
@@ -328,82 +335,288 @@ class DtrMasterListViewmodel extends ChangeNotifier {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "REQUISITION NO".toUpperCase(),
-                      style: const TextStyle(
-                        fontSize: normalSize,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: doubleFive,),
-
-                    const SizedBox(height: doubleFifteen,),
-                    const Text(
-                      "Choose pole type",
-                      style: TextStyle(
-                        fontSize: normalSize,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: doubleFive,),
-                    const Divider(),
-                    const Text(
-                      "Quantity",
-                      style: TextStyle(
-                        fontSize: normalSize,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: doubleFive,),
-                    DropdownButton<String>(
-                      isExpanded: true,
-                      hint: const Text("Select an item"),
-                      value: selectedItem,
-                      items: employeeMasterEntityList.map((item) => DropdownMenuItem<String>(
-                        value: item.empName,
-                        child: Row(
-                          children: [
-
-                          ],
-                        ),
-                      )).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          selectedItem = newValue;
-                        });
-                      },
-                    ),
-                    const Divider(),
-                    const SizedBox(height: doubleFive,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.grey,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
+                    Padding(
+                      padding: const EdgeInsets.all(doubleTen),
+                      child: Row(
+                        children: [
+                          const Expanded(
+                            flex: numFour,
+                            child: Text(
+                              "Structure Code",
+                              style: TextStyle(
+                                fontSize: normalSize,
+                                fontWeight: FontWeight.w700,
+                              ),
                             ),
                           ),
-                          onPressed: () async {
-                            Navigator.of(context).pop();
-                          },
-                          child: Text("Cancel".toUpperCase(), style: const TextStyle(fontSize: extraRegularSize, color: Colors.white),),
-                        ),
-                        const SizedBox(width: doubleTen,),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
+                          Container(
+                            height: doubleThirty,
+                            width: doubleOne,
+                            color: Colors.grey,
+                          ),
+                          const SizedBox(width: doubleTen,),
+                          Expanded(
+                            flex: numSix,
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: Text(
+                                checkNull(item.structureCode),
+                                style: const TextStyle(
+                                  color: CommonColors.colorPrimary,
+                                  fontSize: extraRegularSize,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
                             ),
                           ),
-                          onPressed: () async {
+                        ],
+                      ),
+                    ),
+                    const Divider(),
+                    Padding(
+                      padding: const EdgeInsets.all(doubleFive),
+                      child: Row(
+                        children: [
+                          const Expanded(
+                            flex: numFour,
+                            child: Text(
+                              "Previous Maint. Count",
+                              style: TextStyle(
+                                fontSize: normalSize,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            height: doubleThirty,
+                            width: doubleOne,
+                            color: Colors.grey,
+                          ),
+                          const SizedBox(width: doubleTen,),
+                          Expanded(
+                            flex: numSix,
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: Text(
+                                checkNull(item.maintenanceCount.toString()),
+                                style: const TextStyle(
+                                  fontSize: extraRegularSize,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Divider(),
+                    Padding(
+                      padding: const EdgeInsets.all(doubleFive),
+                      child: Row(
+                        children: [
+                          const Expanded(
+                            flex: numFour,
+                            child: Text(
+                              "Last Maint. Date",
+                              style: TextStyle(
+                                fontSize: normalSize,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            height: doubleThirty,
+                            width: doubleOne,
+                            color: Colors.grey,
+                          ),
+                          const SizedBox(width: doubleTen,),
+                          Expanded(
+                            flex: numSix,
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: Text(
+                                checkNull(item.lastMaintainedDate),
+                                style: const TextStyle(
+                                  fontSize: extraRegularSize,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Divider(),
+                    Padding(
+                      padding: const EdgeInsets.all(doubleFive),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Select Staff",
+                            style: TextStyle(
+                              fontSize: normalSize,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const SizedBox(height: doubleFive,),
+                          DropdownButton<String>(
+                            isExpanded: true,
+                            hint: const Text(
+                              "Select an item",
+                              style: TextStyle(fontSize: normalSize,),
+                            ),
+                            value: selectedItem,
+                            items: employeeMasterEntityList.map((item) => DropdownMenuItem<String>(
+                              value: item.empId,
+                              child: Row(
+                                children: [
+                                  RepaintBoundary(
+                                    child: Image.asset(
+                                      Assets.account,
+                                      height: 30.0,
+                                      width: 30.0,
+                                      filterQuality: FilterQuality.low,
+                                    ),
+                                  ),
+                                  const SizedBox(width: doubleTen,),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          checkNull(item.empName),
+                                          style: const TextStyle(
+                                            fontSize: normalSize,
+                                          ),
+                                        ),
+                                        Text(
+                                          checkNull(item.designation),
+                                          style: TextStyle(
+                                              fontSize: extraRegularSize,
+                                              color: Colors.grey[700]
+                                          ),
+                                        ),
+                                        Divider(
+                                          height: doubleOne,
+                                          color: Colors.grey[200],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )).toList(),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                selectedItem = newValue;
+                              });
+                            },
+                          ),
+                          const SizedBox(height: doubleFive,),
+                          const Text(
+                            "Select Schedule Date",
+                            style: TextStyle(
+                              fontSize: normalSize,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const SizedBox(height: doubleFive,),
+                          InkWell(
+                            onTap: () async {
+                              final DateTime today = DateTime.now();
+                              final DateTime maxDate = today.add(const Duration(days: 30)); // 30 days from today
 
-                          },
-                          child: Text("Ok".toUpperCase(), style: const TextStyle(fontSize: extraRegularSize, color: Colors.white),),
-                        ),
-                      ],
+                              final DateTime? picked = await showDatePicker(
+                                context: context,
+                                initialDate: DateTime.now(),
+                                firstDate: today,
+                                lastDate: maxDate,
+                              );
+
+                              if (picked != null && picked != selectedDate) {
+                                setState(() {
+                                  selectedDate = picked;
+                                });
+                              }
+                            },
+                            child: Row(
+                              children: [
+                                const Icon(Icons.calendar_month_outlined),
+                                const SizedBox(width: doubleTen,),
+                                Expanded(
+                                  child: Text(
+                                    selectedDate != null ? DateFormat('dd/MM/yyyy').format(selectedDate!) : "CHOOSE DATE",
+                                    style: const TextStyle(
+                                        color: CommonColors.colorPrimary,
+                                      fontSize: normalSize,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    const Divider(),
+                    Padding(
+                      padding: const EdgeInsets.all(doubleTen),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.grey,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(doubleFive),
+                                ),
+                              ),
+                              onPressed: () async {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text(
+                                "Cancel".toUpperCase(),
+                                style: const TextStyle(
+                                    fontSize: extraRegularSize,
+                                    color: Colors.white
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            width: doubleTen,
+                          ),
+                          Expanded(
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: CommonColors.successGreen,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(doubleFive),
+                                ),
+                              ),
+                              onPressed: () async {
+                                if (selectedItem == null) {
+                                  showAlertDialog(context, "Please select staff to assign DTR inspection");
+                                } else if (selectedDate == null) {
+                                  showAlertDialog(context, "Please select schedule date of maintenance");
+                                } else{
+                                  assignDtrInspection(item, selectedItem, selectedDate);
+                                }
+                              },
+                              child: Text(
+                                "Ok".toUpperCase(),
+                                style: const TextStyle(
+                                    fontSize: extraRegularSize,
+                                    color: Colors.white
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -413,6 +626,52 @@ class DtrMasterListViewmodel extends ChangeNotifier {
         );
       },
     );
+  }
+
+  Future<void> assignDtrInspection(DtrStructureIndexModel item, String? lmEmpId, DateTime? selectedDate) async {
+    String? prefJson = SharedPreferenceHelper.getStringValue(LoginSdkPrefs.npdclUserPrefKey);
+    final List<dynamic> jsonList = jsonDecode(prefJson);
+    final List<NpdclUser> user = jsonList.map((json) => NpdclUser.fromJson(json)).toList();
+    NpdclUser npdclUser = user[0];
+
+    final payload = {
+      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "appId": "in.tsnpdcl.npdclemployee",
+      "lmEmpId": lmEmpId,
+      "structureCode": item.structureCode,
+      "distributionCode": item.distributionCode,
+      "scheduledDate": DateFormat('dd/MM/yyyy').format(selectedDate!),
+      "scheduledMonth": DateFormat('MMyyyy').format(selectedDate),
+    };
+
+    var response = await ApiProvider(baseUrl: Apis.DTR_END_POINT_BASE_URL).postApiCall(context, Apis.ASSIGN_DTR_INSPECTION_URL, payload);
+    _isLoading = isFalse;
+
+    try {
+      if (response != null) {
+        if (response.data is String) {
+          response.data = jsonDecode(response.data); // Parse string to JSON
+        }
+        if (response.statusCode == successResponseCode) {
+          //if(response.data['sessionValid'] == isTrue) {
+          if (response.data['taskSuccess'] == isTrue) {
+            showAlertDialog(context,response.data['message']);
+          } else {
+            showAlertDialog(context,response.data['message']);
+          }
+          // } else {
+          //   showSessionExpiredDialog(context);
+          // }
+        } else {
+          showAlertDialog(context,response.data['message']);
+        }
+      }
+    } catch (e) {
+      showErrorDialog(context,  "An error occurred. Please try again.");
+      rethrow;
+    }
+
+    notifyListeners();
   }
 
 }

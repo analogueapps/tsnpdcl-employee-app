@@ -55,6 +55,7 @@ class AppTheme {
       surfaceTintColor: Colors.white,
     ),
     dialogTheme: const DialogTheme(
+      backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.zero, // Set global corner radius
       ),

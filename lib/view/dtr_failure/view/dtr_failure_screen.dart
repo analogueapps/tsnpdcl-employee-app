@@ -33,59 +33,57 @@ class DtrFailureScreen extends StatelessWidget {
         child: Consumer<DtrFailureViewModel>(
           builder: (context, viewModel, child) {
             return viewModel.dtrFailureMenuItems.isNotEmpty
-                ? Expanded(
-              child: GridView.builder(
-                padding: const EdgeInsets.all(8.0),
-                gridDelegate:
-                const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: numThree, // Number of columns
-                  childAspectRatio: 1,
-                ),
-                itemCount: viewModel.dtrFailureMenuItems.length,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  final item = viewModel.dtrFailureMenuItems[index];
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(16.0),
-                        decoration: BoxDecoration(
-                          color: item.cardColor,
-                          shape: BoxShape.rectangle,
-                          borderRadius: BorderRadius.circular(12.0),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(1),
-                              blurRadius: 4,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: RepaintBoundary(
-                          child: Icon(
-                            item.iconAsset,
-                            size: 40.0,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                          height:
-                          8), // Add spacing between the image and text
-                      Text(
-                        item.title.toUpperCase(),
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w800,
-                          fontSize:
-                          regularTextSize, // Specify a font size for better consistency
-                        ),
-                      ),
-                    ],
-                  );
-                },
+                ? GridView.builder(
+              padding: const EdgeInsets.all(8.0),
+              gridDelegate:
+              const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: numThree, // Number of columns
+                childAspectRatio: 1,
               ),
+              itemCount: viewModel.dtrFailureMenuItems.length,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                final item = viewModel.dtrFailureMenuItems[index];
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(16.0),
+                      decoration: BoxDecoration(
+                        color: item.cardColor,
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.circular(12.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(1),
+                            blurRadius: 4,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: RepaintBoundary(
+                        child: Icon(
+                          item.iconAsset,
+                          size: 40.0,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                        height:
+                        8), // Add spacing between the image and text
+                    Text(
+                      item.title.toUpperCase(),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize:
+                        regularTextSize, // Specify a font size for better consistency
+                      ),
+                    ),
+                  ],
+                );
+              },
             )
                 : const Expanded(
                 child: Center(

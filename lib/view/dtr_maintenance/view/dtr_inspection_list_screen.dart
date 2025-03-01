@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
+import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/utils/status_constants.dart';
 import 'package:tsnpdcl_employee/view/dtr_maintenance/viewmodel/dtr_inspection_list_viewmodel.dart';
 
@@ -48,7 +51,7 @@ class DtrInspectionListScreen extends StatelessWidget {
 
                   return GestureDetector(
                     onTap: () {
-                      //Navigation.instance.navigateTo(Routes.viewDetailedPoleIndentScreen, args: jsonEncode(item));
+                      Navigation.instance.navigateTo(Routes.dtrMaintenanceInspectionScreen, args: jsonEncode(item));
                     },
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

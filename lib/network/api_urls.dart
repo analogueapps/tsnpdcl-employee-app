@@ -60,5 +60,6 @@ class Apis{
   static const GET_DTR_INSPECTIONS_FILTER_DATA_URL = "getDtrInspectionsFilterData";
   static const GET_FILTERED_DTR_INSPECTIONS_DATA_URL = "getFilteredDtrInspections";
   static const GET_EMPLOYEE_OF_SECTION_URL = "getEmployeesOfSection";
+  static const ASSIGN_DTR_INSPECTION_URL = "assignDtrInspection";
 
 }

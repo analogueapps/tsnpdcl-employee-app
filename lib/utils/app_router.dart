@@ -8,6 +8,7 @@ import 'package:tsnpdcl_employee/view/ctpt_menu/view/ctpt_menu_screen.dart';
 import 'package:tsnpdcl_employee/view/dashboard/view/universal_dashboard_screen.dart';
 import 'package:tsnpdcl_employee/view/dtr_failure/view/dtr_failure_screen.dart';
 import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_inspection_list_screen.dart';
+import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_maintenance_inspection_screen.dart';
 import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_maintenance_screen.dart';
 import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_master_list_screen.dart';
 import 'package:tsnpdcl_employee/view/exceptionals/view/exceptionals_screen.dart';
@@ -205,6 +206,9 @@ class AppRouter {
       case DtrInspectionListScreen.id:
         return MaterialPageRoute(
             builder: (_) => DtrInspectionListScreen(status: settings.arguments as String));
+      case DtrMaintenanceInspectionScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => DtrMaintenanceInspectionScreen(data: settings.arguments as String));
 
       // Widgets
       case PinchZoomImageView.id:

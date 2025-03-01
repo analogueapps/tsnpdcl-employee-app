@@ -70,6 +70,7 @@ class Routes {
   // DTR MAINTENANCE
   static const String dtrMasterListScreen = "DtrMasterListScreen";
   static const String dtrInspectionListScreen = "DtrInspectionListScreen";
+  static const String dtrMaintenanceInspectionScreen = "DtrMaintenanceInspectionScreen";
 
   static const String ganeshPandalInformationScreen = 'ganesh_pandal_information_screen';
 
