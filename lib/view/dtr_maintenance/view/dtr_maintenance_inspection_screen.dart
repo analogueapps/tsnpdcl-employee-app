@@ -21,7 +21,8 @@ class DtrMaintenanceInspectionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => DtrMaintenanceInspectionViewmodel(context: context, jsonResponse: data),
+      create: (_) => DtrMaintenanceInspectionViewmodel(
+          context: context, jsonResponse: data),
       child: Consumer<DtrMaintenanceInspectionViewmodel>(
         builder: (context, viewModel, child) {
           return Scaffold(
@@ -35,12 +36,15 @@ class DtrMaintenanceInspectionScreen extends StatelessWidget {
                     style: const TextStyle(
                         color: Colors.white,
                         fontSize: titleSize,
-                        fontWeight: FontWeight.w700
-                    ),
+                        fontWeight: FontWeight.w700),
                   ),
                   Text(
-                    viewModel.dtrInspectionSheetEntity != null ? checkNull(viewModel.dtrInspectionSheetEntity!.structureCode) : "N/A",
-                    style: const TextStyle(fontSize: normalSize, color: Colors.grey),
+                    viewModel.dtrInspectionSheetEntity != null
+                        ? checkNull(
+                            viewModel.dtrInspectionSheetEntity!.structureCode)
+                        : "N/A",
+                    style: const TextStyle(
+                        fontSize: normalSize, color: Colors.grey),
                   ),
                 ],
               ),
@@ -55,7 +59,8 @@ class DtrMaintenanceInspectionScreen extends StatelessWidget {
                   child: SizedBox(
                     height: double.infinity,
                     child: ListView.separated(
-                      separatorBuilder: (_, __) => const Divider(height: doubleOne),
+                      separatorBuilder: (_, __) =>
+                          const Divider(height: doubleOne),
                       itemCount: viewModel.groupsList.length,
                       itemBuilder: (context, index) {
                         final group = viewModel.groupsList[index];
@@ -68,12 +73,12 @@ class DtrMaintenanceInspectionScreen extends StatelessWidget {
                             color: viewModel.selectedGroup == group
                                 ? Colors.grey[300]
                                 : Colors.transparent,
-                            child: Text(
-                                group.optionName!,
+                            child: Text(group.optionName!,
                                 style: TextStyle(
-                                  fontWeight: viewModel.selectedGroup == group ? FontWeight.w700 : FontWeight.w500,
-                                )
-                            ),
+                                  fontWeight: viewModel.selectedGroup == group
+                                      ? FontWeight.w700
+                                      : FontWeight.w500,
+                                )),
                           ),
                         );
                       },
@@ -90,24 +95,26 @@ class DtrMaintenanceInspectionScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       Flexible(
-                        flex: 1,
-                        child: DtrHtSideGroupControllerScreen()
-                      ),
+                          flex: 1, child: DtrHtSideGroupControllerScreen()),
                     ],
                   ),
                 ),
               ],
             ),
             bottomNavigationBar: Padding(
-                padding: const EdgeInsets.all(doubleTwenty),
-                child: PrimaryButton(
-                    text: "Submit".toUpperCase(),
-                    fullWidth: isTrue,
-                    onPressed: () {
-                      final htSideViewModel = Provider.of<DtrHtSideGroupControllerViewmodel>(context, listen: false);
-                      print(htSideViewModel.spinnerAbSwitchContactsDamagedValue);
+              padding: const EdgeInsets.all(doubleTwenty),
+              child: PrimaryButton(
+                  text: "Submit".toUpperCase(),
+                  fullWidth: isTrue,
+                  onPressed: () {
+                    final htSideViewModel =
+                        Provider.of<DtrHtSideGroupControllerViewmodel>(context,
+                            listen: false);
+                    final result = htSideViewModel.methodToCallOnSubmitDtrHtSideGroupControllerScreen(context, isTrue);
+                    if(result) {
+                      htSideViewModel.getData();
                     }
-                ),
+                  }),
             ),
           );
         },

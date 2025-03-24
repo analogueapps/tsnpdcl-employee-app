@@ -3,13 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
-import 'package:tsnpdcl_employee/utils/global_constants.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/view/ctpt_menu/viewmodel/ctpt_menu_viewmodel.dart';
-import 'package:tsnpdcl_employee/view/dtr_failure/viewmodel/dtr_failure_viewmodel.dart';
-import 'package:tsnpdcl_employee/view/dtr_maintenance/viewmodel/dtr_maintenance_viewmodel.dart';
-import 'package:tsnpdcl_employee/view/failure_dtr_inspection/viewmodel/failure_dtr_inspection_viewmodel.dart';
-import 'package:tsnpdcl_employee/view/online_pr_menu/viewmodel/online_pr_menu_viewmodel.dart';
 
 class CtptMenuScreen extends StatelessWidget {
   static const id = Routes.ctptMenuScreen;

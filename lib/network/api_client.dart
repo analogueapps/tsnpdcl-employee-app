@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:tsnpdcl_employee/network/api_urls.dart';
 
 import 'logging_interceptor.dart';
 

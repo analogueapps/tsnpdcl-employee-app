@@ -8,7 +8,7 @@ import 'package:tsnpdcl_employee/utils/app_router.dart';
 import 'package:tsnpdcl_employee/utils/app_theme.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
-import 'package:tsnpdcl_employee/view/asset_mapping/viewmodel/asset_mapping_viewmodel.dart';
+import 'package:tsnpdcl_employee/view/dtr_maintenance/viewmodel/dtr_ht_side_group_controller_viewmodel.dart';
 import 'package:tsnpdcl_employee/view/entry/view/splash_screen.dart';
 
 Future<void> main() async {
@@ -25,17 +25,17 @@ Future<void> main() async {
     ),
   );
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  // runApp(
-  //   MultiProvider(
-  //     providers: [
-  //       ChangeNotifierProvider(
-  //         create: (context) => AssetMappingViewModel(),
-  //       ),
-  //     ],
-  //     child: const MyApp(),
-  //   ),
-  // );
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => DtrHtSideGroupControllerViewmodel(),
+        ),
+      ],
+      child: const MyApp(),
+    ),
+  );
+  //runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {

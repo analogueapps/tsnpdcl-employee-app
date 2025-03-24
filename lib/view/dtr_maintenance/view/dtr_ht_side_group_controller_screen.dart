@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
+import 'package:tsnpdcl_employee/view/dtr_maintenance/model/ht_side_group_model.dart';
 import 'package:tsnpdcl_employee/view/dtr_maintenance/viewmodel/dtr_ht_side_group_controller_viewmodel.dart';
 
 class DtrHtSideGroupControllerScreen extends StatelessWidget {
@@ -9,10 +10,8 @@ class DtrHtSideGroupControllerScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ChangeNotifierProvider(
-        create: (_) => DtrHtSideGroupControllerViewmodel(context: context),
-        child: Consumer<DtrHtSideGroupControllerViewmodel>(
+   return Scaffold(
+      body: Consumer<DtrHtSideGroupControllerViewmodel>(
           builder: (context, viewModel, child) {
             return SingleChildScrollView(
               padding: const EdgeInsets.all(doubleFive),
@@ -33,7 +32,7 @@ class DtrHtSideGroupControllerScreen extends StatelessWidget {
                   Row(
                     children: [
                       Radio<AbSwitch>(
-                        value: AbSwitch.available,
+                        value: AbSwitch.Available,
                         groupValue: viewModel.abSwitch,
                         onChanged: (AbSwitch? value) {
                           viewModel.selectAbSwitch(value);
@@ -42,7 +41,7 @@ class DtrHtSideGroupControllerScreen extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () {
-                          viewModel.selectAbSwitch(AbSwitch.available);
+                          viewModel.selectAbSwitch(AbSwitch.Available);
                         },
                         child: const Text(
                           "Available",
@@ -57,7 +56,7 @@ class DtrHtSideGroupControllerScreen extends StatelessWidget {
                   Row(
                     children: [
                       Radio<AbSwitch>(
-                        value: AbSwitch.notAvailable,
+                        value: AbSwitch.NotAvailable,
                         groupValue: viewModel.abSwitch,
                         onChanged: (AbSwitch? value) {
                           viewModel.selectAbSwitch(value);
@@ -66,7 +65,7 @@ class DtrHtSideGroupControllerScreen extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () {
-                          viewModel.selectAbSwitch(AbSwitch.notAvailable);
+                          viewModel.selectAbSwitch(AbSwitch.NotAvailable);
                         },
                         child: const Text(
                           "Not Available",
@@ -80,7 +79,7 @@ class DtrHtSideGroupControllerScreen extends StatelessWidget {
                   ),
                   const Divider(),
                   Visibility(
-                    visible: viewModel.abSwitch == AbSwitch.available,
+                    visible: viewModel.abSwitch == AbSwitch.Available,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -98,7 +97,7 @@ class DtrHtSideGroupControllerScreen extends StatelessWidget {
                         Row(
                           children: [
                             Radio<AbSwitchType>(
-                              value: AbSwitchType.vertical,
+                              value: AbSwitchType.Vertical,
                               groupValue: viewModel.abSwitchType,
                               onChanged: (AbSwitchType? value) {
                                 viewModel.selectAbSwitchType(value);
@@ -107,7 +106,7 @@ class DtrHtSideGroupControllerScreen extends StatelessWidget {
                             ),
                             GestureDetector(
                               onTap: () {
-                                viewModel.selectAbSwitchType(AbSwitchType.vertical);
+                                viewModel.selectAbSwitchType(AbSwitchType.Vertical);
                               },
                               child: const Text(
                                 "Vertical",
@@ -122,7 +121,7 @@ class DtrHtSideGroupControllerScreen extends StatelessWidget {
                         Row(
                           children: [
                             Radio<AbSwitchType>(
-                              value: AbSwitchType.horizontal,
+                              value: AbSwitchType.Horizontal,
                               groupValue: viewModel.abSwitchType,
                               onChanged: (AbSwitchType? value) {
                                 viewModel.selectAbSwitchType(value);
@@ -131,7 +130,7 @@ class DtrHtSideGroupControllerScreen extends StatelessWidget {
                             ),
                             GestureDetector(
                               onTap: () {
-                                viewModel.selectAbSwitchType(AbSwitchType.horizontal);
+                                viewModel.selectAbSwitchType(AbSwitchType.Horizontal);
                               },
                               child: const Text(
                                 "Horizontal",
@@ -157,17 +156,17 @@ class DtrHtSideGroupControllerScreen extends StatelessWidget {
                         ),
                         Row(
                           children: [
-                            Radio<AbSwitchStatus>(
-                              value: AbSwitchStatus.good,
+                            Radio<Status>(
+                              value: Status.Good,
                               groupValue: viewModel.abSwitchStatus,
-                              onChanged: (AbSwitchStatus? value) {
+                              onChanged: (Status? value) {
                                 viewModel.selectAbSwitchStatus(value);
                               },
                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             ),
                             GestureDetector(
                               onTap: () {
-                                viewModel.selectAbSwitchStatus(AbSwitchStatus.good);
+                                viewModel.selectAbSwitchStatus(Status.Good);
                               },
                               child: const Text(
                                 "Good",
@@ -181,17 +180,17 @@ class DtrHtSideGroupControllerScreen extends StatelessWidget {
                         ),
                         Row(
                           children: [
-                            Radio<AbSwitchStatus>(
-                              value: AbSwitchStatus.damage,
+                            Radio<Status>(
+                              value: Status.Damaged,
                               groupValue: viewModel.abSwitchStatus,
-                              onChanged: (AbSwitchStatus? value) {
+                              onChanged: (Status? value) {
                                 viewModel.selectAbSwitchStatus(value);
                               },
                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             ),
                             GestureDetector(
                               onTap: () {
-                                viewModel.selectAbSwitchStatus(AbSwitchStatus.damage);
+                                viewModel.selectAbSwitchStatus(Status.Damaged);
                               },
                               child: const Text(
                                 "Damaged/Not Working",
@@ -204,7 +203,7 @@ class DtrHtSideGroupControllerScreen extends StatelessWidget {
                           ],
                         ),
                         Visibility(
-                          visible: viewModel.abSwitchStatus == AbSwitchStatus.damage,
+                          visible: viewModel.abSwitchStatus == Status.Damaged,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -339,7 +338,7 @@ class DtrHtSideGroupControllerScreen extends StatelessWidget {
                   Row(
                     children: [
                       Radio<AbSwitch>(
-                        value: AbSwitch.available,
+                        value: AbSwitch.Available,
                         groupValue: viewModel.kv11HgFuseSet,
                         onChanged: (AbSwitch? value) {
                           viewModel.selectKv11HgFuseSet(value);
@@ -348,7 +347,7 @@ class DtrHtSideGroupControllerScreen extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () {
-                          viewModel.selectKv11HgFuseSet(AbSwitch.available);
+                          viewModel.selectKv11HgFuseSet(AbSwitch.Available);
                         },
                         child: const Text(
                           "Available",
@@ -363,7 +362,7 @@ class DtrHtSideGroupControllerScreen extends StatelessWidget {
                   Row(
                     children: [
                       Radio<AbSwitch>(
-                        value: AbSwitch.notAvailable,
+                        value: AbSwitch.NotAvailable,
                         groupValue: viewModel.kv11HgFuseSet,
                         onChanged: (AbSwitch? value) {
                           viewModel.selectKv11HgFuseSet(value);
@@ -372,7 +371,7 @@ class DtrHtSideGroupControllerScreen extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () {
-                          viewModel.selectKv11HgFuseSet(AbSwitch.notAvailable);
+                          viewModel.selectKv11HgFuseSet(AbSwitch.NotAvailable);
                         },
                         child: const Text(
                           "Not Available",
@@ -398,17 +397,17 @@ class DtrHtSideGroupControllerScreen extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      Radio<AbSwitchStatus>(
-                        value: AbSwitchStatus.good,
+                      Radio<Status>(
+                        value: Status.Good,
                         groupValue: viewModel.hgFuseStatus,
-                        onChanged: (AbSwitchStatus? value) {
+                        onChanged: (Status? value) {
                           viewModel.selectHgFuseStatus(value);
                         },
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
                       GestureDetector(
                         onTap: () {
-                          viewModel.selectHgFuseStatus(AbSwitchStatus.good);
+                          viewModel.selectHgFuseStatus(Status.Good);
                         },
                         child: const Text(
                           "Good",
@@ -422,17 +421,17 @@ class DtrHtSideGroupControllerScreen extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      Radio<AbSwitchStatus>(
-                        value: AbSwitchStatus.damage,
+                      Radio<Status>(
+                        value: Status.Damaged,
                         groupValue: viewModel.hgFuseStatus,
-                        onChanged: (AbSwitchStatus? value) {
+                        onChanged: (Status? value) {
                           viewModel.selectHgFuseStatus(value);
                         },
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
                       GestureDetector(
                         onTap: () {
-                          viewModel.selectHgFuseStatus(AbSwitchStatus.damage);
+                          viewModel.selectHgFuseStatus(Status.Damaged);
                         },
                         child: const Text(
                           "Damaged",
@@ -445,7 +444,7 @@ class DtrHtSideGroupControllerScreen extends StatelessWidget {
                     ],
                   ),
                   Visibility(
-                    visible: viewModel.hgFuseStatus == AbSwitchStatus.damage,
+                    visible: viewModel.hgFuseStatus == Status.Damaged,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -587,17 +586,17 @@ class DtrHtSideGroupControllerScreen extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      Radio<AbSwitchStatus>(
-                        value: AbSwitchStatus.good,
+                      Radio<Status>(
+                        value: Status.Good,
                         groupValue: viewModel.htBushStatus,
-                        onChanged: (AbSwitchStatus? value) {
+                        onChanged: (Status? value) {
                           viewModel.selectHtBushStatus(value);
                         },
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
                       GestureDetector(
                         onTap: () {
-                          viewModel.selectHtBushStatus(AbSwitchStatus.good);
+                          viewModel.selectHtBushStatus(Status.Good);
                         },
                         child: const Text(
                           "Good",
@@ -611,17 +610,17 @@ class DtrHtSideGroupControllerScreen extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      Radio<AbSwitchStatus>(
-                        value: AbSwitchStatus.damage,
+                      Radio<Status>(
+                        value: Status.Damaged,
                         groupValue: viewModel.htBushStatus,
-                        onChanged: (AbSwitchStatus? value) {
+                        onChanged: (Status? value) {
                           viewModel.selectHtBushStatus(value);
                         },
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
                       GestureDetector(
                         onTap: () {
-                          viewModel.selectHtBushStatus(AbSwitchStatus.damage);
+                          viewModel.selectHtBushStatus(Status.Damaged);
                         },
                         child: const Text(
                           "Damaged",
@@ -634,7 +633,7 @@ class DtrHtSideGroupControllerScreen extends StatelessWidget {
                     ],
                   ),
                   Visibility(
-                    visible: viewModel.htBushStatus == AbSwitchStatus.damage,
+                    visible: viewModel.htBushStatus == Status.Damaged,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -712,17 +711,17 @@ class DtrHtSideGroupControllerScreen extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      Radio<AbSwitchStatus>(
-                        value: AbSwitchStatus.good,
+                      Radio<Status>(
+                        value: Status.Good,
                         groupValue: viewModel.htBushRodsStatus,
-                        onChanged: (AbSwitchStatus? value) {
+                        onChanged: (Status? value) {
                           viewModel.selectHtBushRodsStatus(value);
                         },
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
                       GestureDetector(
                         onTap: () {
-                          viewModel.selectHtBushRodsStatus(AbSwitchStatus.good);
+                          viewModel.selectHtBushRodsStatus(Status.Good);
                         },
                         child: const Text(
                           "Good",
@@ -736,17 +735,17 @@ class DtrHtSideGroupControllerScreen extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      Radio<AbSwitchStatus>(
-                        value: AbSwitchStatus.damage,
+                      Radio<Status>(
+                        value: Status.Damaged,
                         groupValue: viewModel.htBushRodsStatus,
-                        onChanged: (AbSwitchStatus? value) {
+                        onChanged: (Status? value) {
                           viewModel.selectHtBushRodsStatus(value);
                         },
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
                       GestureDetector(
                         onTap: () {
-                          viewModel.selectHtBushRodsStatus(AbSwitchStatus.damage);
+                          viewModel.selectHtBushRodsStatus(Status.Damaged);
                         },
                         child: const Text(
                           "Damaged",
@@ -759,7 +758,7 @@ class DtrHtSideGroupControllerScreen extends StatelessWidget {
                     ],
                   ),
                   Visibility(
-                    visible: viewModel.htBushRodsStatus == AbSwitchStatus.damage,
+                    visible: viewModel.htBushRodsStatus == Status.Damaged,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -815,7 +814,6 @@ class DtrHtSideGroupControllerScreen extends StatelessWidget {
             );
           },
         ),
-      ),
     );
   }
 }
