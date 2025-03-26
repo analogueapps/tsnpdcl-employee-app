@@ -46,6 +46,8 @@ import 'package:tsnpdcl_employee/view/pole_tracker/view/view_digital_sketch_scre
 import 'package:tsnpdcl_employee/view/pole_tracker/view/view_offline_feeders_screen.dart';
 import 'package:tsnpdcl_employee/view/reports/view/reports_screen.dart';
 import 'package:tsnpdcl_employee/view/search_consumer/view/search_consumer_screen.dart';
+import 'package:tsnpdcl_employee/view/tong_tester_readings/view/tong_tester_readings_screen.dart';
+import 'package:tsnpdcl_employee/view/tong_tester_readings/view/view_detailed_tong_tester_readings.dart';
 import 'package:tsnpdcl_employee/view/web_view/view/web_view_screen.dart';
 import 'package:tsnpdcl_employee/widget/pinch_zoom_imageview.dart';
 
@@ -215,6 +217,11 @@ class AppRouter {
         return MaterialPageRoute(
             builder: (_) => PinchZoomImageView(imageUrl: settings.arguments as String));
 
+      //Tong tester readings * Swetha
+      case TongTesterReadingsScreen.id:
+        return MaterialPageRoute(builder: (_) => const TongTesterReadingsScreen());
+      case ViewDetailedTongTesterReadings.id:
+        return MaterialPageRoute(builder: (_) => const ViewDetailedTongTesterReadings());
 
       default:
         return MaterialPageRoute(

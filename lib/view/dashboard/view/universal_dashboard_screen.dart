@@ -234,7 +234,7 @@ class _UniversalDashboardScreenState extends State<UniversalDashboardScreen> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Container(
-                                padding: const EdgeInsets.all(16.0),
+                                padding: const EdgeInsets.all(14.0),
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   shape: BoxShape.rectangle,

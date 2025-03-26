@@ -54,7 +54,6 @@ class ViewDispatchInstructionsScreen extends StatelessWidget {
                 itemCount: viewModel.poleDispatchInstructionList.length,
                 itemBuilder: (context, index) {
                   final item = viewModel.poleDispatchInstructionList[index];
-
                   return GestureDetector(
                     onTap: () {
                       Navigation.instance.navigateTo(Routes.viewDetailedDiTabsScreen, args: jsonEncode(item));

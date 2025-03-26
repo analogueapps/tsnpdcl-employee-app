@@ -48,7 +48,7 @@ class MeesevaMenuScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(16.0),
+                        padding: const EdgeInsets.all(14.0),
                         decoration: BoxDecoration(
                           color: item.cardColor,
                           shape: BoxShape.rectangle,
