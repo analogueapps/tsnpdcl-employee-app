@@ -27,6 +27,7 @@ import 'package:tsnpdcl_employee/view/line_clearance/view/view_detailed_lc_scree
 import 'package:tsnpdcl_employee/view/manage_staff/view/manage_staffs_screen.dart';
 import 'package:tsnpdcl_employee/view/measure_distance/view/measure_distance_screen.dart';
 import 'package:tsnpdcl_employee/view/meeseva/view/meeseva_menu_screen.dart';
+import 'package:tsnpdcl_employee/view/middle_poles/view/middle_poles_screen.dart';
 import 'package:tsnpdcl_employee/view/online_pr_menu/view/online_pr_menu_screen.dart';
 import 'package:tsnpdcl_employee/view/pdms/view/create_pole_indents_screen.dart';
 import 'package:tsnpdcl_employee/view/pdms/view/pdms_screen.dart';
@@ -45,7 +46,9 @@ import 'package:tsnpdcl_employee/view/pole_tracker/view/pole_tracker_selection_v
 import 'package:tsnpdcl_employee/view/pole_tracker/view/view_digital_sketch_screen.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/view/view_offline_feeders_screen.dart';
 import 'package:tsnpdcl_employee/view/reports/view/reports_screen.dart';
+import 'package:tsnpdcl_employee/view/rfss/view/rfss_screen.dart';
 import 'package:tsnpdcl_employee/view/search_consumer/view/search_consumer_screen.dart';
+import 'package:tsnpdcl_employee/view/ss_maintenance/view/ss_maintenance_screen.dart';
 import 'package:tsnpdcl_employee/view/tong_tester_readings/view/tong_tester_readings_screen.dart';
 import 'package:tsnpdcl_employee/view/tong_tester_readings/view/view_detailed_tong_tester_readings.dart';
 import 'package:tsnpdcl_employee/view/web_view/view/web_view_screen.dart';
@@ -217,11 +220,24 @@ class AppRouter {
         return MaterialPageRoute(
             builder: (_) => PinchZoomImageView(imageUrl: settings.arguments as String));
 
-      //Tong tester readings * Swetha
+      // Tong tester readings * Swetha
       case TongTesterReadingsScreen.id:
         return MaterialPageRoute(builder: (_) => const TongTesterReadingsScreen());
       case ViewDetailedTongTesterReadings.id:
         return MaterialPageRoute(builder: (_) => const ViewDetailedTongTesterReadings());
+
+      // RFSS Screen * Swetha
+      case RfssScreen.id:
+        return MaterialPageRoute(builder: (_) => const RfssScreen());
+
+      // Middle Poles Screen * Swetha
+      case MiddlePolesScreen.id:
+        return MaterialPageRoute(builder: (_) => const MiddlePolesScreen());
+
+      // SS Maintenance Screen * Swetha
+      case SsMaintenanceScreen.id:
+        return MaterialPageRoute(builder: (_) => const SsMaintenanceScreen());
+
 
       default:
         return MaterialPageRoute(

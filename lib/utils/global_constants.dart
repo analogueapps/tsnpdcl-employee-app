@@ -108,4 +108,24 @@ class GlobalConstants {
   static const String metersInstalledToBeReleasedByAe = "Meters Installed To Be Released By AE";
   static const String releasedByAe = "Release By AE";
   static const String rejected = "Rejected";
+
+  // RFSS menu
+  static const String rfssMenu = "RFSS MENU";
+  static const String mappingOfServices = "Mapping Of Services";
+  static const String dtrDigitilization = "Dtr Digitilization";
+  static const String dtrDefectsReporting = "Dtr Defects Reporting";
+
+  // Middle Poles Menu
+  static const String middlePoles = "Middle Poles";
+  static const String newStr = "New";
+  static const String pendingList = "Pending List";
+  static const String completedList = "Completed List";
+  static const String networkType = "Network Type?";
+
+  // SS Maintenance Menu
+  static const String ssMaintenance = "SS Maintenance";
+  static const String inspectSS = "Inspect SS";
+  static const String insOrPending = "Inspected/Pending Maintenance";
+  static const String mainFinished = "Maintenance Finished";
+
 }

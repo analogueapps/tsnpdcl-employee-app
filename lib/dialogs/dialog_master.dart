@@ -6,6 +6,7 @@ import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/view/dashboard/model/global_list_dialog_item.dart';
+import 'package:tsnpdcl_employee/view/rfss/model/list_dialog_item.dart';
 
 Future<void> showLogoutDialog(BuildContext context) async {
   final result = await showOkCancelAlertDialog(
@@ -147,6 +148,54 @@ Future<void> showCustomListDialog(BuildContext context, List<GlobalListDialogIte
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
+            },
+            child: const Text('Cancel'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+// RFSS Screen dialog box * swetha
+void showCustomListRfssDialog(BuildContext context, List<listDialogItem> listDialogItem, {String? heading}) {
+  showDialog(
+    context: context,
+    barrierDismissible: false, // Prevents dismissing the dialog by tapping outside
+    builder: (context) {
+      return AlertDialog(
+        title: heading != null
+            ? Text(
+          heading,
+          style: const TextStyle(
+              fontWeight: FontWeight.bold
+          ),) // Show the custom heading if provided
+            : const Text("Select an Option"), // Default heading if no heading is provided
+        content: SizedBox(
+          width: double.maxFinite,
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: listDialogItem.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(
+                  listDialogItem[index].title,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  // Add your navigation logic here, depending on your requirements
+                },
+              );
+            },
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
             },
             child: const Text('Cancel'),
           ),

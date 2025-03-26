@@ -77,8 +77,17 @@ class Routes {
   // WIDGETS
   static const String pinchZoomImageView = 'PinchZoomImageView';
 
-  //tong tester readings
+  //tong tester readings * swetha
   static const String tongTesterReadingsScreen = 'TongTesterReadingsScreen';
   static const String viewDetailedTongTesterReadings = 'ViewDetailedTongTesterReadings';
+
+  // RFSS Screen * swetha
+  static const String rfssScreen = 'RfssScreen';
+
+  // Middle Poles Screen * Swetha
+  static const String middlePolesScreen = 'MiddlePolesScreen';
+
+  // SS Maintenance Screen * Swetha
+  static const String ssMaintenanceScreen = 'SsMaintenanceScreen';
 
 }

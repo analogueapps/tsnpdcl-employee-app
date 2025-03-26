@@ -123,7 +123,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.ssMaintenanceTitle,
           imageAsset: Assets.ssMaintenance,
-          routeName: routeName),
+          routeName: Routes.ssMaintenanceScreen
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.electroMechTitle,
           imageAsset: Assets.electroMech,
@@ -169,7 +170,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.middlePolesTitle,
           imageAsset: Assets.middlePoles,
-          routeName: routeName),
+          routeName: Routes.middlePolesScreen
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.checkMeasurementTitle,
           imageAsset: Assets.checkMeasurement,
@@ -228,7 +230,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.rfssTitle,
           imageAsset: Assets.rfss,
-          routeName: routeName),
+          routeName: Routes.rfssScreen
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.uscNoTitle,
           imageAsset: Assets.uscNo,
@@ -375,7 +378,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.ssMaintenanceTitle,
           imageAsset: Assets.ssMaintenance,
-          routeName: routeName),
+          routeName: Routes.ssMaintenanceScreen
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.pmiOfLinesTitle,
           imageAsset: Assets.pmiOfLines,
@@ -383,7 +387,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.rfssTitle,
           imageAsset: Assets.rfss,
-          routeName: routeName),
+          routeName: Routes.rfssScreen
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.schedulesTitle,
           imageAsset: Assets.schedules,
@@ -450,7 +455,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.middlePolesTitle,
           imageAsset: Assets.middlePoles,
-          routeName: routeName),
+          routeName: Routes.middlePolesScreen
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.maintenanceTitle,
           imageAsset: Assets.maintenance,
