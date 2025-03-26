@@ -10,5 +10,7 @@ class CommonColors {
   static const successGreen = Color(0xff1D8321);
   static const deepBlue = Color(0xff3F51B5);
 
+  // * Bhavana
+  static const pink= Color(0xffe64980);
   static const textFieldColor = Color.fromRGBO(245, 245, 245, 1);
 }

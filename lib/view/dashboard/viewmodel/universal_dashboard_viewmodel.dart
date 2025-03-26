@@ -429,7 +429,7 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.ltmtTitle,
           imageAsset: Assets.ltmt,
-          routeName: routeName),
+          routeName: Routes.ltmtScreen),
       UniversalDashboardItem(
           title: GlobalConstants.electroMechTitle,
           imageAsset: Assets.electroMech,
@@ -589,7 +589,7 @@ class UniversalDashboardViewModel extends ChangeNotifier {
         ),
         GlobalListDialogItem(
             title: "View Mapped DTR's",
-            routeName: ""
+            routeName: Routes.mappedDtrScreen,
         ),
         GlobalListDialogItem(
             title: "Create DTR Master(Offline)",

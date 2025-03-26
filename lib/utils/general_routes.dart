@@ -90,4 +90,11 @@ class Routes {
   // SS Maintenance Screen * Swetha
   static const String ssMaintenanceScreen = 'SsMaintenanceScreen';
 
+  //ltmt * Bhavana
+  static const String ltmtScreen='LtmtMenu';
+  static const String metersStock= 'MetersStock';
+
+  //DTR Master * Bhavana
+  static const String mappedDtrScreen= "MappedDtr";
+
 }
