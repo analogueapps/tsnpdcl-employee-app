@@ -11,6 +11,7 @@ import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_inspection_list_s
 import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_maintenance_inspection_screen.dart';
 import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_maintenance_screen.dart';
 import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_master_list_screen.dart';
+import 'package:tsnpdcl_employee/view/dtr_master/view_mappedDTR/mapped_dtrs.dart';
 import 'package:tsnpdcl_employee/view/exceptionals/view/exceptionals_screen.dart';
 import 'package:tsnpdcl_employee/view/failure_dtr_inspection/view/failure_dtr_inspection_screen.dart';
 import 'package:tsnpdcl_employee/view/filter/view/filter_screen.dart';
@@ -53,6 +54,9 @@ import 'package:tsnpdcl_employee/view/tong_tester_readings/view/tong_tester_read
 import 'package:tsnpdcl_employee/view/tong_tester_readings/view/view_detailed_tong_tester_readings.dart';
 import 'package:tsnpdcl_employee/view/web_view/view/web_view_screen.dart';
 import 'package:tsnpdcl_employee/widget/pinch_zoom_imageview.dart';
+
+import '../view/ltmt/view/ltmt_menu.dart';
+import '../view/ltmt/view/meters_stock.dart';
 
 class AppRouter {
   static Route generateRoute(RouteSettings settings) {
@@ -238,6 +242,16 @@ class AppRouter {
       case SsMaintenanceScreen.id:
         return MaterialPageRoute(builder: (_) => const SsMaintenanceScreen());
 
+
+      //LTMT * Bhavana
+      case LtmtMenu.id:
+        return MaterialPageRoute(builder: (_)=> const LtmtMenu());
+      case MetersStock.id:
+        return MaterialPageRoute(builder: (_)=> const MetersStock());
+
+      // DTR Master * Bhavana
+      case MappedDtr.id:
+        return MaterialPageRoute(builder: (_)=> const MappedDtr());
 
       default:
         return MaterialPageRoute(
