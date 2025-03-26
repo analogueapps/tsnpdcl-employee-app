@@ -128,4 +128,9 @@ class GlobalConstants {
   static const String insOrPending = "Inspected/Pending Maintenance";
   static const String mainFinished = "Maintenance Finished";
 
+  //DTR Master * bhavana
+  static const  String viewMappedDTR="Configure Filter";
+  static const  String metersStock="Meters in Stock";
+  static const  String metersOM="Meters issued to O & M";
+
 }
