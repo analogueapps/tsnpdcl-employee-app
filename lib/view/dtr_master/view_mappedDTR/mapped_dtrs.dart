@@ -6,6 +6,7 @@ import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
 import 'package:tsnpdcl_employee/widget/fill_text_form_field.dart';
+import 'package:tsnpdcl_employee/widget/primary_button.dart';
 import 'map_dtr_viewmodel.dart';
 
 class MappedDtr extends StatelessWidget{
@@ -29,10 +30,13 @@ class MappedDtr extends StatelessWidget{
         ),
       ),
       body: ChangeNotifierProvider(
-        create: (_) => MapDtrViewMobel(),
+        create: (_) => MapDtrViewMobel(context:context),
         child: Consumer<MapDtrViewMobel>(
             builder: (context, viewModel, child) {
               return SingleChildScrollView(
+                  child:Padding(padding: const EdgeInsets.only(left:10, right: 10),
+                  child:Form(
+                  key: viewModel.formKey,
                   child:Column(
                     children: [
                     Wrap(
@@ -59,16 +63,107 @@ class MappedDtr extends StatelessWidget{
                 controller: viewModel.equipNoORStructCode,
                 labelText: 'Enter Equipment No/Structure Code',
                 keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please enter equipment number";
-                  }
-                  return null;
-                },
+                // validator: (value) {
+                //   if (value == null || value.isEmpty) {
+                //     return "Please enter equipment number";
+                //   }
+                //   return null;
+                // },
               ),
               ),
               ),
+                      Visibility(
+                        visible: viewModel.selectedFilter == "Distribution wise",
+                        child:Padding(
+                          padding: const EdgeInsets.only(right: 10, left: 10, top: 10),
+                          child:Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                            const Text("Select Distribution", style: TextStyle(fontSize:15),),
+                          DropdownButton<String>(
+                            isExpanded: true,
+                            hint: const Text("Select "),
+                            value: viewModel.selectedDistribution,
+                            items: viewModel.distributions.map((item) {
+                              return DropdownMenuItem<String>(
+                                value: item,
+                                child: Text(item),
+                              );
+                            }).toList(),
+                            onChanged: (value) => viewModel.onListDistriSelected(value),
+                          ),
+                            ]
+                          ),
+                        ),
+                      ),
+
+                      Visibility(
+                        visible: viewModel.selectedFilter == "Feeder wise",
+                        child:Padding(
+                          padding: const EdgeInsets.only(right: 10, left: 10, top: 10),
+                          child:Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text("Select Circle", style: TextStyle(fontSize:15),),
+                                DropdownButton<String>(
+                                  isExpanded: true,
+                                  hint: const Text("Select "),
+                                  value: viewModel.selectedCircle,
+                                  items: viewModel.circle.map((item) {
+                                    return DropdownMenuItem<String>(
+                                      value: item,
+                                      child: Text(item),
+                                    );
+                                  }).toList(),
+                                  onChanged: (value) => viewModel.onListCircleSelected(value),
+                                ),
+                                const SizedBox(height: 5,),
+                                const Text("Sub Station", style: TextStyle(fontSize:15),),
+                                DropdownButton<String>(
+                                  isExpanded: true,
+                                  hint: const Text("Select "),
+                                  value: viewModel.selectedStation,
+                                  items: viewModel.station.map((item) {
+                                    return DropdownMenuItem<String>(
+                                      value: item,
+                                      child: Text(item),
+                                    );
+                                  }).toList(),
+                                  onChanged: (value) => viewModel.onListStationSelected(value),
+                                ),
+                                const SizedBox(height: 5,),
+                                const Text("Choose Feeder", style: TextStyle(fontSize:15),),
+                                DropdownButton<String>(
+                                  isExpanded: true,
+                                  hint: const Text("Select "),
+                                  value: viewModel.selectedFeeder,
+                                  items: viewModel.feeder.map((item) {
+                                    return DropdownMenuItem<String>(
+                                      value: item,
+                                      child: Text(item),
+                                    );
+                                  }).toList(),
+                                  onChanged: (value) => viewModel.onListFeederSelected(value),
+                                ),
+                              ]
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: PrimaryButton(
+                            text: "SEARCH",
+                            onPressed: () {
+                              viewModel.submitForm();
+                            }
+                        ),
+                      ),
                 ]
+                  ),
+                  ),
                   ),
               );
             }
