@@ -11,7 +11,12 @@ import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_inspection_list_s
 import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_maintenance_inspection_screen.dart';
 import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_maintenance_screen.dart';
 import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_master_list_screen.dart';
-import 'package:tsnpdcl_employee/view/dtr_master/view_mappedDTR/mapped_dtrs.dart';
+import 'package:tsnpdcl_employee/view/dtr_master/view/create_dtr_online.dart';
+import 'package:tsnpdcl_employee/view/dtr_master/view/download_feeder_data.dart';
+import 'package:tsnpdcl_employee/view/dtr_master/view/mis_matched_dtrs.dart';
+import 'package:tsnpdcl_employee/view/dtr_master/view/view_offline_data.dart';
+import 'package:tsnpdcl_employee/view/dtr_master/viewmodel/download_feeder_viewmodel.dart';
+import 'package:tsnpdcl_employee/view/dtr_master/view/mapped_dtrs.dart';
 import 'package:tsnpdcl_employee/view/exceptionals/view/exceptionals_screen.dart';
 import 'package:tsnpdcl_employee/view/failure_dtr_inspection/view/failure_dtr_inspection_screen.dart';
 import 'package:tsnpdcl_employee/view/filter/view/filter_screen.dart';
@@ -252,6 +257,15 @@ class AppRouter {
       // DTR Master * Bhavana
       case MappedDtr.id:
         return MaterialPageRoute(builder: (_)=> const MappedDtr());
+      case DownloadFeederData.id:
+        return MaterialPageRoute(builder: (_)=> const DownloadFeederData());
+      case ViewOfflineData.id:
+        return MaterialPageRoute(builder: (_)=> const ViewOfflineData());
+      case MisMatchedDtr.id:
+        return MaterialPageRoute(builder: (_)=> const MisMatchedDtr());
+      case CreateDtrOnline.id:
+        return MaterialPageRoute(builder: (_)=> const CreateDtrOnline());
+
 
       default:
         return MaterialPageRoute(

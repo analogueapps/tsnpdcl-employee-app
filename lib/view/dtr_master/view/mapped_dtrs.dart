@@ -7,7 +7,7 @@ import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
 import 'package:tsnpdcl_employee/widget/fill_text_form_field.dart';
 import 'package:tsnpdcl_employee/widget/primary_button.dart';
-import 'map_dtr_viewmodel.dart';
+import '../viewmodel/map_dtr_viewmodel.dart';
 
 class MappedDtr extends StatelessWidget{
   static const id= Routes.mappedDtrScreen;

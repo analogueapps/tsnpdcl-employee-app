@@ -132,5 +132,9 @@ class GlobalConstants {
   static const  String viewMappedDTR="Configure Filter";
   static const  String metersStock="Meters in Stock";
   static const  String metersOM="Meters issued to O & M";
+  static const String downloadFeeder="Download Feeder Data";
+  static const String missMatchedDtr= "Mis Matched DTRs";
+  static const String viewOfflineData="Offline DTR Structures";
+  static const String createOnlineDTR= "Create DTR Structure";
 
 }
