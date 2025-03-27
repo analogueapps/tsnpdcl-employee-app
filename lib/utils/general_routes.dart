@@ -97,4 +97,9 @@ class Routes {
   //DTR Master * Bhavana
   static const String mappedDtrScreen= "MappedDtr";
 
+  // Interruptions * swetha
+  static const String breakdown33kvScreen = "Breakdown33kvScreen";
+  static const String breakdown11kvScreen = "Breakdown11kvScreen";
+  static const String interruptionsEntryScreen = "InterruptionsEntryScreen";
+
 }

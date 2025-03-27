@@ -45,16 +45,22 @@ class MiddlePolesScreen extends StatelessWidget {
                       print("$item clicked");
                     }
                   },
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      item.toUpperCase(),
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 16, // Font size for better readability
-                        fontWeight: FontWeight.bold, // Bold for emphasis
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          item.toUpperCase(),
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 16, // Font size for better readability
+                            fontWeight: FontWeight.bold, // Bold for emphasis
+                          ),
+                        ),
                       ),
-                    ),
+                      Divider(height: 0.1, color: Colors.grey[200],),
+                    ],
                   ),
                 );
               },
