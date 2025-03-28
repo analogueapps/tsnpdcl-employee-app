@@ -585,7 +585,7 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       globalListDialogItem.addAll([
         GlobalListDialogItem(
             title: "Create DTR Master(Online)",
-            routeName: ""
+            routeName: Routes.createOnlineDTR
         ),
         GlobalListDialogItem(
             title: "View Mapped DTR's",
@@ -597,15 +597,15 @@ class UniversalDashboardViewModel extends ChangeNotifier {
         ),
         GlobalListDialogItem(
             title: "Download For Offline",
-            routeName: ""
+            routeName: Routes.downloadFeederScreen,
         ),
         GlobalListDialogItem(
             title: "View Offline Data",
-            routeName: ""
+            routeName: Routes.offlineData
         ),
         GlobalListDialogItem(
             title: "View Mismatch DTR's",
-            routeName: ""
+            routeName: Routes.misMatched
         ),
       ]);
       showCustomListDialog(context, globalListDialogItem);
