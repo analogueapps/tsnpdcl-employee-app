@@ -140,7 +140,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.interruptionsTitle,
           imageAsset: Assets.interruptions,
-          routeName: routeName),
+          routeName: GlobalConstants.interruptionsTitle,
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.ctPtFailureTitle,
           imageAsset: Assets.ctPtFailure,
@@ -472,7 +473,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.interruptionsTitle,
           imageAsset: Assets.interruptions,
-          routeName: routeName),
+          routeName: GlobalConstants.interruptionsTitle,
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.manageStaffTitle,
           imageAsset: Assets.manageStaff,
@@ -585,7 +587,7 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       globalListDialogItem.addAll([
         GlobalListDialogItem(
             title: "Create DTR Master(Online)",
-            routeName: ""
+            routeName: Routes.createOnlineDTR
         ),
         GlobalListDialogItem(
             title: "View Mapped DTR's",
@@ -597,15 +599,15 @@ class UniversalDashboardViewModel extends ChangeNotifier {
         ),
         GlobalListDialogItem(
             title: "Download For Offline",
-            routeName: ""
+            routeName: Routes.downloadFeederScreen,
         ),
         GlobalListDialogItem(
             title: "View Offline Data",
-            routeName: ""
+            routeName: Routes.offlineData
         ),
         GlobalListDialogItem(
             title: "View Mismatch DTR's",
-            routeName: ""
+            routeName: Routes.misMatched
         ),
       ]);
       showCustomListDialog(context, globalListDialogItem);
@@ -640,6 +642,43 @@ class UniversalDashboardViewModel extends ChangeNotifier {
         GlobalListDialogItem(
           title: "View Offline Forms(Pending)",
           routeName: "",
+        ),
+      ]);
+      showCustomListDialog(context, globalListDialogItem);
+    } else if(routeName == GlobalConstants.interruptionsTitle) { // swetha
+      List<GlobalListDialogItem> globalListDialogItem = [];
+      globalListDialogItem.addAll([
+        GlobalListDialogItem(
+            title: "33KV Breakdown Entry",
+            routeName: Routes.breakdown33kvScreen,
+        ),
+        GlobalListDialogItem(
+          title: "View 33KV Breakdowns",
+          routeName: "",
+        ),
+        GlobalListDialogItem(
+            title: "11KV Breakdown Entry",
+            routeName: Routes.breakdown11kvScreen,
+        ),
+        GlobalListDialogItem(
+            title: "View 11KV Breakdowns",
+            routeName: ""
+        ),
+        GlobalListDialogItem(
+            title: "Interruptions Entry",
+            routeName: Routes.interruptionsEntryScreen,
+        ),
+        GlobalListDialogItem(
+            title: "SAIDI SAIFI CALCULATOR",
+            routeName: ""
+        ),
+        GlobalListDialogItem(
+            title: "VIEW SAIDI SAIFI",
+            routeName: ""
+        ),
+        GlobalListDialogItem(
+            title: "View Report",
+            routeName: ""
         ),
       ]);
       showCustomListDialog(context, globalListDialogItem);

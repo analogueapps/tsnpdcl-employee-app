@@ -11,13 +11,21 @@ import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_inspection_list_s
 import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_maintenance_inspection_screen.dart';
 import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_maintenance_screen.dart';
 import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_master_list_screen.dart';
-import 'package:tsnpdcl_employee/view/dtr_master/view_mappedDTR/mapped_dtrs.dart';
+import 'package:tsnpdcl_employee/view/dtr_master/view/create_dtr_online.dart';
+import 'package:tsnpdcl_employee/view/dtr_master/view/download_feeder_data.dart';
+import 'package:tsnpdcl_employee/view/dtr_master/view/mis_matched_dtrs.dart';
+import 'package:tsnpdcl_employee/view/dtr_master/view/view_offline_data.dart';
+import 'package:tsnpdcl_employee/view/dtr_master/viewmodel/download_feeder_viewmodel.dart';
+import 'package:tsnpdcl_employee/view/dtr_master/view/mapped_dtrs.dart';
 import 'package:tsnpdcl_employee/view/exceptionals/view/exceptionals_screen.dart';
 import 'package:tsnpdcl_employee/view/failure_dtr_inspection/view/failure_dtr_inspection_screen.dart';
 import 'package:tsnpdcl_employee/view/filter/view/filter_screen.dart';
 import 'package:tsnpdcl_employee/view/ganesh_pandal/view/ganesh_pandal_info_screen.dart';
 import 'package:tsnpdcl_employee/view/ganesh_pandal/view/ganesh_pandal_information_screen.dart';
 import 'package:tsnpdcl_employee/view/gruha_jyothi/view/gruha_jyothi_screen.dart';
+import 'package:tsnpdcl_employee/view/interruptions/view/breakdown_11kv_screen.dart';
+import 'package:tsnpdcl_employee/view/interruptions/view/breakdown_33kv_screen.dart';
+import 'package:tsnpdcl_employee/view/interruptions/view/interruptions_entry_screen.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/view/add_induction_point_screen.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/view/all_lc_request_list_screen.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/view/feeder_induction_list_screen.dart';
@@ -109,29 +117,32 @@ class AppRouter {
       // Consumer details
       case DlistFormScreen.id:
         return MaterialPageRoute(
-            builder: (_) => DlistFormScreen(
-                form: settings.arguments as String));
+            builder: (_) =>
+                DlistFormScreen(form: settings.arguments as String));
 
       // Line Clearance
       case LcMasterSsListScreen.id:
-        return MaterialPageRoute(
-            builder: (_) => const LcMasterSsListScreen());
+        return MaterialPageRoute(builder: (_) => const LcMasterSsListScreen());
       case LcMasterFeederListScreen.id:
         return MaterialPageRoute(
-            builder: (_) => LcMasterFeederListScreen(args: settings.arguments as Map<String, dynamic>));
+            builder: (_) => LcMasterFeederListScreen(
+                args: settings.arguments as Map<String, dynamic>));
       case FeederInductionListScreen.id:
         return MaterialPageRoute(
-            builder: (_) => FeederInductionListScreen(args: settings.arguments as Map<String, dynamic>));
+            builder: (_) => FeederInductionListScreen(
+                args: settings.arguments as Map<String, dynamic>));
       case AddInductionPointScreen.id:
         return MaterialPageRoute(
-            builder: (_) => AddInductionPointScreen(args: settings.arguments as Map<String, dynamic>));
+            builder: (_) => AddInductionPointScreen(
+                args: settings.arguments as Map<String, dynamic>));
       case AllLcRequestListScreen.id:
         return MaterialPageRoute(
-            builder: (_) => AllLcRequestListScreen(status: settings.arguments as String));
+            builder: (_) =>
+                AllLcRequestListScreen(status: settings.arguments as String));
       case ViewDetailedLcScreen.id:
         return MaterialPageRoute(
-            builder: (_) => ViewDetailedLcScreen(lcId: settings.arguments as String));
-
+            builder: (_) =>
+                ViewDetailedLcScreen(lcId: settings.arguments as String));
 
       // Pole tracker
       case PoleTrackerSelectionViewSketchScreen.id:
@@ -139,36 +150,38 @@ class AppRouter {
             builder: (_) => const PoleTrackerSelectionViewSketchScreen());
       case ViewDigitalSketchScreen.id:
         return MaterialPageRoute(
-            builder: (_) => ViewDigitalSketchScreen(args: settings.arguments as Map<String, dynamic>));
+            builder: (_) => ViewDigitalSketchScreen(
+                args: settings.arguments as Map<String, dynamic>));
       case NewProposalScreen.id:
         return MaterialPageRoute(
-            builder: (_) => NewProposalScreen(ssc: settings.arguments as String));
+            builder: (_) =>
+                NewProposalScreen(ssc: settings.arguments as String));
       case PoleTrackerSelectionScreen.id:
         return MaterialPageRoute(
             builder: (_) => const PoleTrackerSelectionScreen());
       case PoleProposal11kvFeederMarkScreen.id:
         return MaterialPageRoute(
-            builder: (_) => PoleProposal11kvFeederMarkScreen(args: settings.arguments as Map<String, dynamic>));
+            builder: (_) => PoleProposal11kvFeederMarkScreen(
+                args: settings.arguments as Map<String, dynamic>));
       case Pole33kvProposalFeederMarkScreen.id:
         return MaterialPageRoute(
-            builder: (_) => Pole33kvProposalFeederMarkScreen(args: settings.arguments as Map<String, dynamic>));
+            builder: (_) => Pole33kvProposalFeederMarkScreen(
+                args: settings.arguments as Map<String, dynamic>));
       case Pole11kvFeederMarkScreen.id:
         return MaterialPageRoute(
-            builder: (_) => Pole11kvFeederMarkScreen(args: settings.arguments as Map<String, dynamic>));
+            builder: (_) => Pole11kvFeederMarkScreen(
+                args: settings.arguments as Map<String, dynamic>));
       case ViewOfflineFeedersScreen.id:
         return MaterialPageRoute(
             builder: (_) => const ViewOfflineFeedersScreen());
 
-
       // BILLING RELATED
       case GruhaJyothiScreen.id:
-        return MaterialPageRoute(
-            builder: (_) => const GruhaJyothiScreen());
+        return MaterialPageRoute(builder: (_) => const GruhaJyothiScreen());
 
       // MANAGE STAFF
       case ManageStaffsScreen.id:
-        return MaterialPageRoute(
-            builder: (_) => const ManageStaffsScreen());
+        return MaterialPageRoute(builder: (_) => const ManageStaffsScreen());
 
       // PDMS
       case CreatePoleIndentsScreen.id:
@@ -176,22 +189,27 @@ class AppRouter {
             builder: (_) => const CreatePoleIndentsScreen());
       case ViewDetailedPoleIndentScreen.id:
         return MaterialPageRoute(
-            builder: (_) => ViewDetailedPoleIndentScreen(data: settings.arguments as String));
+            builder: (_) => ViewDetailedPoleIndentScreen(
+                data: settings.arguments as String));
       case ViewDispatchInstructionsScreen.id:
         return MaterialPageRoute(
             builder: (_) => const ViewDispatchInstructionsScreen());
       case ViewDetailedDiTabsScreen.id:
         return MaterialPageRoute(
-            builder: (_) => ViewDetailedDiTabsScreen(data: settings.arguments as String));
+            builder: (_) =>
+                ViewDetailedDiTabsScreen(data: settings.arguments as String));
       case ViewDetailedTransportScreen.id:
         return MaterialPageRoute(
-            builder: (_) => ViewDetailedTransportScreen(data: settings.arguments as String));
+            builder: (_) => ViewDetailedTransportScreen(
+                data: settings.arguments as String));
       case ViewPoleDumpedLocationScreen.id:
         return MaterialPageRoute(
-            builder: (_) => ViewPoleDumpedLocationScreen(status: settings.arguments as String));
+            builder: (_) => ViewPoleDumpedLocationScreen(
+                status: settings.arguments as String));
       case ViewDetailedPoleDumpedLocationScreen.id:
         return MaterialPageRoute(
-            builder: (_) => ViewDetailedPoleDumpedLocationScreen(data: settings.arguments as String));
+            builder: (_) => ViewDetailedPoleDumpedLocationScreen(
+                data: settings.arguments as String));
 
       // REPORTS
       case ReportsScreen.id:
@@ -205,30 +223,33 @@ class AppRouter {
 
       // EXCEPTIONALS
       case ExceptionalsScreen.id:
-        return MaterialPageRoute(
-            builder: (_) => const ExceptionalsScreen());
+        return MaterialPageRoute(builder: (_) => const ExceptionalsScreen());
 
       // DTR MAINTENANCE
       case DtrMasterListScreen.id:
-        return MaterialPageRoute(
-            builder: (_) => const DtrMasterListScreen());
+        return MaterialPageRoute(builder: (_) => const DtrMasterListScreen());
       case DtrInspectionListScreen.id:
         return MaterialPageRoute(
-            builder: (_) => DtrInspectionListScreen(status: settings.arguments as String));
+            builder: (_) =>
+                DtrInspectionListScreen(status: settings.arguments as String));
       case DtrMaintenanceInspectionScreen.id:
         return MaterialPageRoute(
-            builder: (_) => DtrMaintenanceInspectionScreen(data: settings.arguments as String));
+            builder: (_) => DtrMaintenanceInspectionScreen(
+                data: settings.arguments as String));
 
       // Widgets
       case PinchZoomImageView.id:
         return MaterialPageRoute(
-            builder: (_) => PinchZoomImageView(imageUrl: settings.arguments as String));
+            builder: (_) =>
+                PinchZoomImageView(imageUrl: settings.arguments as String));
 
       // Tong tester readings * Swetha
       case TongTesterReadingsScreen.id:
-        return MaterialPageRoute(builder: (_) => const TongTesterReadingsScreen());
+        return MaterialPageRoute(
+            builder: (_) => const TongTesterReadingsScreen());
       case ViewDetailedTongTesterReadings.id:
-        return MaterialPageRoute(builder: (_) => const ViewDetailedTongTesterReadings());
+        return MaterialPageRoute(
+            builder: (_) => const ViewDetailedTongTesterReadings());
 
       // RFSS Screen * Swetha
       case RfssScreen.id:
@@ -242,16 +263,23 @@ class AppRouter {
       case SsMaintenanceScreen.id:
         return MaterialPageRoute(builder: (_) => const SsMaintenanceScreen());
 
-
       //LTMT * Bhavana
       case LtmtMenu.id:
-        return MaterialPageRoute(builder: (_)=> const LtmtMenu());
+        return MaterialPageRoute(builder: (_) => const LtmtMenu());
       case MetersStock.id:
-        return MaterialPageRoute(builder: (_)=> const MetersStock());
+        return MaterialPageRoute(builder: (_) => const MetersStock());
 
       // DTR Master * Bhavana
       case MappedDtr.id:
         return MaterialPageRoute(builder: (_)=> const MappedDtr());
+      case DownloadFeederData.id:
+        return MaterialPageRoute(builder: (_)=> const DownloadFeederData());
+      case ViewOfflineData.id:
+        return MaterialPageRoute(builder: (_)=> const ViewOfflineData());
+      case MisMatchedDtr.id:
+        return MaterialPageRoute(builder: (_)=> const MisMatchedDtr());
+      case CreateDtrOnline.id:
+        return MaterialPageRoute(builder: (_)=> const CreateDtrOnline());
 
       default:
         return MaterialPageRoute(
