@@ -3,9 +3,11 @@ import 'package:geolocator/geolocator.dart';
 import 'package:tsnpdcl_employee/utils/alerts.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 
-class OnlineDtrViewmodel extends ChangeNotifier{
+class OnlineDtrViewmodel extends ChangeNotifier{ // all fields are required
   OnlineDtrViewmodel({required this.context}) {
     getCurrentLocation();
+    sapDTRStructCode.text ="SELECT-SS-0001";
+    notifyListeners();
   }
 
   final BuildContext context;
@@ -15,7 +17,11 @@ class OnlineDtrViewmodel extends ChangeNotifier{
 
 
   final formKey = GlobalKey<FormState>();
-  final TextEditingController equipNoORStructCode = TextEditingController();
+  final TextEditingController sapDTRStructCode= TextEditingController();
+  final TextEditingController dtrLocatLandMark= TextEditingController();
+  final TextEditingController serialNo= TextEditingController();
+  final TextEditingController first_time_charged_date= TextEditingController();
+  final TextEditingController sap_dtr= TextEditingController();
 
   String? _selectedFilter;
   String? get selectedFilter => _selectedFilter;
@@ -67,7 +73,7 @@ class OnlineDtrViewmodel extends ChangeNotifier{
   String? _selectedStation;
   String? get selectedStation => _selectedStation;
 
-  List _station = ["KHA", "ANGALp", "ADILA"];
+  List _station = ["ALLIPURAM", "BACHODU", "BEEROLU"];
 
   List get station => _station;
   void onListStationSelected(String? value) {
@@ -75,11 +81,11 @@ class OnlineDtrViewmodel extends ChangeNotifier{
     notifyListeners();
   }
 
-  //5.Choose Feeder
+  //5. IF SUB STATION IS SELECTED LET USER SELECT Choose Feeder
   String? _selectedFeeder;
   String? get selectedFeeder => _selectedFeeder;
 
-  List _feeder = ["RTC", "Nakkalagutta", "Ramnagar"];
+  List _feeder = ["SUBLAID", "RAJARAM", "BEEROLU"];
   List get feeder => _feeder;
 
   void onListFeederSelected(String? value) {
@@ -91,11 +97,12 @@ class OnlineDtrViewmodel extends ChangeNotifier{
   String? _selectedCapacity;
   String? get selectedCapacity => _selectedCapacity;
 
-  List _capacity = ["KHAMMAM", "WARANGAL", "ADILABAD"];
+  List _capacity = ["Select", "1x10(L)", "1x10KVA(AGL)", "1X63+2x15KVA"];
   List get capacity => _capacity;
 
   void onListCapacitySelected(String? value) {
     _selectedCapacity = value;
+    print("$_selectedCapacity: selected Capacity ");
     notifyListeners();
   }
 
@@ -103,7 +110,7 @@ class OnlineDtrViewmodel extends ChangeNotifier{
   String? _selectedDTRType;
   String? get selectedDTRType => _selectedDTRType;
 
-  List _dTRtype = ["KHAMMAM", "WARANGAL", "ADILABAD"];
+  List _dTRtype = ["SELECT", "Single Pole", "Double Pole"];
   List get dTRtype => _dTRtype;
 
   void onListDTRTypeSelected(String? value) {
@@ -115,7 +122,7 @@ class OnlineDtrViewmodel extends ChangeNotifier{
   String? _selectedPlintType;
   String? get selectedPlintType => _selectedPlintType;
 
-  List _plintType= ["KHAMMAM", "WARANGAL", "ADILABAD"];
+  List _plintType= ["Rings", "Pillar Type", "Rock Plint"];
   List get plintType=> _plintType;
 
   void onListPlintTypeSelected(String? value) {
@@ -127,7 +134,7 @@ class OnlineDtrViewmodel extends ChangeNotifier{
   String? _selectedABSwitch;
   String? get selectedABSwitch => _selectedABSwitch;
 
-  List _aBSwitch = ["KHAMMAM", "WARANGAL", "ADILABAD"];
+  List _aBSwitch = ["Select", "Horizontal", "Vertical", "Not Available"];
   List get aBSwitch => _aBSwitch;
 
   void onListABSwitchSelected(String? value) {
@@ -139,7 +146,7 @@ class OnlineDtrViewmodel extends ChangeNotifier{
   String? _selectedHGFuse;
   String? get selectedHGFuse => _selectedHGFuse;
 
-  List _hGFuse = ["KHAMMAM", "WARANGAL", "ADILABAD"];
+  List _hGFuse = ["Select", "Horizontal", "Vertical", "Not Available"];
   List get hGFuse => _hGFuse;
 
   void onListHGFuseSelected(String? value) {
@@ -151,7 +158,7 @@ class OnlineDtrViewmodel extends ChangeNotifier{
   String? _selectedLTFuseSet;
   String? get selectedLTFuseSet => _selectedLTFuseSet;
 
-  List _lTFuseSet = ["KHAMMAM", "WARANGAL", "ADILABAD"];
+  List _lTFuseSet = ["Select", "Available and OK", "Available but Parallel", "Not Available"];
   List get lTFuseSet => _lTFuseSet;
 
   void onListLTFuseSelected(String? value) {
@@ -163,11 +170,11 @@ class OnlineDtrViewmodel extends ChangeNotifier{
   String? _selectedLTFuseType;
   String? get selectedLTFuseType => _selectedLTFuseType;
 
-  List _lTType = ["KHAMMAM", "WARANGAL", "ADILABAD"];
+  List _lTType = ["Select", "Not Available", "Distribution Box", "LT Fuse Set"];
   List get lTType => _lTType;
 
   void onListLTFuseTypeSelected(String? value) {
-    _selectedCircle = value;
+    _selectedLTFuseType = value;
     notifyListeners();
   }
 
@@ -175,7 +182,7 @@ class OnlineDtrViewmodel extends ChangeNotifier{
   String? _selectedLoadPattern;
   String? get selectedLoadPattern => _selectedLoadPattern;
 
-  List _loadPattern = ["KHAMMAM", "WARANGAL", "ADILABAD"];
+  List _loadPattern = ["Select", "Idle", "HT Service", "Mixed Load"];
   List get loadPattern => _loadPattern;
 
   void onListLoadPatternSelected(String? value) {
