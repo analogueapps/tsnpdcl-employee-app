@@ -105,5 +105,6 @@ class Routes {
   static const String breakdown33kvScreen = "Breakdown33kvScreen";
   static const String breakdown11kvScreen = "Breakdown11kvScreen";
   static const String interruptionsEntryScreen = "InterruptionsEntryScreen";
+  static const String saidiSaifiCalculatorScreen = "SaidiSaifiCalculatorScreen";
 
 }

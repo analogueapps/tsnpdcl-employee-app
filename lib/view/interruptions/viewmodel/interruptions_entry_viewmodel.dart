@@ -5,9 +5,10 @@ import 'package:tsnpdcl_employee/view/interruptions/model/substation_model.dart'
 class InterruptionsEntryViewmodel extends ChangeNotifier {
   final TextEditingController substationsController = TextEditingController();
 
-  String? selectedOption; // The selected radio button's value
+  String? selectedOption = "Feeder"; // Default to "Feeder"
   String? _selectedInterruptionLevel; // "Feeder", "LV", or "ISF"
-  String? _selectedSupplyPosition;    // "Restored" or "Not Restored"
+  String? _selectedSupplyPosition = "Restored"; // Default to "Restored"
+  String? selectedLV; // New field for LV dropdown selection
 
   // Getters
   String? get selectedInterruptionLevel => _selectedInterruptionLevel;
@@ -21,17 +22,17 @@ class InterruptionsEntryViewmodel extends ChangeNotifier {
 
   /// **Substations Data**
   List<SubstationModel> _substations = [
-    SubstationModel(name: "Substation A", rawData: "Raw data for Substation A"),
-    SubstationModel(name: "Substation B", rawData: "Raw data for Substation B"),
-    SubstationModel(name: "Substation C", rawData: "Raw data for Substation C"),
+    SubstationModel(name: "Circle A", rawData: "Raw data for Substation A"),
+    SubstationModel(name: "Circle B", rawData: "Raw data for Substation B"),
+    SubstationModel(name: "Circle C", rawData: "Raw data for Substation C"),
   ];
   String? selectedSubstation;
 
   /// **Feeders Data (Separate Model)**
   List<SubstationModel> _feeders = [
-    SubstationModel(name: "Feeder 1", rawData: "Data for Feeder 1"),
-    SubstationModel(name: "Feeder 2", rawData: "Data for Feeder 2"),
-    SubstationModel(name: "Feeder 3", rawData: "Data for Feeder 3"),
+    SubstationModel(name: "Substation 1", rawData: "Data for Feeder 1"),
+    SubstationModel(name: "Substation 2", rawData: "Data for Feeder 2"),
+    SubstationModel(name: "Substation 3", rawData: "Data for Feeder 3"),
   ];
   String? selectedFeeder;
 
@@ -57,6 +58,12 @@ class InterruptionsEntryViewmodel extends ChangeNotifier {
 
   void setSelectedFeeder(String? feeder) {
     selectedFeeder = feeder;
+    notifyListeners();
+  }
+
+  /// New method for LV dropdown
+  void setSelectedLV(String? lv) {
+    selectedLV = lv;
     notifyListeners();
   }
 
@@ -157,5 +164,4 @@ class InterruptionsEntryViewmodel extends ChangeNotifier {
   bool validateSelections() {
     return _selectedInterruptionLevel != null && _selectedSupplyPosition != null;
   }
-
 }

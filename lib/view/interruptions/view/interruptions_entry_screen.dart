@@ -33,8 +33,14 @@ class InterruptionsEntryScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Center(child: Text("11KV FEEDER INTERRUPTIONS", style: TextStyle(fontSize: extraTitleSize, fontWeight: FontWeight.bold),)),
-                  SizedBox(height: 20,),
+                  Center(
+                    child: Text(
+                      "11KV FEEDER INTERRUPTIONS",
+                      style: TextStyle(
+                          fontSize: extraTitleSize, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  SizedBox(height: 20),
                   /// Select Circle
                   const Text("SELECT CIRCLE", style: TextStyle(fontSize: 16)),
                   const SizedBox(height: 8),
@@ -56,7 +62,8 @@ class InterruptionsEntryScreen extends StatelessWidget {
                   const SizedBox(height: 20),
 
                   /// Select Substation
-                  const Text("SELECT SUBSTATION", style: TextStyle(fontSize: 16)),
+                  const Text("SELECT SUBSTATION",
+                      style: TextStyle(fontSize: 16)),
                   const SizedBox(height: 8),
                   DropdownButton<String>(
                     isExpanded: true,
@@ -76,7 +83,8 @@ class InterruptionsEntryScreen extends StatelessWidget {
                   const SizedBox(height: 20),
 
                   /// Interruption Level
-                  const Text("INTERRUPTION LEVEL", style: TextStyle(fontSize: 16)),
+                  const Text("INTERRUPTION LEVEL",
+                      style: TextStyle(fontSize: 16)),
                   const SizedBox(height: 8),
                   Row(
                     children: [
@@ -91,7 +99,7 @@ class InterruptionsEntryScreen extends StatelessWidget {
                                   viewModel.toggleOption(value!),
                             ),
                             const SizedBox(width: 4),
-                            Text(
+                            const Text(
                               "Feeder",
                               style: TextStyle(
                                 fontSize: 16,
@@ -112,7 +120,7 @@ class InterruptionsEntryScreen extends StatelessWidget {
                                   viewModel.toggleOption(value!),
                             ),
                             const SizedBox(width: 4),
-                            Text(
+                            const Text(
                               "LV",
                               style: TextStyle(
                                 fontSize: 16,
@@ -133,7 +141,7 @@ class InterruptionsEntryScreen extends StatelessWidget {
                                   viewModel.toggleOption(value!),
                             ),
                             const SizedBox(width: 4),
-                            Text(
+                            const Text(
                               "ISF",
                               style: TextStyle(
                                 fontSize: 16,
@@ -145,6 +153,49 @@ class InterruptionsEntryScreen extends StatelessWidget {
                       ),
                     ],
                   ),
+
+                  const SizedBox(height: 20),
+
+                  /// Conditional Section based on selectedOption
+                  if (viewModel.selectedOption == "Feeder" ||
+                      viewModel.selectedOption == "ISF") ...[
+                    const Text("SELECT 11KV FEEDERS",
+                        style: TextStyle(fontSize: 16)),
+                    const SizedBox(height: 8),
+                  ] else if (viewModel.selectedOption == "LV") ...[
+                    const Text("SELECT LV", style: TextStyle(fontSize: 16)),
+                    const SizedBox(height: 8),
+                    DropdownButton<String>(
+                      isExpanded: true,
+                      hint: const Text("SELECT"),
+                      value: viewModel.selectedLV,
+                      items: const [
+                        DropdownMenuItem<String>(
+                          value: null,
+                          child: Text("SELECT"),
+                        ),
+                        DropdownMenuItem<String>(
+                          value: "LV1",
+                          child: Text("LV1"),
+                        ),
+                        DropdownMenuItem<String>(
+                          value: "LV2",
+                          child: Text("LV2"),
+                        ),
+                        DropdownMenuItem<String>(
+                          value: "LV3",
+                          child: Text("LV3"),
+                        ),
+                        DropdownMenuItem<String>(
+                          value: "LV4",
+                          child: Text("LV4"),
+                        ),
+                      ],
+                      onChanged: (selectedLV) {
+                        viewModel.setSelectedLV(selectedLV);
+                      },
+                    ),
+                  ],
 
                   const SizedBox(height: 20),
 
@@ -160,10 +211,11 @@ class InterruptionsEntryScreen extends StatelessWidget {
                             Radio<String>(
                               value: "Restored",
                               groupValue: viewModel.selectedSupplyPosition,
-                              onChanged: (value) => viewModel.setSupplyPosition(value),
+                              onChanged: (value) =>
+                                  viewModel.setSupplyPosition(value),
                             ),
                             const SizedBox(width: 4),
-                            Text(
+                            const Text(
                               "Restored",
                               style: TextStyle(
                                 fontSize: 16,
@@ -180,10 +232,11 @@ class InterruptionsEntryScreen extends StatelessWidget {
                             Radio<String>(
                               value: "Not Restored",
                               groupValue: viewModel.selectedSupplyPosition,
-                              onChanged: (value) => viewModel.setSupplyPosition(value),
+                              onChanged: (value) =>
+                                  viewModel.setSupplyPosition(value),
                             ),
                             const SizedBox(width: 4),
-                            Text(
+                            const Text(
                               "Not Restored",
                               style: TextStyle(
                                 fontSize: 16,
@@ -208,46 +261,54 @@ class InterruptionsEntryScreen extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text("Start Date & Time", style: TextStyle(fontSize: 14)),
-                            const SizedBox(height: 4), // Small gap between text and picker
+                            const Text("Start Date & Time",
+                                style: TextStyle(fontSize: 14)),
+                            const SizedBox(height: 4),
                             InkWell(
                               onTap: () => viewModel.selectFromDateTime(context),
                               child: InputDecorator(
                                 decoration: InputDecoration(
                                   hintText: "From Date & Time",
-                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
-                                  suffixIcon: const Icon(Icons.calendar_today, size: 20),
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8.0)),
+                                  suffixIcon:
+                                  const Icon(Icons.calendar_today, size: 20),
                                 ),
                                 child: Text(
                                   viewModel.fromDateTime == null
                                       ? "DD/MM/YY HH:MM"
-                                      : viewModel.formatDateTime(viewModel.fromDateTime!),
+                                      : viewModel
+                                      .formatDateTime(viewModel.fromDateTime!),
                                 ),
                               ),
                             ),
                           ],
                         ),
                       ),
-                      const SizedBox(width: 10), // Spacing between the two columns
+                      const SizedBox(width: 10),
                       // Second Column (End Date)
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text("End Date & Time", style: TextStyle(fontSize: 14)),
-                            const SizedBox(height: 4), // Small gap between text and picker
+                            const Text("End Date & Time",
+                                style: TextStyle(fontSize: 14)),
+                            const SizedBox(height: 4),
                             InkWell(
                               onTap: () => viewModel.selectToDateTime(context),
                               child: InputDecorator(
                                 decoration: InputDecoration(
                                   hintText: "To Date & Time",
-                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
-                                  suffixIcon: const Icon(Icons.calendar_today, size: 20),
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8.0)),
+                                  suffixIcon:
+                                  const Icon(Icons.calendar_today, size: 20),
                                 ),
                                 child: Text(
                                   viewModel.toDateTime == null
                                       ? "DD/MM/YY HH:MM"
-                                      : viewModel.formatDateTime(viewModel.toDateTime!),
+                                      : viewModel
+                                      .formatDateTime(viewModel.toDateTime!),
                                 ),
                               ),
                             ),
@@ -262,20 +323,21 @@ class InterruptionsEntryScreen extends StatelessWidget {
                   /// Simple Calendar Field (without ViewModel)
                   const Text("DURATION", style: TextStyle(fontSize: 16)),
                   const SizedBox(height: 8),
-                    InputDecorator(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        suffixIcon: const Icon(Icons.calendar_today, size: 20),
+                  InputDecorator(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
                       ),
-                      child: const Text(""),
+                      suffixIcon: const Icon(Icons.calendar_today, size: 20),
                     ),
+                    child: const Text(""),
+                  ),
 
                   const SizedBox(height: 30),
 
                   /// Select Circle
-                  const Text("INTERRUPTION TYPE", style: TextStyle(fontSize: 16)),
+                  const Text("INTERRUPTION TYPE",
+                      style: TextStyle(fontSize: 16)),
                   DropdownButton<String>(
                     isExpanded: true,
                     hint: const Text("SELECT"),
@@ -291,7 +353,7 @@ class InterruptionsEntryScreen extends StatelessWidget {
                     },
                   ),
 
-                  const SizedBox(height: 20,),
+                  const SizedBox(height: 20),
                   /// Submit Button
                   SizedBox(
                     height: 50,

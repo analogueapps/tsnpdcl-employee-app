@@ -670,7 +670,7 @@ class UniversalDashboardViewModel extends ChangeNotifier {
         ),
         GlobalListDialogItem(
             title: "SAIDI SAIFI CALCULATOR",
-            routeName: ""
+            routeName: Routes.saidiSaifiCalculatorScreen
         ),
         GlobalListDialogItem(
             title: "VIEW SAIDI SAIFI",
