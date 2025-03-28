@@ -182,6 +182,7 @@ class CreateDtrOnline extends StatelessWidget {
                                                     lastDate: DateTime.now(),
                                                   );
                                                   if (pickedDate != null) {
+                                                    // Format the date as DD/MM/YYYY
                                                     final formattedDate = "${pickedDate.day.toString().padLeft(2,'0')}/${pickedDate.month.toString().padLeft(2,'0')}/${pickedDate.year}";
                                                     viewModel.first_time_charged_date.text = formattedDate;
                                                   }
