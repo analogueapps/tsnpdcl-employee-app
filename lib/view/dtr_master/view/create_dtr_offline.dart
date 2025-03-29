@@ -9,7 +9,6 @@ import 'package:tsnpdcl_employee/view/dtr_master/viewmodel/createOffline_dtr_vie
 
 class CreateDtrOffline extends StatelessWidget {
   static const id = Routes.createOfflineDTR;
-
   const CreateDtrOffline({super.key});
 
   @override
