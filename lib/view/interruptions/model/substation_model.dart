@@ -4,3 +4,4 @@ class SubstationModel {
 
   SubstationModel({required this.name, required this.rawData});
 }
+

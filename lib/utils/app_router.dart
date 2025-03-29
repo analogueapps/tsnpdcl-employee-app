@@ -26,6 +26,7 @@ import 'package:tsnpdcl_employee/view/gruha_jyothi/view/gruha_jyothi_screen.dart
 import 'package:tsnpdcl_employee/view/interruptions/view/breakdown_11kv_screen.dart';
 import 'package:tsnpdcl_employee/view/interruptions/view/breakdown_33kv_screen.dart';
 import 'package:tsnpdcl_employee/view/interruptions/view/interruptions_entry_screen.dart';
+import 'package:tsnpdcl_employee/view/interruptions/view/saidi_saifi_calculator_screen.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/view/add_induction_point_screen.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/view/all_lc_request_list_screen.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/view/feeder_induction_list_screen.dart';
@@ -62,9 +63,9 @@ import 'package:tsnpdcl_employee/view/tong_tester_readings/view/tong_tester_read
 import 'package:tsnpdcl_employee/view/tong_tester_readings/view/view_detailed_tong_tester_readings.dart';
 import 'package:tsnpdcl_employee/view/web_view/view/web_view_screen.dart';
 import 'package:tsnpdcl_employee/widget/pinch_zoom_imageview.dart';
-
 import '../view/ltmt/view/ltmt_menu.dart';
 import '../view/ltmt/view/meters_stock.dart';
+import 'package:tsnpdcl_employee/view/dtr_master/view/create_dtr_offline.dart';
 
 class AppRouter {
   static Route generateRoute(RouteSettings settings) {
@@ -270,6 +271,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const Breakdown11kvScreen());
       case InterruptionsEntryScreen.id:
         return MaterialPageRoute(builder: (_) => const InterruptionsEntryScreen());
+        case SaidiSaifiCalculatorScreen.id:
+        return MaterialPageRoute(builder: (_) => const SaidiSaifiCalculatorScreen());
 
       //LTMT * Bhavana
       case LtmtMenu.id:
@@ -288,6 +291,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_)=> const MisMatchedDtr());
       case CreateDtrOnline.id:
         return MaterialPageRoute(builder: (_)=> const CreateDtrOnline());
+      case CreateDtrOffline.id:
+        return MaterialPageRoute(builder: (_)=> const CreateDtrOffline());
 
       default:
         return MaterialPageRoute(

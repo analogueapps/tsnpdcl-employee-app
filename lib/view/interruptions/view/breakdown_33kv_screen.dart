@@ -4,6 +4,7 @@ import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
 import 'package:tsnpdcl_employee/view/interruptions/viewmodel/breakdown_33kv_viewmodel.dart';
 import 'package:tsnpdcl_employee/widget/fill_text_form_field.dart';
+import 'package:tsnpdcl_employee/widget/primary_button.dart';
 
 class Breakdown33kvScreen extends StatelessWidget {
   static const id = 'Breakdown33kvScreen';
@@ -126,17 +127,7 @@ class Breakdown33kvScreen extends StatelessWidget {
                   const SizedBox(height: 20),
 
                   /// **Submit Button**
-                  SizedBox(
-                    height: 50,
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      style: ButtonStyle(
-                        backgroundColor: WidgetStateProperty.all(CommonColors.successGreen),
-                      ),
-                      child: const Text('SUBMIT', style: TextStyle(color: Colors.white)),
-                    ),
-                  ),
+                  PrimaryButton(text: "SUBMIT", onPressed: (){}, fullWidth: true,),
                 ],
               ),
             ),
