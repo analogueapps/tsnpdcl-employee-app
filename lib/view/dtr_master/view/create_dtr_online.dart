@@ -58,23 +58,24 @@ class CreateDtrOnline extends StatelessWidget {
                             children: [
                               checkbox(context, "STRUCTURE"),
                               checkbox(context, "SUB STATION"),
-                              Container(
-                                height: 50,
-                                color:Colors.grey[200],
-                                child: Center(child:Text(
-                                  "DTR Structure Details",
-                                  style: TextStyle(color: Colors.purple[300]
-                                  ),
-                                ),
-                                ),
-                              ),
                               Visibility(
-                                visible: viewModel.selectedFilter == "STRUCTURE",
-                                child:Padding(
+                                visible: viewModel.selectedFilter == null || viewModel.selectedFilter == "STRUCTURE",
+                                child:
+                                Padding(
                                   padding: const EdgeInsets.only(right: 10, left: 10, top: 10),
                                   child:Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
+                                        Container(
+                                          height: 50,
+                                          color:Colors.grey[200],
+                                          child: Center(child:Text(
+                                            "DTR Structure Details",
+                                            style: TextStyle(color: Colors.purple[300]
+                                            ),
+                                          ),
+                                          ),
+                                        ),
                                         dropDown(context, "Select Distribution","Select ", viewModel.selectedDistribution,viewModel.distributions,viewModel.onListDistriSelected ),
                                         dropDown(context, "SS No.","Select ",  viewModel.selectedSSNo,viewModel.ssno,viewModel.onListSSNoSelected ),
 
@@ -92,14 +93,6 @@ class CreateDtrOnline extends StatelessWidget {
                                           labelText: '',
                                           isEnable: false,
                                           keyboardType: TextInputType.number,
-                                          validator: (value) {
-                                            if (value == null || value.isEmpty) {
-                                              return "Please enter USCNO";
-                                            } else if (value.length < 8) {
-                                              return "Please enter valid USCNO";
-                                            }
-                                            return null;
-                                          },
                                         ),
                                         const SizedBox(height: 20,),
                                          Text("DTR Structure Location LandMark", style: TextStyle(fontSize:15, color:Colors.purple[300] ),),
@@ -107,12 +100,6 @@ class CreateDtrOnline extends StatelessWidget {
                                           controller: viewModel.dtrLocatLandMark,
                                           labelText: '',
                                           keyboardType: TextInputType.text,
-                                          validator: (value) {
-                                            if (value == null || value.isEmpty) {
-                                              return "Please enter USCNO";
-                                            }
-                                            return null;
-                                          },
                                         ),
                                         dropDown(context, "DTR Structure Type(*)","Select", viewModel.selectedDTRType,viewModel.dTRtype,viewModel.onListDTRTypeSelected ),
                                         dropDown(context, "Plint Type(*)","Select", viewModel.selectedPlintType,viewModel.plintType,viewModel.onListPlintTypeSelected ),
@@ -195,12 +182,7 @@ class CreateDtrOnline extends StatelessWidget {
                                                       border: OutlineInputBorder(),
                                                       // suffixIcon: Icon(Icons.calendar_today),
                                                     ),
-                                                    validator: (value) {
-                                                      if (value == null || value.isEmpty) {
-                                                        return "Please select a date";
-                                                      }
-                                                      return null;
-                                                    },
+
                                                   ),
                                                 ),
                                               ),
@@ -225,12 +207,6 @@ class CreateDtrOnline extends StatelessWidget {
                                                           controller: viewModel.serialNo,
                                                           labelText: '',
                                                           keyboardType: TextInputType.text,
-                                                          validator: (value) {
-                                                            if (value == null || value.isEmpty) {
-                                                              return "Please enter Serial No";
-                                                            }
-                                                            return null;
-                                                          },
                                                         )
                                                         ),
                                                       ],
@@ -290,12 +266,6 @@ class CreateDtrOnline extends StatelessWidget {
                                                           controller: viewModel.sap_dtr,
                                                           labelText: '',
                                                           keyboardType: TextInputType.text,
-                                                          validator: (value) {
-                                                            if (value == null || value.isEmpty) {
-                                                              return "Please enter sap dtr";
-                                                            }
-                                                            return null;
-                                                          },
                                                         )
                                                         ),
                                                       ],
@@ -332,19 +302,42 @@ class CreateDtrOnline extends StatelessWidget {
                                             ),
                                           ),
                                         ),
-                                        SizedBox(
-                                          width: double.infinity,
-                                          child: PrimaryButton(
-                                              text: "SUBMIT",
-                                              onPressed: () {
-
-                                              }
-                                          ),
-                                        ),
                                       ]
                                   ),
                                 ),
-                              )
+                              ),
+                              Visibility(
+                                visible: viewModel.selectedFilter == "SUB STATION",
+                                child:Column(
+                                  children: [
+                                    Container(
+                                      height: 50,
+                                      color:Colors.grey[200],
+                                      child: Center(child:Text(
+                                        "DTR  Details",
+                                        style: TextStyle(color: Colors.purple[300]
+                                        ),
+                                      ),
+                                      ),
+                                    ),
+                                    SizedBox(height: 10,),
+                                    Container(
+                                      height: 50,
+                                      color:Colors.grey[200],
+                                      ),
+                                  ],
+                                ),
+
+                              ),
+                              SizedBox(
+                                width: double.infinity,
+                                child: PrimaryButton(
+                                    text: "SUBMIT",
+                                    onPressed: () {
+                                    viewModel.submitForm();
+                                    }
+                                ),
+                              ),
                             ],
                           ),
                         ]
@@ -425,7 +418,11 @@ class CreateDtrOnline extends StatelessWidget {
               items: dtrItems.map<DropdownMenuItem<String>>((item) {
                 return DropdownMenuItem<String>(
                   value: item,
-                  child: Text(item),
+                  child: Text(
+                    item,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: false,
+                  ),
                 );
               }).toList(),
               onChanged: (value) => changedDetails(value),

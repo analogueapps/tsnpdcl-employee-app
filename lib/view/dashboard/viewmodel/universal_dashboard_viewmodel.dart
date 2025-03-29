@@ -595,7 +595,7 @@ class UniversalDashboardViewModel extends ChangeNotifier {
         ),
         GlobalListDialogItem(
             title: "Create DTR Master(Offline)",
-            routeName: ""
+            routeName: Routes.createOfflineDTR
         ),
         GlobalListDialogItem(
             title: "Download For Offline",

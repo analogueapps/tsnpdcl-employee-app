@@ -5,8 +5,7 @@ import 'package:tsnpdcl_employee/utils/app_constants.dart';
 
 class OnlineDtrViewmodel extends ChangeNotifier{ // all fields are required
   OnlineDtrViewmodel({required this.context}) {
-    getCurrentLocation();
-    sapDTRStructCode.text ="SELECT-SS-0001";
+    init();
     notifyListeners();
   }
 
@@ -23,6 +22,11 @@ class OnlineDtrViewmodel extends ChangeNotifier{ // all fields are required
   final TextEditingController first_time_charged_date= TextEditingController();
   final TextEditingController sap_dtr= TextEditingController();
 
+  void init() {
+    getCurrentLocation();
+    sapDTRStructCode.text = "SELECT-SS-0001";
+  }
+
   String? _selectedFilter;
   String? get selectedFilter => _selectedFilter;
   void setSelectedFilter(String title) {
@@ -30,6 +34,8 @@ class OnlineDtrViewmodel extends ChangeNotifier{ // all fields are required
     print("$_selectedFilter: filter selected");
     notifyListeners();
   }
+
+
 
   // 1.Distribution
   String? _selectedDistribution;
@@ -45,7 +51,7 @@ class OnlineDtrViewmodel extends ChangeNotifier{ // all fields are required
   }
 
   //2.SS No
-  String? _selectedSSNo;
+  String? _selectedSSNo="01";
   String? get selectedSSNo=> _selectedSSNo;
 
   List _ssno= ["01", "02", "03"];
@@ -191,31 +197,157 @@ class OnlineDtrViewmodel extends ChangeNotifier{ // all fields are required
   }
 
 
+  // Future<void> getCurrentLocation() async {
+  //   try {
+  //     Position position = await Geolocator.getCurrentPosition(
+  //       desiredAccuracy: LocationAccuracy.high,
+  //     );
+  //
+  //     if (position != null) {
+  //       _latitude = position.latitude.toString();
+  //       _longitude = position.longitude.toString();
+  //       isLocationGranted = true;
+  //       print("Geo Last known location: $_latitude , $_longitude");
+  //     } else {
+  //       // If no last known location, fetch current location
+  //       Position currentPosition = await Geolocator.getCurrentPosition(
+  //         desiredAccuracy: LocationAccuracy.high,
+  //       );
+  //       _latitude = currentPosition.latitude.toString();
+  //       _longitude = currentPosition.longitude.toString();
+  //       print("Geo Current location: $_latitude , $_longitude");
+  //     }
+  //   } catch (e) {
+  //     print("Error fetching location: $e");
+  //     AlertUtils.showSnackBar(context, "Error fetching location", isTrue);
+  //   }
+  //   notifyListeners(); // Notify listeners that the location has been updated
+  // }
+
   Future<void> getCurrentLocation() async {
     try {
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          AlertUtils.showSnackBar(context, "Location permission denied", isTrue);
+          return;
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        AlertUtils.showSnackBar(
+            context, "Location permissions are permanently denied", isTrue);
+        return;
+      }
+
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
       );
 
-      if (position != null) {
-        _latitude = position.latitude.toString();
-        _longitude = position.longitude.toString();
-        isLocationGranted = true;
-        print("Geo Last known location: $_latitude , $_longitude");
-      } else {
-        // If no last known location, fetch current location
-        Position currentPosition = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high,
-        );
-        _latitude = currentPosition.latitude.toString();
-        _longitude = currentPosition.longitude.toString();
-        print("Geo Current location: $_latitude , $_longitude");
-      }
+      _latitude = position.latitude.toString();
+      _longitude = position.longitude.toString();
+      isLocationGranted = true;
+
+      print("Geo Current location: $_latitude , $_longitude");
+
+      notifyListeners();
     } catch (e) {
       print("Error fetching location: $e");
       AlertUtils.showSnackBar(context, "Error fetching location", isTrue);
     }
-    notifyListeners(); // Notify listeners that the location has been updated
   }
 
+
+  Future<void> submitForm() async {
+    if (formKey.currentState!.validate()) {
+      formKey.currentState!.save();
+      notifyListeners();
+
+      if (!validateForm()) {
+        return;
+      }
+    }
+  }
+  bool validateForm() {
+    if (_selectedFilter==''||_selectedFilter==null) {
+      AlertUtils.showSnackBar(context, "Please select location of DTR", isTrue);
+      print("Please select any one filter option");
+      return false;
+    }
+    if (_selectedDistribution==""|| _selectedDistribution==null ) {
+      AlertUtils.showSnackBar(
+          context, "Please select Distribution",
+          isTrue);
+      return false;
+    } else if (_selectedSSNo==null||_selectedSSNo=="" ) {
+      AlertUtils.showSnackBar(
+          context, "Please select Distribution",
+          isTrue);
+      return false;
+    }else if (_selectedStation==""|| _selectedStation==null ) {
+      AlertUtils.showSnackBar(
+          context, "Please select Sub Station",
+          isTrue);
+      return false;
+    }else if (_selectedCircle==""|| _selectedCircle==null ) {
+      AlertUtils.showSnackBar(
+          context, "Please select Circle",
+          isTrue);
+      return false;
+    }else if (_selectedFeeder==""|| _selectedFeeder==null ) {
+      AlertUtils.showSnackBar(
+          context, "Please select Feeder",
+          isTrue);
+      return false;
+    }else if (dtrLocatLandMark.text.isEmpty||dtrLocatLandMark.text=="") {
+      AlertUtils.showSnackBar(
+          context, "Please enter DTR Lank mark",
+          isTrue);
+      return false;
+    }else if (_selectedCapacity==""|| _selectedCapacity==null ) {
+      AlertUtils.showSnackBar(
+          context, "Please select structure Capacity",
+          isTrue);
+      return false;
+    }else if (_selectedPlintType==""|| _selectedPlintType==null ) {
+      AlertUtils.showSnackBar(
+          context, "Please select Plinth type",
+          isTrue);
+      return false;
+    }else if (_selectedABSwitch==""|| _selectedABSwitch==null ) {
+      AlertUtils.showSnackBar(
+          context, "Please select AB switch type",
+          isTrue);
+      return false;
+    }else if (_selectedHGFuse==""|| _selectedHGFuse==null ) {
+      AlertUtils.showSnackBar(
+          context, "Please select Feeder",
+          isTrue);
+      return false;
+    }else if (_selectedLTFuseSet==""|| _selectedLTFuseSet==null ) {
+      AlertUtils.showSnackBar(
+          context, "Please select LT Fuse sets",
+          isTrue);
+      return false;
+    }else if (_selectedLTFuseType==""|| _selectedLTFuseType==null ) {
+      AlertUtils.showSnackBar(
+          context, "Please select LT Fuse type",
+          isTrue);
+      return false;
+    }else if (_selectedLoadPattern==""|| _selectedLoadPattern==null ) {
+      AlertUtils.showSnackBar(
+          context, "Please select Load Pattern",
+          isTrue);
+      return false;
+    }else if (_latitude==null|| _longitude==null ) {
+      getCurrentLocation();
+      print(" Final Loaction $_latitude and $_longitude");
+      AlertUtils.showSnackBar(
+          context, "Please await until we capture  your current location",
+          isTrue);
+      return false;
+    }
+    return true;
+  }
 }

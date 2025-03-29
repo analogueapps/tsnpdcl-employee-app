@@ -136,6 +136,7 @@ class GlobalConstants {
   static const String missMatchedDtr= "Mis Matched DTRs";
   static const String viewOfflineData="Offline DTR Structures";
   static const String createOnlineDTR= "Create DTR Structure";
+  static const String createOfflineDTR="Create DTR Structure(Offline)";
 
   // Interruption * swetha
   static const String thirtyThreeBreakdownEntry = "33KV Breakdown Entry";
