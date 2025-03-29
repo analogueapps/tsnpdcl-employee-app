@@ -263,6 +263,14 @@ class AppRouter {
       case SsMaintenanceScreen.id:
         return MaterialPageRoute(builder: (_) => const SsMaintenanceScreen());
 
+    // Interruptions * swetha
+      case Breakdown33kvScreen.id:
+        return MaterialPageRoute(builder: (_) => const Breakdown33kvScreen());
+      case Breakdown11kvScreen.id:
+        return MaterialPageRoute(builder: (_) => const Breakdown11kvScreen());
+      case InterruptionsEntryScreen.id:
+        return MaterialPageRoute(builder: (_) => const InterruptionsEntryScreen());
+
       //LTMT * Bhavana
       case LtmtMenu.id:
         return MaterialPageRoute(builder: (_) => const LtmtMenu());
