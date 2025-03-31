@@ -4,7 +4,7 @@ class RfssMenuGridItem {
   final String title;
   final IconData iconAsset;
   final Color cardColor;
-  // final String routeName;
+  // final String? routeName;
 
   RfssMenuGridItem(
       {required this.title,
@@ -12,4 +12,5 @@ class RfssMenuGridItem {
         required this.cardColor,
         // required this.routeName
       });
+
 }

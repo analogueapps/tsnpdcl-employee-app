@@ -19,13 +19,12 @@ class RfssViewModel extends ChangeNotifier {
   // Add items
   void _initializeItems() {
     const String routeName = '';
-
     _rfssMenuItems.addAll([
       RfssMenuGridItem(
         title: GlobalConstants.mappingOfServices,
         iconAsset: Icons.account_tree_outlined,
         cardColor: Colors.redAccent,
-        // routeName: Routes.viewPoleDumpedLocationScreen,
+
       ),
       RfssMenuGridItem(
         title: GlobalConstants.dtrDigitilization,
@@ -50,7 +49,7 @@ class RfssViewModel extends ChangeNotifier {
       listDialogItemArray.addAll([
         listDialogItem(
             title: "Non-AGL Service",
-            routeName: Routes.reportsScreen
+            routeName: Routes.nonAglService
         ),
         listDialogItem(
             title: "AGL Service",
@@ -63,26 +62,26 @@ class RfssViewModel extends ChangeNotifier {
       listDialogItemArray.addAll([
         listDialogItem(
             title: "Create DTR Master(Online)",
-            routeName: ""
+            routeName:Routes.createOnlineDTR
         ),listDialogItem(
             title: "View Mapped DTR's",
-            routeName: ""
+            routeName: Routes.mappedDtrScreen,
         ),
         listDialogItem(
             title: "Create DTR Master(Offline)",
-            routeName: ""
+            routeName: Routes.createOfflineDTR
         ),
         listDialogItem(
             title: "Download For Offline",
-            routeName: ""
+            routeName: Routes.downloadFeederScreen,
         ),
         listDialogItem(
             title: "View Offline Data",
-            routeName: ""
+            routeName:Routes.offlineData
         ),
         listDialogItem(
             title: "View Mismatch DTR's",
-            routeName: ""
+            routeName:  Routes.misMatched,
         ),
       ]);
       showCustomListRfssDialog(context, listDialogItemArray);

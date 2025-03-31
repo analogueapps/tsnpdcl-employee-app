@@ -109,6 +109,16 @@ class OnlineDtrViewmodel extends ChangeNotifier{ // all fields are required
   void onListCapacitySelected(String? value) {
     _selectedCapacity = value;
     print("$_selectedCapacity: selected Capacity ");
+
+    // Reset all DTR Details fields when capacity changes
+    _selectedMake = null;
+    _selectedDtrCapacity = null;
+    _selectedYearOfMfg = null;
+    _selectedPhase = null;
+    _selectedRatio = null;
+    _selectedTypeOfMeter = null;
+    first_time_charged_date.text="";
+    serialNo.text="";
     notifyListeners();
   }
 
@@ -196,33 +206,79 @@ class OnlineDtrViewmodel extends ChangeNotifier{ // all fields are required
     notifyListeners();
   }
 
+  ///DTR Details
+  //Make
+  String? _selectedMake;
+  String? get selectedMake => _selectedMake;
 
-  // Future<void> getCurrentLocation() async {
-  //   try {
-  //     Position position = await Geolocator.getCurrentPosition(
-  //       desiredAccuracy: LocationAccuracy.high,
-  //     );
-  //
-  //     if (position != null) {
-  //       _latitude = position.latitude.toString();
-  //       _longitude = position.longitude.toString();
-  //       isLocationGranted = true;
-  //       print("Geo Last known location: $_latitude , $_longitude");
-  //     } else {
-  //       // If no last known location, fetch current location
-  //       Position currentPosition = await Geolocator.getCurrentPosition(
-  //         desiredAccuracy: LocationAccuracy.high,
-  //       );
-  //       _latitude = currentPosition.latitude.toString();
-  //       _longitude = currentPosition.longitude.toString();
-  //       print("Geo Current location: $_latitude , $_longitude");
-  //     }
-  //   } catch (e) {
-  //     print("Error fetching location: $e");
-  //     AlertUtils.showSnackBar(context, "Error fetching location", isTrue);
-  //   }
-  //   notifyListeners(); // Notify listeners that the location has been updated
-  // }
+  List _make = ["11KV VCB-AREVA T&D INDIA LTD, NAINI W..", "Idle", "HT Service", "Mixed Load"];
+  List get make => _make;
+
+  void onListMake(String? value) {
+    _selectedMake= value;
+    notifyListeners();
+  }
+
+  //Capacity
+  String? _selectedDtrCapacity;
+  String? get selectedDtrCapacity => _selectedDtrCapacity;
+
+  List _dtrCapacity = ["Select", "Idle", "HT Service", "Mixed Load"];
+  List get dtrCapacity => _dtrCapacity;
+
+  void onListDtrCapacity(String? value) {
+    _selectedDtrCapacity= value;
+    notifyListeners();
+  }
+
+  //Year of Mfg
+  String? _selectedYearOfMfg;
+  String? get selectedYearOfMfg => _selectedYearOfMfg;
+
+  List _yearOfMfg = ["Select", "Idle", "HT Service", "Mixed Load"];
+  List get yearOfMfg => _yearOfMfg;
+
+  void onListYearOfMfg(String? value) {
+    _selectedYearOfMfg= value;
+    notifyListeners();
+  }
+
+  //Phase
+  String? _selectedPhase;
+  String? get selectedPhase => _selectedPhase;
+
+  List _phase = ["Select", "Idle", "HT Service", "Mixed Load"];
+  List get phase => _phase;
+
+  void onListPhase(String? value) {
+    _selectedPhase= value;
+    notifyListeners();
+  }
+
+  //ratio
+  String? _selectedRatio;
+  String? get selectedRatio => _selectedRatio;
+
+  List _ratio = ["Select", "Idle", "HT Service", "Mixed Load"];
+  List get ratio => _ratio;
+
+  void onListRatio(String? value) {
+    _selectedRatio= value;
+    notifyListeners();
+  }
+
+  //type of meter
+  String? _selectedTypeOfMeter;
+  String? get selectedTypeOfMeter => _selectedTypeOfMeter;
+
+  List _typeOfMeter = ["Select", "Idle", "HT Service", "Mixed Load"];
+  List get typeOfMeter => _typeOfMeter;
+
+  void onListTypeOfMeter(String? value) {
+    _selectedTypeOfMeter= value;
+    notifyListeners();
+  }
+  
 
   Future<void> getCurrentLocation() async {
     try {

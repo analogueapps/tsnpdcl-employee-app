@@ -102,7 +102,7 @@ class CreateDtrOnline extends StatelessWidget {
                                           keyboardType: TextInputType.text,
                                         ),
                                         dropDown(context, "DTR Structure Type(*)","Select", viewModel.selectedDTRType,viewModel.dTRtype,viewModel.onListDTRTypeSelected ),
-                                        dropDown(context, "Plint Type(*)","Select", viewModel.selectedPlintType,viewModel.plintType,viewModel.onListPlintTypeSelected ),
+                                        dropDown(context, "Plinth Type(*)","Select", viewModel.selectedPlintType,viewModel.plintType,viewModel.onListPlintTypeSelected ),
                                         dropDown(context, "AB Switch","Select", viewModel.selectedABSwitch,viewModel.aBSwitch,viewModel.onListABSwitchSelected ),
                                         dropDown(context, "HG Fuse Sets(*)","Select", viewModel.selectedHGFuse,viewModel.hGFuse,viewModel.onListHGFuseSelected ),
                                         dropDown(context, "LT Fuse Sets(*)","Select", viewModel.selectedLTFuseSet,viewModel.lTFuseSet,viewModel.onListLTFuseSelected ),
@@ -118,6 +118,7 @@ class CreateDtrOnline extends StatelessWidget {
                                           ),
                                           ),
                                         ),
+                                        const SizedBox(height: 10,),
                                         // Capacity is selected  displayed Card
                                         Visibility(
                                           visible: viewModel.selectedCapacity != null &&
@@ -141,9 +142,9 @@ class CreateDtrOnline extends StatelessWidget {
                                                         Expanded( // Ensure the dropdown has finite width
                                                           child: dtrDrops(
                                                             "Make",
-                                                            viewModel.selectedCircle,
-                                                            viewModel.circle,
-                                                            viewModel.onListCircleSelected,
+                                                            viewModel.selectedMake,
+                                                            viewModel.make,
+                                                            viewModel.onListMake,
                                                           ),
                                                         ),
                                                         const IconButton(
@@ -152,48 +153,48 @@ class CreateDtrOnline extends StatelessWidget {
                                                         ),
                                                       ],
                                                     ),
+                                                    dtrDrops(
+                                                      "Capacity",
+                                                      viewModel.selectedDtrCapacity,
+                                                      viewModel.dtrCapacity,
+                                                      viewModel.onListDtrCapacity,
+                                                    ),
                                                     Row(
                                                       children: [
                                                         SizedBox(
                                                           width: 150, // Fixed width for all labels
                                                           child:  Text("First time DTR\n "
-                                                              "Charged/Energised\n date", style: TextStyle(color: Colors.purple[300]),),
+                                                              "Charged/Energised\n Date", style: TextStyle(color: Colors.purple[300]),),
                                                         ),
-                                            Expanded(
-                                              child: InkWell(
-                                                onTap: () async {
-                                                  final DateTime? pickedDate = await showDatePicker(
-                                                    context: context,
-                                                    initialDate: DateTime.now(),
-                                                    firstDate: DateTime(2000),
-                                                    lastDate: DateTime.now(),
-                                                  );
-                                                  if (pickedDate != null) {
-                                                    // Format the date as DD/MM/YYYY
-                                                    final formattedDate = "${pickedDate.day.toString().padLeft(2,'0')}/${pickedDate.month.toString().padLeft(2,'0')}/${pickedDate.year}";
-                                                    viewModel.first_time_charged_date.text = formattedDate;
-                                                  }
-                                                },
-                                                child: IgnorePointer(
-                                                  child: TextFormField(
-                                                    controller: viewModel.first_time_charged_date,
-                                                    decoration: const InputDecoration(
-                                                      labelText: 'DD/MM/YYYY',
-                                                      border: OutlineInputBorder(),
-                                                      // suffixIcon: Icon(Icons.calendar_today),
-                                                    ),
+                                                        Expanded(
+                                                          child: InkWell(
+                                                            onTap: () async {
+                                                              final DateTime? pickedDate = await showDatePicker(
+                                                                context: context,
+                                                                initialDate: DateTime.now(),
+                                                                firstDate: DateTime(2000),
+                                                                lastDate: DateTime.now(),
+                                                              );
+                                                              if (pickedDate != null) {
+                                                                // Format the date as DD/MM/YYYY
+                                                                final formattedDate = "${pickedDate.day.toString().padLeft(2,'0')}/${pickedDate.month.toString().padLeft(2,'0')}/${pickedDate.year}";
+                                                                viewModel.first_time_charged_date.text = formattedDate;
+                                                              }
+                                                            },
+                                                            child: IgnorePointer(
+                                                              child: TextFormField(
+                                                                controller: viewModel.first_time_charged_date,
+                                                                decoration: const InputDecoration(
+                                                                  labelText: 'DD/MM/YYYY',
+                                                                  border: OutlineInputBorder(),
+                                                                  // suffixIcon: Icon(Icons.calendar_today),
+                                                                ),
 
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
                                                       ],
-                                                    ),
-                                                    dtrDrops(
-                                                      "Capacity",
-                                                      viewModel.selectedCircle,
-                                                      viewModel.circle,
-                                                      viewModel.onListCircleSelected,
                                                     ),
                                                     const Divider(),
                                                     Row(
@@ -228,31 +229,31 @@ class CreateDtrOnline extends StatelessWidget {
                                                     const Divider(),
                                                     dtrDrops(
                                                       "Year of Mfg",
-                                                      viewModel.selectedCircle,
-                                                      viewModel.circle,
-                                                      viewModel.onListCircleSelected,
+                                                      viewModel.selectedYearOfMfg,
+                                                      viewModel.yearOfMfg,
+                                                      viewModel.onListYearOfMfg,
                                                     ),
 
                                                     dtrDrops(
                                                       "Phase",
-                                                      viewModel.selectedCircle,
-                                                      viewModel.circle,
-                                                      viewModel.onListCircleSelected,
+                                                      viewModel.selectedPhase,
+                                                      viewModel.phase,
+                                                      viewModel.onListPhase,
                                                     ),
 
                                                     dtrDrops(
                                                       "Ratio",
-                                                      viewModel.selectedCircle,
-                                                      viewModel.circle,
-                                                      viewModel.onListCircleSelected,
+                                                      viewModel.selectedRatio,
+                                                      viewModel.ratio,
+                                                      viewModel.onListRatio,
                                                     ),
                                                     const Divider(),
                                                     dtrDrops(
                                                       "Select Type of \n"
                                                           "meter (LV side)",
-                                                      viewModel.selectedCircle,
-                                                      viewModel.circle,
-                                                      viewModel.onListCircleSelected,
+                                                      viewModel.selectedTypeOfMeter,
+                                                      viewModel.typeOfMeter,
+                                                      viewModel.onListTypeOfMeter,
                                                     ),
                                                     Row(
                                                       children: [

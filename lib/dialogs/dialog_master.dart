@@ -187,6 +187,7 @@ void showCustomListRfssDialog(BuildContext context, List<listDialogItem> listDia
                 onTap: () {
                   Navigator.pop(context);
                   // Add your navigation logic here, depending on your requirements
+                  Navigation.instance.navigateTo(listDialogItem[index].routeName);
                 },
               );
             },

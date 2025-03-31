@@ -595,7 +595,7 @@ class UniversalDashboardViewModel extends ChangeNotifier {
         ),
         GlobalListDialogItem(
             title: "Create DTR Master(Offline)",
-            routeName: Routes.createOfflineDTR
+            routeName: Routes.createOfflineDTR,
         ),
         GlobalListDialogItem(
             title: "Download For Offline",
@@ -603,11 +603,11 @@ class UniversalDashboardViewModel extends ChangeNotifier {
         ),
         GlobalListDialogItem(
             title: "View Offline Data",
-            routeName: Routes.offlineData
+            routeName: Routes.offlineData,
         ),
         GlobalListDialogItem(
             title: "View Mismatch DTR's",
-            routeName: Routes.misMatched
+            routeName: Routes.misMatched,
         ),
       ]);
       showCustomListDialog(context, globalListDialogItem);

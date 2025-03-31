@@ -83,6 +83,8 @@ class Routes {
 
   // RFSS Screen * swetha
   static const String rfssScreen = 'RfssScreen';
+  //Non-Agl-Service * Bhavana
+  static const String nonAglService="NonAglServices";
 
   // Middle Poles Screen * Swetha
   static const String middlePolesScreen = 'MiddlePolesScreen';
