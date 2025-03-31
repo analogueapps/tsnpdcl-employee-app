@@ -4,12 +4,12 @@ class SsMaintenanceGridItem {
   final String title;
   final IconData iconAsset;
   final Color cardColor;
-  // final String routeName;
+  final String routeName;
 
   SsMaintenanceGridItem(
       {required this.title,
         required this.iconAsset,
         required this.cardColor,
-        // required this.routeName
+        required this.routeName
       });
 }

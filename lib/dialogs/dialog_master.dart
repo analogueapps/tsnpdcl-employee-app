@@ -167,9 +167,8 @@ void showCustomListRfssDialog(BuildContext context, List<listDialogItem> listDia
         title: heading != null
             ? Text(
           heading,
-          style: const TextStyle(
-              fontWeight: FontWeight.bold
-          ),) // Show the custom heading if provided
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ) // Show the custom heading if provided
             : const Text("Select an Option"), // Default heading if no heading is provided
         content: SizedBox(
           width: double.maxFinite,
@@ -185,8 +184,9 @@ void showCustomListRfssDialog(BuildContext context, List<listDialogItem> listDia
                   ),
                 ),
                 onTap: () {
-                  Navigator.pop(context);
-                  // Add your navigation logic here, depending on your requirements
+                  Navigator.pop(context); // Close the dialog
+                  // Navigate to the route specified in the listDialogItem
+                  Navigation.instance.navigateTo(listDialogItem[index].routeName);
                   Navigation.instance.navigateTo(listDialogItem[index].routeName);
                 },
               );
@@ -205,3 +205,49 @@ void showCustomListRfssDialog(BuildContext context, List<listDialogItem> listDia
     },
   );
 }
+// void showCustomListRfssDialog(BuildContext context, List<listDialogItem> listDialogItem, {String? heading}) {
+//   showDialog(
+//     context: context,
+//     barrierDismissible: false, // Prevents dismissing the dialog by tapping outside
+//     builder: (context) {
+//       return AlertDialog(
+//         title: heading != null
+//             ? Text(
+//           heading,
+//           style: const TextStyle(
+//               fontWeight: FontWeight.bold
+//           ),) // Show the custom heading if provided
+//             : const Text("Select an Option"), // Default heading if no heading is provided
+//         content: SizedBox(
+//           width: double.maxFinite,
+//           child: ListView.builder(
+//             shrinkWrap: true,
+//             itemCount: listDialogItem.length,
+//             itemBuilder: (context, index) {
+//               return ListTile(
+//                 title: Text(
+//                   listDialogItem[index].title,
+//                   style: const TextStyle(
+//                     fontWeight: FontWeight.bold,
+//                   ),
+//                 ),
+//                 onTap: () {
+//                   Navigator.pop(context);
+//                   // Add your navigation logic here, depending on your requirements
+//                 },
+//               );
+//             },
+//           ),
+//         ),
+//         actions: [
+//           TextButton(
+//             onPressed: () {
+//               Navigator.of(context).pop(); // Close the dialog
+//             },
+//             child: const Text('Cancel'),
+//           ),
+//         ],
+//       );
+//     },
+//   );
+// }

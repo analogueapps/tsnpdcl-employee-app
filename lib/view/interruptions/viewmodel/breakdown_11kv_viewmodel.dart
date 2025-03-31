@@ -21,17 +21,13 @@ class Breakdown11kvViewmodel extends ChangeNotifier {
   ];
   String? selectedFeeder;
 
-  bool _isOption1Selected = false;
-  bool _isOption2Selected = false;
-  bool _isOption3Selected = false;
+  // Single variable to track the selected supply option
+  String? selectedSupplyOption; // Possible values: "Not Arranged", "Arranged", "Partially Provided", or null
+
   DateTime? selectedDateTime;
 
   List<SubstationModel> get substations => _substations;
   List<SubstationModel> get feeders => _feeders;
-
-  bool get isOption1Selected => _isOption1Selected;
-  bool get isOption2Selected => _isOption2Selected;
-  bool get isOption3Selected => _isOption3Selected;
 
   void setSelectedSubstation(String? substation) {
     selectedSubstation = substation;
@@ -76,19 +72,9 @@ class Breakdown11kvViewmodel extends ChangeNotifier {
     return DateFormat("dd-MM-yyyy hh:mm a").format(dateTime);
   }
 
-  /// **Alternative Supply Arrangement (Checkboxes)**
-  void toggleOption1(bool value) {
-    _isOption1Selected = value;
-    notifyListeners();
-  }
-
-  void toggleOption2(bool value) {
-    _isOption2Selected = value;
-    notifyListeners();
-  }
-
-  void toggleOption3(bool value) {
-    _isOption3Selected = value;
+  /// **Alternative Supply Arrangement (Single Selection)**
+  void setSupplyOption(String? option) {
+    selectedSupplyOption = option; // Set the selected option, or null to deselect
     notifyListeners();
   }
 }

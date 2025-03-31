@@ -72,19 +72,19 @@ class Breakdown33kvScreen extends StatelessWidget {
                   const SizedBox(height: 20), // Extra Space
 
                   /// **Select Breakdown Date & Time**
-                  const Text("SELECT BREAKDOWN DATE & TIME", style: TextStyle(fontSize: 16)),
+                  const Text("BREAK DOWN START TIME", style: TextStyle(fontSize: 16)),
                   const SizedBox(height: 8), // Space Below Heading
                   InkWell(
                     onTap: () => viewModel.selectDateTime(context),
                     child: InputDecorator(
                       decoration: InputDecoration(
-                        hintText: "Select Date & Time",
+                        hintText: "DD/MM/YYYY HH:MM",
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
                         suffixIcon: const Icon(Icons.calendar_today),
                       ),
                       child: Text(
                         viewModel.selectedDateTime == null
-                            ? "Select Date & Time"
+                            ? "DD/MM/YYYY HH:MM"
                             : viewModel.formatDateTime(viewModel.selectedDateTime!),
                       ),
                     ),
@@ -98,20 +98,26 @@ class Breakdown33kvScreen extends StatelessWidget {
                   CheckboxListTile(
                     controlAffinity: ListTileControlAffinity.leading,
                     title: const Text("Not Arranged", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                    value: viewModel.isOption1Selected,
-                    onChanged: (value) => viewModel.toggleOption1(value!),
+                    value: viewModel.selectedSupplyOption == "Not Arranged",
+                    onChanged: (value) {
+                      viewModel.setSupplyOption(value == true ? "Not Arranged" : null);
+                    },
                   ),
                   CheckboxListTile(
                     controlAffinity: ListTileControlAffinity.leading,
                     title: const Text("Arranged", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                    value: viewModel.isOption2Selected,
-                    onChanged: (value) => viewModel.toggleOption2(value!),
+                    value: viewModel.selectedSupplyOption == "Arranged",
+                    onChanged: (value) {
+                      viewModel.setSupplyOption(value == true ? "Arranged" : null);
+                    },
                   ),
                   CheckboxListTile(
                     controlAffinity: ListTileControlAffinity.leading,
                     title: const Text("Partially Provided", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                    value: viewModel.isOption3Selected,
-                    onChanged: (value) => viewModel.toggleOption3(value!),
+                    value: viewModel.selectedSupplyOption == "Partially Provided",
+                    onChanged: (value) {
+                      viewModel.setSupplyOption(value == true ? "Partially Provided" : null);
+                    },
                   ),
 
                   const SizedBox(height: 20),

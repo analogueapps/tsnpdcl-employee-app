@@ -27,6 +27,9 @@ import 'package:tsnpdcl_employee/view/interruptions/view/breakdown_11kv_screen.d
 import 'package:tsnpdcl_employee/view/interruptions/view/breakdown_33kv_screen.dart';
 import 'package:tsnpdcl_employee/view/interruptions/view/interruptions_entry_screen.dart';
 import 'package:tsnpdcl_employee/view/interruptions/view/saidi_saifi_calculator_screen.dart';
+import 'package:tsnpdcl_employee/view/interruptions/view/view_11kv_breakdown_screen.dart';
+import 'package:tsnpdcl_employee/view/interruptions/view/view_33kv_breakdown_screen.dart';
+import 'package:tsnpdcl_employee/view/interruptions/view/view_saidi_saifi_screen.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/view/add_induction_point_screen.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/view/all_lc_request_list_screen.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/view/feeder_induction_list_screen.dart';
@@ -37,6 +40,8 @@ import 'package:tsnpdcl_employee/view/line_clearance/view/view_detailed_lc_scree
 import 'package:tsnpdcl_employee/view/manage_staff/view/manage_staffs_screen.dart';
 import 'package:tsnpdcl_employee/view/measure_distance/view/measure_distance_screen.dart';
 import 'package:tsnpdcl_employee/view/meeseva/view/meeseva_menu_screen.dart';
+import 'package:tsnpdcl_employee/view/middle_poles/view/middle_pole_11kv.dart';
+import 'package:tsnpdcl_employee/view/middle_poles/view/middle_pole_33kv.dart';
 import 'package:tsnpdcl_employee/view/middle_poles/view/middle_poles_screen.dart';
 import 'package:tsnpdcl_employee/view/online_pr_menu/view/online_pr_menu_screen.dart';
 import 'package:tsnpdcl_employee/view/pdms/view/create_pole_indents_screen.dart';
@@ -58,6 +63,8 @@ import 'package:tsnpdcl_employee/view/pole_tracker/view/view_offline_feeders_scr
 import 'package:tsnpdcl_employee/view/reports/view/reports_screen.dart';
 import 'package:tsnpdcl_employee/view/rfss/view/rfss_screen.dart';
 import 'package:tsnpdcl_employee/view/search_consumer/view/search_consumer_screen.dart';
+import 'package:tsnpdcl_employee/view/ss_maintenance/view/maintenance_due_screen.dart';
+import 'package:tsnpdcl_employee/view/ss_maintenance/view/maintenance_finished_screen.dart';
 import 'package:tsnpdcl_employee/view/ss_maintenance/view/ss_maintenance_screen.dart';
 import 'package:tsnpdcl_employee/view/tong_tester_readings/view/tong_tester_readings_screen.dart';
 import 'package:tsnpdcl_employee/view/tong_tester_readings/view/view_detailed_tong_tester_readings.dart';
@@ -66,6 +73,7 @@ import 'package:tsnpdcl_employee/widget/pinch_zoom_imageview.dart';
 import '../view/ltmt/view/ltmt_menu.dart';
 import '../view/ltmt/view/meters_stock.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/view/create_dtr_offline.dart';
+import 'package:tsnpdcl_employee/view/rfss/view/non_agl_services.dart';
 
 class AppRouter {
   static Route generateRoute(RouteSettings settings) {
@@ -255,14 +263,24 @@ class AppRouter {
       // RFSS Screen * Swetha
       case RfssScreen.id:
         return MaterialPageRoute(builder: (_) => const RfssScreen());
+      case NonAglServices.id:
+        return MaterialPageRoute(builder: (_) => const NonAglServices());
 
       // Middle Poles Screen * Swetha
       case MiddlePolesScreen.id:
         return MaterialPageRoute(builder: (_) => const MiddlePolesScreen());
+      case MiddlePoles33kv.id:
+        return MaterialPageRoute(builder: (_) => const MiddlePoles33kv());
+      case MiddlePole11kv.id:
+        return MaterialPageRoute(builder: (_) => const MiddlePole11kv());
 
       // SS Maintenance Screen * Swetha
       case SsMaintenanceScreen.id:
         return MaterialPageRoute(builder: (_) => const SsMaintenanceScreen());
+      case MaintenanceDueScreen.id:
+        return MaterialPageRoute(builder: (_) => const MaintenanceDueScreen());
+      case MaintenanceFinishedScreen.id:
+        return MaterialPageRoute(builder: (_) => const MaintenanceFinishedScreen());
 
     // Interruptions * swetha
       case Breakdown33kvScreen.id:
@@ -271,8 +289,14 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const Breakdown11kvScreen());
       case InterruptionsEntryScreen.id:
         return MaterialPageRoute(builder: (_) => const InterruptionsEntryScreen());
-        case SaidiSaifiCalculatorScreen.id:
+      case SaidiSaifiCalculatorScreen.id:
         return MaterialPageRoute(builder: (_) => const SaidiSaifiCalculatorScreen());
+      case ViewSaidiSaifiScreen.id:
+        return MaterialPageRoute(builder: (_) => const ViewSaidiSaifiScreen());
+      case View33kvBreakdownScreen.id:
+        return MaterialPageRoute(builder: (_) => const View33kvBreakdownScreen());
+      case View11kvBreakdownScreen.id:
+        return MaterialPageRoute(builder: (_) => const View11kvBreakdownScreen());
 
       //LTMT * Bhavana
       case LtmtMenu.id:

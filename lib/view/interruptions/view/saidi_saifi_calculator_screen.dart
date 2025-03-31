@@ -63,28 +63,36 @@ class SaidiSaifiCalculatorScreen extends StatelessWidget {
 
                   const SizedBox(height: 20),
 
-                  // Select Substation
+                  // Select Substation with Dialog Popup
                   const Text("Select Substation", style: TextStyle(fontSize: titleSize)),
                   const SizedBox(height: 10),
 
-                  // Standard Dropdown Button
-                  DropdownButtonFormField<String>(
-                    isExpanded: true,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                  // Substation Selection Button with Down Arrow
+                  GestureDetector(
+                    onTap: () => _showSubstationDialog(context, viewmodel),
+                    child: Container(
+                      height: 50,
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      decoration: BoxDecoration(
+                        color: CommonColors.textFieldColor,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            viewmodel.selectedSubstation ?? "Select Substation",
+                            style: const TextStyle(color: Colors.black),
+                          ),
+                          const Icon(
+                            Icons.arrow_drop_down,
+                            color: Colors.black,
+                            size: 24,
+                          ),
+                        ],
+                      ),
                     ),
-                    hint: const Text("SELECT"),
-                    value: viewmodel.selectedSubstation,
-                    items: viewmodel.substations.map((substation) {
-                      return DropdownMenuItem<String>(
-                        value: substation.name,
-                        child: Text(substation.name),
-                      );
-                    }).toList(),
-                    onChanged: (selectedSubstation) {
-                      viewmodel.setSelectedSubstation(selectedSubstation);
-                    },
                   ),
 
                   const SizedBox(height: 20),
@@ -107,7 +115,6 @@ class SaidiSaifiCalculatorScreen extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
-                        // Content Rows
                         const Align(
                           alignment: Alignment.topLeft,
                           child: Text("CIRCLE OFFICE"),
@@ -135,6 +142,77 @@ class SaidiSaifiCalculatorScreen extends StatelessWidget {
         },
       ),
     );
+  }
+
+  void _showSubstationDialog(BuildContext context, SaidiSaifiCalculatorViewmodel viewmodel) {
+    // Move controller and searchQuery outside the builder
+    final TextEditingController searchController = TextEditingController();
+    String searchQuery = '';
+
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return AlertDialog(
+              title: const Text('Select Substation'),
+              content: SizedBox(
+                width: double.maxFinite,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Search Field
+                    TextField(
+                      controller: searchController,
+                      decoration: const InputDecoration(
+                        labelText: "Search Substation",
+                        hintText: "Type to search",
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          searchQuery = value;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    // Substation List
+                    SizedBox(
+                      height: 200,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: viewmodel.substations
+                            .where((substation) => substation.name
+                            .toLowerCase()
+                            .contains(searchQuery.toLowerCase()))
+                            .length,
+                        itemBuilder: (context, index) {
+                          final filteredSubstations = viewmodel.substations
+                              .where((substation) => substation.name
+                              .toLowerCase()
+                              .contains(searchQuery.toLowerCase()))
+                              .toList();
+                          return ListTile(
+                            title: Text(filteredSubstations[index].name),
+                            onTap: () {
+                              viewmodel.setSelectedSubstation(filteredSubstations[index].name);
+                              Navigator.pop(dialogContext);
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    ).then((_) {
+      // Dispose the controller when dialog is closed
+      searchController.dispose();
+    });
   }
 
   Widget _reusableLastRow(String label, String value, String value2) {

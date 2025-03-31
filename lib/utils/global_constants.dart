@@ -118,6 +118,7 @@ class GlobalConstants {
 
   // Middle Poles Menu * swetha
   static const String middlePoles = "Middle Poles";
+  static const String newMiddlePoles = "New Middle Poles";
   static const String newStr = "New";
   static const String pendingList = "Pending List";
   static const String completedList = "Completed List";
@@ -128,6 +129,9 @@ class GlobalConstants {
   static const String inspectSS = "Inspect SS";
   static const String insOrPending = "Inspected/Pending Maintenance";
   static const String mainFinished = "Maintenance Finished";
+  static const String maintenanceDueScreen = "Maintenance Due Screen";
+  static const String maintenanceDue = "Maintenance Due";
+  static const String maintenanceCompleted = "Maintenance Completed";
 
   //DTR Master * bhavana
   static const  String viewMappedDTR="Configure Filter";
@@ -144,6 +148,7 @@ class GlobalConstants {
   static const String elevenBreakdownEntry = "11KV Breakdown Entry";
   static const String interruptionsEntry = "Interruptions Entry";
   static const String saidiSaifiCalculator = "Saidi Saifi Calculator";
+  static const String viewBreakdowns = "View Breakdowns";
 
 }
 

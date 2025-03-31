@@ -88,9 +88,13 @@ class Routes {
 
   // Middle Poles Screen * Swetha
   static const String middlePolesScreen = 'MiddlePolesScreen';
+  static const String middlePoles33kv = 'MiddlePoles33kv';
+  static const String middlePole11kv = 'MiddlePole11kv';
 
   // SS Maintenance Screen * Swetha
   static const String ssMaintenanceScreen = 'SsMaintenanceScreen';
+  static const String maintenanceDueScreen = 'MaintenanceDueScreen';
+  static const String maintenanceFinishedScreen = 'MaintenanceFinishedScreen';
 
   //ltmt * Bhavana
   static const String ltmtScreen='LtmtMenu';
@@ -109,5 +113,8 @@ class Routes {
   static const String breakdown11kvScreen = "Breakdown11kvScreen";
   static const String interruptionsEntryScreen = "InterruptionsEntryScreen";
   static const String saidiSaifiCalculatorScreen = "SaidiSaifiCalculatorScreen";
+  static const String viewSaidiSaifiScreen = "ViewSaidiSaifiScreen";
+  static const String view33kvBreakdownScreen = "View33kvBreakdownScreen";
+  static const String view11kvBreakdownScreen = "View11kvBreakdownScreen";
 
 }

@@ -654,7 +654,7 @@ class UniversalDashboardViewModel extends ChangeNotifier {
         ),
         GlobalListDialogItem(
           title: "View 33KV Breakdowns",
-          routeName: "",
+          routeName: Routes.view33kvBreakdownScreen,
         ),
         GlobalListDialogItem(
             title: "11KV Breakdown Entry",
@@ -662,7 +662,7 @@ class UniversalDashboardViewModel extends ChangeNotifier {
         ),
         GlobalListDialogItem(
             title: "View 11KV Breakdowns",
-            routeName: ""
+            routeName: Routes.view11kvBreakdownScreen,
         ),
         GlobalListDialogItem(
             title: "Interruptions Entry",
@@ -670,11 +670,11 @@ class UniversalDashboardViewModel extends ChangeNotifier {
         ),
         GlobalListDialogItem(
             title: "SAIDI SAIFI CALCULATOR",
-            routeName: Routes.saidiSaifiCalculatorScreen
+            routeName: Routes.saidiSaifiCalculatorScreen,
         ),
         GlobalListDialogItem(
             title: "VIEW SAIDI SAIFI",
-            routeName: ""
+            routeName: Routes.viewSaidiSaifiScreen
         ),
         GlobalListDialogItem(
             title: "View Report",

@@ -33,14 +33,16 @@ class InterruptionsEntryScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Center(
+                  const Center(
                     child: Text(
                       "11KV FEEDER INTERRUPTIONS",
                       style: TextStyle(
-                          fontSize: extraTitleSize, fontWeight: FontWeight.bold),
+                          fontSize: extraTitleSize,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
+
                   /// Select Circle
                   const Text("SELECT CIRCLE", style: TextStyle(fontSize: 16)),
                   const SizedBox(height: 8),
@@ -88,7 +90,6 @@ class InterruptionsEntryScreen extends StatelessWidget {
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      // Feeder Radio
                       Expanded(
                         child: Row(
                           children: [
@@ -109,7 +110,6 @@ class InterruptionsEntryScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                      // LV Radio
                       Expanded(
                         child: Row(
                           children: [
@@ -130,7 +130,6 @@ class InterruptionsEntryScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                      // ISF Radio
                       Expanded(
                         child: Row(
                           children: [
@@ -204,7 +203,6 @@ class InterruptionsEntryScreen extends StatelessWidget {
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      // Feeder Radio
                       Expanded(
                         child: Row(
                           children: [
@@ -225,7 +223,6 @@ class InterruptionsEntryScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                      // LV Radio
                       Expanded(
                         child: Row(
                           children: [
@@ -251,12 +248,12 @@ class InterruptionsEntryScreen extends StatelessWidget {
 
                   const SizedBox(height: 20),
 
-                  /// Time Details
+                  /// Time Details - Conditional Rendering
                   const Text("TIME DETAILS", style: TextStyle(fontSize: 16)),
                   const SizedBox(height: 14),
                   Row(
                     children: [
-                      // First Column (Start Date)
+                      // Start Date (Always visible)
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -265,96 +262,137 @@ class InterruptionsEntryScreen extends StatelessWidget {
                                 style: TextStyle(fontSize: 14)),
                             const SizedBox(height: 4),
                             InkWell(
-                              onTap: () => viewModel.selectFromDateTime(context),
+                              onTap: () =>
+                                  viewModel.selectFromDateTime(context),
                               child: InputDecorator(
                                 decoration: InputDecoration(
                                   hintText: "From Date & Time",
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(8.0)),
-                                  suffixIcon:
-                                  const Icon(Icons.calendar_today, size: 20),
+                                  suffixIcon: const Icon(Icons.calendar_today,
+                                      size: 20),
                                 ),
                                 child: Text(
                                   viewModel.fromDateTime == null
                                       ? "DD/MM/YY HH:MM"
-                                      : viewModel
-                                      .formatDateTime(viewModel.fromDateTime!),
+                                      : viewModel.formatDateTime(
+                                      viewModel.fromDateTime!),
                                 ),
                               ),
                             ),
                           ],
                         ),
                       ),
-                      const SizedBox(width: 10),
-                      // Second Column (End Date)
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text("End Date & Time",
-                                style: TextStyle(fontSize: 14)),
-                            const SizedBox(height: 4),
-                            InkWell(
-                              onTap: () => viewModel.selectToDateTime(context),
-                              child: InputDecorator(
-                                decoration: InputDecoration(
-                                  hintText: "To Date & Time",
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8.0)),
-                                  suffixIcon:
-                                  const Icon(Icons.calendar_today, size: 20),
-                                ),
-                                child: Text(
-                                  viewModel.toDateTime == null
-                                      ? "DD/MM/YY HH:MM"
-                                      : viewModel
-                                      .formatDateTime(viewModel.toDateTime!),
+                      // End Date (Visible only if Restored)
+                      if (viewModel.selectedSupplyPosition == "Restored") ...[
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text("End Date & Time",
+                                  style: TextStyle(fontSize: 14)),
+                              const SizedBox(height: 4),
+                              InkWell(
+                                onTap: () =>
+                                    viewModel.selectToDateTime(context),
+                                child: InputDecorator(
+                                  decoration: InputDecoration(
+                                    hintText: "To Date & Time",
+                                    border: OutlineInputBorder(
+                                        borderRadius:
+                                        BorderRadius.circular(8.0)),
+                                    suffixIcon: const Icon(Icons.calendar_today,
+                                        size: 20),
+                                  ),
+                                  child: Text(
+                                    viewModel.toDateTime == null
+                                        ? "DD/MM/YY HH:MM"
+                                        : viewModel.formatDateTime(
+                                        viewModel.toDateTime!),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
+                      ],
                     ],
                   ),
 
-                  const SizedBox(height: 20),
-
-                  /// Simple Calendar Field (without ViewModel)
-                  const Text("DURATION", style: TextStyle(fontSize: 16)),
-                  const SizedBox(height: 8),
-                  InputDecorator(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.0),
+                  // Duration (Visible only if Restored)
+                  if (viewModel.selectedSupplyPosition == "Restored") ...[
+                    const SizedBox(height: 20),
+                    const Text("DURATION", style: TextStyle(fontSize: 16)),
+                    const SizedBox(height: 8),
+                    InputDecorator(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        suffixIcon: const Icon(Icons.calendar_today, size: 20),
                       ),
-                      suffixIcon: const Icon(Icons.calendar_today, size: 20),
+                      child: const Text("HH:MM"),
                     ),
-                    child: const Text(""),
-                  ),
+                  ],
 
-                  const SizedBox(height: 30),
+                  // Interruption Type (Visible for Feeder & Not Restored, LV & Restored, Hidden for ISF & Restored)
+                  if ((viewModel.selectedOption == "Feeder") ||
+                      (viewModel.selectedOption == "LV") &&
+                          viewModel.selectedSupplyPosition != "ISF") ...[
+                    const SizedBox(height: 30),
+                    const Text("INTERRUPTION TYPE",
+                        style: TextStyle(fontSize: 16)),
+                    DropdownButton<String>(
+                      isExpanded: true,
+                      hint: const Text("SELECT"),
+                      value: viewModel.selectedSubstation,
+                      items: viewModel.substations.map((substation) {
+                        return DropdownMenuItem<String>(
+                          value: substation.name,
+                          child: Text(substation.name),
+                        );
+                      }).toList(),
+                      onChanged: (selectedSubstation) {
+                        viewModel.setSelectedSubstation(selectedSubstation);
+                      },
+                    ),
+                  ],
 
-                  /// Select Circle
-                  const Text("INTERRUPTION TYPE",
-                      style: TextStyle(fontSize: 16)),
-                  DropdownButton<String>(
-                    isExpanded: true,
-                    hint: const Text("SELECT"),
-                    value: viewModel.selectedSubstation,
-                    items: viewModel.substations.map((substation) {
-                      return DropdownMenuItem<String>(
-                        value: substation.name,
-                        child: Text(substation.name),
-                      );
-                    }).toList(),
-                    onChanged: (selectedSubstation) {
-                      viewModel.setSelectedSubstation(selectedSubstation);
-                    },
-                  ),
+                  // Reason Textarea (Visible for LV & Restored, LV & Not Restored, ISF & Restored, ISF & Not Restored; Hidden for Feeder & Restored)
+                  if ((viewModel.selectedSupplyPosition == "Restored" &&
+                      viewModel.selectedOption == "LV") ||
+                      (viewModel.selectedOption == "LV" &&
+                          viewModel.selectedSupplyPosition == "Not Restored") ||
+                      (viewModel.selectedOption == "ISF")) ...[
+                    const SizedBox(height: 14),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Reason",
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w500),
+                        ),
+                        const SizedBox(height: 8),
+                        TextField(
+                          maxLines: 4,
+                          decoration: InputDecoration(
+                            hintText: "Enter reason here...",
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            filled: true,
+                            fillColor: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
 
                   const SizedBox(height: 20),
-                  /// Submit Button
+
+                  /// Submit Button (Always visible)
                   SizedBox(
                     height: 50,
                     width: double.infinity,

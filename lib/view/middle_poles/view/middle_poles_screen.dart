@@ -21,7 +21,8 @@ class MiddlePolesScreen extends StatelessWidget {
           style: const TextStyle(
               color: Colors.white,
               fontSize: toolbarTitleSize,
-              fontWeight: FontWeight.w700),
+              fontWeight: FontWeight.w700
+          ),
         ),
         iconTheme: const IconThemeData(
           color: Colors.white,

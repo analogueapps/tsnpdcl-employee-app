@@ -22,11 +22,11 @@ class MiddlePolesViewModel extends ChangeNotifier {
       listDialogItemArray.addAll([
         listDialogItem(
           title: "33KV Middle Pole",
-          routeName: Routes.reportsScreen,
+          routeName: Routes.middlePoles33kv,
         ),
         listDialogItem(
           title: "11KV/LT Middle Pole",
-          routeName: Routes.reportsScreen,
+          routeName: Routes.middlePole11kv,
         ),
       ]);
       // Show the custom dialog
