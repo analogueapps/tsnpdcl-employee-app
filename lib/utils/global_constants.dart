@@ -115,6 +115,8 @@ class GlobalConstants {
   static const String dtrDigitilization = "Dtr Digitilization";
   static const String dtrDefectsReporting = "Dtr Defects Reporting";
   static const String nonAGLService="Mapping of Non AGL Services";
+  static const String aglServices="Mapping of AGL Services";
+  static const String newInspection="RFSS DTR defect info";
 
   // Middle Poles Menu * swetha
   static const String middlePoles = "Middle Poles";

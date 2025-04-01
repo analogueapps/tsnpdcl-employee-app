@@ -53,7 +53,7 @@ class RfssViewModel extends ChangeNotifier {
         ),
         listDialogItem(
             title: "AGL Service",
-            routeName: Routes.reportsScreen
+            routeName: Routes.aglService
         ),
       ]);
       showCustomListRfssDialog(context, listDialogItemArray);
@@ -90,11 +90,11 @@ class RfssViewModel extends ChangeNotifier {
       listDialogItemArray.addAll([
         listDialogItem(
             title: "Open New Inspection",
-            routeName: Routes.reportsScreen
+            routeName: Routes.openNewInspection
         ),
         listDialogItem(
             title: "View Inspections",
-            routeName: Routes.reportsScreen
+            routeName: Routes.dtrMaintenanceScreen
         ),
 
       ]);

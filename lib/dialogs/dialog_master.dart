@@ -187,7 +187,6 @@ void showCustomListRfssDialog(BuildContext context, List<listDialogItem> listDia
                   Navigator.pop(context); // Close the dialog
                   // Navigate to the route specified in the listDialogItem
                   Navigation.instance.navigateTo(listDialogItem[index].routeName);
-                  Navigation.instance.navigateTo(listDialogItem[index].routeName);
                 },
               );
             },
