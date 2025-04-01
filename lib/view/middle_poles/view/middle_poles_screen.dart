@@ -19,9 +19,9 @@ class MiddlePolesScreen extends StatelessWidget {
         title: Text(
           GlobalConstants.middlePoles.toUpperCase(),
           style: const TextStyle(
-              color: Colors.white,
-              fontSize: toolbarTitleSize,
-              fontWeight: FontWeight.w700
+            color: Colors.white,
+            fontSize: toolbarTitleSize,
+            fontWeight: FontWeight.w700,
           ),
         ),
         iconTheme: const IconThemeData(
@@ -38,13 +38,8 @@ class MiddlePolesScreen extends StatelessWidget {
                 final item = viewModel.menuItems[index];
                 return GestureDetector(
                   onTap: () {
-                    // Handle the action when an item is clicked
-                    if (item == GlobalConstants.newStr) {
-                      // Call the method to show the dialog when "New Str" is clicked
-                      viewModel.mpNewMenuItemClicked(context, item);
-                    } else {
-                      print("$item clicked");
-                    }
+                    // Call the method for all items
+                    viewModel.mpNewMenuItemClicked(context, item);
                   },
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,12 +50,12 @@ class MiddlePolesScreen extends StatelessWidget {
                           item.toUpperCase(),
                           style: const TextStyle(
                             color: Colors.black,
-                            fontSize: 16, // Font size for better readability
-                            fontWeight: FontWeight.bold, // Bold for emphasis
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
-                      Divider(height: 0.1, color: Colors.grey[200],),
+                      Divider(height: 0.1, color: Colors.grey[200]),
                     ],
                   ),
                 );

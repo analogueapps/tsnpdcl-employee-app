@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
 import 'package:tsnpdcl_employee/dialogs/dialog_master.dart'; // Import dialog method
 import 'package:tsnpdcl_employee/utils/general_routes.dart'; // Import Routes
+import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/view/rfss/model/list_dialog_item.dart';
 
 class MiddlePolesViewModel extends ChangeNotifier {
@@ -31,6 +32,10 @@ class MiddlePolesViewModel extends ChangeNotifier {
       ]);
       // Show the custom dialog
       showCustomListRfssDialog(context, listDialogItemArray, heading: GlobalConstants.networkType);
+    } else if (title == GlobalConstants.pendingList) {
+      // Navigate to PendingListScreen
+      Navigator.pushNamed(context, Routes.pendingListScreen);
     }
   }
 }
+

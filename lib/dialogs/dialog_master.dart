@@ -157,7 +157,7 @@ Future<void> showCustomListDialog(BuildContext context, List<GlobalListDialogIte
   );
 }
 
-// RFSS Screen dialog box * swetha
+// RFSS, middle poles Screen dialog box * swetha
 void showCustomListRfssDialog(BuildContext context, List<listDialogItem> listDialogItem, {String? heading}) {
   showDialog(
     context: context,

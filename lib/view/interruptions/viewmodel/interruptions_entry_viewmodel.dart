@@ -6,21 +6,10 @@ class InterruptionsEntryViewmodel extends ChangeNotifier {
   final TextEditingController substationsController = TextEditingController();
 
   String? selectedOption = "Feeder"; // Default to "Feeder"
-  String? _selectedInterruptionLevel; // "Feeder", "LV", or "ISF"
-  String? _selectedSupplyPosition = "Restored"; // Default to "Restored"
-  String? selectedLV; // New field for LV dropdown selection
+  String? selectedSupplyPosition = "Restored"; // Default to "Restored"
+  String? selectedLV; // For LV dropdown selection
 
-  // Getters
-  String? get selectedInterruptionLevel => _selectedInterruptionLevel;
-  String? get selectedSupplyPosition => _selectedSupplyPosition;
-
-  // Toggle the selected radio button
-  void toggleOption(String value) {
-    selectedOption = value;
-    notifyListeners();
-  }
-
-  /// **Substations Data**
+  // Substations Data
   List<SubstationModel> _substations = [
     SubstationModel(name: "Circle A", rawData: "Raw data for Substation A"),
     SubstationModel(name: "Circle B", rawData: "Raw data for Substation B"),
@@ -28,7 +17,7 @@ class InterruptionsEntryViewmodel extends ChangeNotifier {
   ];
   String? selectedSubstation;
 
-  /// **Feeders Data (Separate Model)**
+  // Feeders Data
   List<SubstationModel> _feeders = [
     SubstationModel(name: "Substation 1", rawData: "Data for Feeder 1"),
     SubstationModel(name: "Substation 2", rawData: "Data for Feeder 2"),
@@ -36,21 +25,23 @@ class InterruptionsEntryViewmodel extends ChangeNotifier {
   ];
   String? selectedFeeder;
 
-  bool _isOption1Selected = false;
-  bool _isOption2Selected = false;
-  bool _isOption3Selected = false;
+  // Interruption Types (New)
+  List<String> _interruptionTypes = [
+    "Type 1",
+    "Type 2",
+    "Type 3",
+  ];
+  String? selectedInterruptionType;
 
-  // CHANGED: Two separate date-times for From and To
   DateTime? fromDateTime;
   DateTime? toDateTime;
 
+  // Getters
   List<SubstationModel> get substations => _substations;
   List<SubstationModel> get feeders => _feeders;
+  List<String> get interruptionTypes => _interruptionTypes;
 
-  bool get isOption1Selected => _isOption1Selected;
-  bool get isOption2Selected => _isOption2Selected;
-  bool get isOption3Selected => _isOption3Selected;
-
+  // Setters
   void setSelectedSubstation(String? substation) {
     selectedSubstation = substation;
     notifyListeners();
@@ -61,13 +52,27 @@ class InterruptionsEntryViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// New method for LV dropdown
   void setSelectedLV(String? lv) {
     selectedLV = lv;
     notifyListeners();
   }
 
-  /// **DateTime Picker - From**
+  void setSelectedInterruptionType(String? type) {
+    selectedInterruptionType = type;
+    notifyListeners();
+  }
+
+  void toggleOption(String value) {
+    selectedOption = value;
+    notifyListeners();
+  }
+
+  void setSupplyPosition(String? position) {
+    selectedSupplyPosition = position;
+    notifyListeners();
+  }
+
+  // DateTime Pickers
   Future<void> selectFromDateTime(BuildContext context) async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -98,12 +103,11 @@ class InterruptionsEntryViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// **DateTime Picker - To**
   Future<void> selectToDateTime(BuildContext context) async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: toDateTime ?? (fromDateTime ?? DateTime.now()),
-      firstDate: fromDateTime ?? DateTime(2000), // Don't allow To date before From date
+      firstDate: fromDateTime ?? DateTime(2000),
       lastDate: DateTime(2100),
     );
 
@@ -133,35 +137,18 @@ class InterruptionsEntryViewmodel extends ChangeNotifier {
     return DateFormat("dd-MM-yyyy hh:mm a").format(dateTime);
   }
 
-  /// **Alternative Supply Arrangement (Checkboxes)**
-  void toggleOption1(bool value) {
-    _isOption1Selected = value;
-    notifyListeners();
+  String getDuration() {
+    if (fromDateTime == null || toDateTime == null) return "HH:MM";
+    final difference = toDateTime!.difference(fromDateTime!);
+    final hours = difference.inHours;
+    final minutes = difference.inMinutes % 60;
+    return "${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}";
   }
 
-  void toggleOption2(bool value) {
-    _isOption2Selected = value;
-    notifyListeners();
-  }
-
-  void toggleOption3(bool value) {
-    _isOption3Selected = value;
-    notifyListeners();
-  }
-
-  // Methods for radio selections
-  void setInterruptionLevel(String? level) {
-    _selectedInterruptionLevel = level;
-    notifyListeners();
-  }
-
-  void setSupplyPosition(String? position) {
-    _selectedSupplyPosition = position;
-    notifyListeners();
-  }
-
-  // Validation method
-  bool validateSelections() {
-    return _selectedInterruptionLevel != null && _selectedSupplyPosition != null;
+  // Cleanup
+  @override
+  void dispose() {
+    substationsController.dispose();
+    super.dispose();
   }
 }

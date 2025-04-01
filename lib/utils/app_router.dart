@@ -43,6 +43,9 @@ import 'package:tsnpdcl_employee/view/meeseva/view/meeseva_menu_screen.dart';
 import 'package:tsnpdcl_employee/view/middle_poles/view/middle_pole_11kv.dart';
 import 'package:tsnpdcl_employee/view/middle_poles/view/middle_pole_33kv.dart';
 import 'package:tsnpdcl_employee/view/middle_poles/view/middle_poles_screen.dart';
+import 'package:tsnpdcl_employee/view/middle_poles/view/pending_list_floating_button.dart';
+import 'package:tsnpdcl_employee/view/middle_poles/view/pending_list_screen.dart';
+import 'package:tsnpdcl_employee/view/middle_poles/view/view_detailed_pending_list_screen.dart';
 import 'package:tsnpdcl_employee/view/online_pr_menu/view/online_pr_menu_screen.dart';
 import 'package:tsnpdcl_employee/view/pdms/view/create_pole_indents_screen.dart';
 import 'package:tsnpdcl_employee/view/pdms/view/pdms_screen.dart';
@@ -74,6 +77,8 @@ import '../view/ltmt/view/ltmt_menu.dart';
 import '../view/ltmt/view/meters_stock.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/view/create_dtr_offline.dart';
 import 'package:tsnpdcl_employee/view/rfss/view/non_agl_services.dart';
+import 'package:tsnpdcl_employee/view/rfss/view/agl_services.dart';
+import 'package:tsnpdcl_employee/view/rfss/view/new_inspection.dart';
 
 class AppRouter {
   static Route generateRoute(RouteSettings settings) {
@@ -265,6 +270,10 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const RfssScreen());
       case NonAglServices.id:
         return MaterialPageRoute(builder: (_) => const NonAglServices());
+      case AglServices.id:
+        return MaterialPageRoute(builder: (_) => const AglServices());
+      case NewInspection.id:
+        return MaterialPageRoute(builder: (_) => const NewInspection());
 
       // Middle Poles Screen * Swetha
       case MiddlePolesScreen.id:
@@ -273,6 +282,12 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const MiddlePoles33kv());
       case MiddlePole11kv.id:
         return MaterialPageRoute(builder: (_) => const MiddlePole11kv());
+      case PendingListScreen.id:
+        return MaterialPageRoute(builder: (_) => const PendingListScreen());
+      case ViewDetailedPendingListScreen.id:
+        return MaterialPageRoute(builder: (_) => const ViewDetailedPendingListScreen());
+      case PendingListFloatingButton.id:
+        return MaterialPageRoute(builder: (_) => const PendingListFloatingButton());
 
       // SS Maintenance Screen * Swetha
       case SsMaintenanceScreen.id:

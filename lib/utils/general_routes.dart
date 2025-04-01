@@ -92,6 +92,9 @@ class Routes {
   static const String middlePolesScreen = 'MiddlePolesScreen';
   static const String middlePoles33kv = 'MiddlePoles33kv';
   static const String middlePole11kv = 'MiddlePole11kv';
+  static const String pendingListScreen = 'PendingListScreen';
+  static const String viewDetailedPendingListScreen = 'ViewDetailedPendingListScreen';
+  static const String pendingListFloatingButton = 'PendingListFloatingButton';
 
   // SS Maintenance Screen * Swetha
   static const String ssMaintenanceScreen = 'SsMaintenanceScreen';

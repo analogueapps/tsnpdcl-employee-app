@@ -121,6 +121,8 @@ class GlobalConstants {
   // Middle Poles Menu * swetha
   static const String middlePoles = "Middle Poles";
   static const String newMiddlePoles = "New Middle Poles";
+  static const String middlePoleList = "Middle Pole List";
+  static const String viewMiddlePole = "View Middle Pole";
   static const String newStr = "New";
   static const String pendingList = "Pending List";
   static const String completedList = "Completed List";
