@@ -1,18 +1,17 @@
 import 'dart:convert';
 
-SubstationModel SubstationModelFromJson(String str) =>
-    SubstationModel.fromJson(json.decode(str));
+FeederModel FeederModelFromJson(String str) =>
+    FeederModel.fromJson(json.decode(str));
 
-String SubstationModelToJson(SubstationModel data) =>
-    json.encode(data.toJson());
+String FeederModelToJson(FeederModel data) => json.encode(data.toJson());
 
-class SubstationModel {
-  SubstationModel({
+class FeederModel {
+  FeederModel({
     this.optionId,
     this.optionName,
   });
 
-  SubstationModel.fromJson(dynamic json) {
+  FeederModel.fromJson(dynamic json) {
     optionId = json['optionId'];
     optionName = json['optionName'];
   }
@@ -20,11 +19,11 @@ class SubstationModel {
   String? optionId;
   String? optionName;
 
-  SubstationModel copyWith({
+  FeederModel copyWith({
     String? optionId,
     String? optionName,
   }) =>
-      SubstationModel(
+      FeederModel(
         optionId: optionId ?? this.optionId,
         optionName: optionName ?? this.optionName,
       );

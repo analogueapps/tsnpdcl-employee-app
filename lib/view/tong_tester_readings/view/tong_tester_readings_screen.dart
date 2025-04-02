@@ -6,7 +6,7 @@ import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/widget/view_detailed_lc_tile_widget.dart';
 
 class TongTesterReadingsScreen extends StatelessWidget {
-  static const id = 'TongTesterReadingsScreen';
+  static const id = Routes.tongTesterReadingsScreen;
 
   const TongTesterReadingsScreen({super.key});
 

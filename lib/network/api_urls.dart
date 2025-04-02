@@ -62,4 +62,8 @@ class Apis{
   static const GET_EMPLOYEE_OF_SECTION_URL = "getEmployeesOfSection";
   static const ASSIGN_DTR_INSPECTION_URL = "assignDtrInspection";
 
+  /// INTERRUPTIONS * SWETHA
+  static const INTERRUPTIONS_END_POINT_BASE_URL = "$SERVER_IP:5656/NPFDAS/ep/interruptions/";
+  static const GET_132KV_SUBSTATIONS_OF_SECTION = "get132kvSubstationsOfSection";
+  static const GET_FEEDERS_OF_132KV_SS = "getFeedersOf132kvSs";
 }

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
+import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
 
 class View33kvBreakdownScreen extends StatelessWidget {
-  static const id = "View33kvBreakdownScreen";
+  static const id = Routes.view33kvBreakdownScreen;
   const View33kvBreakdownScreen({super.key});
 
   @override

@@ -8,7 +8,7 @@ import 'package:tsnpdcl_employee/view/middle_poles/viewmodel/middle_poles_viewmo
 import '../../../utils/app_constants.dart';
 
 class MiddlePolesScreen extends StatelessWidget {
-  static const id = "MiddlePolesScreen";
+  static const id = Routes.middlePolesScreen;
   const MiddlePolesScreen({super.key});
 
   @override

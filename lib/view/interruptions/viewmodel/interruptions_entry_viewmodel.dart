@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:tsnpdcl_employee/view/interruptions/model/general_substation_model.dart';
 import 'package:tsnpdcl_employee/view/interruptions/model/substation_model.dart';
 
 class InterruptionsEntryViewmodel extends ChangeNotifier {
@@ -10,18 +11,18 @@ class InterruptionsEntryViewmodel extends ChangeNotifier {
   String? selectedLV; // For LV dropdown selection
 
   // Substations Data
-  List<SubstationModel> _substations = [
-    SubstationModel(name: "Circle A", rawData: "Raw data for Substation A"),
-    SubstationModel(name: "Circle B", rawData: "Raw data for Substation B"),
-    SubstationModel(name: "Circle C", rawData: "Raw data for Substation C"),
+  List<GeneralSubstationModel> _substations = [
+    GeneralSubstationModel(name: "Circle A", rawData: "Raw data for Substation A"),
+    GeneralSubstationModel(name: "Circle B", rawData: "Raw data for Substation B"),
+    GeneralSubstationModel(name: "Circle C", rawData: "Raw data for Substation C"),
   ];
   String? selectedSubstation;
 
   // Feeders Data
-  List<SubstationModel> _feeders = [
-    SubstationModel(name: "Substation 1", rawData: "Data for Feeder 1"),
-    SubstationModel(name: "Substation 2", rawData: "Data for Feeder 2"),
-    SubstationModel(name: "Substation 3", rawData: "Data for Feeder 3"),
+  List<GeneralSubstationModel> _feeders = [
+    GeneralSubstationModel(name: "Substation 1", rawData: "Data for Feeder 1"),
+    GeneralSubstationModel(name: "Substation 2", rawData: "Data for Feeder 2"),
+    GeneralSubstationModel(name: "Substation 3", rawData: "Data for Feeder 3"),
   ];
   String? selectedFeeder;
 
@@ -37,8 +38,8 @@ class InterruptionsEntryViewmodel extends ChangeNotifier {
   DateTime? toDateTime;
 
   // Getters
-  List<SubstationModel> get substations => _substations;
-  List<SubstationModel> get feeders => _feeders;
+  List<GeneralSubstationModel> get substations => _substations;
+  List<GeneralSubstationModel> get feeders => _feeders;
   List<String> get interruptionTypes => _interruptionTypes;
 
   // Setters

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
+import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/view/rfss/viewmodel/rfss_viewmodel.dart';
@@ -8,7 +9,7 @@ import 'package:tsnpdcl_employee/view/ss_maintenance/viewmodel/ss_maintenance_vi
 import '../../../utils/app_constants.dart';
 
 class SsMaintenanceScreen extends StatelessWidget {
-  static const id = "SsMaintenanceScreen";
+  static const id = Routes.ssMaintenanceScreen;
   const SsMaintenanceScreen({super.key});
 
   @override

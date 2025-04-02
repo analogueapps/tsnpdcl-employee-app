@@ -6,7 +6,7 @@ import 'package:tsnpdcl_employee/utils/global_constants.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 
 class PendingListScreen extends StatelessWidget {
-  static const id = "PendingListScreen";
+  static const id = Routes.pendingListScreen;
   const PendingListScreen({super.key});
 
   @override

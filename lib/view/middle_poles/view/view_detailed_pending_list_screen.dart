@@ -7,7 +7,7 @@ import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/widget/view_detailed_lc_tile_widget.dart';
 
 class ViewDetailedPendingListScreen extends StatelessWidget {
-  static const id = "ViewDetailedPendingListScreen";
+  static const id = Routes.viewDetailedPendingListScreen;
 
   const ViewDetailedPendingListScreen({super.key});
 

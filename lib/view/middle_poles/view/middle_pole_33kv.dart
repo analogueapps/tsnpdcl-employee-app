@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
+import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
 import 'package:tsnpdcl_employee/view/middle_poles/viewmodel/middlepoles_33kv_viewmodel.dart';
 
 class MiddlePoles33kv extends StatelessWidget {
-  static const id = "MiddlePoles33kv";
+  static const id = Routes.middlePoles33kv;
 
   const MiddlePoles33kv({super.key});
 

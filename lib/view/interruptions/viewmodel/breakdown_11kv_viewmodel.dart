@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:tsnpdcl_employee/view/interruptions/model/general_substation_model.dart';
 import 'package:tsnpdcl_employee/view/interruptions/model/substation_model.dart';
 
 class Breakdown11kvViewmodel extends ChangeNotifier {
   final TextEditingController substationsController = TextEditingController();
 
   /// **Substations Data**
-  List<SubstationModel> _substations = [
-    SubstationModel(name: "Substation A", rawData: "Raw data for Substation A"),
-    SubstationModel(name: "Substation B", rawData: "Raw data for Substation B"),
-    SubstationModel(name: "Substation C", rawData: "Raw data for Substation C"),
+  List<GeneralSubstationModel> _substations = [
+    GeneralSubstationModel(name: "Substation A", rawData: "Raw data for Substation A"),
+    GeneralSubstationModel(name: "Substation B", rawData: "Raw data for Substation B"),
+    GeneralSubstationModel(name: "Substation C", rawData: "Raw data for Substation C"),
   ];
   String? selectedSubstation;
 
   /// **Feeders Data (Separate Model)**
-  List<SubstationModel> _feeders = [
-    SubstationModel(name: "Feeder 1", rawData: "Data for Feeder 1"),
-    SubstationModel(name: "Feeder 2", rawData: "Data for Feeder 2"),
-    SubstationModel(name: "Feeder 3", rawData: "Data for Feeder 3"),
+  List<GeneralSubstationModel> _feeders = [
+    GeneralSubstationModel(name: "Feeder 1", rawData: "Data for Feeder 1"),
+    GeneralSubstationModel(name: "Feeder 2", rawData: "Data for Feeder 2"),
+    GeneralSubstationModel(name: "Feeder 3", rawData: "Data for Feeder 3"),
   ];
   String? selectedFeeder;
 
@@ -26,8 +27,8 @@ class Breakdown11kvViewmodel extends ChangeNotifier {
 
   DateTime? selectedDateTime;
 
-  List<SubstationModel> get substations => _substations;
-  List<SubstationModel> get feeders => _feeders;
+  List<GeneralSubstationModel> get substations => _substations;
+  List<GeneralSubstationModel> get feeders => _feeders;
 
   void setSelectedSubstation(String? substation) {
     selectedSubstation = substation;

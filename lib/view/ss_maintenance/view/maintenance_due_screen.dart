@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
+import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
 
 class MaintenanceDueScreen extends StatelessWidget {
-  static const id = "MaintenanceDueScreen";
+  static const id = Routes.maintenanceDueScreen;
   const MaintenanceDueScreen({super.key});
 
   @override

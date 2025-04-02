@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
+import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
 import 'package:tsnpdcl_employee/view/interruptions/viewmodel/breakdown_11kv_viewmodel.dart';
 import 'package:tsnpdcl_employee/widget/fill_text_form_field.dart';
 import 'package:tsnpdcl_employee/widget/primary_button.dart';
 
 class Breakdown11kvScreen extends StatelessWidget {
-  static const id = 'Breakdown11kvScreen';
+  static const id = Routes.breakdown11kvScreen;
 
   const Breakdown11kvScreen({super.key});
 

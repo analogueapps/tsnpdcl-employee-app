@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
+import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/view/middle_poles/viewmodel/pending_list_floating_button_viewmodel.dart';
 
 class PendingListFloatingButton extends StatelessWidget {
-  static const id = "PendingListFloatingButton";
+  static const id = Routes.pendingListFloatingButton;
   const PendingListFloatingButton({super.key});
 
   @override

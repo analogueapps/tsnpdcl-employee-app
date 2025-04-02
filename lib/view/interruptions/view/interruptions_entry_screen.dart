@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
+import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
 import 'package:tsnpdcl_employee/view/interruptions/viewmodel/interruptions_entry_viewmodel.dart';
 
 class InterruptionsEntryScreen extends StatelessWidget {
-  static const id = "InterruptionsEntryScreen";
+  static const id = Routes.interruptionsEntryScreen;
 
   const InterruptionsEntryScreen({super.key});
 
