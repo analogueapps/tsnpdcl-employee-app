@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tsnpdcl_employee/model/sub_menu_grid_item.dart';
+import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
 
 class DtrFailureViewModel extends ChangeNotifier {
@@ -21,7 +22,7 @@ class DtrFailureViewModel extends ChangeNotifier {
           title: GlobalConstants.dtrFailureReporting,
           iconAsset: Icons.post_add,
           cardColor: Colors.orange,
-          routeName: routeName),
+          routeName: Routes.failureReporting),
       SubMenuGridItem(
           title: GlobalConstants.viewFailureReports,
           iconAsset: Icons.assignment_late_outlined,
