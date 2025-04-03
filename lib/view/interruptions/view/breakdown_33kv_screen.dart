@@ -144,7 +144,9 @@ class Breakdown33kvScreen extends StatelessWidget {
                         const SizedBox(height: 20),
                         PrimaryButton(
                           text: "SUBMIT",
-                          onPressed: () {},
+                          onPressed: () {
+                            viewModel.submitData();
+                          },
                           fullWidth: true,
                         ),
                       ],

@@ -64,6 +64,13 @@ class Apis{
 
   /// INTERRUPTIONS * SWETHA
   static const INTERRUPTIONS_END_POINT_BASE_URL = "$SERVER_IP:5656/NPFDAS/ep/interruptions/";
+  /// 33KV BREAKDOWN ENTRY * DROPDOWN FIELDS
   static const GET_132KV_SUBSTATIONS_OF_SECTION = "get132kvSubstationsOfSection";
   static const GET_FEEDERS_OF_132KV_SS = "getFeedersOf132kvSs";
+  /// 11KV BREAKDOWN ENTRY * DROPDOWN FIELDS
+  static const GET_SUBSTATIONS_OF_SECTION = "getSubstationsOfSection";
+  static const GET_FEEDERS_OF_SS = "getFeedersOfSs";
+  /// SAVING FORMS
+  static const SAVE_BREAKDOWN_REPORT = "saveBreakDownReport";
+
 }
