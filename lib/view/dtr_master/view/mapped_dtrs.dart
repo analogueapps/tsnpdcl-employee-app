@@ -5,9 +5,12 @@ import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
+import 'package:tsnpdcl_employee/view/pdms/model/option.dart';
 import 'package:tsnpdcl_employee/widget/fill_text_form_field.dart';
 import 'package:tsnpdcl_employee/widget/primary_button.dart';
 import '../viewmodel/map_dtr_viewmodel.dart';
+import 'package:tsnpdcl_employee/view/dtr_master/model/circle_model.dart';
+
 
 class MappedDtr extends StatelessWidget{
   static const id= Routes.mappedDtrScreen;
@@ -104,19 +107,23 @@ class MappedDtr extends StatelessWidget{
                           child:Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text("Select Circle", style: TextStyle(fontSize:15),),
-                                DropdownButton<String>(
-                                  isExpanded: true,
-                                  hint: const Text("Select "),
-                                  value: viewModel.selectedCircle,
-                                  items: viewModel.circle.map((item) {
-                                    return DropdownMenuItem<String>(
-                                      value: item,
-                                      child: Text(item),
-                                    );
-                                  }).toList(),
-                                  onChanged: (value) => viewModel.onListCircleSelected(value),
+                                const Text(
+                                  "Select Circle",
+                                  style: TextStyle(fontSize: 15),
                                 ),
+                          DropdownButton<String>(
+                            isExpanded: true,
+                            hint: const Text("Select"),
+                            value: viewModel.selectedCircle,
+                            // Properly type the items parameter
+                            items: viewModel.circle.map<DropdownMenuItem<String>>((Circle item) {
+                              return DropdownMenuItem<String>(
+                                value: item.circleId,
+                                child: Text(item.circleName),
+                              );
+                            }).toList(),
+                            onChanged: (String? value) => viewModel.onListCircleSelected(value),
+                          ),
                                 const SizedBox(height: 5,),
                                 const Text("Sub Station", style: TextStyle(fontSize:15),),
                                 DropdownButton<String>(

@@ -104,6 +104,7 @@ class Routes {
   //ltmt * Bhavana
   static const String ltmtScreen='LtmtMenu';
   static const String metersStock= 'MetersStock';
+  static const String meterOM="MetersOm";
 
   //DTR Master * Bhavana
   static const String mappedDtrScreen= "MappedDtr";

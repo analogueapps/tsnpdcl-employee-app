@@ -13,43 +13,55 @@ class  MisMatchedDtr extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+        create: (_) => MisMatchedViewModel(context: context),
+        child: Consumer<MisMatchedViewModel>(
+        builder: (context, viewModel, child) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: CommonColors.colorPrimary,
-          title: const Text(
-            GlobalConstants.missMatchedDtr,
-            style:  TextStyle(
-                color: Colors.white,
-                fontSize: toolbarTitleSize,
-                fontWeight: FontWeight.w700),
-          ),
-          iconTheme: const IconThemeData(
-            color: Colors.white,
-          ),
-        ),
-        body:ChangeNotifierProvider(
-          create: (_) => MisMatchedViewModel(),
-          child: Consumer<MisMatchedViewModel>(
-              builder: (context, viewModel, child) {
-                return const Padding(
-                  padding:  EdgeInsets.all(8.0),
-                  child:  SingleChildScrollView(
-                    child:Column( //use ListTitle here
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("12245-GOKULNAGAR-NKG-SS-0048"),
-                         Text("100005249", style: TextStyle(color: Colors.grey)),
-                         Text("Eq no. should written on DTR only", style: TextStyle(color: Colors.redAccent), textAlign: TextAlign.end,),
-                         Divider(),
-                      ],
+    appBar: AppBar(
+    backgroundColor: CommonColors.colorPrimary,
+    title: const Text(
+    GlobalConstants.missMatchedDtr,
+    style: TextStyle(
+    color: Colors.white,
+    fontSize: toolbarTitleSize,
+    fontWeight: FontWeight.w700),
+    ),
+    iconTheme: const IconThemeData(
+    color: Colors.white,
+    ),
+    ),
+    body:viewModel.isLoading
+    ? const Center(child: CircularProgressIndicator())
+        : ListView.builder(
+    shrinkWrap: true,
+    physics: const NeverScrollableScrollPhysics(),
+    itemCount: viewModel.misMatchedStockEntityList.length,
+    itemBuilder: (context, index) {
+    if (viewModel.misMatchedStockEntityList.isEmpty) {
+    return const Center(child: Text("No meter data available"));
+    }
 
-                    ),
-
-                  ),
-                );
-              }
-          ),
-        ),
+    final misMatched = viewModel.misMatchedStockEntityList[index];
+    return Padding(
+    padding: EdgeInsets.all(8.0),
+    child: SingleChildScrollView(
+    child:Column( //use ListTitle here
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+    Text(misMatched.sapEquipmentCode??"N/A"),
+    Text(misMatched.structureCode??"N/A", style: TextStyle(color: Colors.grey)),
+    Text(misMatched.statusRemarks??"N/A", style: TextStyle(color: Colors.redAccent), textAlign: TextAlign.end,),
+    Divider(),
+    ],
+    ),
+    ),
+    );
+    }
+    ),
+    );
+    }
+        )
     );
   }
 }

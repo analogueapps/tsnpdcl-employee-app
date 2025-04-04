@@ -340,3 +340,38 @@ class OfflineDtrViewmodel extends ChangeNotifier{
   }
 
 }
+
+//private String[] storesArray = new String[]{"SELECT","KHAMMAM-STORE","WARANGAL-STORE", "KARIMNAGAR STORE","NIZAMABAD-STORE","ADILABAD-STORE","MANCHERIAL-STORE"};
+//     private String[] spmArray = new String[]{
+//             "SELECT",
+//             "AE/SPM/Khammam",
+//             "AE/SPM/Tallada",
+//             "AE/SPM/Kothagudem",
+//             "AE/SPM/Bhadrachalam",
+//             "AE/SPM/Hanamkonda",
+//             "AE/SPM/Warangal",
+//             "AE/SPM &TRE/Bhupalpally",
+//             "AE/SPM/Mulugu",
+//             "AE/CTM &LTM/WGL Rural",
+//             "AE/LTM &CTM/Mahabubabad",
+//             "AE/SPM &TRE/WGL Rural",
+//             "AE/SPM/Mahabubabad",
+//             "AE/SPM/Thorrur",
+//             "AE/SPM/Jangaon",
+//             "AE/SPM/Ghanpur",
+//             "AE/SPM/Karimnagar",
+//             "AE/SPM/Huzurabad",
+//             "AE/SPM/Jagtial",
+//             "AE/SPM/Metpally",
+//             "AE/SPM/Pedpapally",
+//             "AE/SPM/Manthani",
+//             "AE/SPM/Nizamabad",
+//             "AE/SPM/Armoor",
+//             "AE/SPM/Kamareddy",
+//             "AE/SPM/Banswada",
+//             "AE/SPM/Nirmal",
+//             "AE/SPM/Bhainsa",
+//             "AE/SPM/Mancherial",
+//             "AE/SPM &TRE/Asifabad",
+//             "AE/SPM/Adilabad"
+//     };

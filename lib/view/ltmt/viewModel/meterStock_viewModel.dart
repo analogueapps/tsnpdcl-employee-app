@@ -19,7 +19,6 @@ class MeterStockViewmodel extends ChangeNotifier {
 
   // Current View Context
   final BuildContext context;
-
   //check box
   List<MeterStockEntity> selectedMeters = []; // To store selected meters
   int get checkedCount => selectedMeters.length;
@@ -385,13 +384,18 @@ class MeterStockViewmodel extends ChangeNotifier {
                             return ListTile(
                               title: Text(
                                   "${staffName.name ?? 'N/A'}, ${staffName.designation??"null"} "),
-                              onTap: () {
+                              onTap: () async{
                                 setSelectedStaff(staffName);
                                 notifyListeners();
                                 Navigator.pop(context);
-                                allotmentDialog(context);
-                                print("Sleected Staff ${staffName.name}");
-
+                                //  if(title=="Meters issued to O&M") {
+                                //   await getLoaderLoadMetersStock();
+                                //   Navigation.instance.navigateTo(Routes.metersStock);
+                                //   print("Meters issued to O&M : ${staffName.employeeId}");
+                                // }else{
+                                   allotmentDialog(context);
+                                   print("Sleected Staff ${staffName.name}");
+                                 // }
                               },
                             );
                           },
@@ -565,4 +569,8 @@ class MeterStockViewmodel extends ChangeNotifier {
       AlertUtils.showSnackBar(context, "Sorry, something went wrong: $e", true);
       print("Error during allotment: $e");
     }
-  }}
+  }
+
+
+  //load meters api call with empId
+}

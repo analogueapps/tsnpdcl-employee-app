@@ -10,6 +10,8 @@ import 'package:tsnpdcl_employee/view/dtr_master/viewmodel/createOffline_dtr_vie
 import 'package:tsnpdcl_employee/widget/fill_text_form_field.dart';
 import 'package:tsnpdcl_employee/widget/primary_button.dart';
 
+//CreateDtrStructureOfflineActivity
+
 class CreateDtrOffline extends StatelessWidget {
   static const id = Routes.createOfflineDTR;
   const CreateDtrOffline({super.key});
