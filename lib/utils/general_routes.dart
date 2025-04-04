@@ -125,5 +125,9 @@ class Routes {
   static const String viewSaidiSaifiScreen = "ViewSaidiSaifiScreen";
   static const String view33kvBreakdownScreen = "View33kvBreakdownScreen";
   static const String view11kvBreakdownScreen = "View11kvBreakdownScreen";
+  static const String detailedView33kvBreakdownScreen = "DetailedView33kvBreakdownScreen";
+  static const String detailedView11kvBreakdownScreen = "DetailedView11kvBreakdownScreen";
+  static const String view33kvOpenRestoreDetails = "View33kvOpenRestoreDetails";
+  static const String view11kvOpenRestoreDetails = "View11kvOpenRestoreDetails";
 
 }

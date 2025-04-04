@@ -25,10 +25,14 @@ import 'package:tsnpdcl_employee/view/ganesh_pandal/view/ganesh_pandal_informati
 import 'package:tsnpdcl_employee/view/gruha_jyothi/view/gruha_jyothi_screen.dart';
 import 'package:tsnpdcl_employee/view/interruptions/view/breakdown_11kv_screen.dart';
 import 'package:tsnpdcl_employee/view/interruptions/view/breakdown_33kv_screen.dart';
+import 'package:tsnpdcl_employee/view/interruptions/view/detailed_view_11kv_breakdown_screen.dart';
+import 'package:tsnpdcl_employee/view/interruptions/view/detailed_view_33kv_breakdown_screen.dart';
 import 'package:tsnpdcl_employee/view/interruptions/view/interruptions_entry_screen.dart';
 import 'package:tsnpdcl_employee/view/interruptions/view/saidi_saifi_calculator_screen.dart';
 import 'package:tsnpdcl_employee/view/interruptions/view/view_11kv_breakdown_screen.dart';
+import 'package:tsnpdcl_employee/view/interruptions/view/view_11kv_open_restore_details.dart';
 import 'package:tsnpdcl_employee/view/interruptions/view/view_33kv_breakdown_screen.dart';
+import 'package:tsnpdcl_employee/view/interruptions/view/view_33kv_open_restore_details.dart';
 import 'package:tsnpdcl_employee/view/interruptions/view/view_saidi_saifi_screen.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/view/add_induction_point_screen.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/view/all_lc_request_list_screen.dart';
@@ -80,6 +84,7 @@ import 'package:tsnpdcl_employee/view/rfss/view/non_agl_services.dart';
 import 'package:tsnpdcl_employee/view/rfss/view/agl_services.dart';
 import 'package:tsnpdcl_employee/view/rfss/view/new_inspection.dart';
 import 'package:tsnpdcl_employee/view/dtr_failure/view/dtr_failure_reporting.dart';
+import 'package:tsnpdcl_employee/view/ltmt/view/meters_OM.dart';
 
 class AppRouter {
   static Route generateRoute(RouteSettings settings) {
@@ -313,12 +318,22 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const View33kvBreakdownScreen());
       case View11kvBreakdownScreen.id:
         return MaterialPageRoute(builder: (_) => const View11kvBreakdownScreen());
+      case DetailedView33kvBreakdownScreen.id:
+        return MaterialPageRoute(builder: (_) => DetailedView33kvBreakdownScreen(data: settings.arguments as Map<String, dynamic>,));
+       case DetailedView11kvBreakdownScreen.id:
+        return MaterialPageRoute(builder: (_) => DetailedView11kvBreakdownScreen(data: settings.arguments as Map<String, dynamic>,));
+      case View33kvOpenRestoreDetails.id:
+        return MaterialPageRoute(builder: (_) => View33kvOpenRestoreDetails(data: settings.arguments as Map<String, dynamic>,));
+      case View11kvOpenRestoreDetails.id:
+        return MaterialPageRoute(builder: (_) => View11kvOpenRestoreDetails(data: settings.arguments as Map<String, dynamic>,));
 
-    //LTMT * Bhavana
+    ///LTMT * Bhavana
       case LtmtMenu.id:
         return MaterialPageRoute(builder: (_) => const LtmtMenu());
       case MetersStock.id:
         return MaterialPageRoute(builder: (_) => const MetersStock());
+      case MetersOm.id:
+        return MaterialPageRoute(builder: (_) => MetersOm(empId:settings.arguments as String ));
 
     // DTR Master * Bhavana
       case MappedDtr.id:

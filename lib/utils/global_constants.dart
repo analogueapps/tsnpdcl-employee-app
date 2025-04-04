@@ -153,6 +153,7 @@ class GlobalConstants {
   static const String interruptionsEntry = "Interruptions Entry";
   static const String saidiSaifiCalculator = "Saidi Saifi Calculator";
   static const String viewBreakdowns = "View Breakdowns";
+  static const String viewBreakdown = "View Breakdown";
 
 }
 

@@ -43,8 +43,7 @@ class Breakdown33kvViewmodel extends ChangeNotifier {
     _isLoading = true; // Set loading state to true
     notifyListeners();
     final payload = {
-      "token":
-          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
     };
     var response = await ApiProvider(

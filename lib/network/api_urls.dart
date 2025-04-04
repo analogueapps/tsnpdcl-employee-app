@@ -72,5 +72,7 @@ class Apis{
   static const GET_FEEDERS_OF_SS = "getFeedersOfSs";
   /// SAVING FORMS
   static const SAVE_BREAKDOWN_REPORT = "saveBreakDownReport";
+  /// GET 33KV DATA
+  static const GET_BREAKDOWNS_OF_SECTION = "getBreakDownsOfSection";
 
 }
