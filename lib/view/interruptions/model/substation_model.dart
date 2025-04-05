@@ -36,3 +36,4 @@ class SubstationModel {
     return map;
   }
 }
+

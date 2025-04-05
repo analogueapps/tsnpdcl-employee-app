@@ -1,9 +1,11 @@
+// interruptions_entry_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
+import 'package:tsnpdcl_employee/view/interruptions/model/substation_model.dart';
 import 'package:tsnpdcl_employee/view/interruptions/viewmodel/interruptions_entry_viewmodel.dart';
 
 class InterruptionsEntryScreen extends StatelessWidget {
@@ -14,7 +16,7 @@ class InterruptionsEntryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => InterruptionsEntryViewmodel(),
+      create: (_) => InterruptionsEntryViewmodel(), // Removed context parameter
       child: Consumer<InterruptionsEntryViewmodel>(
         builder: (context, viewModel, child) {
           return Scaffold(
@@ -52,39 +54,34 @@ class InterruptionsEntryScreen extends StatelessWidget {
                   DropdownButton<String>(
                     isExpanded: true,
                     hint: const Text("SELECT"),
-                    value: viewModel.selectedSubstation,
-                    items: viewModel.substations.map((substation) {
+                    value: viewModel.selectedCircle,
+                    items: viewModel.circles.map((circle) {
                       return DropdownMenuItem<String>(
-                        value: substation.name,
-                        child: Text(substation.name),
+                        value: circle.optionCode,
+                        child: Text(circle.optionName),
                       );
                     }).toList(),
-                    onChanged: (selectedSubstation) {
-                      viewModel.setSelectedSubstation(selectedSubstation);
+                    onChanged: (value) {
+                      viewModel.setSelectedCircle(value, context);
                     },
                   ),
-
                   const SizedBox(height: 20),
 
-                  /// Select Substation
-                  const Text("SELECT SUBSTATION",
-                      style: TextStyle(fontSize: 16)),
-                  const SizedBox(height: 8),
+                  const Text("Sub Station", style: TextStyle(fontSize: 15)),
                   DropdownButton<String>(
                     isExpanded: true,
-                    hint: const Text("SELECT"),
-                    value: viewModel.selectedFeeder,
-                    items: viewModel.feeders.map((feeder) {
+                    hint: const Text("Select"),
+                    value: viewModel.selectedSubstation,
+                    items: viewModel.substations.map<DropdownMenuItem<String>>(
+                        (InterruptionsModel item) {
                       return DropdownMenuItem<String>(
-                        value: feeder.name,
-                        child: Text(feeder.name),
+                        value: item.optionCode,
+                        child: Text(item.optionName),
                       );
                     }).toList(),
-                    onChanged: (selectedFeeder) {
-                      viewModel.setSelectedFeeder(selectedFeeder);
-                    },
+                    onChanged: (value) =>
+                        viewModel.setSelectedSubstation(value, context),
                   ),
-
                   const SizedBox(height: 20),
 
                   /// Interruption Level
@@ -158,40 +155,39 @@ class InterruptionsEntryScreen extends StatelessWidget {
 
                   const SizedBox(height: 20),
 
-                  /// Conditional Section based on selectedOption
-                  Visibility(
-                    visible: viewModel.selectedOption == "Feeder" ||
-                        viewModel.selectedOption == "ISF",
-                    child: Column(
+                  /// Feeders Selection
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text("SELECT 11KV FEEDERS",
                             style: TextStyle(fontSize: 16)),
                         const SizedBox(height: 8),
-                        DropdownButton<String>(
-                          isExpanded: true,
-                          hint: const Text("SELECT"),
-                          value: viewModel.selectedFeeder,
-                          items: viewModel.feeders.map((feeder) {
-                            return DropdownMenuItem<String>(
-                              value: feeder.name,
-                              child: Text(feeder.name),
-                            );
-                          }).toList(),
-                          onChanged: (selectedFeeder) {
-                            viewModel.setSelectedFeeder(selectedFeeder);
-                          },
-                        ),
+                        ...viewModel.feeders
+                            .map((feeder) => CheckboxListTile(
+                                  controlAffinity:
+                                      ListTileControlAffinity.leading,
+                                  title: Text(feeder.optionName),
+                                  value: viewModel.selectedFeeders
+                                      .contains(feeder.optionCode),
+                                  enabled: viewModel.selectedOption != "ISF",
+                                  onChanged: (value) {
+                                    viewModel.toggleFeederSelection(
+                                        feeder.optionCode);
+                                  },
+                                  contentPadding:
+                                      const EdgeInsets.only(left: 8),
+                                ))
+                            .toList(),
                       ],
                     ),
-                  ),
+
+                  /// LV Selection
                   Visibility(
                     visible: viewModel.selectedOption == "LV",
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text("SELECT LV",
-                            style: TextStyle(fontSize: 16)),
+                        const Text("SELECT LV", style: TextStyle(fontSize: 16)),
                         const SizedBox(height: 8),
                         DropdownButton<String>(
                           isExpanded: true,
@@ -199,7 +195,7 @@ class InterruptionsEntryScreen extends StatelessWidget {
                           value: viewModel.selectedLV,
                           items: const [
                             DropdownMenuItem<String>(
-                              value: null,
+                              value: "",
                               child: Text("SELECT"),
                             ),
                             DropdownMenuItem<String>(
@@ -230,8 +226,7 @@ class InterruptionsEntryScreen extends StatelessWidget {
                   const SizedBox(height: 20),
 
                   /// Supply Position
-                  const Text("SUPPLY POSITION",
-                      style: TextStyle(fontSize: 16)),
+                  const Text("SUPPLY POSITION", style: TextStyle(fontSize: 16)),
                   const SizedBox(height: 8),
                   Row(
                     children: [
@@ -280,12 +275,11 @@ class InterruptionsEntryScreen extends StatelessWidget {
 
                   const SizedBox(height: 20),
 
-                  /// Time Details - Conditional Rendering
+                  /// Time Details
                   const Text("TIME DETAILS", style: TextStyle(fontSize: 16)),
                   const SizedBox(height: 14),
                   Row(
                     children: [
-                      // Start Date (Always visible)
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -308,18 +302,17 @@ class InterruptionsEntryScreen extends StatelessWidget {
                                   viewModel.fromDateTime == null
                                       ? "DD/MM/YY HH:MM"
                                       : viewModel.formatDateTime(
-                                      viewModel.fromDateTime!),
+                                          viewModel.fromDateTime!),
                                 ),
                               ),
                             ),
                           ],
                         ),
                       ),
-                      // End Date (Visible only if Restored)
                       Expanded(
                         child: Visibility(
                           visible:
-                          viewModel.selectedSupplyPosition == "Restored",
+                              viewModel.selectedSupplyPosition == "Restored",
                           child: Row(
                             children: [
                               const SizedBox(width: 10),
@@ -338,7 +331,7 @@ class InterruptionsEntryScreen extends StatelessWidget {
                                           hintText: "To Date & Time",
                                           border: OutlineInputBorder(
                                               borderRadius:
-                                              BorderRadius.circular(8.0)),
+                                                  BorderRadius.circular(8.0)),
                                           suffixIcon: const Icon(
                                               Icons.calendar_today,
                                               size: 20),
@@ -347,7 +340,7 @@ class InterruptionsEntryScreen extends StatelessWidget {
                                           viewModel.toDateTime == null
                                               ? "DD/MM/YY HH:MM"
                                               : viewModel.formatDateTime(
-                                              viewModel.toDateTime!),
+                                                  viewModel.toDateTime!),
                                         ),
                                       ),
                                     ),
@@ -361,7 +354,6 @@ class InterruptionsEntryScreen extends StatelessWidget {
                     ],
                   ),
 
-                  // Duration (Visible only if Restored)
                   Visibility(
                     visible: viewModel.selectedSupplyPosition == "Restored",
                     child: Column(
@@ -375,7 +367,8 @@ class InterruptionsEntryScreen extends StatelessWidget {
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8.0),
                             ),
-                            suffixIcon: const Icon(Icons.calendar_today, size: 20),
+                            suffixIcon:
+                                const Icon(Icons.calendar_today, size: 20),
                           ),
                           child: Text(viewModel.getDuration()),
                         ),
@@ -383,11 +376,9 @@ class InterruptionsEntryScreen extends StatelessWidget {
                     ),
                   ),
 
-                  // Interruption Type (Visible for Feeder & Not Restored, LV & Restored, Hidden for ISF & Restored)
+                  /// Interruption Type
                   Visibility(
-                    visible: (viewModel.selectedOption == "Feeder") ||
-                        (viewModel.selectedOption == "LV") &&
-                            viewModel.selectedSupplyPosition != "ISF",
+                    visible: viewModel.selectedOption != "ISF",
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -412,13 +403,9 @@ class InterruptionsEntryScreen extends StatelessWidget {
                     ),
                   ),
 
-                  // Reason Textarea (Visible for LV & Restored, LV & Not Restored, ISF & Restored, ISF & Not Restored; Hidden for Feeder & Restored)
+                  /// Reason
                   Visibility(
-                    visible: (viewModel.selectedSupplyPosition == "Restored" &&
-                        viewModel.selectedOption == "LV") ||
-                        (viewModel.selectedOption == "LV" &&
-                            viewModel.selectedSupplyPosition == "Not Restored") ||
-                        (viewModel.selectedOption == "ISF"),
+                    visible: viewModel.shouldShowReason(),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -432,6 +419,7 @@ class InterruptionsEntryScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 8),
                         TextField(
+                          controller: viewModel.reasonController,
                           maxLines: 4,
                           decoration: InputDecoration(
                             hintText: "Enter reason here...",
@@ -448,15 +436,15 @@ class InterruptionsEntryScreen extends StatelessWidget {
 
                   const SizedBox(height: 20),
 
-                  /// Submit Button (Always visible)
+                  /// Submit Button
                   SizedBox(
                     height: 50,
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () => viewModel.submit(context),
                       style: ButtonStyle(
                         backgroundColor:
-                        WidgetStateProperty.all(CommonColors.deepRed),
+                            WidgetStateProperty.all(CommonColors.deepRed),
                       ),
                       child: const Text(
                         'SUBMIT',
@@ -473,6 +461,3 @@ class InterruptionsEntryScreen extends StatelessWidget {
     );
   }
 }
-
-
-
