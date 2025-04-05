@@ -9,6 +9,8 @@ import 'package:tsnpdcl_employee/utils/alerts.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/model/circle_model.dart';
+import 'package:tsnpdcl_employee/view/dtr_master/model/dtr_feedet_distribution_model.dart';
+import 'package:tsnpdcl_employee/view/dtr_master/view/dateMoth.dart';
 
 class MapDtrViewMobel extends ChangeNotifier {
   MapDtrViewMobel({required this.context});
@@ -24,17 +26,108 @@ class MapDtrViewMobel extends ChangeNotifier {
   String? _selectedFilter;
   String? get selectedFilter => _selectedFilter;
 
+  //Distribution
   String? _selectedDistribution;
   String? get selectedDistribution => _selectedDistribution;
-
-  // List<Circle> _circles = [];
-  List _distributions = ["RTC", "Nakkalagutta", "Ramnagar"];
-  List get distributions => _distributions;
+  List<SubstationModel> _distributions = [];
+  List<SubstationModel> get distributions => _distributions;
 
   void onListDistriSelected(String? value) {
     _selectedDistribution = value;
     notifyListeners();
   }
+
+  Future<void> getDistributions() async {
+    _distributions.clear();
+    if (_isLoading) return; // Prevent duplicate calls
+
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final requestData = {
+        "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ?? "",
+        "api": Apis.API_KEY,
+      };
+
+      final payload = {
+        "path": "/load/distributions",
+        "apiVersion": "1.0",
+        "method": "POST",
+        "data": jsonEncode(requestData),
+      };
+
+      final response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+          .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+
+      if (response == null) {
+        throw Exception("No response received from server");
+      }
+
+      // Process response data
+      dynamic responseData = response.data;
+      if (responseData is String) {
+        responseData = jsonDecode(responseData);
+      }
+
+      // Validate response
+      if (response.statusCode != successResponseCode) {
+        throw Exception(responseData['message'] ??
+            "Request failed with status ${response.statusCode}");
+      }
+
+      if (responseData['tokenValid'] != true) {
+        showSessionExpiredDialog(context);
+        return;
+      }
+
+      if (responseData['success'] != true) {
+        throw Exception(responseData['message'] ?? "Operation failed");
+      }
+
+      // Process station data
+      if (responseData['objectJson'] == null) {
+        throw Exception("No station data received");
+      }
+
+      final jsonList = responseData['objectJson'];
+      List<SubstationModel> dataList = [];
+
+      if (jsonList is String) {
+        // Clean and parse JSON string
+        String cleanedJson = jsonList.replaceAll(r'\"', '"').trim();
+
+        if (cleanedJson.endsWith(',')) {
+          cleanedJson = cleanedJson.substring(0, cleanedJson.length - 1);
+        }
+
+        if (!cleanedJson.startsWith('[')) {
+          cleanedJson = '[$cleanedJson]';
+        }
+
+        dataList = (jsonDecode(cleanedJson) as List<dynamic>)
+            .map((json) => SubstationModel.fromJson(json as Map<String, dynamic>))
+            .toList();
+      } else if (jsonList is List) {
+        dataList = (jsonList as List<dynamic>)
+            .map((json) => SubstationModel.fromJson(json as Map<String, dynamic>))
+            .toList();
+      }
+
+      _distributions.addAll(dataList);
+      print("Successfully loaded ${_distributions.length} distributions");
+
+    } catch (e, stackTrace) {
+      print("Error fetching distributions: $e\n$stackTrace");
+      showErrorDialog(context, "Failed to load distributions: ${e.toString()}");
+      rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+
 
   //Feeder wise
   //1. Circle
@@ -66,6 +159,9 @@ class MapDtrViewMobel extends ChangeNotifier {
 
   void onListCircleSelected(String? value) {
     _selectedCircle = value ?? '000';
+    _selectedStation = null;
+    _selectedFeeder=null;
+    getSubstations();
     print("_selectedCircle: $_selectedCircle");
     notifyListeners();
   }
@@ -73,29 +169,336 @@ class MapDtrViewMobel extends ChangeNotifier {
   String? _selectedStation;
   String? get selectedStation => _selectedStation;
 
-  List _station = ["KHA", "ANGALp", "ADILA"];
+  List<SubstationModel> _stations = [];
+  List<SubstationModel> get stations => _stations;
 
-  List get station => _station;
-  void onListStationSelected(String? value) {
+  void onStationSelected(String? value) {
     _selectedStation = value;
+    _selectedFeeder=null;
+    getFeeders();
+    print("_selectedStation: $_selectedStation");
     notifyListeners();
   }
+
+  Future<void> getSubstations() async {
+    _stations.clear();
+    if (_isLoading) return; // Prevent duplicate calls
+
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final requestData = {
+        "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+        "api": Apis.API_KEY,
+        "circleCode": _selectedCircle
+      };
+
+      final payload = {
+        "path": "/load/load33kvssOfCircle",
+        "apiVersion": "1.0",
+        "method": "POST",
+        "data": jsonEncode(requestData),
+      };
+
+      final response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+          .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+
+      if (response == null) {
+        throw Exception("No response received from server");
+      }
+
+      // Process response data
+      dynamic responseData = response.data;
+      if (responseData is String) {
+        responseData = jsonDecode(responseData);
+      }
+
+      // Validate response
+      if (response.statusCode != successResponseCode) {
+        throw Exception(responseData['message'] ??
+            "Request failed with status ${response.statusCode}");
+      }
+
+      if (responseData['tokenValid'] != true) {
+        showSessionExpiredDialog(context);
+        return;
+      }
+
+      if (responseData['success'] != true) {
+        throw Exception(responseData['message'] ?? "Operation failed");
+      }
+
+      // Process station data
+      if (responseData['objectJson'] == null) {
+        throw Exception("No station data received");
+      }
+
+      final jsonList = responseData['objectJson'];
+      List<SubstationModel> dataList = [];
+
+      if (jsonList is String) {
+        // Clean and parse JSON string
+        String cleanedJson = jsonList
+            .replaceAll(r'\"', '"')
+            .trim();
+
+        if (cleanedJson.endsWith(',')) {
+          cleanedJson = cleanedJson.substring(0, cleanedJson.length - 1);
+        }
+
+        if (!cleanedJson.startsWith('[')) {
+          cleanedJson = '[$cleanedJson]';
+        }
+
+        dataList = (jsonDecode(cleanedJson) as List)
+            .map((json) => SubstationModel.fromJson(json))
+            .toList();
+      }
+      else if (jsonList is List) {
+        dataList = jsonList
+            .map((json) => SubstationModel.fromJson(json))
+            .toList();
+      }
+
+      _stations.addAll(dataList);
+      print("Successfully loaded ${_stations.length} stations");
+
+    } catch (e, stackTrace) {
+      print("Error fetching stations: $e\n$stackTrace");
+      showErrorDialog(context, "Failed to load stations: ${e.toString()}");
+      rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
 
 //3.feeder
   String? _selectedFeeder;
   String? get selectedFeeder => _selectedFeeder;
 
-  List _feeder = ["RTC", "Nakkalagutta", "Ramnagar"];
-  List get feeder => _feeder;
+  List<SubstationModel> _feeder = [];
+  List<SubstationModel> get feeder => _feeder;
+
 
   void onListFeederSelected(String? value) {
-    _selectedFeeder = value;
-    notifyListeners();
+    if (value != null && _feeder.any((item) => item.optionCode == value)) {
+      _selectedFeeder = value;
+      notifyListeners();
+    }
   }
 
+  Future<void> getFeeders() async {
+    if (_isLoading) return; // Prevent duplicate calls
+
+    _isLoading = true;
+    _feeder.clear();
+    _selectedFeeder = null; // Reset selected feeder when reloading
+    notifyListeners();
+
+    try {
+      final requestData = {
+        "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ?? "",
+        "api": Apis.API_KEY,
+        "ss": _selectedStation ?? "",
+      };
+
+      final payload = {
+        "path": "/load/feeders",
+        "apiVersion": "1.0",
+        "method": "POST",
+        "data": jsonEncode(requestData),
+      };
+
+      final response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+          .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+
+      if (response == null) {
+        throw Exception("No response received from server");
+      }
+
+      // Process response data
+      dynamic responseData = response.data;
+      if (responseData is String) {
+        responseData = jsonDecode(responseData);
+      }
+
+      // Validate response
+      if (response.statusCode != successResponseCode) {
+        throw Exception(responseData['message'] ??
+            "Request failed with status ${response.statusCode}");
+      }
+
+      if (responseData['tokenValid'] != true) {
+        showSessionExpiredDialog(context);
+        return;
+      }
+
+      if (responseData['success'] != true) {
+        throw Exception(responseData['message'] ?? "Operation failed");
+      }
+
+      // Process feeder data
+      if (responseData['objectJson'] == null) {
+        throw Exception("No feeder data received");
+      }
+
+      final jsonList = responseData['objectJson'];
+      List<SubstationModel> dataList = [];
+
+      if (jsonList is String) {
+        String cleanedJson = jsonList.replaceAll(r'\"', '"').trim();
+        if (cleanedJson.endsWith(',')) {
+          cleanedJson = cleanedJson.substring(0, cleanedJson.length - 1);
+        }
+        if (!cleanedJson.startsWith('[')) {
+          cleanedJson = '[$cleanedJson]';
+        }
+        dataList = (jsonDecode(cleanedJson) as List<dynamic>)
+            .map((json) => SubstationModel.fromJson(json as Map<String, dynamic>))
+            .toList();
+      } else if (jsonList is List) {
+        dataList = (jsonList as List<dynamic>)
+            .map((json) => SubstationModel.fromJson(json as Map<String, dynamic>))
+            .toList();
+      }
+
+      // Remove duplicates based on optionCode
+      _feeder = dataList.toSet().toList(); // Assumes SubstationModel has proper equality
+      if (_feeder.isNotEmpty && _selectedFeeder == null) {
+        _selectedFeeder = _feeder.first.optionCode; // Set default selection
+      }
+      print("Successfully loaded ${_feeder.length} feeders");
+
+    } catch (e, stackTrace) {
+      print("Error fetching feeders: $e\n$stackTrace");
+      showErrorDialog(context, "Failed to load feeders: ${e.toString()}");
+      rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  //SUBMIT API CALLS
+
+  List<FeederDisModel> _FDEntityList = [];
+  List<FeederDisModel> get FDEntityList => _FDEntityList;
+
+  Future<void> getStructFeederDis() async {
+    if (_isLoading) return; // Prevent duplicate calls
+
+    _isLoading = true;
+    _feeder.clear();
+    notifyListeners();
+
+    final Map<String, dynamic> requestFData; // Declare as final
+
+    try {
+      if (_selectedFilter == "Feeder wise") {
+        requestFData = {
+          "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ?? "",
+          "api": Apis.API_KEY,
+          "ss": _selectedStation ?? "",
+          "fc": _selectedFeeder ?? "",
+          "status": "",
+          "ignoreSection": "true"
+        };
+      } else if (_selectedFilter == "Distribution wise") {
+        requestFData = {
+          "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ?? "",
+          "api": Apis.API_KEY,
+          "dc": _selectedDistribution ?? "",
+          "fc": "",
+          "status": "",
+          "ignoreSection": "true"
+        };
+      } else {
+        throw Exception("Invalid filter selected: $_selectedFilter");
+      }
+
+      final payload = {
+        "path": "/getStructuresOfFeederOrDistribution",
+        "apiVersion": "1.0",
+        "method": "POST",
+        "data": jsonEncode(requestFData),
+      };
+
+      final response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+          .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+
+      if (response == null) {
+        throw Exception("No response received from server");
+      }
+
+      // Process response data
+      dynamic responseData = response.data;
+      if (responseData is String) {
+        responseData = jsonDecode(responseData);
+      }
+
+      print("API Response: $responseData"); // Debug log
+
+      // Validate response
+      if (response.statusCode != successResponseCode) {
+        throw Exception(responseData['message'] ??
+            "Request failed with status ${response.statusCode}");
+      }
+
+      if (responseData['tokenValid'] != true) {
+        showSessionExpiredDialog(context);
+        return;
+      }
+
+      if (responseData['success'] != true) {
+        throw Exception(responseData['message'] ?? "Operation failed");
+      }
+
+      // Process feeder/distribution data
+      final jsonList = responseData['objectJson'];
+      List<FeederDisModel> dataList = [];
+
+      if (jsonList == null) {
+        print("No feeder/distribution data received in objectJson");
+        _FDEntityList.clear(); // Clear list if no data
+      } else if (jsonList is String) {
+        String cleanedJson = jsonList.replaceAll(r'\"', '"').trim();
+        if (cleanedJson.endsWith(',')) {
+          cleanedJson = cleanedJson.substring(0, cleanedJson.length - 1);
+        }
+        if (!cleanedJson.startsWith('[')) {
+          cleanedJson = '[$cleanedJson]';
+        }
+        dataList = (jsonDecode(cleanedJson) as List<dynamic>)
+            .map((json) => FeederDisModel.fromJson(json as Map<String, dynamic>))
+            .toList();
+        _FDEntityList.addAll(dataList);
+      } else if (jsonList is List) {
+        dataList = (jsonList as List<dynamic>)
+            .map((json) => FeederDisModel.fromJson(json as Map<String, dynamic>))
+            .toList();
+        _FDEntityList.addAll(dataList);
+      }
+
+      print("Successfully loaded ${_FDEntityList.length} feeder/distribution entities");
+
+    } catch (e, stackTrace) {
+      print("Error fetching feeder/distribution data: $e\n$stackTrace");
+      showErrorDialog(context, "Failed to load data: ${e.toString()}");
+      rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
   void setSelectedFilter(String title) {
     _selectedFilter = title;
     print("$_selectedFilter: filter selected");
+    if(_selectedFilter=="Distribution wise"){
+      getDistributions();
+    }
     notifyListeners();
   }
 
@@ -106,6 +509,10 @@ class MapDtrViewMobel extends ChangeNotifier {
 
       if (!validateForm()) {
         return;
+      }else if(_selectedFilter=="Distribution wise"||_selectedFilter=="Feeder wise"){
+        getStructFeederDis();
+      }else{
+        null;
       }
     }
   }
@@ -120,7 +527,13 @@ class MapDtrViewMobel extends ChangeNotifier {
             context, "Please Enter Your Equipment No/Structure Code",
             isTrue);
         return false;
-      } else if (_selectedFilter=="Distribution wise" && selectedDistribution==null) {
+      } else if (_selectedFilter=="Equipment/Structure search" && equipNoORStructCode.text.length<9 ) {
+        AlertUtils.showSnackBar(
+            context, "Please Enter Your Equipment No/Structure Code",
+            isTrue);
+        return false;
+      }
+      else if (_selectedFilter=="Distribution wise" && selectedDistribution==null) {
         AlertUtils.showSnackBar(
             context, "Please select Distribution",
             isTrue);
@@ -143,97 +556,4 @@ class MapDtrViewMobel extends ChangeNotifier {
       }
       return true;
     }
-
-  // Future<void> getSubStation() async {
-  //   _isLoading = true;
-  //   notifyListeners();
-  //
-  //   final requestData = {
-  //     "authToken": SharedPreferenceHelper.getStringValue(
-  //         LoginSdkPrefs.tokenPrefKey),
-  //     "api": Apis.API_KEY,
-  //     "circleCode":"",
-  //   };
-  //
-  //   final payload = {
-  //     "path": "/load/load33kvssOfCircle",
-  //     "apiVersion": "1.0",
-  //     "method": "POST",
-  //     "data": jsonEncode(requestData), //"data": "{\"authToken\":\"{{TOKEN}}\",\"api\":\"{{API_KEY}}\", \"empId\":\"70000000\"}"
-  //   };
-  //
-  //
-  //   try {
-  //     var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(
-  //         context, Apis.NPDCL_EMP_URL, payload);
-  //
-  //     _isLoading = false;
-  //     notifyListeners();
-  //
-  //     print("Meter response: $response");
-  //     if (response != null) {
-  //       var responseData = response.data;
-  //       // Ensure response.data is properly parsed
-  //       if (responseData is String) {
-  //         try {
-  //           responseData = jsonDecode(responseData);
-  //         } catch (e) {
-  //           print("Error decoding response data: $e");
-  //           showErrorDialog(
-  //               context, "Invalid response format. Please try again.");
-  //           return;
-  //         }
-  //       }
-  //
-  //       // Check status code
-  //       if (response.statusCode == successResponseCode) {
-  //         if (responseData['tokenValid'] == isTrue) {
-  //           if (responseData['success'] == isTrue) {
-  //              if (responseData['objectJson'] != null) {
-  //       try {
-  //         final jsonList = responseData['objectJson'];
-  //         List<MisMatchedModel> dataList = [];
-  //
-  //         if (jsonList is String) {
-  //           // Clean the string JSON format by replacing escaped quotes
-  //           String cleanedJsonString = jsonList.replaceAll(r'\"', '"').trim();
-  //
-  //           // Ensure it ends with a correct JSON format (either array or object)
-  //           if (cleanedJsonString.endsWith(',')) {
-  //             cleanedJsonString = cleanedJsonString.substring(0, cleanedJsonString.length - 1);
-  //           }
-  //
-  //           if (!cleanedJsonString.startsWith('[')) {
-  //             cleanedJsonString = '[$cleanedJsonString]';
-  //           }
-  //
-  //                   // Parse the cleaned JSON string
-  //                   final parsedList = jsonDecode(cleanedJsonString) as List;
-  //                   dataList = parsedList.map((json) => MeterStockEntity.fromJson(json)).toList();
-  //                 } else if (jsonList is List) {
-  //                   dataList = jsonList.map((json) => MeterStockEntity.fromJson(json)).toList();
-  //                 }
-  //
-  //                 _meterStockEntityList.addAll(dataList);
-  //                 print("Meters data: ${_meterStockEntityList.length} items loaded");
-  //                 notifyListeners();
-  //               } catch (e, stackTrace) {
-  //                 print("Error parsing objectJson: $e");
-  //                 print("Stack trace: $stackTrace");
-  //                 showErrorDialog(context, "Failed to parse meter data. Please contact support.");
-  //               }
-  //             }            }
-  //         } else {
-  //           showAlertDialog(context, responseData['message']);
-  //         }
-  //       } else {
-  //         showSessionExpiredDialog(context);
-  //       }
-  //     }
-  //   } catch (e) {
-  //     print("Exception caught: $e");
-  //     showErrorDialog(context, "An error occurred. Please try again.");
-  //   }
-  // }
-
 }

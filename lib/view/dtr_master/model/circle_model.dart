@@ -20,97 +20,42 @@ class Circle {
   }
 }
 
-MeterStockEntity meterStockEntityFromJson(String str) =>
-    MeterStockEntity.fromJson(json.decode(str));
+class SubstationModel {
+  final String optionCode;
+  final String optionName;
 
-String meterStockEntityToJson(MeterStockEntity data) =>
-    json.encode(data.toJson());
-
-class MeterStockEntity {
-  MeterStockEntity({
-    this.meterCapacity,
-    this.meterType,
-    this.meterTrackId,
-    this.make,
-    this.meterNo,
-    this.opDate,
-    this.newMeterId,
-
+  SubstationModel({
+    required this.optionCode,
+    required this.optionName,
   });
 
-  MeterStockEntity.fromJson(dynamic json) {
-    try {
-      meterCapacity = json['meterCapacity']?.toString();
-      meterType = json['meterType']?.toString();
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+          other is SubstationModel &&
+              runtimeType == other.runtimeType &&
+              optionCode == other.optionCode;
 
-      // Handle meterTrackId which might come as String or num
-      if (json['meterTrackId'] != null) {
-        meterTrackId = json['meterTrackId'] is String
-            ? num.tryParse(json['meterTrackId'])
-            : json['meterTrackId'] as num?;
-      }
+  @override
+  int get hashCode => optionCode.hashCode;
 
-      make = json['make']?.toString();
-
-      // Handle meterNo which might come as String or num
-      if (json['meterNo'] != null) {
-        meterNo = json['meterNo'] is String
-            ? num.tryParse(json['meterNo'])
-            : json['meterNo'] as num?;
-      }
-
-      opDate = json['opDate']?.toString();
-      newMeterId = json['newMeterId']?.toString();
-    } catch (e) {
-      print("Error parsing MeterStockEntity: $e");
-      throw FormatException("Invalid meter data format");
-    }
+  factory SubstationModel.fromJson(Map<String, dynamic> json) {
+    return SubstationModel(
+      optionCode: json['optionCode'] as String? ?? '',
+      optionName: json['optionName'] as String? ?? '',
+    );
   }
 
-  String? meterCapacity;
-  String? meterType;
-  num? meterTrackId;
-  String? make;
-  num? meterNo;
-  String? opDate;
-  String? newMeterId;
-  String? poleHeight;
-
-
-  MeterStockEntity copyWith({
-
-    String? meterCapacity,
-    String? meterType,
-    num? meterTrackId,
-    String? make,
-    num? meterNo,
-    String? opDate,
-    String? newMeterId,
-
-  }) =>
-      MeterStockEntity(
-
-        meterCapacity: meterCapacity ?? this.meterCapacity,
-        meterType: meterType ?? this.meterType,
-        meterTrackId: meterTrackId ?? this.meterTrackId,
-        make: make ?? this.make,
-        meterNo: meterNo ?? this.meterNo,
-        opDate: opDate ?? this.opDate,
-        newMeterId: newMeterId ?? this.newMeterId,
-
-      );
-
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['meterCapacity'] = meterCapacity;
-    map['meterType'] = meterType;
-    map['meterTrackId'] = meterTrackId;
-    map['make'] = make;
-    map['meterNo'] = meterNo;
-    map['opDate'] = opDate;
-    map['newMeterId'] = newMeterId;
-
-    return map;
-  }
+  Map<String, dynamic> toJson() => {
+    'optionCode': optionCode,
+    'optionName': optionName,
+  };
 }
+
+// Helper functions (only if needed)
+SubstationModel substationModelFromJson(String str) =>
+    SubstationModel.fromJson(json.decode(str));
+
+String substationModelToJson(SubstationModel data) =>
+    json.encode(data.toJson());
 

@@ -320,7 +320,7 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const View11kvBreakdownScreen());
       case DetailedView33kvBreakdownScreen.id:
         return MaterialPageRoute(builder: (_) => DetailedView33kvBreakdownScreen(data: settings.arguments as Map<String, dynamic>,));
-       case DetailedView11kvBreakdownScreen.id:
+      case DetailedView11kvBreakdownScreen.id:
         return MaterialPageRoute(builder: (_) => DetailedView11kvBreakdownScreen(data: settings.arguments as Map<String, dynamic>,));
       case View33kvOpenRestoreDetails.id:
         return MaterialPageRoute(builder: (_) => View33kvOpenRestoreDetails(data: settings.arguments as Map<String, dynamic>,));

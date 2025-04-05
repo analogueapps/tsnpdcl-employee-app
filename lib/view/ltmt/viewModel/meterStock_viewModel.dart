@@ -202,7 +202,6 @@ class MeterStockViewmodel extends ChangeNotifier {
                         // .replaceAll(r'\u0026', '&')  // Handle Unicode characters
                         .trim();
 
-                    // Remove trailing comma if present
                     if (cleanedJsonString.endsWith(',')) {
                       cleanedJsonString = cleanedJsonString.substring(0, cleanedJsonString.length - 1);
                     }
@@ -550,6 +549,41 @@ class MeterStockViewmodel extends ChangeNotifier {
               setSelectedStaff(null);
               notifyListeners();
               await getLoaderLoadMetersStock();
+              // showDialog<void>(
+              //     context: context,
+              //     builder: (BuildContext context) {
+              //       return AlertDialog(
+              //         title: const Text('Success'),
+              //         content: Text(
+              //           responseData['message'] ??
+              //               "Meters allotted successfully",
+              //         ),
+              //         actions: <Widget>[
+              //           TextButton(
+              //             style: TextButton.styleFrom(textStyle: Theme
+              //                 .of(context)
+              //                 .textTheme
+              //                 .labelLarge),
+              //             child: const Text('EXIT'),
+              //             onPressed: () {
+              //               Navigator.of(context).pop();
+              //             },
+              //           ),
+              //           TextButton(
+              //             style: TextButton.styleFrom(textStyle: Theme
+              //                 .of(context)
+              //                 .textTheme
+              //                 .labelLarge),
+              //             child: const Text('CONTINUE'),
+              //             onPressed: () {
+              //               Navigator.of(context).pop();
+              //               Navigator.of(context).pop();
+              //             },
+              //           ),
+              //         ],
+              //       );
+              //     }
+              // );
               AlertUtils.showSnackBar(context, responseData['message'] ?? "Meters allotted successfully", false);
             } else {
               AlertUtils.showSnackBar(context, responseData['message'] ?? "Allotment failed", true);

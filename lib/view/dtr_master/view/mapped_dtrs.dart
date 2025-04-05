@@ -36,7 +36,9 @@ class MappedDtr extends StatelessWidget{
         create: (_) => MapDtrViewMobel(context:context),
         child: Consumer<MapDtrViewMobel>(
             builder: (context, viewModel, child) {
-              return SingleChildScrollView(
+              return Stack(
+                children: [
+               SingleChildScrollView(
                   child:Padding(padding: const EdgeInsets.only(left:10, right: 10),
                   child:Form(
                   key: viewModel.formKey,
@@ -58,23 +60,23 @@ class MappedDtr extends StatelessWidget{
                       const Divider(),
                     ],
                   ),
-              Visibility(
-              visible: viewModel.selectedFilter == "Equipment/Structure search",
-              child:Padding(
-                padding: const EdgeInsets.only(right: 10, left: 10, top: 10),
-                child:FillTextFormField(
-                controller: viewModel.equipNoORStructCode,
-                labelText: 'Enter Equipment No/Structure Code',
-                keyboardType: TextInputType.number,
-                // validator: (value) {
-                //   if (value == null || value.isEmpty) {
-                //     return "Please enter equipment number";
-                //   }
-                //   return null;
-                // },
-              ),
-              ),
-              ),
+                  Visibility(
+                  visible: viewModel.selectedFilter == "Equipment/Structure search",
+                  child:Padding(
+                    padding: const EdgeInsets.only(right: 10, left: 10, top: 10),
+                    child:FillTextFormField(
+                    controller: viewModel.equipNoORStructCode,
+                    labelText: 'Enter Equipment No/Structure Code',
+                    keyboardType: TextInputType.number,
+                    // validator: (value) {
+                    //   if (value == null || value.isEmpty) {
+                    //     return "Please enter equipment number";
+                    //   }
+                    //   return null;
+                    // },
+                  ),
+                  ),
+                  ),
                       Visibility(
                         visible: viewModel.selectedFilter == "Distribution wise",
                         child:Padding(
@@ -87,10 +89,10 @@ class MappedDtr extends StatelessWidget{
                             isExpanded: true,
                             hint: const Text("Select "),
                             value: viewModel.selectedDistribution,
-                            items: viewModel.distributions.map((item) {
+                            items: viewModel.distributions.map((SubstationModel item) {
                               return DropdownMenuItem<String>(
-                                value: item,
-                                child: Text(item),
+                                value: item.optionCode,
+                                child: Text(item.optionName),
                               );
                             }).toList(),
                             onChanged: (value) => viewModel.onListDistriSelected(value),
@@ -115,7 +117,6 @@ class MappedDtr extends StatelessWidget{
                             isExpanded: true,
                             hint: const Text("Select"),
                             value: viewModel.selectedCircle,
-                            // Properly type the items parameter
                             items: viewModel.circle.map<DropdownMenuItem<String>>((Circle item) {
                               return DropdownMenuItem<String>(
                                 value: item.circleId,
@@ -125,32 +126,36 @@ class MappedDtr extends StatelessWidget{
                             onChanged: (String? value) => viewModel.onListCircleSelected(value),
                           ),
                                 const SizedBox(height: 5,),
-                                const Text("Sub Station", style: TextStyle(fontSize:15),),
-                                DropdownButton<String>(
-                                  isExpanded: true,
-                                  hint: const Text("Select "),
-                                  value: viewModel.selectedStation,
-                                  items: viewModel.station.map((item) {
-                                    return DropdownMenuItem<String>(
-                                      value: item,
-                                      child: Text(item),
-                                    );
-                                  }).toList(),
-                                  onChanged: (value) => viewModel.onListStationSelected(value),
-                                ),
+                                const Text("Sub Station", style: TextStyle(fontSize: 15)),
+                          DropdownButton<String>(
+                            isExpanded: true,
+                            hint: const Text("Select"),
+                            value: viewModel.selectedStation,
+                            items: viewModel.stations.map((SubstationModel item) {
+                              return DropdownMenuItem<String>(
+                                value: item.optionCode,
+                                child: Text(item.optionName),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              if (value != null) {
+                                viewModel.onStationSelected(value);
+                              }
+                            },
+                          ),
                                 const SizedBox(height: 5,),
                                 const Text("Choose Feeder", style: TextStyle(fontSize:15),),
                                 DropdownButton<String>(
                                   isExpanded: true,
-                                  hint: const Text("Select "),
+                                  hint: const Text("Select"),
                                   value: viewModel.selectedFeeder,
-                                  items: viewModel.feeder.map((item) {
+                                  items: viewModel.feeder.map((SubstationModel item) {
                                     return DropdownMenuItem<String>(
-                                      value: item,
-                                      child: Text(item),
+                                      value: item.optionCode, // Using optionCode as the value
+                                      child: Text(item.optionName), // Showing optionName in the dropdown
                                     );
                                   }).toList(),
-                                  onChanged: (value) => viewModel.onListFeederSelected(value),
+                                  onChanged: (value) => viewModel.onStationSelected(value),
                                 ),
                               ]
                           ),
@@ -172,6 +177,17 @@ class MappedDtr extends StatelessWidget{
                   ),
                   ),
                   ),
+              ),
+                  if (viewModel.isLoading)
+                    Positioned.fill(
+                      child:  Container(
+                          color: Colors.black.withOpacity(0.3),
+                          child: const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        ),
+                    ),
+              ]
               );
             }
         ),
