@@ -1,10 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
+import 'package:tsnpdcl_employee/utils/navigation_service.dart';
+import 'package:tsnpdcl_employee/view/dtr_master/model/circle_model.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/viewmodel/createOnline_dtr_viewmodel.dart';
 import 'package:tsnpdcl_employee/widget/fill_text_form_field.dart';
 import 'package:tsnpdcl_employee/widget/primary_button.dart';
@@ -15,7 +20,11 @@ class CreateDtrOnline extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return  ChangeNotifierProvider(
+      create: (_) => OnlineDtrViewmodel(context:context),
+      child: Consumer<OnlineDtrViewmodel>(
+          builder: (context, viewModel, child) {
+            return Scaffold(
       appBar: AppBar(
         backgroundColor: CommonColors.colorPrimary,
         title: Text(
@@ -33,16 +42,24 @@ class CreateDtrOnline extends StatelessWidget {
         iconTheme: const IconThemeData(
           color: Colors.white,
         ),
-        actions: const [
-          TextButton(onPressed: null,
-              child: Text("UPDATE DTR MAKES", style: TextStyle(color: Colors.white),))
+        actions: [
+          TextButton(
+              onPressed: (){
+                viewModel.getMake();
+                if(viewModel.make.isNotEmpty){
+                  showSuccessDialog(context, "Make Updated successfully",
+                        () {
+            Navigation.instance.pushBack();
+          },
+                  );
+          }
+          },
+              child: const Text("UPDATE DTR MAKES", style: TextStyle(color: Colors.white),))
         ],
       ),
-      body: ChangeNotifierProvider(
-        create: (_) => OnlineDtrViewmodel(context:context),
-        child: Consumer<OnlineDtrViewmodel>(
-            builder: (context, viewModel, child) {
-              return SingleChildScrollView(
+      body: Stack(
+                  children: [
+                    SingleChildScrollView(
                 child:Padding(
                   padding: const EdgeInsets.all(5),
                   child:Form(
@@ -76,16 +93,105 @@ class CreateDtrOnline extends StatelessWidget {
                                           ),
                                           ),
                                         ),
-                                        dropDown(context, "Select Distribution","Select ", viewModel.selectedDistribution,viewModel.distributions,viewModel.onListDistriSelected ),
-                                        dropDown(context, "SS No.","Select ",  viewModel.selectedSSNo,viewModel.ssno,viewModel.onListSSNoSelected ),
-
-                                         Text("Please select feeding details to DTR structure", textAlign: TextAlign.center, style: TextStyle(color:Colors.grey[700]),),
-
-                                        dropDown(context, "Select Circle","Select Circle",  viewModel.selectedCircle,viewModel.circle,viewModel.onListCircleSelected ),
-                                        dropDown(context, "Sub Station","Select",  viewModel.selectedStation,viewModel.station,viewModel.onListStationSelected ),
-                                        dropDown(context, "Choose Feeder","Select",  viewModel.selectedFeeder,viewModel.feeder,viewModel.onListFeederSelected ),
-                                        dropDown(context, "Structure Capacity","Select",  viewModel.selectedCapacity,viewModel.capacity,viewModel.onListCapacitySelected ),
-
+                                        const SizedBox(height: 5),
+                                         Text("Select Distribution", style: TextStyle(fontSize: 15,color:Colors.purple[300]),),
+                                        DropdownButton<String>(
+                                          isExpanded: true,
+                                          hint: const Text("Select"),
+                                          value: viewModel.selectedDistribution,
+                                          items: viewModel.distributions.map((SubstationModel item) {
+                                            return DropdownMenuItem<String>(
+                                              value: item.optionCode,
+                                              child: Text(item.optionName),
+                                            );
+                                          }).toList(),
+                                          onChanged: (String? value) {
+                                            if (value != null) {
+                                              final selectedItem = viewModel.distributions.firstWhere(
+                                                    (item) => item.optionCode == value,
+                                              );
+                                              viewModel.onListDistriSelected(value, selectedItem.optionName);
+                                            }
+                                          },
+                                        ),
+                                        const SizedBox(height: 5),
+                                         Text("SS No.", style: TextStyle(fontSize: 15,color:Colors.purple[300])),
+                                        DropdownButton<String>(
+                                          isExpanded: true,
+                                          hint: const Text("Select"),
+                                          value: viewModel.selectedSSNo,
+                                          items: viewModel.ssno.map<DropdownMenuItem<String>>((item) {
+                                            return DropdownMenuItem<String>(
+                                              value: item, // Assuming ssno is a List<String>
+                                              child: Text(item),
+                                            );
+                                          }).toList(),
+                                          onChanged: (String? value) => viewModel.onListSSNoSelected(value),
+                                        ),
+                                        const SizedBox(height: 5),
+                                        Text(
+                                          "Please select feeding details to DTR structure",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(color: Colors.grey[700]),
+                                        ),
+                                        const SizedBox(height: 5),
+                                         Text("Select Circle", style: TextStyle(fontSize: 15, color:Colors.purple[300])),
+                                        DropdownButton<String>(
+                                          isExpanded: true,
+                                          hint: const Text("Select"),
+                                          value: viewModel.selectedCircle,
+                                          items: viewModel.circle.map<DropdownMenuItem<String>>((Circle item) {
+                                            return DropdownMenuItem<String>(
+                                              value: item.circleId,
+                                              child: Text(item.circleName),
+                                            );
+                                          }).toList(),
+                                          onChanged: (String? value) => viewModel.onListCircleSelected(value),
+                                        ),
+                                        const SizedBox(height: 5),
+                                         Text("Sub Station", style: TextStyle(fontSize: 15, color:Colors.purple[300])),
+                                        DropdownButton<String>(
+                                          isExpanded: true,
+                                          hint: const Text("Select"),
+                                          value: viewModel.selectedStation,
+                                          items: viewModel.stations.map<DropdownMenuItem<String>>((SubstationModel item) {
+                                            return DropdownMenuItem<String>(
+                                              value: item.optionCode,
+                                              child: Text(item.optionName),
+                                            );
+                                          }).toList(),
+                                          onChanged: (String? value) => viewModel.onStationSelected(value),
+                                        ),
+                                        const SizedBox(height: 5),
+                                         Text("Choose Feeder", style: TextStyle(fontSize: 15, color:Colors.purple[300])),
+                                        DropdownButton<String>(
+                                          isExpanded: true,
+                                          hint: const Text("Select"),
+                                          value: viewModel.selectedFeeder,
+                                          items: viewModel.feeder.map<DropdownMenuItem<String>>((SubstationModel item) {
+                                            return DropdownMenuItem<String>(
+                                              value: item.optionCode,
+                                              child: Text(item.optionName),
+                                            );
+                                          }).toList(),
+                                          onChanged: (String? value) => viewModel.onListFeederSelected(value),
+                                        ),
+                                        const SizedBox(height: 5),
+                                         Text("Structure Capacity", style: TextStyle(fontSize: 15, color:Colors.purple[300])),
+                                        DropdownButton<int>(
+                                          isExpanded: true,
+                                          hint: const Text("Select"),
+                                          value: viewModel.selectedCapacityIndex,
+                                          items: viewModel.capacity.asMap().entries.map<DropdownMenuItem<int>>((entry) {
+                                            final index = entry.key;
+                                            final item = entry.value;
+                                            return DropdownMenuItem<int>(
+                                              value: index,
+                                              child: Text(item.optionName),
+                                            );
+                                          }).toList(),
+                                          onChanged: viewModel.onListCapacitySelected,
+                                        ),
                                         const SizedBox(height: 20,),
                                          Text("SAP DTR Structure Code(*)", style: TextStyle(fontSize:15,color:Colors.purple[300]),),
                                         FillTextFormField(
@@ -119,12 +225,13 @@ class CreateDtrOnline extends StatelessWidget {
                                           ),
                                         ),
                                         const SizedBox(height: 10,),
-                                        // Capacity is selected  displayed Card
-                                        Visibility(
-                                          visible: viewModel.selectedCapacity != null &&
-                                              viewModel.selectedCapacity!.isNotEmpty &&
-                                              viewModel.selectedCapacity != "Select",
-                                          child: Card(
+                                        Column(
+                                            children: [
+                                              if (viewModel.selectedCapacity != null && viewModel.selectedCapacity != "0")
+                                                for (int i = 0; i < int.parse(viewModel.selectedCapacity!); i++)
+                                                  Visibility(
+                                                    visible: viewModel.selectedCapacity != null && viewModel.selectedCapacity != "0",
+                                                    child: Card(
                                             elevation: 3,
                                             color: Colors.white,
                                             shape: RoundedRectangleBorder(
@@ -139,12 +246,25 @@ class CreateDtrOnline extends StatelessWidget {
                                                   children: [
                                                     Row(
                                                       children: [
-                                                        Expanded( // Ensure the dropdown has finite width
-                                                          child: dtrDrops(
+                                                        SizedBox(
+                                                          width: 150, // Fixed width for all labels
+                                                          child: Text(
                                                             "Make",
-                                                            viewModel.selectedMake,
-                                                            viewModel.make,
-                                                            viewModel.onListMake,
+                                                            style: TextStyle(color: Colors.purple[300]),
+                                                          ),
+                                                        ),
+                                                        Expanded( // Ensure the dropdown has finite width
+                                                          child: DropdownButton<String>(
+                                                            isExpanded: true,
+                                                            hint: const Text("Select Make"),
+                                                            value: viewModel.selectedMake,
+                                                            items: viewModel.make.map<DropdownMenuItem<String>>((SubstationModel item) {
+                                                              return DropdownMenuItem<String>(
+                                                                value: item.optionCode,
+                                                                child: Text(item.optionName, overflow: TextOverflow.ellipsis,),
+                                                              );
+                                                            }).toList(),
+                                                            onChanged: viewModel.onListMake,
                                                           ),
                                                         ),
                                                         const IconButton(
@@ -214,10 +334,10 @@ class CreateDtrOnline extends StatelessWidget {
                                                     ),
 
                                                     const Text("If Serial No. is not available Please click here", style: TextStyle(color: Colors.red,fontSize: 12),),
-                                                    const Align(
+                                                    Align(
                                                       alignment: Alignment.bottomRight,
                                                       child:
-                                                    Text("Request Serial No", style: TextStyle(color: Colors.blueAccent), textAlign: TextAlign.right,),
+                                                    TextButton(onPressed: viewModel.requestSerialNo,child:const Text("Request Serial No", style: TextStyle(color: Colors.blueAccent), textAlign: TextAlign.right,),),
                                                     ),
                                                     const SizedBox(height: 20,),
                                                     const Text("👉🏻 Please Paint the Serial No on the DTR and capture the photo of DTR", style: TextStyle(
@@ -278,13 +398,12 @@ class CreateDtrOnline extends StatelessWidget {
                                                     ),
                                                     ),
                                                     const SizedBox(height: 10,),
-                                                    _buildPlaceholder(),
+                                                    _buildPlaceholder(viewModel.capturedImage),
                                                     const SizedBox(height: 10,),
                                                     SizedBox(
                                                       width: double.infinity,
                                                       child: ElevatedButton(
                                                           style: ElevatedButton.styleFrom(
-                                                            //backgroundColor: CommonColors.colorPrimary,
                                                             backgroundColor:Colors.deepOrangeAccent,
                                                             shape: RoundedRectangleBorder(
                                                               borderRadius: BorderRadius.circular(5),
@@ -293,7 +412,7 @@ class CreateDtrOnline extends StatelessWidget {
                                                           ),
                                                           child: const Text("CAPTURE DTR PHOTO", style: TextStyle(color: Colors.white),),
                                                           onPressed: () {
-
+                                                            viewModel.capturePhoto();
                                                           }
                                                       ),
                                                     )
@@ -303,6 +422,8 @@ class CreateDtrOnline extends StatelessWidget {
                                             ),
                                           ),
                                         ),
+                                        ]
+                                       ),
                                       ]
                                   ),
                                 ),
@@ -345,10 +466,21 @@ class CreateDtrOnline extends StatelessWidget {
                     ),
                   ),
                 ),
+              ),
+              if (viewModel.isLoading)
+              Positioned.fill(
+              child:  Container(
+              color: Colors.black.withOpacity(0.3),
+              child: const Center(
+              child: CircularProgressIndicator(),
+              ),
+              ),
+              ),
+              ]
+      ),
               );
             }
         ),
-      ),
     );
   }
   Widget checkbox(BuildContext context, String title) {
@@ -433,7 +565,7 @@ class CreateDtrOnline extends StatelessWidget {
       ),
     );
   }
-  Widget _buildPlaceholder() {
+  Widget _buildPlaceholder(File? image) {
     return Container(
       height: 180,
       width: double.infinity,
@@ -441,11 +573,18 @@ class CreateDtrOnline extends StatelessWidget {
         color: Colors.grey[200],
         borderRadius: BorderRadius.circular(8),
       ),
-      child: const Center(
-        child: Icon(
+      child: Center(
+        child: image == null
+            ? const Icon(
           Icons.photo_library,
           size: 50,
           color: Colors.grey,
+        )
+            : Image.file(
+          image!,
+          fit: BoxFit.cover, // Adjust fit as needed
+          height: 180,
+          width: double.infinity,
         ),
       ),
     );
