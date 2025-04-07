@@ -78,6 +78,7 @@ import 'package:tsnpdcl_employee/view/ss_maintenance/view/ss_maintenance_screen.
 import 'package:tsnpdcl_employee/view/tong_tester_readings/view/tong_tester_readings_screen.dart';
 import 'package:tsnpdcl_employee/view/tong_tester_readings/view/view_detailed_tong_tester_readings.dart';
 import 'package:tsnpdcl_employee/view/web_view/view/web_view_screen.dart';
+import 'package:tsnpdcl_employee/widget/month_year_selector.dart';
 import 'package:tsnpdcl_employee/widget/pinch_zoom_imageview.dart';
 import '../view/dtr_master/view/view_mapped/mapped_dtr.dart';
 import '../view/ltmt/view/ltmt_menu.dart';
@@ -329,6 +330,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => View33kvOpenRestoreDetails(data: settings.arguments as Map<String, dynamic>,));
       case View11kvOpenRestoreDetails.id:
         return MaterialPageRoute(builder: (_) => View11kvOpenRestoreDetails(data: settings.arguments as Map<String, dynamic>,));
+      case MonthYearSelector.id:
+        return MaterialPageRoute(builder: (_) => const MonthYearSelector()); //data: settings.arguments as Map<String, dynamic>,
 
     ///LTMT * Bhavana
       case LtmtMenu.id:

@@ -79,6 +79,7 @@ class AuthViewmodel extends ChangeNotifier {
       if (context.mounted) {
         ProcessDialogHelper.closeDialog(context);
       }
+      print('shitt1: $response');
 
       try {
         if (response != null) {
@@ -95,6 +96,10 @@ class AuthViewmodel extends ChangeNotifier {
                 await SharedPreferenceHelper.setStringValue(LoginSdkPrefs.userIdPrefKey, empIdController.text.trim());
                 await SharedPreferenceHelper.setStringValue(LoginSdkPrefs.npdclUserPrefKey, jsonEncode(user));
                 await SharedPreferenceHelper.setLoginStatus(isTrue);
+                /// * swetha
+                await SharedPreferenceHelper.setStringValue(LoginSdkPrefs.sectionCodePrefKey, user[0].sectionCode ?? '',);
+                await SharedPreferenceHelper.setStringValue(LoginSdkPrefs.circleIdPrefKey, user[0].secMasterEntity!.circleId ?? '',);
+
 
                 Navigation.instance.pushAndRemoveUntil(Routes.universalDashboardScreen);
               }
@@ -158,7 +163,6 @@ class AuthViewmodel extends ChangeNotifier {
       if (context.mounted) {
         ProcessDialogHelper.closeDialog(context);
       }
-
       try {
         if (response != null) {
           if (response.data is String) {

@@ -6,6 +6,8 @@ import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
 import 'package:tsnpdcl_employee/view/interruptions/viewmodel/view_saidi_saifi_viewmodel.dart';
 
+import '../../../widget/month_year_selector.dart';
+
 class ViewSaidiSaifiScreen extends StatelessWidget {
   static const id = Routes.viewSaidiSaifiScreen;
   const ViewSaidiSaifiScreen({super.key});
@@ -20,7 +22,7 @@ class ViewSaidiSaifiScreen extends StatelessWidget {
             appBar: AppBar(
               backgroundColor: CommonColors.colorPrimary,
               title: Text(
-                GlobalConstants.saidiSaifiCalculator.toUpperCase(),
+                GlobalConstants.saidiSaifiReport.toUpperCase(),
                 style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,
@@ -40,14 +42,39 @@ class ViewSaidiSaifiScreen extends StatelessWidget {
                     height: 50,
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        final result = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const MonthYearSelector(),
+                          ),
+                        );
+
+                        if (result != null && result is Map) {
+                          viewmodel.setSelectedMonthYear(
+                            result['month'] as String,
+                            result['year'] as int,
+                            context,
+                          );
+                        }
+                      },
                       style: ButtonStyle(
-                        backgroundColor: WidgetStateProperty.all(CommonColors.textFieldColor),
+                        backgroundColor: WidgetStateProperty.all(
+                            CommonColors.textFieldColor),
                         shape: WidgetStateProperty.all(
-                          const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                          const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.zero),
                         ),
                       ),
-                      child: const Text('TAP HERE', style: TextStyle(color: Colors.black)),
+                      child: viewmodel.selectedMonthYear != null
+                          ? Text(
+                        '${viewmodel.selectedMonthYear!['month']} ${viewmodel.selectedMonthYear!['year']}',
+                        style: const TextStyle(color: Colors.black),
+                      )
+                          : const Text(
+                        'TAP HERE',
+                        style: TextStyle(color: Colors.black),
+                      ),
                     ),
                   ),
 

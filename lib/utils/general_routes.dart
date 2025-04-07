@@ -131,5 +131,6 @@ class Routes {
   static const String detailedView11kvBreakdownScreen = "DetailedView11kvBreakdownScreen";
   static const String view33kvOpenRestoreDetails = "View33kvOpenRestoreDetails";
   static const String view11kvOpenRestoreDetails = "View11kvOpenRestoreDetails";
+  static const String monthYearSelector = "MonthYearSelector";
 
 }

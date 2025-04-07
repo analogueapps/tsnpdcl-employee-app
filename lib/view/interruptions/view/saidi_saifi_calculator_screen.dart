@@ -5,6 +5,7 @@ import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
 import 'package:tsnpdcl_employee/view/interruptions/viewmodel/saidi_saifi_calculator_viewmodel.dart';
+import 'package:tsnpdcl_employee/widget/month_year_selector.dart';
 import 'package:tsnpdcl_employee/widget/primary_button.dart';
 
 class SaidiSaifiCalculatorScreen extends StatelessWidget {
@@ -24,120 +25,190 @@ class SaidiSaifiCalculatorScreen extends StatelessWidget {
               title: Text(
                 GlobalConstants.saidiSaifiCalculator.toUpperCase(),
                 style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500),
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
               iconTheme: const IconThemeData(color: Colors.white),
             ),
-            body: SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      "SAIDI SAIFI CALCULATOR",
-                      style: TextStyle(fontSize: extraTitleSize),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Select Month
-                  const Text("Select Month", style: TextStyle(fontSize: titleSize)),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    height: 50,
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      style: ButtonStyle(
-                        backgroundColor: WidgetStateProperty.all(CommonColors.textFieldColor),
-                        shape: WidgetStateProperty.all(
-                          const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+            body: Stack(
+              children: [
+                SingleChildScrollView(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          "SAIDI SAIFI CALCULATOR",
+                          style: TextStyle(fontSize: extraTitleSize),
                         ),
                       ),
-                      child: const Text('TAP HERE', style: TextStyle(color: Colors.black)),
-                    ),
-                  ),
+                      const SizedBox(height: 20),
 
-                  const SizedBox(height: 20),
+                      // Select Month
+                      const Text("Select Month",
+                          style: TextStyle(fontSize: titleSize)),
+                      const SizedBox(height: 10),
+                      SizedBox(
+                        height: 50,
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            final result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const MonthYearSelector(),
+                              ),
+                            );
 
-                  // Select Substation with Dialog Popup
-                  const Text("Select Substation", style: TextStyle(fontSize: titleSize)),
-                  const SizedBox(height: 10),
-
-                  // Substation Selection Button with Down Arrow
-                  GestureDetector(
-                    onTap: () => _showSubstationDialog(context, viewmodel),
-                    child: Container(
-                      height: 50,
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(
-                        color: CommonColors.textFieldColor,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            viewmodel.selectedSubstation ?? "Select Substation",
+                            if (result != null && result is Map) {
+                              viewmodel.setSelectedMonthYear(
+                                result['month'] as String,
+                                result['year'] as int,
+                                context,
+                              );
+                            }
+                          },
+                          style: ButtonStyle(
+                            backgroundColor: WidgetStateProperty.all(
+                                CommonColors.textFieldColor),
+                            shape: WidgetStateProperty.all(
+                              const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.zero),
+                            ),
+                          ),
+                          child: viewmodel.selectedMonthYear != null
+                              ? Text(
+                            '${viewmodel.selectedMonthYear!['month']} ${viewmodel.selectedMonthYear!['year']}',
                             style: const TextStyle(color: Colors.black),
+                          )
+                              : const Text(
+                            'TAP HERE',
+                            style: TextStyle(color: Colors.black),
                           ),
-                          const Icon(
-                            Icons.arrow_drop_down,
-                            color: Colors.black,
-                            size: 24,
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
 
-                  const SizedBox(height: 20),
-                  const Text("ENTER INTERRUPTION DETAILS"),
-                  const SizedBox(height: 8),
+                      const SizedBox(height: 20),
 
-                  Container(
-                    margin: const EdgeInsets.all(2),
-                    padding: const EdgeInsets.only(top: 16, left: 10, right: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 8,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        const Align(
-                          alignment: Alignment.topLeft,
-                          child: Text("CIRCLE OFFICE"),
-                        ),
+                      // Only show these if month/year is selected
+                      if (viewmodel.selectedMonthYear != null) ...[
+                        // Select Substation with Dialog Popup
+                        const Text("Select Substation",
+                            style: TextStyle(fontSize: titleSize)),
                         const SizedBox(height: 10),
-                        _reusableLastRow("INTERRUPTION TYPE", "NO OF INTERRUPTIONS", "DURATION IN MINUTES"),
-                        _reusableLastRow("EL", "form field", "form field"),
-                        _reusableLastRow("OL", "form field", "form field"),
-                        _reusableLastRow("EL & OL", "form field", "form field"),
-                        _reusableLastRow("L.C", "form field", "form field"),
-                        _reusableLastRow("Break Down", "form field", "form field"),
+
+                        // Substation Selection Button with Down Arrow
+                        GestureDetector(
+                          onTap: viewmodel.substations.isNotEmpty
+                              ? () {
+                            print(
+                                "Substations: ${viewmodel.substations}, ListSubStationItem: ${viewmodel.listSubStationItem}");
+                            _showSubstationDialog(context, viewmodel);
+                          }
+                              : null,
+                          child: Container(
+                            height: 50,
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            decoration: BoxDecoration(
+                              color: CommonColors.textFieldColor,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  viewmodel.selectedSubstation ??
+                                      "Select Substation",
+                                  style: const TextStyle(color: Colors.black),
+                                ),
+                                const Icon(
+                                  Icons.arrow_drop_down,
+                                  color: Colors.black,
+                                  size: 24,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+
                         const SizedBox(height: 20),
+                        const Text("ENTER INTERRUPTION DETAILS"),
+                        const SizedBox(height: 8),
+
+                        Container(
+                          margin: const EdgeInsets.all(2),
+                          padding: const EdgeInsets.only(
+                              top: 16, left: 10, right: 10),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 8,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            children: [
+                              const Align(
+                                alignment: Alignment.topLeft,
+                                child: Text("CIRCLE OFFICE"),
+                              ),
+                              const SizedBox(height: 10),
+                              _reusableLastRow("INTERRUPTION TYPE",
+                                  "NO OF INTERRUPTIONS", "DURATION IN MINUTES"),
+                              if (viewmodel.interruptionDetails.isEmpty) ...[
+                                _reusableLastRow(
+                                    "EL", "form field", "form field"),
+                                _reusableLastRow(
+                                    "OL", "form field", "form field"),
+                                _reusableLastRow(
+                                    "EL & OL", "form field", "form field"),
+                                _reusableLastRow(
+                                    "L.C", "form field", "form field"),
+                                _reusableLastRow(
+                                    "Break Down", "form field", "form field"),
+                              ] else ...[
+                                ...viewmodel.interruptionDetails.map((details) {
+                                  return _reusableLastRow(
+                                    details.type,
+                                    details.noOfInterruptions.toString(),
+                                    details.durationInMinutes.toString(),
+                                  );
+                                }).toList(),
+                              ],
+                              const SizedBox(height: 20),
+                            ],
+                          ),
+                        ),
+
+                        const SizedBox(height: 20),
+
+                        // Calculate Button - Fixed to always provide a non-null VoidCallback
+                        PrimaryButton(
+                          text: "CALCULATE",
+                          onPressed: () {
+                            if (viewmodel.selectedSubstation != null) {
+                              // Handle calculation logic here
+                              print("Calculate pressed");
+                            }
+                          },
+                          fullWidth: true,
+                        ),
                       ],
-                    ),
+                    ],
                   ),
-
-                  const SizedBox(height: 20),
-
-                  // Calculate Button
-                  PrimaryButton(text: "CALCULATE", onPressed: () {}, fullWidth: true),
-                ],
-              ),
+                ),
+                if (viewmodel.isLoading)
+                  const Center(child: CircularProgressIndicator()),
+              ],
             ),
           );
         },
@@ -145,8 +216,8 @@ class SaidiSaifiCalculatorScreen extends StatelessWidget {
     );
   }
 
-  void _showSubstationDialog(BuildContext context, SaidiSaifiCalculatorViewmodel viewmodel) {
-    // Move controller and searchQuery outside the builder
+  void _showSubstationDialog(
+      BuildContext context, SaidiSaifiCalculatorViewmodel viewmodel) {
     final TextEditingController searchController = TextEditingController();
     String searchQuery = '';
 
@@ -162,7 +233,7 @@ class SaidiSaifiCalculatorScreen extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Search Field
+                    // Search Field (keep existing)
                     TextField(
                       controller: searchController,
                       decoration: const InputDecoration(
@@ -172,31 +243,40 @@ class SaidiSaifiCalculatorScreen extends StatelessWidget {
                       ),
                       onChanged: (value) {
                         setState(() {
-                          searchQuery = value;
+                          searchQuery = value.toLowerCase();
                         });
                       },
                     ),
                     const SizedBox(height: 10),
-                    // Substation List
+                    // Updated Substation List using listSubStationItem
                     SizedBox(
                       height: 200,
                       child: ListView.builder(
                         shrinkWrap: true,
-                        itemCount: viewmodel.substations
-                            .where((substation) => substation.name
+                        itemCount: viewmodel.listSubStationItem
+                            .where((item) => item.optionName!
                             .toLowerCase()
-                            .contains(searchQuery.toLowerCase()))
+                            .contains(searchQuery))
                             .length,
                         itemBuilder: (context, index) {
-                          final filteredSubstations = viewmodel.substations
-                              .where((substation) => substation.name
+                          final filteredItems = viewmodel.listSubStationItem
+                              .where((item) => item.optionName!
                               .toLowerCase()
-                              .contains(searchQuery.toLowerCase()))
+                              .contains(searchQuery))
                               .toList();
+                          // Extract only the substation name (e.g., "NAKKALAGUTTA" from "0003-33KV SS-NAKKALAGUTTA")
+                          String fullName = filteredItems[index].optionName ?? '';
+                          String displayName = fullName.split('-').length > 2
+                              ? fullName.split('-')[2].trim()
+                              : fullName;
+
                           return ListTile(
-                            title: Text(filteredSubstations[index].name),
+                            title: Text(displayName),
                             onTap: () {
-                              viewmodel.setSelectedSubstation(filteredSubstations[index].name);
+                              viewmodel.setSelectedSubstation(
+                                filteredItems[index].optionName ?? '',
+                                context,
+                              );
                               Navigator.pop(dialogContext);
                             },
                           );
@@ -211,7 +291,6 @@ class SaidiSaifiCalculatorScreen extends StatelessWidget {
         );
       },
     ).then((_) {
-      // Dispose the controller when dialog is closed
       searchController.dispose();
     });
   }
@@ -235,8 +314,6 @@ class SaidiSaifiCalculatorScreen extends StatelessWidget {
               textAlign: TextAlign.start,
             ),
           ),
-
-          // Separator Line (Shown only if there are no form fields)
           if (!isFormField1)
             Container(
               width: 1,
@@ -244,12 +321,12 @@ class SaidiSaifiCalculatorScreen extends StatelessWidget {
               margin: const EdgeInsets.all(10),
               color: const Color(0xffcfcdcd),
             ),
-
           Expanded(
             child: isFormField1
                 ? const TextField(
               decoration: InputDecoration(
-                contentPadding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                contentPadding:
+                EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               ),
             )
                 : Text(
@@ -258,7 +335,6 @@ class SaidiSaifiCalculatorScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 10),
-          // Separator Line (Shown only if there are no form fields)
           if (!isFormField2)
             Container(
               width: 1,
@@ -266,12 +342,12 @@ class SaidiSaifiCalculatorScreen extends StatelessWidget {
               margin: const EdgeInsets.all(10),
               color: const Color(0xffcfcdcd),
             ),
-
           Expanded(
             child: isFormField2
                 ? const TextField(
               decoration: InputDecoration(
-                contentPadding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                contentPadding:
+                EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               ),
             )
                 : Text(
