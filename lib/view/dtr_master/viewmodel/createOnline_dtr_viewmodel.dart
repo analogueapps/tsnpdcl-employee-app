@@ -407,3 +407,42 @@ class OnlineDtrViewmodel extends ChangeNotifier{ // all fields are required
     return true;
   }
 }
+
+//TSNPDCL
+// private void saveDtrStructure(boolean replace) {
+//
+//   final ApptrolsProgressDialog apptrolsProgressDialog = new ApptrolsProgressDialog();
+//   apptrolsProgressDialog.setProgressText("Creating Structure...");
+//   apptrolsProgressDialog.displayDialog(getSupportFragmentManager());
+//   JSONObject structure = new JSONObject();
+//
+//
+//
+//   new Thread(new Runnable() {
+//       @Override
+//       public void run() {
+//       try {
+//       structure.put("replace",replace);
+//       if (checkBox_structure.isChecked()) {
+//       structure.put("structureCode", et_sap_structure_code.getText().toString());
+//       structure.put("abSwitch", spinner_ab_switch.getSelectedItem() + "");
+//       structure.put("capacity", ((Option) spinner_capacity.getSelectedItem()).getOptionName() + "");
+//       structure.put("landMark", et_landmark.getText().toString());
+//
+//
+//       structure.put("distributionCode", ((Option) spinner_distribution.getSelectedItem()).getOptionCode());
+//       structure.put("distribution", ((Option) spinner_distribution.getSelectedItem()).getOptionName());
+//       structure.put("structureType", spinner_structure_type.getSelectedItem() + "");
+//       structure.put("feederCode", ((Option) spinner_ss11kv.getSelectedItem()).getOptionCode());
+//       structure.put("feederName", ((Option) spinner_ss11kv.getSelectedItem()).getOptionName());
+//       structure.put("hgFuseSet", spinner_hg_fuse_sets.getSelectedItem() + "");
+//       structure.put("lat", location.getLatitude());
+//       structure.put("lon", location.getLongitude());
+//
+//       structure.put("loadPattern", spinner_load_pattern.getSelectedItem() + "");
+//       structure.put("ltFuseSet", spinner_lt_fuse_sets.getSelectedItem() + "");
+//       structure.put("ltFuseType", spinner_lt_fuse_type.getSelectedItem() + "");
+//       structure.put("plinthType", spinner_plinth_type.getSelectedItem() + "");
+//       structure.put("ssCode", ((Option) spinner_ss33kv.getSelectedItem()).getOptionCode());
+//       structure.put("ssName", ((Option) spinner_ss33kv.getSelectedItem()).getOptionName());
+//       structure.put("ssNo", "SS-" + (spinner_dtr_strut.getSelectedItem()+""));

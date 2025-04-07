@@ -5,16 +5,15 @@ import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
-import 'package:tsnpdcl_employee/view/pdms/model/option.dart';
 import 'package:tsnpdcl_employee/widget/fill_text_form_field.dart';
 import 'package:tsnpdcl_employee/widget/primary_button.dart';
-import '../viewmodel/map_dtr_viewmodel.dart';
+import '../../viewmodel/configure_viewmodel.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/model/circle_model.dart';
 
 
-class MappedDtr extends StatelessWidget{
-  static const id= Routes.mappedDtrScreen;
-  const MappedDtr({super.key});
+class ConfigureFilter extends StatelessWidget{
+  static const id= Routes.configureFilter;
+  const ConfigureFilter({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +21,7 @@ class MappedDtr extends StatelessWidget{
       appBar: AppBar(
         backgroundColor: CommonColors.colorPrimary,
         title: Text(
-          GlobalConstants.viewMappedDTR.toUpperCase(),
+          GlobalConstants.configureFilter.toUpperCase(),
           style: const TextStyle(
               color: Colors.white,
               fontSize: toolbarTitleSize,
@@ -67,7 +66,7 @@ class MappedDtr extends StatelessWidget{
                     child:FillTextFormField(
                     controller: viewModel.equipNoORStructCode,
                     labelText: 'Enter Equipment No/Structure Code',
-                    keyboardType: TextInputType.number,
+                    keyboardType: TextInputType.text,
                     // validator: (value) {
                     //   if (value == null || value.isEmpty) {
                     //     return "Please enter equipment number";
@@ -104,60 +103,57 @@ class MappedDtr extends StatelessWidget{
 
                       Visibility(
                         visible: viewModel.selectedFilter == "Feeder wise",
-                        child:Padding(
+                        child: Padding(
                           padding: const EdgeInsets.only(right: 10, left: 10, top: 10),
-                          child:Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  "Select Circle",
-                                  style: TextStyle(fontSize: 15),
-                                ),
-                          DropdownButton<String>(
-                            isExpanded: true,
-                            hint: const Text("Select"),
-                            value: viewModel.selectedCircle,
-                            items: viewModel.circle.map<DropdownMenuItem<String>>((Circle item) {
-                              return DropdownMenuItem<String>(
-                                value: item.circleId,
-                                child: Text(item.circleName),
-                              );
-                            }).toList(),
-                            onChanged: (String? value) => viewModel.onListCircleSelected(value),
-                          ),
-                                const SizedBox(height: 5,),
-                                const Text("Sub Station", style: TextStyle(fontSize: 15)),
-                          DropdownButton<String>(
-                            isExpanded: true,
-                            hint: const Text("Select"),
-                            value: viewModel.selectedStation,
-                            items: viewModel.stations.map((SubstationModel item) {
-                              return DropdownMenuItem<String>(
-                                value: item.optionCode,
-                                child: Text(item.optionName),
-                              );
-                            }).toList(),
-                            onChanged: (value) {
-                              if (value != null) {
-                                viewModel.onStationSelected(value);
-                              }
-                            },
-                          ),
-                                const SizedBox(height: 5,),
-                                const Text("Choose Feeder", style: TextStyle(fontSize:15),),
-                                DropdownButton<String>(
-                                  isExpanded: true,
-                                  hint: const Text("Select"),
-                                  value: viewModel.selectedFeeder,
-                                  items: viewModel.feeder.map((SubstationModel item) {
-                                    return DropdownMenuItem<String>(
-                                      value: item.optionCode, // Using optionCode as the value
-                                      child: Text(item.optionName), // Showing optionName in the dropdown
-                                    );
-                                  }).toList(),
-                                  onChanged: (value) => viewModel.onStationSelected(value),
-                                ),
-                              ]
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text("Select Circle", style: TextStyle(fontSize: 15)),
+                              DropdownButton<String>(
+                                isExpanded: true,
+                                hint: const Text("Select"),
+                                value: viewModel.selectedCircle,
+                                items: viewModel.circle.map<DropdownMenuItem<String>>((Circle item) {
+                                  return DropdownMenuItem<String>(
+                                    value: item.circleId,
+                                    child: Text(item.circleName),
+                                  );
+                                }).toList(),
+                                onChanged: (String? value) => viewModel.onListCircleSelected(value),
+                              ),
+                              const SizedBox(height: 5),
+                              const Text("Sub Station", style: TextStyle(fontSize: 15)),
+                              DropdownButton<String>(
+                                isExpanded: true,
+                                hint: const Text("Select"),
+                                value: viewModel.selectedStation,
+                                items: viewModel.stations.map((SubstationModel item) {
+                                  return DropdownMenuItem<String>(
+                                    value: item.optionCode,
+                                    child: Text(item.optionName),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  if (value != null) {
+                                    viewModel.onStationSelected(value);
+                                  }
+                                },
+                              ),
+                              const SizedBox(height: 5),
+                              const Text("Choose Feeder", style: TextStyle(fontSize: 15)),
+                              DropdownButton<String>(
+                                isExpanded: true,
+                                hint: const Text("Select"),
+                                value: viewModel.selectedFeeder,
+                                items: viewModel.feeder.map((SubstationModel item) {
+                                  return DropdownMenuItem<String>(
+                                    value: item.optionCode,
+                                    child: Text(item.optionName),
+                                  );
+                                }).toList(),
+                                onChanged: (value) => viewModel.onListFeederSelected(value), // Fixed
+                              ),
+                            ],
                           ),
                         ),
                       ),

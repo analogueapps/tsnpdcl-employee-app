@@ -138,7 +138,8 @@ class GlobalConstants {
   static const String maintenanceCompleted = "Maintenance Completed";
 
   //DTR Master * bhavana
-  static const  String viewMappedDTR="Configure Filter";
+  static const  String viewMappedDTR="Mapped DTR's";
+  static const  String configureFilter="Configure Filter";
   static const  String metersStock="Meters in Stock";
   static const  String metersOM="Meters issued to O & M";
   static const String downloadFeeder="Download Feeder Data";

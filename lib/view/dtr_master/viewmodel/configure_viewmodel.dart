@@ -8,9 +8,10 @@ import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/alerts.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
+import 'package:tsnpdcl_employee/utils/general_routes.dart';
+import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/model/circle_model.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/model/dtr_feedet_distribution_model.dart';
-import 'package:tsnpdcl_employee/view/dtr_master/view/dateMoth.dart';
 
 class MapDtrViewMobel extends ChangeNotifier {
   MapDtrViewMobel({required this.context});
@@ -291,11 +292,11 @@ class MapDtrViewMobel extends ChangeNotifier {
   }
 
   Future<void> getFeeders() async {
-    if (_isLoading) return; // Prevent duplicate calls
+    if (_isLoading) return;
 
     _isLoading = true;
     _feeder.clear();
-    _selectedFeeder = null; // Reset selected feeder when reloading
+    _selectedFeeder = null;
     notifyListeners();
 
     try {
@@ -319,16 +320,13 @@ class MapDtrViewMobel extends ChangeNotifier {
         throw Exception("No response received from server");
       }
 
-      // Process response data
       dynamic responseData = response.data;
       if (responseData is String) {
         responseData = jsonDecode(responseData);
       }
 
-      // Validate response
       if (response.statusCode != successResponseCode) {
-        throw Exception(responseData['message'] ??
-            "Request failed with status ${response.statusCode}");
+        throw Exception(responseData['message'] ?? "Request failed with status ${response.statusCode}");
       }
 
       if (responseData['tokenValid'] != true) {
@@ -340,7 +338,6 @@ class MapDtrViewMobel extends ChangeNotifier {
         throw Exception(responseData['message'] ?? "Operation failed");
       }
 
-      // Process feeder data
       if (responseData['objectJson'] == null) {
         throw Exception("No feeder data received");
       }
@@ -365,10 +362,10 @@ class MapDtrViewMobel extends ChangeNotifier {
             .toList();
       }
 
-      // Remove duplicates based on optionCode
-      _feeder = dataList.toSet().toList(); // Assumes SubstationModel has proper equality
-      if (_feeder.isNotEmpty && _selectedFeeder == null) {
-        _selectedFeeder = _feeder.first.optionCode; // Set default selection
+      _feeder = dataList.toSet().toList(); // Deduplicate based on optionCode
+      print("Feeder option codes: ${_feeder.map((f) => f.optionCode).toList()}");
+      if (_feeder.isNotEmpty) {
+        _selectedFeeder = _feeder.first.optionCode; // Default to first feeder
       }
       print("Successfully loaded ${_feeder.length} feeders");
 
@@ -381,20 +378,19 @@ class MapDtrViewMobel extends ChangeNotifier {
       notifyListeners();
     }
   }
-
   //SUBMIT API CALLS
 
-  List<FeederDisModel> _FDEntityList = [];
-  List<FeederDisModel> get FDEntityList => _FDEntityList;
+  List<FeederDisModel> _fDEntityList = [];
+  List<FeederDisModel> get fDEntityList => _fDEntityList;
 
   Future<void> getStructFeederDis() async {
-    if (_isLoading) return; // Prevent duplicate calls
+    if (_isLoading) return;
 
     _isLoading = true;
-    _feeder.clear();
+    _fDEntityList.clear();
     notifyListeners();
 
-    final Map<String, dynamic> requestFData; // Declare as final
+    final Map<String, dynamic> requestFData;
 
     try {
       if (_selectedFilter == "Feeder wise") {
@@ -433,18 +429,15 @@ class MapDtrViewMobel extends ChangeNotifier {
         throw Exception("No response received from server");
       }
 
-      // Process response data
       dynamic responseData = response.data;
       if (responseData is String) {
         responseData = jsonDecode(responseData);
       }
 
-      print("API Response: $responseData"); // Debug log
+      print("API Response: $responseData");
 
-      // Validate response
       if (response.statusCode != successResponseCode) {
-        throw Exception(responseData['message'] ??
-            "Request failed with status ${response.statusCode}");
+        throw Exception(responseData['message'] ?? "Request failed with status ${response.statusCode}");
       }
 
       if (responseData['tokenValid'] != true) {
@@ -456,33 +449,40 @@ class MapDtrViewMobel extends ChangeNotifier {
         throw Exception(responseData['message'] ?? "Operation failed");
       }
 
-      // Process feeder/distribution data
-      final jsonList = responseData['objectJson'];
+      final jsonList = responseData['message'];
       List<FeederDisModel> dataList = [];
 
       if (jsonList == null) {
-        print("No feeder/distribution data received in objectJson");
-        _FDEntityList.clear(); // Clear list if no data
+        print("No feeder/distribution data received in message");
+        _fDEntityList.clear();
       } else if (jsonList is String) {
-        String cleanedJson = jsonList.replaceAll(r'\"', '"').trim();
-        if (cleanedJson.endsWith(',')) {
-          cleanedJson = cleanedJson.substring(0, cleanedJson.length - 1);
+        print("Raw message string: $jsonList");
+        String cleanedJson = jsonList.trim();
+        try {
+          if (!cleanedJson.startsWith('[') || !cleanedJson.endsWith(']')) {
+            throw FormatException("Invalid JSON array format in message: $cleanedJson");
+          }
+          dataList = (jsonDecode(cleanedJson) as List<dynamic>)
+              .map((json) => FeederDisModel.fromJson(json as Map<String, dynamic>))
+              .toList();
+          _fDEntityList = dataList;
+        } catch (e) {
+          print("Error decoding JSON string: $e");
+          throw e;
         }
-        if (!cleanedJson.startsWith('[')) {
-          cleanedJson = '[$cleanedJson]';
-        }
-        dataList = (jsonDecode(cleanedJson) as List<dynamic>)
-            .map((json) => FeederDisModel.fromJson(json as Map<String, dynamic>))
-            .toList();
-        _FDEntityList.addAll(dataList);
       } else if (jsonList is List) {
+        print("Processing JSON list: $jsonList");
         dataList = (jsonList as List<dynamic>)
             .map((json) => FeederDisModel.fromJson(json as Map<String, dynamic>))
             .toList();
-        _FDEntityList.addAll(dataList);
+        _fDEntityList = dataList;
+      } else {
+        throw Exception("Unexpected message format: ${jsonList.runtimeType}");
       }
 
-      print("Successfully loaded ${_FDEntityList.length} feeder/distribution entities");
+      print("Successfully loaded ${_fDEntityList.length} structure entities");
+      print("Navigating to MappedDtr with ${_fDEntityList.length} items: ${_fDEntityList.map((e) => e.toJson())}");
+      Navigator.pushNamed(context, Routes.mappedDtrScreen, arguments: _fDEntityList);
 
     } catch (e, stackTrace) {
       print("Error fetching feeder/distribution data: $e\n$stackTrace");
@@ -491,8 +491,111 @@ class MapDtrViewMobel extends ChangeNotifier {
     } finally {
       _isLoading = false;
       notifyListeners();
+      print("Finished getStructFeederDis");
     }
   }
+
+  //Equipment no/Structure code
+  List<FeederDisModel> _structureDataConfi = [];
+  List<FeederDisModel> get structureData => _structureDataConfi;
+
+  Future<void> getStructureData() async {
+    _isLoading = true;
+    _structureDataConfi.clear();
+    notifyListeners();
+
+
+
+    final requestData = {
+      "authToken":
+      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ??
+          "",
+      "api": Apis.API_KEY,
+      "structureCode": equipNoORStructCode.text,
+    };
+
+    final payload = {
+      "path": "/getDtrsOfStructure",
+      "apiVersion": "1.0",
+      "method": "POST",
+      "data": jsonEncode(requestData),
+    };
+
+    try {
+      var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+          .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+
+      _isLoading = false;
+      notifyListeners();
+
+      print("load structure response: $response");
+      if (response != null) {
+        var responseData = response.data;
+        if (responseData is String) {
+          try {
+            responseData = jsonDecode(responseData);
+          } catch (e) {
+            print("Error decoding response data: $e");
+            showErrorDialog(
+                context, "Invalid response format. Please try again.");
+            return;
+          }
+        }
+
+        if (response.statusCode == successResponseCode) {
+          if (responseData['tokenValid'] == true) {
+            if (responseData['success'] == true) {
+              if (responseData['message'] != null) {
+                try {
+                  final jsonMessage = responseData['message'];
+                  List<FeederDisModel> dataList = [];
+
+                  if (jsonMessage is String) {
+                    // Parse the JSON string within message
+                    final structureJson = jsonDecode(jsonMessage);
+                    dataList.add(FeederDisModel.fromJson(structureJson));
+                  } else if (jsonMessage is Map<String, dynamic>) {
+                    // If message is already a parsed object
+                    dataList.add(FeederDisModel.fromJson(jsonMessage));
+                  }
+
+                  _structureDataConfi.addAll(dataList);
+                  print(
+                      "Structure data: ${_structureDataConfi.length} items loaded");
+                  print(
+                      "Structure details: ${_structureDataConfi.map((e) =>
+                          e.toJson())}");
+                  Navigator.pushNamed(
+                    context,
+                    Routes.dtrStructure,
+                    arguments: _structureDataConfi,
+                  );
+                } catch (e, stackTrace) {
+                  print("Error parsing message: $e");
+                  print("Stack trace: $stackTrace");
+                  showErrorDialog(context,
+                      "Failed to parse structure data. Please contact support.");
+                }
+              }
+            } else {
+              showAlertDialog(
+                  context, responseData['message'] ?? "Operation failed");
+            }
+          } else {
+            showSessionExpiredDialog(context);
+          }
+        } else {
+          showErrorDialog(context,
+              "Request failed with status: ${response.statusCode}");
+        }
+      }
+    } catch (e) {
+      print("Exception caught: $e");
+      showErrorDialog(context, "An error occurred. Please try again.");
+    }
+  }
+
+
   void setSelectedFilter(String title) {
     _selectedFilter = title;
     print("$_selectedFilter: filter selected");
@@ -511,8 +614,8 @@ class MapDtrViewMobel extends ChangeNotifier {
         return;
       }else if(_selectedFilter=="Distribution wise"||_selectedFilter=="Feeder wise"){
         getStructFeederDis();
-      }else{
-        null;
+      }else {
+        getStructureData();
       }
     }
   }

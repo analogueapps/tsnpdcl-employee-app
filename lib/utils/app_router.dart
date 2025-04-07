@@ -11,12 +11,14 @@ import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_inspection_list_s
 import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_maintenance_inspection_screen.dart';
 import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_maintenance_screen.dart';
 import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_master_list_screen.dart';
+import 'package:tsnpdcl_employee/view/dtr_master/model/dtr_feedet_distribution_model.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/view/create_dtr_online.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/view/download_feeder_data.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/view/mis_matched_dtrs.dart';
+import 'package:tsnpdcl_employee/view/dtr_master/view/view_mapped/struct_details.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/view/view_offline_data.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/viewmodel/download_feeder_viewmodel.dart';
-import 'package:tsnpdcl_employee/view/dtr_master/view/mapped_dtrs.dart';
+import 'package:tsnpdcl_employee/view/dtr_master/view/view_mapped/configure_filter.dart';
 import 'package:tsnpdcl_employee/view/exceptionals/view/exceptionals_screen.dart';
 import 'package:tsnpdcl_employee/view/failure_dtr_inspection/view/failure_dtr_inspection_screen.dart';
 import 'package:tsnpdcl_employee/view/filter/view/filter_screen.dart';
@@ -77,6 +79,7 @@ import 'package:tsnpdcl_employee/view/tong_tester_readings/view/tong_tester_read
 import 'package:tsnpdcl_employee/view/tong_tester_readings/view/view_detailed_tong_tester_readings.dart';
 import 'package:tsnpdcl_employee/view/web_view/view/web_view_screen.dart';
 import 'package:tsnpdcl_employee/widget/pinch_zoom_imageview.dart';
+import '../view/dtr_master/view/view_mapped/mapped_dtr.dart';
 import '../view/ltmt/view/ltmt_menu.dart';
 import '../view/ltmt/view/meters_stock.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/view/create_dtr_offline.dart';
@@ -336,8 +339,10 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => MetersOm(empId:settings.arguments as String ));
 
     // DTR Master * Bhavana
+      case ConfigureFilter.id:
+        return MaterialPageRoute(builder: (_)=> const ConfigureFilter());
       case MappedDtr.id:
-        return MaterialPageRoute(builder: (_)=> const MappedDtr());
+        return MaterialPageRoute(builder: (_)=>  MappedDtr(structureData: settings.arguments as List<FeederDisModel>));
       case DownloadFeederData.id:
         return MaterialPageRoute(builder: (_)=> const DownloadFeederData());
       case ViewOfflineData.id:
@@ -348,6 +353,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_)=> const CreateDtrOnline());
       case CreateDtrOffline.id:
         return MaterialPageRoute(builder: (_)=> const CreateDtrOffline());
+      case StructDetails.id:
+        return MaterialPageRoute(builder: (_)=>  StructDetails(structData: settings.arguments as List<FeederDisModel>));
 
     // DTR FAILURE
       case DtrFailureReporting.id:

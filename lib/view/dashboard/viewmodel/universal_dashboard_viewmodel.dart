@@ -591,7 +591,7 @@ class UniversalDashboardViewModel extends ChangeNotifier {
         ),
         GlobalListDialogItem(
             title: "View Mapped DTR's",
-            routeName: Routes.mappedDtrScreen,
+            routeName: Routes.configureFilter,
         ),
         GlobalListDialogItem(
             title: "Create DTR Master(Offline)",

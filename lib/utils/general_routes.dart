@@ -108,6 +108,8 @@ class Routes {
 
   //DTR Master * Bhavana
   static const String mappedDtrScreen= "MappedDtr";
+  static const String dtrStructure="StructDetails";
+  static const String configureFilter="ConfigureFilter";
   static const String downloadFeederScreen="DownloadFeederData";
   static const String misMatched="MisMatchedDtr";
   static const String offlineData= "ViewOfflineDataDTR";
