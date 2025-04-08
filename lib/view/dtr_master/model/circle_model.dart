@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
+
 class Circle {
   final String circleId;
   final String circleName;
@@ -18,6 +20,18 @@ class Circle {
   String getCircleName() {
     return circleName;
   }
+}
+
+class DtrItem {
+  String? selectedMake;
+  String? selectedDtrCapacity;
+  final TextEditingController firstTimeChargedDate = TextEditingController();
+  final TextEditingController serialNo = TextEditingController();
+  String? selectedYearOfMfg;
+  String? selectedPhase;
+  String? selectedRatio;
+  String? selectedTypeOfMeter;
+  final TextEditingController sapDtr = TextEditingController();
 }
 
 class SubstationModel {

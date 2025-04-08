@@ -513,7 +513,7 @@ class OnlineDtrViewmodel extends ChangeNotifier {
     print("$_selectedCapacity: selected Capacity ");
 
     // Reset all DTR Details fields when capacity changes
-    _selectedMake = null;
+    _make;
     _selectedDtrCapacity = null;
     _selectedYearOfMfg = null;
     _selectedPhase = null;
@@ -655,8 +655,8 @@ class OnlineDtrViewmodel extends ChangeNotifier {
 
   ///DTR Details
   //Make
-
-
+  //
+  //
   String? _selectedMake;
   String? get selectedMake => _selectedMake;
 
@@ -813,6 +813,8 @@ class OnlineDtrViewmodel extends ChangeNotifier {
     _selectedTypeOfMeter= value;
     notifyListeners();
   }
+
+
 
   //capture image
   File? _capturedImage;

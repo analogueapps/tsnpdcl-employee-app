@@ -5,6 +5,7 @@ import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
+import 'package:tsnpdcl_employee/view/dtr_master/model/circle_model.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/viewmodel/download_feeder_viewmodel.dart';
 import 'package:tsnpdcl_employee/widget/primary_button.dart';
 
@@ -19,9 +20,10 @@ class DownloadFeederData extends StatelessWidget {
       child: Consumer<DownloadFeederViewmodel>(
         builder: (context, viewModel, child) {
           return WillPopScope(
-            onWillPop: () async {
-              return viewModel.isLocationGranted;
-            },
+            // onWillPop: () async {
+            //   return viewModel.isLocationGranted;
+            // },
+            onWillPop: null,
             child: Scaffold(
               appBar: AppBar(
                 backgroundColor: CommonColors.colorPrimary,
@@ -42,7 +44,9 @@ class DownloadFeederData extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-              body:Form(
+              body:Stack(
+                children: [
+                  Form(
                   key: viewModel.formKey,
                   child: Padding(
                   padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
@@ -54,13 +58,13 @@ class DownloadFeederData extends StatelessWidget {
                     isExpanded: true,
                     hint: const Text("Select"),
                     value: viewModel.selectedSubStation,
-                    items: viewModel.station.map((item) {
+                    items: viewModel.station.map<DropdownMenuItem<String>>((SubstationModel item) {
                       return DropdownMenuItem<String>(
-                        value: item,
-                        child: Text(item),
+                        value: item.optionCode,
+                        child: Text(item.optionName),
                       );
                     }).toList(),
-                    onChanged: (value) => viewModel.onListSubStationSelected(value),
+                    onChanged: (String? value) => viewModel.onListSubStationSelected(value),
                   ),
                   const SizedBox(height: 10,),
                   //here feeder automatically fetched from api
@@ -69,13 +73,13 @@ class DownloadFeederData extends StatelessWidget {
                     isExpanded: true,
                     hint: const Text("Select"),
                     value: viewModel.chooseFeeder,
-                    items: viewModel.feeder.map((item) {
+                    items: viewModel.feeder.map<DropdownMenuItem<String>>((SubstationModel item) {
                       return DropdownMenuItem<String>(
-                        value: item,
-                        child: Text(item),
+                        value: item.optionCode,
+                        child: Text(item.optionName),
                       );
                     }).toList(),
-                    onChanged: (value) => viewModel.onListFeederSelected(value),
+                    onChanged: (String? value) => viewModel.onListFeederSelected(value),
                   ),
                   const SizedBox(height: 10,),
                   const Row(
@@ -98,7 +102,18 @@ class DownloadFeederData extends StatelessWidget {
               )
             ),
             ),
+                  if (viewModel.isLoading)
+                    Positioned.fill(
+                      child:  Container(
+                        color: Colors.black.withOpacity(0.3),
+                        child: const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                    ),
+              ]
             ),
+          ),
           );
         },
       ),

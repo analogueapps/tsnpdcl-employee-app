@@ -5,6 +5,7 @@ import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
+import 'package:tsnpdcl_employee/view/dtr_master/model/circle_model.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/view/spm_create_offline.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/viewmodel/createOffline_dtr_viewmodel.dart';
 import 'package:tsnpdcl_employee/widget/fill_text_form_field.dart';
@@ -41,7 +42,9 @@ class CreateDtrOffline extends StatelessWidget {
         create: (_) => OfflineDtrViewmodel(context: context),
         child: Consumer<OfflineDtrViewmodel>(
             builder: (context, viewModel, child) {
-              return SingleChildScrollView(
+              return Stack(
+                  children: [
+                    SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.all(5),
                   child: Form(
@@ -95,15 +98,103 @@ class CreateDtrOffline extends StatelessWidget {
                                             ),
                                             ),
                                           ),
-                                          dropDown(context, "Select Distribution","Select ", viewModel.selectedDistributionOffline,viewModel.distributionsOffline,viewModel.onListDistriSelectedOffline ),
-                                          dropDown(context, "SS No.","Select ",  viewModel.selectedSSNoOffline,viewModel.ssnoOffline,viewModel.onListSSNoSelectedOffline ),
+                                          const SizedBox(height: 5),
+                                          Text("Select Distribution", style: TextStyle(fontSize: 15,color:Colors.purple[300]),),
+                                          DropdownButton<String>(
+                                            isExpanded: true,
+                                            hint: const Text("Select"),
+                                            value: viewModel.selectedDistributionOffline,
+                                            items: viewModel.distributionsOffline.map((SubstationModel item) {
+                                              return DropdownMenuItem<String>(
+                                                value: item.optionCode,
+                                                child: Text(item.optionName),
+                                              );
+                                            }).toList(),
+                                            onChanged: (String? value) {
+                                              if (value != null) {
+                                                final selectedItem = viewModel.distributionsOffline.firstWhere(
+                                                      (item) => item.optionCode == value,
+                                                );
+                                                viewModel.onListDistriSelectedOffline(value, selectedItem.optionName);
+                                              }
+                                            },
+                                          ),
+                                          const SizedBox(height: 5),
+                                          Text("SS No.", style: TextStyle(fontSize: 15,color:Colors.purple[300])),
+                                          DropdownButton<String>(
+                                            isExpanded: true,
+                                            hint: const Text("Select"),
+                                            value: viewModel.selectedSSNoOffline,
+                                            items: viewModel.ssnoOffline.map<DropdownMenuItem<String>>((item) {
+                                              return DropdownMenuItem<String>(
+                                                value: item, // Assuming ssno is a List<String>
+                                                child: Text(item),
+                                              );
+                                            }).toList(),
+                                            onChanged: (String? value) => viewModel.onListSSNoSelectedOffline(value),
+                                          ),
+                                          const SizedBox(height: 5),
 
                                           Text("Please select feeding details to DTR structure", textAlign: TextAlign.center, style: TextStyle(color:Colors.grey[700]),),
 
-                                          dropDown(context, "Select Circle","Select Circle",  viewModel.selectedCircleOffline,viewModel.circle,viewModel.onListCircleSelectedOffline ),
-                                          dropDown(context, "Sub Station","Select",  viewModel.selectedStation,viewModel.stationOffline,viewModel.onListStationSelectedOffline ),
-                                          dropDown(context, "Choose Feeder","Select",  viewModel.selectedFeederOffline,viewModel.feederOffline,viewModel.onListFeederSelectedOffline ),
-                                          dropDown(context, "Structure Capacity","Select",  viewModel.selectedCapacityOffline,viewModel.capacityOffline,viewModel.onListCapacitySelectedOffline ),
+                                          const SizedBox(height: 5),
+                                          Text("Select Circle", style: TextStyle(fontSize: 15, color:Colors.purple[300])),
+                                          DropdownButton<String>(
+                                            isExpanded: true,
+                                            hint: const Text("Select"),
+                                            value: viewModel.selectedCircleOffline,
+                                            items: viewModel.circleOffline.map<DropdownMenuItem<String>>((Circle item) {
+                                              return DropdownMenuItem<String>(
+                                                value: item.circleId,
+                                                child: Text(item.circleName),
+                                              );
+                                            }).toList(),
+                                            onChanged: (String? value) => viewModel.onListCircleSelectedOffline(value),
+                                          ),
+                                          const SizedBox(height: 5),
+                                          Text("Sub Station", style: TextStyle(fontSize: 15, color:Colors.purple[300])),
+                                          DropdownButton<String>(
+                                            isExpanded: true,
+                                            hint: const Text("Select"),
+                                            value: viewModel.selectedStation,
+                                            items: viewModel.stationOffline.map<DropdownMenuItem<String>>((SubstationModel item) {
+                                              return DropdownMenuItem<String>(
+                                                value: item.optionCode,
+                                                child: Text(item.optionName),
+                                              );
+                                            }).toList(),
+                                            onChanged: (String? value) => viewModel.onListStationSelectedOffline(value),
+                                          ),
+                                          const SizedBox(height: 5),
+                                          Text("Choose Feeder", style: TextStyle(fontSize: 15, color:Colors.purple[300])),
+                                          DropdownButton<String>(
+                                            isExpanded: true,
+                                            hint: const Text("Select"),
+                                            value: viewModel.selectedFeederOffline,
+                                            items: viewModel.feederOffline.map<DropdownMenuItem<String>>((SubstationModel item) {
+                                              return DropdownMenuItem<String>(
+                                                value: item.optionCode,
+                                                child: Text(item.optionName),
+                                              );
+                                            }).toList(),
+                                            onChanged: (String? value) => viewModel.onListFeederSelectedOffline(value),
+                                          ),
+                                          const SizedBox(height: 5),
+                                          Text("Structure Capacity", style: TextStyle(fontSize: 15, color:Colors.purple[300])),
+                                          DropdownButton<int>(
+                                            isExpanded: true,
+                                            hint: const Text("Select"),
+                                            value: viewModel.selectedCapacityIndex,
+                                            items: viewModel.capacityOffline.asMap().entries.map<DropdownMenuItem<int>>((entry) {
+                                              final index = entry.key;
+                                              final item = entry.value;
+                                              return DropdownMenuItem<int>(
+                                                value: index,
+                                                child: Text(item.optionName),
+                                              );
+                                            }).toList(),
+                                            onChanged: viewModel.onListCapacitySelectedOffline,
+                                          ),
 
                                           const SizedBox(height: 20,),
                                           Text("SAP DTR Structure Code(*)", style: TextStyle(fontSize:15,color:Colors.purple[300]),),
@@ -591,6 +682,8 @@ class CreateDtrOffline extends StatelessWidget {
                     ),
                   ),
                 ),
+              ),
+              ]
               );
             }
         ),

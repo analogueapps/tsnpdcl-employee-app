@@ -231,7 +231,8 @@ class CreateDtrOnline extends StatelessWidget {
                                                 for (int i = 0; i < int.parse(viewModel.selectedCapacity!); i++)
                                                   Visibility(
                                                     visible: viewModel.selectedCapacity != null && viewModel.selectedCapacity != "0",
-                                                    child: Card(
+                                                    child:
+                                                    Card(
                                             elevation: 3,
                                             color: Colors.white,
                                             shape: RoundedRectangleBorder(

@@ -19,16 +19,12 @@ class SpmCreateOffline extends StatelessWidget {
         children: [
           Text("Select Physical Location Of DTR", style: TextStyle(fontSize:15, color:Colors.purple[300]),),
           DropdownButton<String>(
-            isExpanded: true,
-            hint:  Text("SELECT", style: const TextStyle(color: Colors.black),),
             value: viewModel.selectedPhysicalLocation,
-            items: viewModel.listPhysicalLocation.map((item) {
-              return DropdownMenuItem<String>(
-                value: item,
-                child: Text(item),
-              );
-            }).toList(),
-            onChanged: (value) => viewModel.onListPhysicalLocation(value),
+            items: viewModel.listPhysicalLocation.map((location) => DropdownMenuItem<String>(
+              value: location,
+              child: Text(location),
+            )).toList(),
+            onChanged: viewModel.onListPhysicalLocation,
           ),
           const SizedBox(height: 10,),
           Text("Select SPM Shed", style: TextStyle(fontSize:15, color:Colors.purple[300]),),

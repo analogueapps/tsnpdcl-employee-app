@@ -1,7 +1,19 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:tsnpdcl_employee/utils/alerts.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
+import 'package:tsnpdcl_employee/utils/app_helper.dart';
+import 'package:tsnpdcl_employee/view/dtr_master/model/circle_model.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
+import 'package:tsnpdcl_employee/network/api_provider.dart';
+import 'package:tsnpdcl_employee/network/api_urls.dart';
+import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 
 class OfflineDtrViewmodel extends ChangeNotifier{
   OfflineDtrViewmodel({required this.context}) {
@@ -11,11 +23,22 @@ class OfflineDtrViewmodel extends ChangeNotifier{
 
   final BuildContext context;
   bool isLocationGranted = false;
+
+  bool _isLoading = isFalse;
+  bool get isLoading => _isLoading;
+
   String? _latitude;
   String? _longitude;
 
   void init() {
     getCurrentLocation();
+    getDistributions();
+
+    _ssnoOffline = List.generate(
+      999,
+          (index) => (index + 1).toString().padLeft(3, '0'),
+    );
+    sap_dtrOffline.text = "SELECT-SS-0001";
   }
 
   final formKey = GlobalKey<FormState>();
@@ -40,19 +63,115 @@ class OfflineDtrViewmodel extends ChangeNotifier{
   String? get selectedDistributionOffline => _selectedDistributionOffline;
 
   // List<Option> _circles = [];
-  List _distributionsOffline = ["RTC", "Nakkalagutta", "Ramnagar"];
-  List get distributionsOffline => _distributionsOffline;
+  List<SubstationModel> _distributionsOffline = [];
+  List<SubstationModel> get distributionsOffline => _distributionsOffline;
 
-  void onListDistriSelectedOffline(String? value) {
+  Future<void> getDistributions() async {
+    _stationOffline.clear();
+    if (_isLoading) return; // Prevent duplicate calls
+
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final requestData = {
+        "authToken": SharedPreferenceHelper.getStringValue(
+            LoginSdkPrefs.tokenPrefKey),
+        "api": Apis.API_KEY,
+      };
+
+      final payload = {
+        "path": "/load/distributions",
+        "apiVersion": "1.0",
+        "method": "POST",
+        "data": jsonEncode(requestData),
+      };
+
+      final response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+          .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+
+      if (response == null) {
+        throw Exception("No response received from server");
+      }
+
+      // Process response data
+      dynamic responseData = response.data;
+      if (responseData is String) {
+        responseData = jsonDecode(responseData);
+      }
+
+      // Validate response
+      if (response.statusCode != successResponseCode) {
+        throw Exception(responseData['message'] ??
+            "Request failed with status ${response.statusCode}");
+      }
+
+      if (responseData['tokenValid'] != true) {
+        showSessionExpiredDialog(context);
+        return;
+      }
+
+      if (responseData['success'] != true) {
+        throw Exception(responseData['message'] ?? "Operation failed");
+      }
+
+      // Process station data
+      if (responseData['objectJson'] == null) {
+        throw Exception("No _distributions data received");
+      }
+
+      final jsonList = responseData['objectJson'];
+      List<SubstationModel> dataList = [];
+
+      if (jsonList is String) {
+        // Clean and parse JSON string
+        String cleanedJson = jsonList
+            .replaceAll(r'\"', '"')
+            .trim();
+
+        if (cleanedJson.endsWith(',')) {
+          cleanedJson = cleanedJson.substring(0, cleanedJson.length - 1);
+        }
+
+        if (!cleanedJson.startsWith('[')) {
+          cleanedJson = '[$cleanedJson]';
+        }
+
+        dataList = (jsonDecode(cleanedJson) as List)
+            .map((json) => SubstationModel.fromJson(json))
+            .toList();
+      }
+      else if (jsonList is List) {
+        dataList = jsonList
+            .map((json) => SubstationModel.fromJson(json))
+            .toList();
+      }
+
+      _distributionsOffline.addAll(dataList);
+      print("Successfully loaded ${_distributionsOffline.length} stations");
+    } catch (e, stackTrace) {
+      print("Error fetching _distributions: $e\n$stackTrace");
+      showErrorDialog(
+          context, "Failed to load _distributions: ${e.toString()}");
+      rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  void onListDistriSelectedOffline(String? value, String? distriName) {
     _selectedDistributionOffline = value;
+    sapDTRStructCodeOffline.text = "$distriName-SS-0001";
+    print("sapDTRStructCode $sapDTRStructCodeOffline");
     notifyListeners();
   }
 
   //2.SS No
-  String? _selectedSSNoOffline="01";
+  String? _selectedSSNoOffline="001";
   String? get selectedSSNoOffline=> _selectedSSNoOffline;
 
-  List _ssnoOffline= ["01", "02", "03"];
+  List _ssnoOffline= [];
   List get ssnoOffline => _ssnoOffline;
 
   void onListSSNoSelectedOffline(String? value) {
@@ -61,15 +180,35 @@ class OfflineDtrViewmodel extends ChangeNotifier{
   }
 
   //3.Circle
-  String? _selectedCircleOffline;
+  String? _selectedCircleOffline='000';
   String? get selectedCircleOffline => _selectedCircleOffline;
 
   // List<Option> _circles = [];
-  List _circleOffline = ["KHAMMAM", "WARANGAL", "ADILABAD"];
-  List get circle => _circleOffline;
+  final List<Circle> _circleOffline = [
+    Circle("000", "SELECT"),
+    Circle("401", "KHAMMAM"),
+    Circle("402", "HANAMKONDA"),
+    Circle("407", "WARANGAL"),
+    Circle("403", "KARIMNAGAR"),
+    Circle("405", "ADILABAD"),
+    Circle("404", "NIZAMABAD"),
+    Circle("406", "BHADRADRI KOTHAGUDEM"),
+    Circle("408", "JANGAON"),
+    Circle("409", "BHOOPALAPALLY"),
+    Circle("410", "MAHABUBABAD"),
+    Circle("411", "JAGITYAL"),
+    Circle("412", "PEDDAPALLY"),
+    Circle("413", "KAMAREDDY"),
+    Circle("414", "NIRMAL"),
+    Circle("415", "ASIFABAD"),
+    Circle("416", "MANCHERIAL"),];
+  List<Circle> get circleOffline => _circleOffline;
 
   void onListCircleSelectedOffline(String? value) {
     _selectedCircleOffline = value;
+    _selectedStationOffline = null;
+    _selectedFeederOffline = null;
+    getSubstations();
     notifyListeners();
   }
 
@@ -77,11 +216,109 @@ class OfflineDtrViewmodel extends ChangeNotifier{
   String? _selectedStationOffline;
   String? get selectedStation => _selectedStationOffline;
 
-  List _stationOffline = [];
+  List<SubstationModel> _stationOffline = [];
 
-  List get stationOffline => _stationOffline;
+  List<SubstationModel> get stationOffline => _stationOffline;
+
+  Future<void> getSubstations() async {
+    _stationOffline.clear();
+    if (_isLoading) return; // Prevent duplicate calls
+
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final requestData = {
+        "authToken": SharedPreferenceHelper.getStringValue(
+            LoginSdkPrefs.tokenPrefKey),
+        "api": Apis.API_KEY,
+        "circleCode": _selectedCircleOffline
+      };
+
+      final payload = {
+        "path": "/load/load33kvssOfCircle",
+        "apiVersion": "1.0",
+        "method": "POST",
+        "data": jsonEncode(requestData),
+      };
+
+      final response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+          .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+
+      if (response == null) {
+        throw Exception("No response received from server");
+      }
+
+      // Process response data
+      dynamic responseData = response.data;
+      if (responseData is String) {
+        responseData = jsonDecode(responseData);
+      }
+
+      // Validate response
+      if (response.statusCode != successResponseCode) {
+        throw Exception(responseData['message'] ??
+            "Request failed with status ${response.statusCode}");
+      }
+
+      if (responseData['tokenValid'] != true) {
+        showSessionExpiredDialog(context);
+        return;
+      }
+
+      if (responseData['success'] != true) {
+        throw Exception(responseData['message'] ?? "Operation failed");
+      }
+
+      // Process station data
+      if (responseData['objectJson'] == null) {
+        throw Exception("No station data received");
+      }
+
+      final jsonList = responseData['objectJson'];
+      List<SubstationModel> dataList = [];
+
+      if (jsonList is String) {
+        // Clean and parse JSON string
+        String cleanedJson = jsonList
+            .replaceAll(r'\"', '"')
+            .trim();
+
+        if (cleanedJson.endsWith(',')) {
+          cleanedJson = cleanedJson.substring(0, cleanedJson.length - 1);
+        }
+
+        if (!cleanedJson.startsWith('[')) {
+          cleanedJson = '[$cleanedJson]';
+        }
+
+        dataList = (jsonDecode(cleanedJson) as List)
+            .map((json) => SubstationModel.fromJson(json))
+            .toList();
+      }
+      else if (jsonList is List) {
+        dataList = jsonList
+            .map((json) => SubstationModel.fromJson(json))
+            .toList();
+      }
+
+      _stationOffline.addAll(dataList);
+      print("Successfully loaded ${_stationOffline.length} stations");
+    } catch (e, stackTrace) {
+      print("Error fetching stations: $e\n$stackTrace");
+      showErrorDialog(context, "Failed to load stations: ${e.toString()}");
+      rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+
   void onListStationSelectedOffline(String? value) {
     _selectedStationOffline = value;
+    _selectedFeederOffline=null;
+    getFeeders();
     notifyListeners();
   }
 
@@ -89,8 +326,101 @@ class OfflineDtrViewmodel extends ChangeNotifier{
   String? _selectedFeederOffline;
   String? get selectedFeederOffline => _selectedFeederOffline;
 
-  List _feederOffline = [];
-  List get feederOffline => _feederOffline;
+  List<SubstationModel> _feederOffline = [];
+  List<SubstationModel> get feederOffline => _feederOffline;
+
+  Future<void> getFeeders() async {
+    if (_isLoading) return;
+
+    _isLoading = true;
+    _feederOffline.clear();
+    _selectedFeederOffline = null;
+    notifyListeners();
+
+    try {
+      final requestData = {
+        "authToken": SharedPreferenceHelper.getStringValue(
+            LoginSdkPrefs.tokenPrefKey) ?? "",
+        "api": Apis.API_KEY,
+        "ss": _selectedStationOffline ?? "",
+      };
+
+      final payload = {
+        "path": "/load/feeders",
+        "apiVersion": "1.0",
+        "method": "POST",
+        "data": jsonEncode(requestData),
+      };
+
+      final response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+          .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+
+      if (response == null) {
+        throw Exception("No response received from server");
+      }
+
+      dynamic responseData = response.data;
+      if (responseData is String) {
+        responseData = jsonDecode(responseData);
+      }
+
+      if (response.statusCode != successResponseCode) {
+        throw Exception(responseData['message'] ??
+            "Request failed with status ${response.statusCode}");
+      }
+
+      if (responseData['tokenValid'] != true) {
+        showSessionExpiredDialog(context);
+        return;
+      }
+
+      if (responseData['success'] != true) {
+        throw Exception(responseData['message'] ?? "Operation failed");
+      }
+
+      if (responseData['objectJson'] == null) {
+        throw Exception("No feeder data received");
+      }
+
+      final jsonList = responseData['objectJson'];
+      List<SubstationModel> dataList = [];
+
+      if (jsonList is String) {
+        String cleanedJson = jsonList.replaceAll(r'\"', '"').trim();
+        if (cleanedJson.endsWith(',')) {
+          cleanedJson = cleanedJson.substring(0, cleanedJson.length - 1);
+        }
+        if (!cleanedJson.startsWith('[')) {
+          cleanedJson = '[$cleanedJson]';
+        }
+        dataList = (jsonDecode(cleanedJson) as List<dynamic>)
+            .map((json) =>
+            SubstationModel.fromJson(json as Map<String, dynamic>))
+            .toList();
+      } else if (jsonList is List) {
+        dataList = (jsonList as List<dynamic>)
+            .map((json) =>
+            SubstationModel.fromJson(json as Map<String, dynamic>))
+            .toList();
+      }
+
+      _feederOffline = dataList.toSet().toList(); // Deduplicate based on optionCode
+      print(
+          "Feeder option codes: ${_feederOffline.map((f) => f.optionCode).toList()}");
+      if (_feederOffline.isNotEmpty) {
+        _selectedFeederOffline = _feederOffline.first.optionCode; // Default to first feeder
+      }
+      print("Successfully loaded ${_feederOffline.length} feeders");
+    } catch (e, stackTrace) {
+      print("Error fetching feeders: $e\n$stackTrace");
+      showErrorDialog(context, "Failed to load feeders: ${e.toString()}");
+      rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
 
   void onListFeederSelectedOffline(String? value) {
     _selectedFeederOffline = value;
@@ -101,11 +431,62 @@ class OfflineDtrViewmodel extends ChangeNotifier{
   String? _selectedCapacityOffline;
   String? get selectedCapacityOffline => _selectedCapacityOffline;
 
-  List _capacityOffline = ["Select", "1x10(L)", "1x10KVA(AGL)", "1X63+2x15KVA"];
-  List get capacityOffline => _capacityOffline;
+  final List<SubstationModel> _capacityOffline = [SubstationModel(optionCode: "0", optionName: "SELECT"),
+    SubstationModel(optionCode: "1", optionName: "1x10(L)"),
+    SubstationModel(optionCode: "1", optionName: "1x10KVA(AGL)"),
+    SubstationModel(optionCode: "3", optionName: "1x63+2x15KVA"),
+    SubstationModel(optionCode: "1", optionName: "1x100"),
+    SubstationModel(optionCode: "1", optionName: "1x75"),
+    SubstationModel(optionCode: "1", optionName: "1x50"),
+    SubstationModel(optionCode: "2", optionName: "1x100+1x15(L)"),
+    SubstationModel(optionCode: "2", optionName: "1x100+1x160"),
+    SubstationModel(optionCode: "1", optionName: "1x15 (Agl)"),
+    SubstationModel(optionCode: "1", optionName: "1x15(L)"),
+    SubstationModel(optionCode: "1", optionName: "1x16"),
+    SubstationModel(optionCode: "2", optionName: "1x16+1x15(L)"),
+    SubstationModel(optionCode: "1", optionName: "1x160"),
+    SubstationModel(optionCode: "1", optionName: "1x200"),
+    SubstationModel(optionCode: "1", optionName: "1x25"),
+    SubstationModel(optionCode: "1", optionName: "1x40"),
+    SubstationModel(optionCode: "1", optionName: "1x25L"),
+    SubstationModel(optionCode: "2", optionName: "1x25+1x15(L)"),
+    SubstationModel(optionCode: "1", optionName: "1x250"),
+    SubstationModel(optionCode: "1", optionName: "1x300"),
+    SubstationModel(optionCode: "1", optionName: "1x315"),
+    SubstationModel(optionCode: "1", optionName: "1x400"),
+    SubstationModel(optionCode: "1", optionName: "1x500"),
+    SubstationModel(optionCode: "1", optionName: "1x63"),
+    SubstationModel(optionCode: "2", optionName: "1x63+1x15(L)"),
+    SubstationModel(optionCode: "1", optionName: "1x630"),
+    SubstationModel(optionCode: "1", optionName: "1x650"),
+    SubstationModel(optionCode: "1", optionName: "1x750"),
+    SubstationModel(optionCode: "1", optionName: "1x800"),
+    SubstationModel(optionCode: "1", optionName: "1x1000"),
+    SubstationModel(optionCode: "1", optionName: "1x1600"),
+    SubstationModel(optionCode: "1", optionName: "1x2000"),
+    SubstationModel(optionCode: "1", optionName: "1x2500"),
+    SubstationModel(optionCode: "2", optionName: "2x100"),
+    SubstationModel(optionCode: "2", optionName: "2x150"),
+    SubstationModel(optionCode: "2", optionName: "2x16"),
+    SubstationModel(optionCode: "2", optionName: "2x25"),
+    SubstationModel(optionCode: "2", optionName: "2x15"),
+    SubstationModel(optionCode: "2", optionName: "2x250"),
+    SubstationModel(optionCode: "2", optionName: "2x63"),
+    SubstationModel(optionCode: "3", optionName: "3x10(A)"),
+    SubstationModel(optionCode: "3", optionName: "3x16"),
+    SubstationModel(optionCode: "3", optionName: "3x25"),
+    SubstationModel(optionCode: "3", optionName: "3x15"),
+    SubstationModel(optionCode: "2", optionName: "1x16+1x63"),
+  ];
+  List<SubstationModel> get capacityOffline => _capacityOffline;
 
-  void onListCapacitySelectedOffline(String? value) {
-    _selectedCapacityOffline = value;
+  int? _selectedCapacityIndex;
+
+  int? get selectedCapacityIndex => _selectedCapacityIndex;
+
+  void onListCapacitySelectedOffline(int? index) {
+    _selectedCapacityIndex = index;
+    _selectedCapacityOffline = index != null ? _capacityOffline[index].optionCode : null;
     print("$_selectedCapacityOffline: selected Capacity ");
 
     // Reset all DTR Details fields when capacity changes
@@ -137,7 +518,11 @@ class OfflineDtrViewmodel extends ChangeNotifier{
   String? _selectedPlintTypeOffline;
   String? get selectedPlintTypeOffline => _selectedPlintTypeOffline;
 
-  List _plintTypeOffline= ["Rings", "Pillar Type", "Rock Plint"];
+  List _plintTypeOffline= ["Select",
+    "Mounting Arrangements",
+    "Rings",
+    "Rock Plinth",
+    "Pillar Type"];
   List get plintTypeOffline=> _plintTypeOffline;
 
   void onListPlintTypeSelectedOffline(String? value) {
@@ -197,7 +582,22 @@ class OfflineDtrViewmodel extends ChangeNotifier{
   String? _selectedLoadPatternOffline;
   String? get selectedLoadPatternOffline => _selectedLoadPatternOffline;
 
-  List _loadPatternOffline = ["Select", "Idle", "HT Service", "Mixed Load"];
+  List _loadPatternOffline = [ "Select",
+    "Idle",
+    "Dedicated PWS",
+    "Dedicated LI",
+    "Dedicated Industrial",
+    "Dedicated Agl Without PWS",
+    "HT Service",
+    "Appartment",
+    "Dedicated Agl with PWS",
+    "Mixed Agl With PWS",
+    "Mixed Agl without PWS",
+    "Mixed Load",
+    "Pure Domestic",
+    "Pure Non Domestic",
+    "Mixed without AGL",
+    "Substation DTR "];
   List get loadPatternOffline => _loadPatternOffline;
 
   void onListLoadPatternSelectedOffline(String? value) {
@@ -210,8 +610,91 @@ class OfflineDtrViewmodel extends ChangeNotifier{
   String? _selectedMakeOffline;
   String? get selectedMakeOffline => _selectedMakeOffline;
 
-  List _makeOffline = ["11KV VCB-AREVA T&D INDIA LTD, NAINI W..", "Idle", "HT Service", "Mixed Load"];
+  List _makeOffline = [];
   List get make => _makeOffline;
+
+  Future<void> getMake() async {
+    if (_isLoading) return;
+
+    _isLoading = true;
+    _makeOffline.clear();
+    _selectedMakeOffline = null;
+    notifyListeners();
+
+    try {
+      final requestData = {
+        "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ?? "",
+        "api": Apis.API_KEY,
+      };
+
+      final payload = {
+        "path": "/getDtrMakes",
+        "apiVersion": "1.0",
+        "method": "POST",
+        "data": jsonEncode(requestData),
+      };
+
+      final response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+          .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+
+      if (response == null) {
+        throw Exception("No response received from server");
+      }
+
+      dynamic responseData = response.data;
+      if (responseData is String) {
+        responseData = jsonDecode(responseData);
+      }
+
+      if (response.statusCode != 200) { // Use a constant for success code
+        throw Exception(responseData['message'] ?? "Request failed with status ${response.statusCode}");
+      }
+
+      if (responseData['tokenValid'] != true) {
+        showSessionExpiredDialog(context);
+        return;
+      }
+
+      if (responseData['success'] != true) {
+        throw Exception(responseData['message'] ?? "Operation failed");
+      }
+
+      final jsonList = responseData['objectJson'];
+      if (jsonList == null) {
+        throw Exception("No make data received");
+      }
+
+      List<SubstationModel> dataList;
+      if (jsonList is List) {
+        dataList = jsonList
+            .map((json) => SubstationModel.fromJson(json as Map<String, dynamic>))
+            .toList();
+      } else if (jsonList is String) {
+        dataList = (jsonDecode(jsonList) as List<dynamic>)
+            .map((json) => SubstationModel.fromJson(json as Map<String, dynamic>))
+            .toList();
+      } else {
+        throw Exception("Invalid objectJson format");
+      }
+
+      // Deduplicate based on optionCode
+      _makeOffline = dataList.toSet().toList();
+      print("Make option codes: ${_makeOffline.map((f) => f.optionCode).toList()}");
+
+      if (_makeOffline.isNotEmpty) {
+        _selectedMakeOffline = _makeOffline.first.optionCode; // Default to first item
+      }
+      print("Successfully loaded ${_makeOffline.length} makes");
+    } catch (e, stackTrace) {
+      print("Error fetching makes: $e\n$stackTrace");
+      if (context.mounted) {
+        showErrorDialog(context, "Failed to load makes: ${e.toString()}");
+      }
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
 
   void onListMakeOffline(String? value) {
     _selectedMakeOffline= value;
@@ -287,23 +770,124 @@ class OfflineDtrViewmodel extends ChangeNotifier{
     notifyListeners();
   }
 
+  //Image
+  File? _capturedImage;
+  File? get capturedImage => _capturedImage;
+
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> capturePhoto() async {
+    // Request camera permission
+    final status = await Permission.camera.request();
+
+    if (status.isDenied) {
+      if (context.mounted) {
+        showErrorDialog(context, "Camera permission denied");
+      }
+      return;
+    }
+
+    if (status.isPermanentlyDenied) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Camera permission permanently denied. Please enable it in settings.'),
+            action: SnackBarAction(
+              label: 'Settings',
+              onPressed: () async {
+                await openAppSettings(); // Open app settings
+              },
+            ),
+          ),
+        );
+      }
+      return;
+    }
+
+    try {
+      final XFile? photo = await _picker.pickImage(
+        source: ImageSource.camera,
+        imageQuality: 85,
+        maxWidth: 1024,
+        maxHeight: 1024,
+      );
+
+      if (photo != null) {
+        _capturedImage = File(photo.path);
+        notifyListeners(); // Notify UI to update
+      }
+    } catch (e) {
+      print('Error capturing photo: $e');
+      if (context.mounted) {
+        showErrorDialog(context, "Error capturing photo");
+      }
+    }
+  }
+
 
   ///Loaction of DTR -> SPM and Store
   ///physical location of DTR
-  String? physical_loctaion;
-    String? get selectedPhysicalLocation => physical_loctaion;
+  String? _physicalLocation; // Fixed typo
+  String? get selectedPhysicalLocation => _physicalLocation;
 
-  List<String> _physical_location_SPM = ["01", "02", "03"];
-  List<String> _physical_locationOTHER = ["A", "B", "C"];
+  final List<String> _physicalLocationOther = [
+    "SELECT",
+    "KHAMMAM-STORE",
+    "WARANGAL-STORE",
+    "KARIMNAGAR STORE",
+    "NIZAMABAD-STORE",
+    "ADILABAD-STORE",
+    "MANCHERIAL-STORE"
+  ];
+
+  final List<String> _physicalLocationSPM = [
+    "SELECT",
+    "AE/SPM/Khammam",
+    "AE/SPM/Tallada",
+    "AE/SPM/Kothagudem",
+    "AE/SPM/Bhadrachalam",
+    "AE/SPM/Hanamkonda",
+    "AE/SPM/Warangal",
+    "AE/SPM &TRE/Bhupalpally",
+    "AE/SPM/Mulugu",
+    "AE/CTM <M/WGL Rural",
+    "AE/LTM &CTM/Mahabubabad",
+    "AE/SPM &TRE/WGL Rural",
+    "AE/SPM/Mahabubabad",
+    "AE/SPM/Thorrur",
+    "AE/SPM/Jangaon",
+    "AE/SPM/Ghanpur",
+    "AE/SPM/Karimnagar",
+    "AE/SPM/Huzurabad",
+    "AE/SPM/Jagtial",
+    "AE/SPM/Metpally",
+    "AE/SPM/Pedpapally",
+    "AE/SPM/Manthani",
+    "AE/SPM/Nizamabad",
+    "AE/SPM/Armoor",
+    "AE/SPM/Kamareddy",
+    "AE/SPM/Banswada",
+    "AE/SPM/Nirmal",
+    "AE/SPM/Bhainsa",
+    "AE/SPM/Mancherial",
+    "AE/SPM &TRE/Asifabad",
+    "AE/SPM/Adilabad"
+  ];
 
   List<String> get listPhysicalLocation {
-    return selectedFilter == "SPM" ? _physical_location_SPM : _physical_locationOTHER;
+    return _selectedFilterOffline == "SPM" ? _physicalLocationSPM : _physicalLocationOther;
   }
 
-    void onListPhysicalLocation(String? value) {
-      physical_loctaion = value;
-      notifyListeners();
-    }
+
+  void onListPhysicalLocation(String? value) {
+    _physicalLocation = value;
+    notifyListeners();
+  }
+
+    // void onListPhysicalLocation(String? value) {
+    //   physical_loctaion = value;
+    //   notifyListeners();
+    // }
 
   Future<void> getCurrentLocation() async {
     try {
