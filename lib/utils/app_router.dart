@@ -35,6 +35,7 @@ import 'package:tsnpdcl_employee/view/interruptions/view/view_11kv_breakdown_scr
 import 'package:tsnpdcl_employee/view/interruptions/view/view_11kv_open_restore_details.dart';
 import 'package:tsnpdcl_employee/view/interruptions/view/view_33kv_breakdown_screen.dart';
 import 'package:tsnpdcl_employee/view/interruptions/view/view_33kv_open_restore_details.dart';
+import 'package:tsnpdcl_employee/view/interruptions/view/view_report_screen.dart';
 import 'package:tsnpdcl_employee/view/interruptions/view/view_saidi_saifi_screen.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/view/add_induction_point_screen.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/view/all_lc_request_list_screen.dart';
@@ -332,6 +333,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => View11kvOpenRestoreDetails(data: settings.arguments as Map<String, dynamic>,));
       case MonthYearSelector.id:
         return MaterialPageRoute(builder: (_) => const MonthYearSelector()); //data: settings.arguments as Map<String, dynamic>,
+      case ViewReportScreen.id:
+        return MaterialPageRoute(builder: (_) => const ViewReportScreen()); //data: settings.arguments as Map<String, dynamic>,
 
     ///LTMT * Bhavana
       case LtmtMenu.id:

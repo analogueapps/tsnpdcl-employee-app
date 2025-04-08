@@ -79,8 +79,6 @@ class AuthViewmodel extends ChangeNotifier {
       if (context.mounted) {
         ProcessDialogHelper.closeDialog(context);
       }
-      print('shitt1: $response');
-
       try {
         if (response != null) {
           if (response.data is String) {
@@ -100,6 +98,7 @@ class AuthViewmodel extends ChangeNotifier {
                 await SharedPreferenceHelper.setStringValue(LoginSdkPrefs.sectionCodePrefKey, user[0].sectionCode ?? '',);
                 await SharedPreferenceHelper.setStringValue(LoginSdkPrefs.circleIdPrefKey, user[0].secMasterEntity!.circleId ?? '',);
 
+                print("login responseee: ${response.data}");
 
                 Navigation.instance.pushAndRemoveUntil(Routes.universalDashboardScreen);
               }

@@ -156,6 +156,8 @@ class GlobalConstants {
   static const String saidiSaifiReport = "Saidi Saifi Report";
   static const String viewBreakdowns = "View Breakdowns";
   static const String viewBreakdown = "View Breakdown";
+  static const String viewReport = "View Report";
+  static const String interruptions = "Interruptions";
 
   // Month Year * swetha
   static const String monthYear = "Month Year";

@@ -4,4 +4,8 @@ class UrlConstants {
   static const String foccUrl = "http://ccc.npdcl.com:9000/ConVoxCCS/index.php";
   static const String ebsUrl = "http://210.212.223.83:9000/EBS/";
   static const String matsUrl = "http://210.212.223.83:7000/MATS2/";
+  static const String viewSaidiUrl = "http://210.212.223.83:7000/NpdclEmployeeWebApi/viewSaidiSaifiv2.jsp?";
+  static const String viewReportUrl = "http://210.212.223.82/ATS/login/1/mis/reports/InterruptionRpt?interruptionFlag=&secMaster.divisionId=&fromDate=2024-04-08&toDate=2024-04-08&result=AppFDRAbst";
+
+
 }

@@ -555,6 +555,7 @@ class UniversalDashboardViewModel extends ChangeNotifier {
         GlobalConstants.foccTitle: UrlConstants.foccUrl,
         GlobalConstants.ebsTitle: UrlConstants.ebsUrl,
         GlobalConstants.matsTitle: UrlConstants.matsUrl,
+        GlobalConstants.viewReport: UrlConstants.viewReportUrl,
       };
 
       if (urlMapping.containsKey(title)) {
@@ -678,7 +679,7 @@ class UniversalDashboardViewModel extends ChangeNotifier {
         ),
         GlobalListDialogItem(
             title: "View Report",
-            routeName: ""
+            routeName: Routes.viewReportScreen
         ),
       ]);
       showCustomListDialog(context, globalListDialogItem);
