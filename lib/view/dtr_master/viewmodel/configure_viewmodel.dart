@@ -482,7 +482,9 @@ class MapDtrViewMobel extends ChangeNotifier {
 
       print("Successfully loaded ${_fDEntityList.length} structure entities");
       print("Navigating to MappedDtr with ${_fDEntityList.length} items: ${_fDEntityList.map((e) => e.toJson())}");
-      Navigator.pushNamed(context, Routes.mappedDtrScreen, arguments: _fDEntityList);
+      // Navigator.pushNamed(context, Routes.mappedDtrScreen, arguments: _fDEntityList);
+      Navigation.instance.navigateTo( Routes.mappedDtrScreen, args: _fDEntityList);
+
 
     } catch (e, stackTrace) {
       print("Error fetching feeder/distribution data: $e\n$stackTrace");
@@ -565,10 +567,9 @@ class MapDtrViewMobel extends ChangeNotifier {
                   print(
                       "Structure details: ${_structureDataConfi.map((e) =>
                           e.toJson())}");
-                  Navigator.pushNamed(
-                    context,
+                  Navigation.instance.navigateTo(
                     Routes.dtrStructure,
-                    arguments: _structureDataConfi,
+                    args: _structureDataConfi,
                   );
                 } catch (e, stackTrace) {
                   print("Error parsing message: $e");

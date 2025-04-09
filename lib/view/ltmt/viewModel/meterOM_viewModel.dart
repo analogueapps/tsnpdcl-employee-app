@@ -262,7 +262,7 @@ class MeterOMViewmodel extends ChangeNotifier {
                                 print("Selected Staff ID: $selectedEmpID");
                                 Navigator.pop(context);
                                 // Use standard Flutter navigation
-                                Navigator.pushNamed(context, Routes.meterOM, arguments: selectedEmpID);
+                                Navigation.instance.navigateTo( Routes.meterOM, args: selectedEmpID);
                               },
                             );
                           },

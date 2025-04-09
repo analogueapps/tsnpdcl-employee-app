@@ -8,6 +8,7 @@ import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
+import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/model/dtr_feedet_distribution_model.dart';
 
 
@@ -92,10 +93,9 @@ class MappedDtrViewmodel extends ChangeNotifier {
                   print(
                       "Structure details: ${_structureData.map((e) =>
                           e.toJson())}");
-                  Navigator.pushNamed(
-                    context,
+                  Navigation.instance.navigateTo(
                     Routes.dtrStructure,
-                    arguments: _structureData,
+                    args: _structureData,
                   );
                 } catch (e, stackTrace) {
                   print("Error parsing message: $e");

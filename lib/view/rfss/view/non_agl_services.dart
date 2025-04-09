@@ -7,6 +7,8 @@ import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
 import 'package:tsnpdcl_employee/view/rfss/viewmodel/non_agl_viewmodel.dart';
 import 'package:tsnpdcl_employee/widget/primary_button.dart';
+import 'package:tsnpdcl_employee/view/dtr_master/model/circle_model.dart';
+
 
 class NonAglServices extends StatelessWidget {
   static const id = Routes.nonAglService;
@@ -51,35 +53,54 @@ class NonAglServices extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         GestureDetector(
-                          onTap: () => viewModel.showSubstationDialog(context, viewModel),
+                          // onTap: () => viewModel.showSubstationDialog(context, viewModel),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Text("Select Distribution"),
-                              Container(
-                            height: 50,
-                            width: double.infinity,
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              // color: CommonColors.textFieldColor,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  viewModel.selectedDistribution ?? "Select ",
-                                  style: const TextStyle(color: Colors.black),
-                                ),
-                                const Icon(
-                                  Icons.arrow_drop_down,
-                                  color: Colors.black,
-                                  size: 24,
-                                ),
-                              ],
-                            ),
-                          ),
+                              DropdownButton<String>(
+                                isExpanded: true,
+                                hint: const Text("Select"),
+                                value: viewModel.selectedDistribution,
+                                items: viewModel.distri.map((SubstationModel item) {
+                                  return DropdownMenuItem<String>(
+                                    value: item.optionCode,
+                                    child: Text(item.optionName),
+                                  );
+                                }).toList(),
+                                onChanged: (String? value) {
+                                  if (value != null) {
+                                    final selectedItem = viewModel.distri.firstWhere(
+                                          (item) => item.optionCode == value,
+                                    );
+                                    viewModel.onListDistributionSelected(value);
+                                  }
+                                },
+                              )
+                          //     Container(
+                          //   height: 50,
+                          //   width: double.infinity,
+                          //   padding: const EdgeInsets.symmetric(horizontal: 12),
+                          //   decoration: BoxDecoration(
+                          //     color: Colors.white,
+                          //     // color: CommonColors.textFieldColor,
+                          //     borderRadius: BorderRadius.circular(8),
+                          //   ),
+                          //   child: Row(
+                          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //     children: [
+                          //       Text(
+                          //         viewModel.selectedDistribution ?? "Select ",
+                          //         style: const TextStyle(color: Colors.black),
+                          //       ),
+                          //       const Icon(
+                          //         Icons.arrow_drop_down,
+                          //         color: Colors.black,
+                          //         size: 24,
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
                           ]
                           ),
                         ),
@@ -94,18 +115,18 @@ class NonAglServices extends StatelessWidget {
                         ),
                         const SizedBox(height: 5,),
                         const Text("Select Structure Code"),
-                        DropdownButton<String>(
-                          isExpanded: true,
-                          hint: const Text(""),
-                          value: viewModel.selectedStructure,
-                          items: viewModel.struct.map((item) {
-                            return DropdownMenuItem<String>(
-                              value: item,
-                              child: Text(item),
-                            );
-                          }).toList(),
-                          onChanged: (value) => viewModel.onListStructureSelected(value),
-                        ),
+                        // DropdownButton<String>(
+                        //   isExpanded: true,
+                        //   hint: const Text(""),
+                        //   value: viewModel.selectedStructure,
+                        //   items: viewModel.struct.map((item) {
+                        //     return DropdownMenuItem<String>(
+                        //       value: item,
+                        //       child: Text(item),
+                        //     );
+                        //   }).toList(),
+                        //   onChanged: (value) => viewModel.onListStructureSelected(value),
+                        // ),
                         Text(viewModel.selectedStructure??"", style: const TextStyle(color: Colors.green),),
 
                       ]

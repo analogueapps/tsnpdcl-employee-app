@@ -634,7 +634,7 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       globalListDialogItem.addAll([
         GlobalListDialogItem(
           title: "View GIS List",
-          routeName: "",
+          routeName: Routes.viewGisIdsScreen,
         ),
         GlobalListDialogItem(
           title: "View Offline Forms",

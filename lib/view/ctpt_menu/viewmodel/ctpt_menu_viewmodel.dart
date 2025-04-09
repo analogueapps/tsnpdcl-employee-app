@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tsnpdcl_employee/model/sub_menu_list_item.dart';
+import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
 
 class CtptMenuViewModel extends ChangeNotifier {
@@ -19,10 +20,10 @@ class CtptMenuViewModel extends ChangeNotifier {
     _ctptMenuItems.addAll([
       SubMenuListItem(
           title: GlobalConstants.reportCtPtFailure,
-          routeName: routeName),
+          routeName: Routes.reportCtPtFailure),
       SubMenuListItem(
           title: GlobalConstants.viewCtPtReportedList,
-          routeName: routeName),
+          routeName: Routes.viewCtPtReportList),
       SubMenuListItem(
           title: GlobalConstants.viewCtPtFailureConfirmedList,
           routeName: routeName),

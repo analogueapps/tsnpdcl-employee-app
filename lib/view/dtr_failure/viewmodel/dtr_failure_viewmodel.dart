@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tsnpdcl_employee/model/sub_menu_grid_item.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
+import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 
 class DtrFailureViewModel extends ChangeNotifier {
   final List<SubMenuGridItem> _dtrFailureMenuItems = [];
@@ -27,7 +28,7 @@ class DtrFailureViewModel extends ChangeNotifier {
           title: GlobalConstants.viewFailureReports,
           iconAsset: Icons.assignment_late_outlined,
           cardColor: Colors.green,
-          routeName: routeName),
+          routeName: Routes.dtrFailureReportingScreen),
       SubMenuGridItem(
           title: GlobalConstants.viewRectifiedReports,
           iconAsset: Icons.list_alt_outlined,
@@ -37,4 +38,5 @@ class DtrFailureViewModel extends ChangeNotifier {
 
     notifyListeners();
   }
+
 }
