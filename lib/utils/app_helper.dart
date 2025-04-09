@@ -13,6 +13,7 @@ class LoginSdkPrefs {
   static const String npdclUserPrefKey = "NPDCL_USER_PREF_KEY";
   static const String sectionCodePrefKey = "SECTION_CODE_PREF_KEY";
   static const String circleIdPrefKey = "CIRCLE_ID_PREF_KEY";
+  static const String sectionPrefKey = "SECTION_PREF_KEY";
 }
 
 Future<String?> getDeviceId() async {

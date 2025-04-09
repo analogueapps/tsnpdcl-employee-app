@@ -76,8 +76,8 @@ import 'package:tsnpdcl_employee/view/search_consumer/view/search_consumer_scree
 import 'package:tsnpdcl_employee/view/ss_maintenance/view/maintenance_due_screen.dart';
 import 'package:tsnpdcl_employee/view/ss_maintenance/view/maintenance_finished_screen.dart';
 import 'package:tsnpdcl_employee/view/ss_maintenance/view/ss_maintenance_screen.dart';
-import 'package:tsnpdcl_employee/view/tong_tester_readings/view/tong_tester_readings_screen.dart';
-import 'package:tsnpdcl_employee/view/tong_tester_readings/view/view_detailed_tong_tester_readings.dart';
+import 'package:tsnpdcl_employee/view/tong_tester_readings/view/overloaded_dtrs_screen.dart';
+import 'package:tsnpdcl_employee/view/tong_tester_readings/view/structure_dtr_list.dart';
 import 'package:tsnpdcl_employee/view/web_view/view/web_view_screen.dart';
 import 'package:tsnpdcl_employee/widget/month_year_selector.dart';
 import 'package:tsnpdcl_employee/widget/pinch_zoom_imageview.dart';
@@ -90,6 +90,16 @@ import 'package:tsnpdcl_employee/view/rfss/view/agl_services.dart';
 import 'package:tsnpdcl_employee/view/rfss/view/new_inspection.dart';
 import 'package:tsnpdcl_employee/view/dtr_failure/view/dtr_failure_reporting.dart';
 import 'package:tsnpdcl_employee/view/ltmt/view/meters_OM.dart';
+import 'package:tsnpdcl_employee/view/ctpt_menu/view/ui/report_ct_pt_failure.dart';
+import 'package:tsnpdcl_employee/view/ctpt_menu/view/ui/view_ct_pt_report_list.dart';
+import 'package:tsnpdcl_employee/view/ctpt_menu/viewmodel/report_ct_pt_viewmodel.dart';
+import 'package:tsnpdcl_employee/view/dashboard/view/universal_dashboard_screen.dart';
+import 'package:tsnpdcl_employee/view/dtr_failure/view/dtr_fail_report.dart';
+import 'package:tsnpdcl_employee/view/gis_ids/view/add_gis_point.dart';
+import 'package:tsnpdcl_employee/view/gis_ids/view/create_gis_id.dart';
+import 'package:tsnpdcl_employee/view/gis_ids/view/gis_ids.dart';
+import 'package:tsnpdcl_employee/view/gis_ids/view/gis_individual.dart';
+import 'package:tsnpdcl_employee/view/gis_ids/view/view_work_details.dart';
 
 class AppRouter {
   static Route generateRoute(RouteSettings settings) {
@@ -269,12 +279,12 @@ class AppRouter {
                 PinchZoomImageView(imageUrl: settings.arguments as String));
 
     // Tong tester readings * Swetha
-      case TongTesterReadingsScreen.id:
+      case OverloadedDtrsView.id:
         return MaterialPageRoute(
-            builder: (_) => const TongTesterReadingsScreen());
-      case ViewDetailedTongTesterReadings.id:
+            builder: (_) => OverloadedDtrsView());
+      case StructureDtrList.id:
         return MaterialPageRoute(
-            builder: (_) => const ViewDetailedTongTesterReadings());
+            builder: (_) => const StructureDtrList(structure: {},));
 
     // RFSS Screen * Swetha
       case RfssScreen.id:
@@ -365,6 +375,26 @@ class AppRouter {
     // DTR FAILURE
       case DtrFailureReporting.id:
         return MaterialPageRoute(builder: (_)=> const DtrFailureReporting());
+      case ReportDTRFailure.id:
+        return MaterialPageRoute(builder: (_)=> const ReportDTRFailure());
+
+    //CT PT FAILURE
+      case CTFailureReportScreen.id:
+        return MaterialPageRoute(builder: (_)=> const CTFailureReportScreen());
+      case FailureReportedList.id:
+        return MaterialPageRoute(builder: (_)=> const FailureReportedList());
+
+    //GIS DIS
+      case GISIDsScreen.id:
+        return MaterialPageRoute(builder: (_)=> const GISIDsScreen());
+      case CreateGisId.id:
+        return MaterialPageRoute(builder: (_)=> const CreateGisId());
+      case AddGisPoint.id:
+        return MaterialPageRoute(builder: (_)=> const AddGisPoint());
+      case GisIndividualId.id:
+        return MaterialPageRoute(builder: (_)=> GisIndividualId(individualGIDId:  settings.arguments as int,));
+      case ViewWorkDetails.id:
+        return MaterialPageRoute(builder: (_)=> const ViewWorkDetails());
 
       default:
         return MaterialPageRoute(

@@ -220,7 +220,7 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.tongTesterReadingsTitle,
           imageAsset: Assets.tongTesterReadings,
-        routeName: Routes.tongTesterReadingsScreen,
+        routeName: Routes.structureDtrList,
       ),
       UniversalDashboardItem(
           title: GlobalConstants.checkReadingsTitle,
@@ -401,7 +401,7 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.tongTesterReadingsTitle,
           imageAsset: Assets.tongTesterReadings,
-          routeName: Routes.tongTesterReadingsScreen,
+          routeName: Routes.overloadedDtrsView,
       ),
       UniversalDashboardItem(
           title: GlobalConstants.uscNoTitle,

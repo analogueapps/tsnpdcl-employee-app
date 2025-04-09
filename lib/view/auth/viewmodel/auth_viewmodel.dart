@@ -97,8 +97,10 @@ class AuthViewmodel extends ChangeNotifier {
                 /// * swetha
                 await SharedPreferenceHelper.setStringValue(LoginSdkPrefs.sectionCodePrefKey, user[0].sectionCode ?? '',);
                 await SharedPreferenceHelper.setStringValue(LoginSdkPrefs.circleIdPrefKey, user[0].secMasterEntity!.circleId ?? '',);
+                await SharedPreferenceHelper.setStringValue(LoginSdkPrefs.sectionPrefKey, user[0].secMasterEntity!.section ?? '',);
 
                 print("login responseee: ${response.data}");
+                print("sectionnn: ${user[0].secMasterEntity!.section}");
 
                 Navigation.instance.pushAndRemoveUntil(Routes.universalDashboardScreen);
               }

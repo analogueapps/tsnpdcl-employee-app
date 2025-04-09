@@ -6,12 +6,13 @@ import 'package:tsnpdcl_employee/utils/status_constants.dart';
 import 'package:tsnpdcl_employee/view/ss_maintenance/model/ss_maintenance_grid_item.dart';
 
 class SsMaintenanceViewModel extends ChangeNotifier {
+  final BuildContext context;
   final List<SsMaintenanceGridItem> _ssMaintenanceMenuItems = [];
 
   List<SsMaintenanceGridItem> get ssMaintenanceMenuItems => _ssMaintenanceMenuItems;
 
   // Constructor to initialize the items
-  SsMaintenanceViewModel() {
+  SsMaintenanceViewModel({required this.context}) {
     _initializeItems();
   }
 
@@ -41,7 +42,7 @@ class SsMaintenanceViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> menuItemClicked(BuildContext context, String title, String routeName) async {
+  Future<void> menuItemClicked(String title, String routeName) async {
     // Navigate to the specified route
     if (routeName == Routes.maintenanceDueScreen) {
       Navigation.instance.navigateTo(routeName);

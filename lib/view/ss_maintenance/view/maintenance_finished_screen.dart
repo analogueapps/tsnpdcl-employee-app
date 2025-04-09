@@ -45,7 +45,7 @@ class _MaintenanceFinishedScreenState extends State<MaintenanceFinishedScreen> {
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: ChangeNotifierProvider(
-        create: (_) => MaintenanceFinishedViewmodel(),
+        create: (_) => MaintenanceFinishedViewmodel(context: context),
         child: Consumer<MaintenanceFinishedViewmodel>(
           builder: (context, viewModel, child) {
             return Padding(

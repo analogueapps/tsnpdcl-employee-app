@@ -75,4 +75,10 @@ class Apis{
   /// GET 33KV DATA
   static const GET_BREAKDOWNS_OF_SECTION = "getBreakDownsOfSection";
 
+  /// Tong tester readings
+  static const TONG_TESTER_END_POINT_BASE_URL = "$ROOT_URL$NPDCL_EMP_URL";
+  static const String GET_SECTIONS_OF_SUBDIVISION = "/getSectionOfSubdivision";
+  static const String GET_STRUCTURES_OF_SECTION = "/getStructuresOfSection";
+  static const String GET_DTRS_OF_STRUCTURE = "/getDtrsOfStructure";
+  static const String SAVE_TONG_TESTER_READING = "/savedTongTesterReading";
 }

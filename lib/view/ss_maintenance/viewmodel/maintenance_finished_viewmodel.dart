@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 class MaintenanceFinishedViewmodel extends ChangeNotifier {
+  final BuildContext context;
   final List<Map<String, String>> _maintenanceItems = [
     {
       "id": "#90204",
@@ -25,7 +26,7 @@ class MaintenanceFinishedViewmodel extends ChangeNotifier {
 
   String _searchQuery = '';
 
-  MaintenanceFinishedViewmodel() {
+  MaintenanceFinishedViewmodel({required this.context}) {
     _filteredItems = List.from(_maintenanceItems);
     print("Initial items: ${_filteredItems.length}");
     notifyListeners();

@@ -78,8 +78,8 @@ class Routes {
   static const String pinchZoomImageView = 'PinchZoomImageView';
 
   //tong tester readings * swetha
-  static const String tongTesterReadingsScreen = 'TongTesterReadingsScreen';
-  static const String viewDetailedTongTesterReadings = 'ViewDetailedTongTesterReadings';
+  static const String overloadedDtrsView = 'OverloadedDtrsView';
+  static const String structureDtrList = 'StructureDtrList';
 
   // RFSS Screen * swetha
   static const String rfssScreen = 'RfssScreen';
@@ -118,6 +118,7 @@ class Routes {
 
   //DTR Failures
   static const String failureReporting="DtrFailureReporting";
+  static const String dtrFailureReportingScreen="ReportDTRFailure";
 
   // Interruptions * swetha
   static const String breakdown33kvScreen = "Breakdown33kvScreen";
@@ -134,4 +135,16 @@ class Routes {
   static const String monthYearSelector = "MonthYearSelector";
   static const String viewReportScreen = "ViewReportScreen";
 
+  // CT PT FAILURE/REPLACEMENT
+  static const String reportCtPtFailure = "CTFailureReportScreen";
+  static const String viewCtPtReportList="FailureReportedList";
+  static const String failureIndividual="IndividualFailureReport";
+
+
+  //GIS DIS * Bhavana
+  static const String viewGisIdsScreen="GISIDsScreen";
+  static const String createGisIds="CreateGisId";
+  static const String gisIndividual="GisIndividualId";
+  static const String addGis="AddGisPoint";
+  static const String viewWorkScreen="ViewWorkDetails";
 }

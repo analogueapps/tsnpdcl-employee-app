@@ -29,7 +29,7 @@ class SsMaintenanceScreen extends StatelessWidget {
         ),
       ),
       body: ChangeNotifierProvider(
-        create: (_) => SsMaintenanceViewModel(), // Use ViewModel
+        create: (_) => SsMaintenanceViewModel(context: context), // Use ViewModel
         child: Consumer<SsMaintenanceViewModel>(
           builder: (context, viewModel, child) {
             return viewModel.ssMaintenanceMenuItems.isNotEmpty
@@ -45,7 +45,7 @@ class SsMaintenanceScreen extends StatelessWidget {
                 final item = viewModel.ssMaintenanceMenuItems[index];
                 return GestureDetector(
                   onTap: () {
-                    viewModel.menuItemClicked(context, item.title, item.routeName);
+                    viewModel.menuItemClicked(item.title, item.routeName);
                     // Handle the item click (navigation or other actions)
                     // Navigation.instance.navigateTo(item.routeName);
                     print('${item.title} clicked');
