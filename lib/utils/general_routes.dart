@@ -137,14 +137,19 @@ class Routes {
 
   // CT PT FAILURE/REPLACEMENT
   static const String reportCtPtFailure = "CTFailureReportScreen";
-  static const String viewCtPtReportList="FailureReportedList";
-  static const String failureIndividual="IndividualFailureReport";
-
+  static const String viewCtPtReportList = "FailureReportedList";
+  static const String failureIndividual = "IndividualFailureReport";
+  static const String viewDetailedCtptReport = "ViewDetailedCtptReport"; // * swetha
 
   //GIS DIS * Bhavana
   static const String viewGisIdsScreen="GISIDsScreen";
   static const String createGisIds="CreateGisId";
   static const String gisIndividual="GisIndividualId";
   static const String addGis="AddGisPoint";
-  static const String viewWorkScreen="ViewWorkDetails";
+  static const String viewWorkScreen="WorkDetailsPage";
+  static const String viewWorkFloatButtonScreen="ViewWorkFloatingButton";
+
+  // ACCOUNT * SWETHA
+  static const String accountScreen = "AccountScreen";
+
 }

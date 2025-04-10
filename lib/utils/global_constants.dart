@@ -162,6 +162,9 @@ class GlobalConstants {
   // Month Year * swetha
   static const String monthYear = "Month Year";
 
+  // Accounts * swetha
+  static const String account = "Account";
+
 }
 
 

@@ -7,54 +7,46 @@ String failureReportToJson(FailureReportModel data) => json.encode(data.toJson()
 
 class FailureReportModel {
   FailureReportModel({
-    required this.regNo,
-    required this.village,
-    required this.scNo,
-    required this.date,
-    required this.status,
-  });
+    required this.data, // Store all API data in a Map
+  }) {
+    // Extract required fields for UI compatibility
+    regNo = data['reportId']?.toString();
+    village = data['section']?.toString();
+    scNo = data['htScno']?.toString();
+    date = data['reportDate']?.toString();
+    status = data['status']?.toString();
+    cName = data['cName']?.toString();
+  }
 
-  FailureReportModel.fromJson(dynamic json) {
+  // Store the full API response
+  final Map<String, dynamic> data;
+
+  // Fields required by your UI (kept for compatibility)
+  String? regNo;
+  String? village;
+  String? scNo;
+  String? date;
+  String? status;
+  String? cName;
+
+  factory FailureReportModel.fromJson(dynamic json) {
     try {
-      regNo = json['regNo']?.toString() ?? '';
-      village = json['village']?.toString() ?? '';
-      scNo = json['scNo']?.toString() ?? '';
-      date = json['opDate']?.toString() ?? '';
-      status = json['status']?.toString() ?? '';
+      return FailureReportModel(
+        data: Map<String, dynamic>.from(json), // Store the entire JSON object
+      );
     } catch (e) {
       print("Error parsing FailureReport: $e");
       throw FormatException("Invalid failure report data format");
     }
   }
 
-  String? regNo;
-  String? village;
-  String? scNo;
-  String? date;
-  String? status;
-
-  FailureReportModel copyWith({
-    String? regNo,
-    String? village,
-    String? scNo,
-    String? date,
-    String? status,
-  }) =>
-      FailureReportModel(
-        regNo: regNo ?? this.regNo,
-        village: village ?? this.village,
-        scNo: scNo ?? this.scNo,
-        date: date ?? this.date,
-        status: status ?? this.status,
-      );
-
   Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['regNo'] = regNo;
-    map['village'] = village;
-    map['scNo'] = scNo;
-    map['opDate'] = date;
-    map['status'] = status;
-    return map;
+    return Map<String, dynamic>.from(data); // Return the full data map
+  }
+
+  @override
+  String toString() {
+    // Display all data in the map for debugging
+    return 'FailureReportModel(${data.entries.map((e) => '${e.key}: ${e.value}').join(', ')})';
   }
 }

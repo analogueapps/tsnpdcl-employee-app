@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:tsnpdcl_employee/view/account_screen/view/account_screen.dart';
 import 'package:tsnpdcl_employee/view/asset_mapping/view/asset_mapping_screen.dart';
 import 'package:tsnpdcl_employee/view/auth/view/corporate_login_screen.dart';
 import 'package:tsnpdcl_employee/view/auth/view/employee_id_login_screen.dart';
 import 'package:tsnpdcl_employee/view/consumer_details/view/consumer_details_screen.dart';
 import 'package:tsnpdcl_employee/view/consumer_details/view/dlist_form_screen.dart';
 import 'package:tsnpdcl_employee/view/ctpt_menu/view/ctpt_menu_screen.dart';
+import 'package:tsnpdcl_employee/view/ctpt_menu/view/ui/view_detailed_ctpt_report.dart';
 import 'package:tsnpdcl_employee/view/dashboard/view/universal_dashboard_screen.dart';
 import 'package:tsnpdcl_employee/view/dtr_failure/view/dtr_failure_screen.dart';
 import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_inspection_list_screen.dart';
@@ -77,10 +79,10 @@ import 'package:tsnpdcl_employee/view/ss_maintenance/view/maintenance_due_screen
 import 'package:tsnpdcl_employee/view/ss_maintenance/view/maintenance_finished_screen.dart';
 import 'package:tsnpdcl_employee/view/ss_maintenance/view/ss_maintenance_screen.dart';
 import 'package:tsnpdcl_employee/view/tong_tester_readings/view/overloaded_dtrs_screen.dart';
-import 'package:tsnpdcl_employee/view/tong_tester_readings/view/structure_dtr_list.dart';
 import 'package:tsnpdcl_employee/view/web_view/view/web_view_screen.dart';
 import 'package:tsnpdcl_employee/widget/month_year_selector.dart';
 import 'package:tsnpdcl_employee/widget/pinch_zoom_imageview.dart';
+import '../view/ctpt_menu/model/failure_report.dart';
 import '../view/dtr_master/view/view_mapped/mapped_dtr.dart';
 import '../view/ltmt/view/ltmt_menu.dart';
 import '../view/ltmt/view/meters_stock.dart';
@@ -100,6 +102,8 @@ import 'package:tsnpdcl_employee/view/gis_ids/view/create_gis_id.dart';
 import 'package:tsnpdcl_employee/view/gis_ids/view/gis_ids.dart';
 import 'package:tsnpdcl_employee/view/gis_ids/view/gis_individual.dart';
 import 'package:tsnpdcl_employee/view/gis_ids/view/view_work_details.dart';
+import 'package:tsnpdcl_employee/view/gis_ids/model/gis_individual_model.dart';
+import 'package:tsnpdcl_employee/view/gis_ids/view/view_work_floating_button.dart';
 
 class AppRouter {
   static Route generateRoute(RouteSettings settings) {
@@ -135,6 +139,13 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const PdmsScreen());
       case CtptMenuScreen.id:
         return MaterialPageRoute(builder: (_) => const CtptMenuScreen());
+      case ViewDetailedCtptReport.id: // * swetha
+        return MaterialPageRoute(
+          builder: (_) => ViewDetailedCtptReport(
+            data: settings.arguments
+                as FailureReportModel, // Cast to FailureReportModel
+          ),
+        );
       case ConsumerDetailsScreen.id:
         return MaterialPageRoute(builder: (_) => const ConsumerDetailsScreen());
       case WebViewScreen.id:
@@ -144,18 +155,18 @@ class AppRouter {
       case MeesevaMenuScreen.id:
         return MaterialPageRoute(builder: (_) => const MeesevaMenuScreen());
 
-    // Ganesh pandal
+      // Ganesh pandal
       case GaneshPandalInformationScreen.id:
         return MaterialPageRoute(
             builder: (_) => const GaneshPandalInformationScreen());
 
-    // Consumer details
+      // Consumer details
       case DlistFormScreen.id:
         return MaterialPageRoute(
             builder: (_) =>
                 DlistFormScreen(form: settings.arguments as String));
 
-    // Line Clearance
+      // Line Clearance
       case LcMasterSsListScreen.id:
         return MaterialPageRoute(builder: (_) => const LcMasterSsListScreen());
       case LcMasterFeederListScreen.id:
@@ -179,7 +190,7 @@ class AppRouter {
             builder: (_) =>
                 ViewDetailedLcScreen(lcId: settings.arguments as String));
 
-    // Pole tracker
+      // Pole tracker
       case PoleTrackerSelectionViewSketchScreen.id:
         return MaterialPageRoute(
             builder: (_) => const PoleTrackerSelectionViewSketchScreen());
@@ -210,15 +221,15 @@ class AppRouter {
         return MaterialPageRoute(
             builder: (_) => const ViewOfflineFeedersScreen());
 
-    // BILLING RELATED
+      // BILLING RELATED
       case GruhaJyothiScreen.id:
         return MaterialPageRoute(builder: (_) => const GruhaJyothiScreen());
 
-    // MANAGE STAFF
+      // MANAGE STAFF
       case ManageStaffsScreen.id:
         return MaterialPageRoute(builder: (_) => const ManageStaffsScreen());
 
-    // PDMS
+      // PDMS
       case CreatePoleIndentsScreen.id:
         return MaterialPageRoute(
             builder: (_) => const CreatePoleIndentsScreen());
@@ -246,21 +257,21 @@ class AppRouter {
             builder: (_) => ViewDetailedPoleDumpedLocationScreen(
                 data: settings.arguments as String));
 
-    // REPORTS
+      // REPORTS
       case ReportsScreen.id:
         return MaterialPageRoute(
             builder: (_) => ReportsScreen(path: settings.arguments as String));
 
-    // FILTER
+      // FILTER
       case FilterScreen.id:
         return MaterialPageRoute(
             builder: (_) => FilterScreen(data: settings.arguments as String));
 
-    // EXCEPTIONALS
+      // EXCEPTIONALS
       case ExceptionalsScreen.id:
         return MaterialPageRoute(builder: (_) => const ExceptionalsScreen());
 
-    // DTR MAINTENANCE
+      // DTR MAINTENANCE
       case DtrMasterListScreen.id:
         return MaterialPageRoute(builder: (_) => const DtrMasterListScreen());
       case DtrInspectionListScreen.id:
@@ -272,21 +283,17 @@ class AppRouter {
             builder: (_) => DtrMaintenanceInspectionScreen(
                 data: settings.arguments as String));
 
-    // Widgets
+      // Widgets
       case PinchZoomImageView.id:
         return MaterialPageRoute(
             builder: (_) =>
                 PinchZoomImageView(imageUrl: settings.arguments as String));
 
-    // Tong tester readings * Swetha
+      // Tong tester readings * Swetha
       case OverloadedDtrsView.id:
-        return MaterialPageRoute(
-            builder: (_) => OverloadedDtrsView());
-      case StructureDtrList.id:
-        return MaterialPageRoute(
-            builder: (_) => const StructureDtrList(structure: {},));
+        return MaterialPageRoute(builder: (_) => OverloadedDtrsView());
 
-    // RFSS Screen * Swetha
+      // RFSS Screen * Swetha
       case RfssScreen.id:
         return MaterialPageRoute(builder: (_) => const RfssScreen());
       case NonAglServices.id:
@@ -296,7 +303,7 @@ class AppRouter {
       case NewInspection.id:
         return MaterialPageRoute(builder: (_) => const NewInspection());
 
-    // Middle Poles Screen * Swetha
+      // Middle Poles Screen * Swetha
       case MiddlePolesScreen.id:
         return MaterialPageRoute(builder: (_) => const MiddlePolesScreen());
       case MiddlePoles33kv.id:
@@ -306,95 +313,132 @@ class AppRouter {
       case PendingListScreen.id:
         return MaterialPageRoute(builder: (_) => const PendingListScreen());
       case ViewDetailedPendingListScreen.id:
-        return MaterialPageRoute(builder: (_) => const ViewDetailedPendingListScreen());
+        return MaterialPageRoute(
+            builder: (_) => const ViewDetailedPendingListScreen());
       case PendingListFloatingButton.id:
-        return MaterialPageRoute(builder: (_) => const PendingListFloatingButton());
+        return MaterialPageRoute(
+            builder: (_) => const PendingListFloatingButton());
 
-    // SS Maintenance Screen * Swetha
+      // SS Maintenance Screen * Swetha
       case SsMaintenanceScreen.id:
         return MaterialPageRoute(builder: (_) => const SsMaintenanceScreen());
       case MaintenanceDueScreen.id:
         return MaterialPageRoute(builder: (_) => const MaintenanceDueScreen());
       case MaintenanceFinishedScreen.id:
-        return MaterialPageRoute(builder: (_) => const MaintenanceFinishedScreen());
+        return MaterialPageRoute(
+            builder: (_) => const MaintenanceFinishedScreen());
 
-    // Interruptions * swetha
+      // Interruptions * swetha
       case Breakdown33kvScreen.id:
         return MaterialPageRoute(builder: (_) => const Breakdown33kvScreen());
       case Breakdown11kvScreen.id:
         return MaterialPageRoute(builder: (_) => const Breakdown11kvScreen());
       case InterruptionsEntryScreen.id:
-        return MaterialPageRoute(builder: (_) => const InterruptionsEntryScreen());
+        return MaterialPageRoute(
+            builder: (_) => const InterruptionsEntryScreen());
       case SaidiSaifiCalculatorScreen.id:
-        return MaterialPageRoute(builder: (_) => const SaidiSaifiCalculatorScreen());
+        return MaterialPageRoute(
+            builder: (_) => const SaidiSaifiCalculatorScreen());
       case ViewSaidiSaifiScreen.id:
         return MaterialPageRoute(builder: (_) => const ViewSaidiSaifiScreen());
       case View33kvBreakdownScreen.id:
-        return MaterialPageRoute(builder: (_) => const View33kvBreakdownScreen());
+        return MaterialPageRoute(
+            builder: (_) => const View33kvBreakdownScreen());
       case View11kvBreakdownScreen.id:
-        return MaterialPageRoute(builder: (_) => const View11kvBreakdownScreen());
+        return MaterialPageRoute(
+            builder: (_) => const View11kvBreakdownScreen());
       case DetailedView33kvBreakdownScreen.id:
-        return MaterialPageRoute(builder: (_) => DetailedView33kvBreakdownScreen(data: settings.arguments as Map<String, dynamic>,));
+        return MaterialPageRoute(
+            builder: (_) => DetailedView33kvBreakdownScreen(
+                  data: settings.arguments as Map<String, dynamic>,
+                ));
       case DetailedView11kvBreakdownScreen.id:
-        return MaterialPageRoute(builder: (_) => DetailedView11kvBreakdownScreen(data: settings.arguments as Map<String, dynamic>,));
+        return MaterialPageRoute(
+            builder: (_) => DetailedView11kvBreakdownScreen(
+                  data: settings.arguments as Map<String, dynamic>,
+                ));
       case View33kvOpenRestoreDetails.id:
-        return MaterialPageRoute(builder: (_) => View33kvOpenRestoreDetails(data: settings.arguments as Map<String, dynamic>,));
+        return MaterialPageRoute(
+            builder: (_) => View33kvOpenRestoreDetails(
+                  data: settings.arguments as Map<String, dynamic>,
+                ));
       case View11kvOpenRestoreDetails.id:
-        return MaterialPageRoute(builder: (_) => View11kvOpenRestoreDetails(data: settings.arguments as Map<String, dynamic>,));
+        return MaterialPageRoute(
+            builder: (_) => View11kvOpenRestoreDetails(
+                  data: settings.arguments as Map<String, dynamic>,
+                ));
       case MonthYearSelector.id:
-        return MaterialPageRoute(builder: (_) => const MonthYearSelector()); //data: settings.arguments as Map<String, dynamic>,
+        return MaterialPageRoute(
+            builder: (_) =>
+                const MonthYearSelector()); //data: settings.arguments as Map<String, dynamic>,
       case ViewReportScreen.id:
-        return MaterialPageRoute(builder: (_) => const ViewReportScreen()); //data: settings.arguments as Map<String, dynamic>,
+        return MaterialPageRoute(
+            builder: (_) =>
+                const ViewReportScreen()); //data: settings.arguments as Map<String, dynamic>,
 
-    ///LTMT * Bhavana
+      ///LTMT * Bhavana
       case LtmtMenu.id:
         return MaterialPageRoute(builder: (_) => const LtmtMenu());
       case MetersStock.id:
         return MaterialPageRoute(builder: (_) => const MetersStock());
       case MetersOm.id:
-        return MaterialPageRoute(builder: (_) => MetersOm(empId:settings.arguments as String ));
+        return MaterialPageRoute(
+            builder: (_) => MetersOm(empId: settings.arguments as String));
 
-    // DTR Master * Bhavana
+      // DTR Master * Bhavana
       case ConfigureFilter.id:
-        return MaterialPageRoute(builder: (_)=> const ConfigureFilter());
+        return MaterialPageRoute(builder: (_) => const ConfigureFilter());
       case MappedDtr.id:
-        return MaterialPageRoute(builder: (_)=>  MappedDtr(structureData: settings.arguments as List<FeederDisModel>));
+        return MaterialPageRoute(
+            builder: (_) => MappedDtr(
+                structureData: settings.arguments as List<FeederDisModel>));
       case DownloadFeederData.id:
-        return MaterialPageRoute(builder: (_)=> const DownloadFeederData());
+        return MaterialPageRoute(builder: (_) => const DownloadFeederData());
       case ViewOfflineData.id:
-        return MaterialPageRoute(builder: (_)=> const ViewOfflineData());
+        return MaterialPageRoute(builder: (_) => const ViewOfflineData());
       case MisMatchedDtr.id:
-        return MaterialPageRoute(builder: (_)=> const MisMatchedDtr());
+        return MaterialPageRoute(builder: (_) => const MisMatchedDtr());
       case CreateDtrOnline.id:
-        return MaterialPageRoute(builder: (_)=> const CreateDtrOnline());
+        return MaterialPageRoute(builder: (_) => const CreateDtrOnline());
       case CreateDtrOffline.id:
-        return MaterialPageRoute(builder: (_)=> const CreateDtrOffline());
+        return MaterialPageRoute(builder: (_) => const CreateDtrOffline());
       case StructDetails.id:
-        return MaterialPageRoute(builder: (_)=>  StructDetails(structData: settings.arguments as List<FeederDisModel>));
+        return MaterialPageRoute(
+            builder: (_) => StructDetails(
+                structData: settings.arguments as List<FeederDisModel>));
 
-    // DTR FAILURE
+      // DTR FAILURE
       case DtrFailureReporting.id:
-        return MaterialPageRoute(builder: (_)=> const DtrFailureReporting());
+        return MaterialPageRoute(builder: (_) => const DtrFailureReporting());
       case ReportDTRFailure.id:
-        return MaterialPageRoute(builder: (_)=> const ReportDTRFailure());
+        return MaterialPageRoute(builder: (_) => const ReportDTRFailure());
 
-    //CT PT FAILURE
+      //CT PT FAILURE
       case CTFailureReportScreen.id:
-        return MaterialPageRoute(builder: (_)=> const CTFailureReportScreen());
+        return MaterialPageRoute(builder: (_) => const CTFailureReportScreen());
       case FailureReportedList.id:
-        return MaterialPageRoute(builder: (_)=> const FailureReportedList());
+        return MaterialPageRoute(builder: (_) => const FailureReportedList());
 
-    //GIS DIS
+      //GIS DIS
       case GISIDsScreen.id:
-        return MaterialPageRoute(builder: (_)=> const GISIDsScreen());
+        return MaterialPageRoute(builder: (_) => const GISIDsScreen());
       case CreateGisId.id:
-        return MaterialPageRoute(builder: (_)=> const CreateGisId());
+        return MaterialPageRoute(builder: (_) => const CreateGisId());
       case AddGisPoint.id:
-        return MaterialPageRoute(builder: (_)=> const AddGisPoint());
+        return MaterialPageRoute(builder: (_) => const AddGisPoint());
+      case ViewWorkFloatingButton.id:
+        return MaterialPageRoute(builder: (_)=> const ViewWorkFloatingButton());
       case GisIndividualId.id:
-        return MaterialPageRoute(builder: (_)=> GisIndividualId(individualGIDId:  settings.arguments as int,));
-      case ViewWorkDetails.id:
-        return MaterialPageRoute(builder: (_)=> const ViewWorkDetails());
+        return MaterialPageRoute(
+            builder: (_) => GisIndividualId(
+                  individualGIDId: settings.arguments as int,
+                ));
+      case WorkDetailsPage.id:
+        return MaterialPageRoute(builder: (_)=> WorkDetailsPage(workDetails: settings.arguments as List<GisSurveyData>,));
+
+      // ACCOUNT * SWETHA
+      case AccountScreen.id:
+        return MaterialPageRoute(builder: (_) => const AccountScreen());
 
       default:
         return MaterialPageRoute(

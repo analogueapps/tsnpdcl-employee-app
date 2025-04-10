@@ -13,84 +13,6 @@ class OverloadedDtrsView extends StatelessWidget {
 
   const OverloadedDtrsView({super.key});
 
-  void _showStructuresDialog(
-      BuildContext context, OverloadedDtrsProvider provider) {
-    final TextEditingController searchController = TextEditingController();
-    String searchQuery = '';
-
-    showDialog(
-      context: context,
-      builder: (BuildContext dialogContext) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return AlertDialog(
-              title: const Text('Select Structure'),
-              content: SizedBox(
-                width: double.maxFinite,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Search Field
-                    TextField(
-                      controller: searchController,
-                      decoration: const InputDecoration(
-                        labelText: "Search Structure",
-                        hintText: "Type to search",
-                        border: OutlineInputBorder(),
-                      ),
-                      onChanged: (value) {
-                        setState(() {
-                          searchQuery = value.toLowerCase();
-                        });
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    // Structure Code List with overflow fix
-                    SizedBox(
-                      height: 200,
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: provider.structures
-                            .where((item) => item.optionName!
-                                .toLowerCase()
-                                .contains(searchQuery))
-                            .length,
-                        itemBuilder: (context, index) {
-                          final filteredItems = provider.structures
-                              .where((item) => item.optionName!
-                                  .toLowerCase()
-                                  .contains(searchQuery))
-                              .toList();
-                          return ListTile(
-                            title: SizedBox(
-                              width: 200, // Constrain width to prevent overflow
-                              child: Text(
-                                filteredItems[index].optionName ?? '',
-                                overflow:
-                                    TextOverflow.ellipsis, // Handle long text
-                              ),
-                            ),
-                            onTap: () {
-                              provider.setSelectedStructure(
-                                  filteredItems[index].optionId);
-                              Navigator.pop(dialogContext);
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
-    ).then((_) {
-      searchController.dispose();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -98,7 +20,7 @@ class OverloadedDtrsView extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: CommonColors.colorPrimary,
-          title: Text(
+          title: const Text(
             "Overloaded DTRs",
             style: const TextStyle(
               color: Colors.white,
@@ -113,7 +35,7 @@ class OverloadedDtrsView extends StatelessWidget {
             // Check if we are loading either structures or structure details
             if (provider.isLoadingStructures ||
                 provider.isLoadingStructureDetails) {
-              return Center(
+              return const Center(
                 child: CircularProgressIndicator(), // Show loading spinner
               );
             }
@@ -136,20 +58,20 @@ class OverloadedDtrsView extends StatelessWidget {
                       ),
                       items: provider.section != null
                           ? [
-                              DropdownMenuItem<String>(
-                                value: provider.section,
-                                child: Text(provider.section!),
-                              ),
-                            ]
+                        DropdownMenuItem<String>(
+                          value: provider.section,
+                          child: Text(provider.section!),
+                        ),
+                      ]
                           : [
-                              const DropdownMenuItem<String>(
-                                value: null,
-                                child: Text("No section selected"),
-                              ),
-                            ],
+                        const DropdownMenuItem<String>(
+                          value: null,
+                          child: Text("No section selected"),
+                        ),
+                      ],
                       onChanged: null,
                       disabledHint:
-                          Text(provider.section ?? "No section selected"),
+                      Text(provider.section ?? "No section selected"),
                     ),
                     SizedBox(height: 6),
                     Align(
@@ -160,7 +82,13 @@ class OverloadedDtrsView extends StatelessWidget {
                         )),
                     const SizedBox(height: 20),
 
-                    //Select Structure Dropdown (triggers dialog)
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: const Text("SELECT STRUCTURE CODE",
+                          style: TextStyle(fontSize: 16)),
+                    ),
+                    SizedBox(height: 5,),
+                    // Select Structure Dropdown (triggers dialog)
                     GestureDetector(
                       onTap: provider.structures.isEmpty
                           ? null
@@ -197,14 +125,14 @@ class OverloadedDtrsView extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 20),
+
                     // New Structure Details UI
                     if (provider.currentStructure != null)
                       SingleChildScrollView(
                         child: ListView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          itemCount: 1,
-                          // Single structure from currentStructure
+                          itemCount: 1, // Single structure from currentStructure
                           itemBuilder: (context, index) {
                             final structure = FeederDisModel.fromJson(
                                 provider.currentStructure!);
@@ -213,6 +141,7 @@ class OverloadedDtrsView extends StatelessWidget {
                                 Container(
                                   color: Colors.grey[300],
                                   width: double.infinity,
+                                  height: 40,
                                   child: const Center(
                                     child: Text(
                                       "STRUCTURE DETAILS",
@@ -220,11 +149,11 @@ class OverloadedDtrsView extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                StructureDetailsCard(structure: structure),
+                                _buildStructureDetailsCard(structure),
                                 if (structure.dtrs != null &&
                                     structure.dtrs!.isNotEmpty)
                                   ...structure.dtrs!
-                                      .map((dtr) => DTRDetailsCard(dtr: dtr))
+                                      .map((dtr) => _buildDTRDetailsCard(dtr))
                                       .toList(),
                               ],
                             );
@@ -234,12 +163,11 @@ class OverloadedDtrsView extends StatelessWidget {
 
                     const SizedBox(height: 20),
 
-                    // Add this just before the Save button in your Column widget (around line 180 in your code)
-
-// ================ TONG TESTER READINGS SECTION ================
+                    // ================ TONG TESTER READINGS SECTION ================
                     Container(
                       color: Colors.grey[300],
                       width: double.infinity,
+                      height: 40,
                       child: const Center(
                         child: Text(
                           "TONG TESTER READINGS",
@@ -355,13 +283,27 @@ class OverloadedDtrsView extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
 
-                    // Date and Time Picker
-                    ListTile(
-                      title: const Text("Date & Time"),
-                      subtitle: Text(provider.selectedDateTime?.toString() ??
-                          "DD/MM/YYYY HH:MM"),
-                      trailing: const Icon(Icons.calendar_today),
-                      onTap: () => provider.selectDateTime(context),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: const Text("READING DATE & TIME",
+                          style: TextStyle(fontSize: 16)),
+                    ),
+                    const SizedBox(height: 8),
+                    InkWell(
+                      onTap: () => provider.selectDateTime(), // Changed from viewModel to provider
+                      child: InputDecorator(
+                        decoration: InputDecoration(
+                          hintText: "DD/MM/YYYY HH:MM",
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
+                          suffixIcon: const Icon(Icons.calendar_today),
+                        ),
+                        child: Text(
+                          provider.selectedDateTime == null // Changed from viewModel to provider
+                              ? "DD/MM/YYYY HH:MM"
+                              : provider.formatDateTime(
+                              provider.selectedDateTime!), // Changed from viewModel to provider
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 20),
 
@@ -373,10 +315,10 @@ class OverloadedDtrsView extends StatelessWidget {
                         border: OutlineInputBorder(),
                       ),
                       items: const [
-                        DropdownMenuItem(value: "Urban", child: Text("Urban")),
-                        DropdownMenuItem(value: "Rural", child: Text("Rural")),
+                        DropdownMenuItem(value: "MUNICIPAL TOWN", child: Text("MUNICIPAL TOWN")),
+                        DropdownMenuItem(value: "MANDAL HEAD QUARTERS", child: Text("MANDAL HEAD QUARTERS")),
                         DropdownMenuItem(
-                            value: "Semi-Urban", child: Text("Semi-Urban")),
+                            value: "RURAL", child: Text("RURAL")),
                       ],
                       onChanged: (value) {
                         provider.selectedLocationType = value;
@@ -388,7 +330,7 @@ class OverloadedDtrsView extends StatelessWidget {
                         return null;
                       },
                     ),
-// ================ END TONG TESTER READINGS SECTION ================
+                    // ================ END TONG TESTER READINGS SECTION ================
                     SizedBox(
                       height: 10,
                     ),
@@ -399,7 +341,7 @@ class OverloadedDtrsView extends StatelessWidget {
                         child: PrimaryButton(
                             text: "SAVE",
                             onPressed: () {
-                              // viewModel.submitForm();
+                              provider.saveTongTesterReading();
                             }),
                       ),
                   ],
@@ -411,16 +353,88 @@ class OverloadedDtrsView extends StatelessWidget {
       ),
     );
   }
-}
 
-// Structure Details Card
-class StructureDetailsCard extends StatelessWidget {
-  final FeederDisModel structure;
 
-  const StructureDetailsCard({super.key, required this.structure});
+  void _showStructuresDialog(
+      BuildContext context, OverloadedDtrsProvider provider) {
+    final TextEditingController searchController = TextEditingController();
+    String searchQuery = '';
 
-  @override
-  Widget build(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return AlertDialog(
+              title: const Text('Select Structure'),
+              content: SizedBox(
+                width: double.maxFinite,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Search Field
+                    TextField(
+                      controller: searchController,
+                      decoration: const InputDecoration(
+                        labelText: "Search Structure",
+                        hintText: "Type to search",
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          searchQuery = value.toLowerCase();
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    // Structure Code List with overflow fix
+                    SizedBox(
+                      height: 200,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: provider.structures
+                            .where((item) => item.optionName!
+                            .toLowerCase()
+                            .contains(searchQuery))
+                            .length,
+                        itemBuilder: (context, index) {
+                          final filteredItems = provider.structures
+                              .where((item) => item.optionName!
+                              .toLowerCase()
+                              .contains(searchQuery))
+                              .toList();
+                          return ListTile(
+                            title: SizedBox(
+                              width: 200, // Constrain width to prevent overflow
+                              child: Text(
+                                filteredItems[index].optionName ?? '',
+                                overflow:
+                                TextOverflow.ellipsis, // Handle long text
+                              ),
+                            ),
+                            onTap: () {
+                              provider.setSelectedStructure(
+                                  filteredItems[index].optionId);
+                              Navigator.pop(dialogContext);
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    ).then((_) {
+      searchController.dispose();
+    });
+  }
+
+  // Method to build Structure Details UI (replacing StructureDetailsCard)
+  Widget _buildStructureDetailsCard(FeederDisModel structure) {
     return Card(
       margin: const EdgeInsets.all(8.0),
       child: Padding(
@@ -451,22 +465,15 @@ class StructureDetailsCard extends StatelessWidget {
       ),
     );
   }
-}
 
-// DTR Details Card
-class DTRDetailsCard extends StatelessWidget {
-  final DTRModel dtr;
-
-  const DTRDetailsCard({super.key, required this.dtr});
-
-  @override
-  Widget build(BuildContext context) {
+  // Method to build DTR Details UI (replacing DTRDetailsCard)
+  Widget _buildDTRDetailsCard(DTRModel dtr) {
     final status = dtr.status?.toLowerCase() ?? '';
     final statusColor = status.contains("mismatch")
         ? Colors.red
         : status == "confirmed"
-            ? Colors.green
-            : Colors.purple;
+        ? Colors.green
+        : Colors.purple;
 
     return Card(
       margin: const EdgeInsets.all(8.0),
@@ -479,7 +486,7 @@ class DTRDetailsCard extends StatelessWidget {
               imageUrl: dtr.url ?? '',
               placeholder: (context, url) => const Icon(Icons.image, size: 50),
               errorWidget: (context, url, error) =>
-                  const Icon(Icons.broken_image, size: 50),
+              const Icon(Icons.broken_image, size: 50),
               height: 100,
               width: 100,
               fit: BoxFit.cover,
@@ -514,4 +521,5 @@ class DTRDetailsCard extends StatelessWidget {
       ),
     );
   }
+
 }

@@ -260,7 +260,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.accountTitle,
           imageAsset: Assets.account,
-          routeName: routeName),
+          routeName: Routes.accountScreen
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.logoutTitle,
           imageAsset: Assets.logout,
@@ -522,7 +523,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.accountTitle,
           imageAsset: Assets.account,
-          routeName: routeName),
+          routeName: Routes.accountScreen
+      ),
       UniversalDashboardItem(
           title: GlobalConstants.logoutTitle,
           imageAsset: Assets.logout,

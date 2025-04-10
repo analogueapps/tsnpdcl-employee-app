@@ -81,4 +81,9 @@ class Apis{
   static const String GET_STRUCTURES_OF_SECTION = "/getStructuresOfSection";
   static const String GET_DTRS_OF_STRUCTURE = "/getDtrsOfStructure";
   static const String SAVE_TONG_TESTER_READING = "/savedTongTesterReading";
+
+  /// Account
+  static const String LOAD_ACCOUNT = "/load/account";
+
+
 }
