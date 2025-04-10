@@ -12,22 +12,24 @@ class AddGisPoint extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => AddGisPointViewModel(context),
+      create: (_) => AddGisPointViewModel(context:context),
+      child: WillPopScope(
+      onWillPop: () async => false,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('NEW'),
           backgroundColor: Colors.blue,
+          title: const Text('NEW', style: TextStyle(color: Colors.white),),
+          leading: IconButton(
+            icon: const Icon(Icons.close, color: Colors.white,),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
           actions: [
             Consumer<AddGisPointViewModel>(
               builder: (context, viewModel, child) => IconButton(
                 onPressed: viewModel.save,
                 icon: const Icon(Icons.save, color: Colors.white),
-              ),
-            ),
-            Consumer<AddGisPointViewModel>(
-              builder: (context, viewModel, child) => IconButton(
-                onPressed: viewModel.openFolder,
-                icon: const Icon(Icons.folder_outlined, color: Colors.white),
               ),
             ),
           ],
@@ -241,6 +243,7 @@ class AddGisPoint extends StatelessWidget {
             ),
           ),
         ),
+      ),
       ),
     );
   }

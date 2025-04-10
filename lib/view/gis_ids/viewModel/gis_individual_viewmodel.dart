@@ -23,14 +23,6 @@ class GisIndividualIdViewModel extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  void navigateToAddGisPoint(BuildContext context) {
-    Navigator.pushNamed(context, '/addGisPoint'); // Adjust route name as needed
-  }
-
-  void navigateToViewWorkDetails(BuildContext context) {
-    Navigator.pushNamed(context, '/viewWorkDetails'); // Adjust route name as needed
-  }
-
   List<GisSurveyData> _gisData = [];
   List<GisSurveyData> get gisData => _gisData;
 

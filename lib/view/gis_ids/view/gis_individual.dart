@@ -18,7 +18,9 @@ class GisIndividualId extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => GisIndividualIdViewModel(context: context, gisID:individualGIDId),
-      child: Scaffold(
+      child: Consumer<GisIndividualIdViewModel>(
+        builder: (context, viewModel, child) {
+      return Scaffold(
         appBar: AppBar(
           backgroundColor: CommonColors.colorPrimary,
           title:  Text(
@@ -36,9 +38,7 @@ class GisIndividualId extends StatelessWidget {
             }, child: const Text("ADD GIS POINT", style: TextStyle(color: Colors.white),))
           ],
         ),
-        body: Consumer<GisIndividualIdViewModel>(
-          builder: (context, viewModel, child) {
-            return Column(
+        body: Column(
               children: [
                 Expanded(
                   child: viewModel.isLoading
@@ -47,8 +47,7 @@ class GisIndividualId extends StatelessWidget {
                       ? const Center(child: Text('No GIS data available'))
                       : InkWell(
                       onTap: () {
-                      // print("gisId:${item.gisId} ");
-                      Navigation.instance.navigateTo(Routes.viewWorkScreen, );
+                      Navigation.instance.navigateTo(Routes.viewWorkScreen, args: viewModel.gisData);
 
                       },
                       child:ListView.builder(
@@ -82,10 +81,10 @@ class GisIndividualId extends StatelessWidget {
                 ),
                 ),
               ],
+              ),
             );
           },
         ),
-      ),
     );
   }
 }

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:tsnpdcl_employee/network/api_urls.dart';
+import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/alerts.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
+import 'package:tsnpdcl_employee/utils/app_helper.dart';
+import 'package:tsnpdcl_employee/view/gis_ids/model/gis_individual_model.dart';
 
 class WorkDetailsViewModel extends ChangeNotifier {
   WorkDetailsViewModel({required this.context}){
@@ -12,6 +16,10 @@ class WorkDetailsViewModel extends ChangeNotifier {
   bool isLocationGranted = false;
   String? _latitude;
   String? _longitude;
+
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
 
   Future<void> getCurrentLocation() async {
     try {

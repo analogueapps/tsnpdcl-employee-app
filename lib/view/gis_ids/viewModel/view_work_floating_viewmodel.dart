@@ -1,93 +1,60 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
-class AddGisPointViewModel extends ChangeNotifier {
+class PendingListFloatingButtonViewmodel extends ChangeNotifier {
   final BuildContext context;
+  PendingListFloatingButtonViewmodel({required this.context});
 
-  AddGisPointViewModel( {required this.context}) {
-    remarksFocusNode = FocusNode();
+  void initialize() {
     _handleLocationIconClick();
   }
-  // Text controllers
-  final TextEditingController gisRegController = TextEditingController(text: "GIS-00121036");
-  final TextEditingController gisIdController = TextEditingController(text: "121036");
-  final TextEditingController feederController = TextEditingController(text: "007-09-11KV ADVOCATESCOLONY");
-  final TextEditingController workDescriptionController = TextEditingController(text: "After Work T230102010101003 Alternate supply @ Caption");
-  final TextEditingController longitudeController = TextEditingController();
-  final TextEditingController latitudeController = TextEditingController();
-  final TextEditingController remarksController = TextEditingController();
 
-  // Dropdown values
-  String? voltageLevel;
-  String? pointType;
+  // Text controllers for all text fields
+  final TextEditingController feederController = TextEditingController();
+  final TextEditingController workDescriptionController = TextEditingController();
+  final TextEditingController sanctionNoController = TextEditingController();
+  final TextEditingController poleBLongitudeController = TextEditingController();
+  final TextEditingController distanceController = TextEditingController();
+  final TextEditingController villagesAffectedController = TextEditingController();
 
   String? _latitude;
   String? _longitude;
 
-  // Focus node
-  late FocusNode remarksFocusNode;
+  // Photo-related state
+  String? poleAPhotoPath;
+  String? poleBPhotoPath;
 
-  // Dropdown items
-  final List<String> voltageItems = [
-    'SELECT',
-    '33KV',
-    '11KV',
-    'LT',
-  ];
+  // Pole Type state
+  String? _selectedPoleType = "SELECT"; // Default value
+  String? get selectedPoleType => _selectedPoleType;
 
-  final List<String> pointTypeItems = [
-    '--SELECT--',
-    'LINE TRAPPING POINT',
-    'LINE TURNING/ANGLE POINT',
-    'LINE END POINT',
-    'SS CONSTRUCTION',
-    'MIDDLE POLE',
-    'BROKEN POLE',
-    'DAMAGED POLE',
-    'RUSTED POLE',
-    'RE-CONSTRUCTION',
-    'LOOSE LINE STRINGING',
-    'THEFT OF CONDUCTOR',
-    'THEFT OF DTR',
-    'DTR ENHANCEMENT',
-    'DTR IMPROVEMENT',
-    'DTR DAMAGE DUO TO CYCLONE',
-    'DTR FOR NEW SERVICE',
-    'SHIFTING OF DTR',
-    'PERMISSION OF SERVICE CONNECTION',
-    'TREE CUTTING START POINT',
-    'TREE CUTTING END POINT',
-    'CIVIL WORKS',
-    'SECTION OFFICE LOCATION',
-    'OTHERS'
-  ];
-
-
-  // Dropdown change handlers
-  void setVoltageLevel(String? newValue) {
-    voltageLevel = newValue;
+  // Method to set pole type
+  void setPoleType(String? value) {
+    _selectedPoleType = value;
     notifyListeners();
   }
 
-  void setPointType(String? newValue) {
-    pointType = newValue;
+  // Method to set photo path
+  void setPoleAPhotoPath(String? path) {
+    poleAPhotoPath = path;
     notifyListeners();
   }
 
-  // Focus request for remarks
-  void requestRemarksFocus() {
-    remarksFocusNode.requestFocus();
+  void setPoleBPhotoPath(String? path) {
+    poleBPhotoPath = path;
+    notifyListeners();
   }
 
-  // Placeholder methods for save and folder actions
-  void save() {
-    print("Save action triggered");
-    // Implement save logic here
-  }
-
-  void openFolder() {
-    print("Folder action triggered");
-    // Implement folder logic here
+  // Cleanup
+  @override
+  void dispose() {
+    feederController.dispose();
+    workDescriptionController.dispose();
+    sanctionNoController.dispose();
+    poleBLongitudeController.dispose();
+    distanceController.dispose();
+    villagesAffectedController.dispose();
+    super.dispose();
   }
 
   void _handleLocationIconClick() async {
@@ -180,18 +147,5 @@ class AddGisPointViewModel extends ChangeNotifier {
     } catch (e) {
       print("Error fetching location: $e");
     }
-  }
-
-  @override
-  void dispose() {
-    gisRegController.dispose();
-    gisIdController.dispose();
-    feederController.dispose();
-    workDescriptionController.dispose();
-    longitudeController.dispose();
-    latitudeController.dispose();
-    remarksController.dispose();
-    remarksFocusNode.dispose();
-    super.dispose();
   }
 }
