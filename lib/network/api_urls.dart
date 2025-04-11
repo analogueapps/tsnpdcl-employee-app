@@ -85,5 +85,9 @@ class Apis{
   /// Account
   static const String LOAD_ACCOUNT = "/load/account";
 
+  /// CTPT FAILURE
+  static const String CTPT_END_POINT_BASE_URL = "$ROOT_URL$NPDCL_EMP_URL";
+  static const String GET_HT_SERVICES = "getHTServices";
+
 
 }
