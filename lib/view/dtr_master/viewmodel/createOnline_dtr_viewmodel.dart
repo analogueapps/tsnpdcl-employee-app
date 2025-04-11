@@ -1,5 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui';
+import 'dart:convert';
+import 'dart:io';
+import 'dart:ui' as ui;
+import 'package:dio/dio.dart';
+import 'package:image/image.dart' as img;
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:flutter/services.dart';
+// import 'package:vendor_app/services/environment.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,11 +22,9 @@ import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/network/api_provider.dart';
 import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
-import 'package:tsnpdcl_employee/utils/alerts.dart';
-import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
-import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/model/circle_model.dart';
+import 'package:tsnpdcl_employee/view/dtr_master/model/create_online_card_model.dart';
 
 class OnlineDtrViewmodel extends ChangeNotifier {
   // all fields are required
@@ -38,9 +47,11 @@ class OnlineDtrViewmodel extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
   final TextEditingController sapDTRStructCode = TextEditingController();
   final TextEditingController dtrLocatLandMark = TextEditingController();
-  final TextEditingController serialNo = TextEditingController();
-  final TextEditingController first_time_charged_date = TextEditingController();
-  final TextEditingController sap_dtr = TextEditingController();
+  // final TextEditingController serialNo = TextEditingController();
+  // final TextEditingController first_time_charged_date = TextEditingController();
+  // final TextEditingController sap_dtr = TextEditingController();
+
+  List<DtrCardData> dtrCardData = [];
 
   void init() {
     getCurrentLocation();
@@ -54,7 +65,6 @@ class OnlineDtrViewmodel extends ChangeNotifier {
   }
 
   String? _selectedFilter;
-
   String? get selectedFilter => _selectedFilter;
 
   void setSelectedFilter(String title) {
@@ -66,14 +76,9 @@ class OnlineDtrViewmodel extends ChangeNotifier {
 
   // 1.Distribution
   String? _selectedDistribution;
-
   String? get selectedDistribution => _selectedDistribution;
-
-
   List<SubstationModel> _distributions = [];
-
   List<SubstationModel> get distributions => _distributions;
-
   Future<void> getDistributions() async {
     _stations.clear();
     if (_isLoading) return; // Prevent duplicate calls
@@ -167,8 +172,6 @@ class OnlineDtrViewmodel extends ChangeNotifier {
       notifyListeners();
     }
   }
-
-
   void onListDistriSelected(String? value, String? distriName) {
     _selectedDistribution = value;
     sapDTRStructCode.text = "$distriName-SS-0001";
@@ -178,13 +181,9 @@ class OnlineDtrViewmodel extends ChangeNotifier {
 
   //2.SS No
   String? _selectedSSNo = "001";
-
   String? get selectedSSNo => _selectedSSNo;
-
   List _ssno = [];
-
   List get ssno => _ssno;
-
   void onListSSNoSelected(String? value) {
     _selectedSSNo = value;
     notifyListeners();
@@ -193,9 +192,7 @@ class OnlineDtrViewmodel extends ChangeNotifier {
 
   //3.Circle
   String? _selectedCircle = '000';
-
   String? get selectedCircle => _selectedCircle;
-
   final List<Circle> _circle = [
     Circle("000", "SELECT"),
     Circle("401", "KHAMMAM"),
@@ -512,16 +509,27 @@ class OnlineDtrViewmodel extends ChangeNotifier {
     _selectedCapacity = index != null ? _capacity[index].optionCode : null;
     print("$_selectedCapacity: selected Capacity ");
 
-    // Reset all DTR Details fields when capacity changes
-    _make;
-    _selectedDtrCapacity = null;
-    _selectedYearOfMfg = null;
-    _selectedPhase = null;
-    _selectedRatio = null;
-    _selectedTypeOfMeter = null;
-    first_time_charged_date.text = "";
-    serialNo.text = "";
+    final capacityCount = int.tryParse(_selectedCapacity ?? "0") ?? 0;
+    if (dtrCardData.length != capacityCount) {
+      // Dispose old controllers
+      for (var data in dtrCardData) {
+        data.dispose();
+      }
+      dtrCardData.clear();
+      // Create new DtrCardData instances
+      dtrCardData = List.generate(capacityCount, (_) => DtrCardData());
+    }
+
     getMake();
+    // _make;
+    // _selectedDtrCapacity = null;
+    // _selectedYearOfMfg = null;
+    // _selectedPhase = null;
+    // _selectedRatio = null;
+    // _selectedTypeOfMeter = null;
+    // first_time_charged_date.text = "";
+    // serialNo.text = "";
+    // getMake();
     notifyListeners();
   }
 
@@ -747,9 +755,11 @@ class OnlineDtrViewmodel extends ChangeNotifier {
   }
   }
 
-  void onListMake(String? value) {
-  _selectedMake = value;
+  void onListMake(String? value, int cardIndex) {
+  if (cardIndex < dtrCardData.length) {
+  dtrCardData[cardIndex].selectedMake = value;
   notifyListeners();
+  }
   }
 
 
@@ -761,9 +771,11 @@ class OnlineDtrViewmodel extends ChangeNotifier {
   List _dtrCapacity = ["Select", "Idle", "HT Service", "Mixed Load"];
   List get dtrCapacity => _dtrCapacity;
 
-  void onListDtrCapacity(String? value) {
-    _selectedDtrCapacity= value;
-    notifyListeners();
+  void onListDtrCapacity(String? value,int cardIndex) {
+  if (cardIndex < dtrCardData.length) {
+  dtrCardData[cardIndex].selectedDtrCapacity = value;
+  notifyListeners();
+  }
   }
 
   //Year of Mfg
@@ -773,9 +785,11 @@ class OnlineDtrViewmodel extends ChangeNotifier {
   List _yearOfMfg = ["Select", "Idle", "HT Service", "Mixed Load"];
   List get yearOfMfg => _yearOfMfg;
 
-  void onListYearOfMfg(String? value) {
-    _selectedYearOfMfg= value;
-    notifyListeners();
+  void onListYearOfMfg(String? value, int cardIndex) {
+  if (cardIndex < dtrCardData.length) {
+  dtrCardData[cardIndex].selectedYearOfMfg = value;
+  notifyListeners();
+  }
   }
 
   //Phase
@@ -785,9 +799,11 @@ class OnlineDtrViewmodel extends ChangeNotifier {
   List _phase = ["Select", "Idle", "HT Service", "Mixed Load"];
   List get phase => _phase;
 
-  void onListPhase(String? value) {
-    _selectedPhase= value;
-    notifyListeners();
+  void onListPhase(String? value, int cardIndex) {
+  if (cardIndex < dtrCardData.length) {
+  dtrCardData[cardIndex].selectedPhase = value;
+  notifyListeners();
+  }
   }
 
   //ratio
@@ -797,9 +813,11 @@ class OnlineDtrViewmodel extends ChangeNotifier {
   List _ratio = ["Select", "Idle", "HT Service", "Mixed Load"];
   List get ratio => _ratio;
 
-  void onListRatio(String? value) {
-    _selectedRatio= value;
-    notifyListeners();
+  void onListRatio(String? value,int cardIndex) {
+  if (cardIndex < dtrCardData.length) {
+  dtrCardData[cardIndex].selectedRatio = value;
+  notifyListeners();
+  }
   }
 
   //type of meter
@@ -809,9 +827,11 @@ class OnlineDtrViewmodel extends ChangeNotifier {
   List _typeOfMeter = ["Select", "Idle", "HT Service", "Mixed Load"];
   List get typeOfMeter => _typeOfMeter;
 
-  void onListTypeOfMeter(String? value) {
-    _selectedTypeOfMeter= value;
-    notifyListeners();
+  void onListTypeOfMeter(String? value, int cardIndex) {
+  if (cardIndex < dtrCardData.length) {
+  dtrCardData[cardIndex].selectedTypeOfMeter = value;
+  notifyListeners();
+  }
   }
 
 
@@ -822,54 +842,42 @@ class OnlineDtrViewmodel extends ChangeNotifier {
 
   final ImagePicker _picker = ImagePicker();
 
-  Future<void> capturePhoto() async {
-    // Request camera permission
-    final status = await Permission.camera.request();
-
-    if (status.isDenied) {
-      if (context.mounted) {
-        showErrorDialog(context, "Camera permission denied");
-      }
-      return;
-    }
-
-    if (status.isPermanentlyDenied) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Camera permission permanently denied. Please enable it in settings.'),
-            action: SnackBarAction(
-              label: 'Settings',
-              onPressed: () async {
-                await openAppSettings(); // Open app settings
-              },
-            ),
-          ),
-        );
-      }
-      return;
-    }
-
-    try {
-      final XFile? photo = await _picker.pickImage(
-        source: ImageSource.camera,
-        imageQuality: 85,
-        maxWidth: 1024,
-        maxHeight: 1024,
-      );
-
-      if (photo != null) {
-        _capturedImage = File(photo.path);
-        notifyListeners(); // Notify UI to update
-      }
-    } catch (e) {
-      print('Error capturing photo: $e');
-      if (context.mounted) {
-        showErrorDialog(context, "Error capturing photo");
-      }
-    }
+  Future<void> capturePhoto(int cardIndex) async {
+  final status = await Permission.camera.request();
+  if (status.isDenied || status.isPermanentlyDenied) {
+  if (context.mounted) {
+  ScaffoldMessenger.of(context).showSnackBar(
+  SnackBar(
+  content: Text(status.isPermanentlyDenied
+  ? 'Camera permission permanently denied. Enable in settings.'
+      : 'Camera permission denied'),
+  action: status.isPermanentlyDenied
+  ? SnackBarAction(label: 'Settings', onPressed: openAppSettings)
+      : null,
+  ),
+  );
   }
-  //showErrorDialog(context, "Error capturing photo");
+  return;
+  }
+
+  try {
+  final XFile? photo = await ImagePicker().pickImage(
+  source: ImageSource.camera,
+  imageQuality: 85,
+  maxWidth: 1024,
+  maxHeight: 1024,
+  );
+  if (photo != null && cardIndex < dtrCardData.length) {
+  dtrCardData[cardIndex].capturedImage = File(photo.path);
+  notifyListeners();
+  }
+
+
+  } catch (e) {
+  if (context.mounted) showErrorDialog(context, "Error capturing photo");
+  }
+  }
+
 
   Future<void> getCurrentLocation() async {
     try {
@@ -905,8 +913,8 @@ class OnlineDtrViewmodel extends ChangeNotifier {
     }
   }
 
-  Future<void> requestSerialNo() async {
-    if (_isLoading) return;
+  Future<void> requestSerialNo(int cardIndex) async {
+    if (_isLoading || cardIndex >= dtrCardData.length) return;
     _isLoading = true;
     notifyListeners();
 
@@ -953,12 +961,10 @@ class OnlineDtrViewmodel extends ChangeNotifier {
       if (responseData['message'] == null) {
         throw Exception("No serial number received");
       }
-
-      // Handle the serial number response
-      final serialNumber = responseData['message'] as String;
-
-      // Update your serial number field (assuming you have one)
-      serialNo.text = serialNumber;
+        final serialNumber = responseData['message'] as String?;
+        if (serialNumber != null) {
+        dtrCardData[cardIndex].serialNo.text = serialNumber;
+        }
       print("Successfully generated serial number: $serialNumber");
     } catch (e, stackTrace) {
       print("Error fetching feeders: $e\n$stackTrace");
@@ -982,6 +988,8 @@ class OnlineDtrViewmodel extends ChangeNotifier {
       }
     }
   }
+
+
   bool validateForm() {
     if (_selectedFilter==''||_selectedFilter==null) {
       AlertUtils.showSnackBar(context, "Please select location of DTR", isTrue);
@@ -1065,43 +1073,89 @@ class OnlineDtrViewmodel extends ChangeNotifier {
   }
 }
 
-//IMAGE_UPLOAD_URL
-
 //TSNPDCL
-// private void saveDtrStructure(boolean replace) {
+// rivate void saveDtrStructure(boolean replace) {
 //
-//   final ApptrolsProgressDialog apptrolsProgressDialog = new ApptrolsProgressDialog();
-//   apptrolsProgressDialog.setProgressText("Creating Structure...");
-//   apptrolsProgressDialog.displayDialog(getSupportFragmentManager());
-//   JSONObject structure = new JSONObject();
+//         final ApptrolsProgressDialog apptrolsProgressDialog = new ApptrolsProgressDialog();
+//         apptrolsProgressDialog.setProgressText("Uploading Image's....");
+//         apptrolsProgressDialog.displayDialog(getSupportFragmentManager());
+//         JSONObject structure = new JSONObject();
+//             new Thread(new Runnable() {
+//                 @Override
+//                 public void run() {
 //
-//
-//
-//   new Thread(new Runnable() {
-//       @Override
-//       public void run() {
-//       try {
-//       structure.put("replace",replace);
-//       if (checkBox_structure.isChecked()) {
-//       structure.put("structureCode", et_sap_structure_code.getText().toString());
-//       structure.put("abSwitch", spinner_ab_switch.getSelectedItem() + "");
-//       structure.put("capacity", ((Option) spinner_capacity.getSelectedItem()).getOptionName() + "");
-//       structure.put("landMark", et_landmark.getText().toString());
+//                     try {
+//                         structure.put("replace",replace);
+//                     if (checkBox_structure.isChecked()||checkBox_ss.isChecked()) {
+//                         structure.put("structureCode", et_sap_structure_code.getText().toString());
+//                         structure.put("abSwitch", spinner_ab_switch.getSelectedItem() + "");
+//                         structure.put("capacity", ((Option) spinner_capacity.getSelectedItem()).getOptionName() + "");
+//                         structure.put("landMark", et_landmark.getText().toString());
 //
 //
-//       structure.put("distributionCode", ((Option) spinner_distribution.getSelectedItem()).getOptionCode());
-//       structure.put("distribution", ((Option) spinner_distribution.getSelectedItem()).getOptionName());
-//       structure.put("structureType", spinner_structure_type.getSelectedItem() + "");
-//       structure.put("feederCode", ((Option) spinner_ss11kv.getSelectedItem()).getOptionCode());
-//       structure.put("feederName", ((Option) spinner_ss11kv.getSelectedItem()).getOptionName());
-//       structure.put("hgFuseSet", spinner_hg_fuse_sets.getSelectedItem() + "");
-//       structure.put("lat", location.getLatitude());
-//       structure.put("lon", location.getLongitude());
+//                         structure.put("distributionCode", ((Option) spinner_distribution.getSelectedItem()).getOptionCode());
+//                         structure.put("distribution", ((Option) spinner_distribution.getSelectedItem()).getOptionName());
+//                         structure.put("structureType", spinner_structure_type.getSelectedItem() + "");
 //
-//       structure.put("loadPattern", spinner_load_pattern.getSelectedItem() + "");
-//       structure.put("ltFuseSet", spinner_lt_fuse_sets.getSelectedItem() + "");
-//       structure.put("ltFuseType", spinner_lt_fuse_type.getSelectedItem() + "");
-//       structure.put("plinthType", spinner_plinth_type.getSelectedItem() + "");
-//       structure.put("ssCode", ((Option) spinner_ss33kv.getSelectedItem()).getOptionCode());
-//       structure.put("ssName", ((Option) spinner_ss33kv.getSelectedItem()).getOptionName());
-//       structure.put("ssNo", "SS-" + (spinner_dtr_strut.getSelectedItem()+""));
+//                         structure.put("feederCode", (checkBox_ss.isChecked())?"NA":((Option) spinner_ss11kv.getSelectedItem()).getOptionCode());
+//                         structure.put("feederName", (checkBox_ss.isChecked())?"NA":((Option) spinner_ss11kv.getSelectedItem()).getOptionName());
+//                         structure.put("hgFuseSet", spinner_hg_fuse_sets.getSelectedItem() + "");
+//                         structure.put("lat", location.getLatitude());
+//                         structure.put("lon", location.getLongitude());
+//
+//                         structure.put("loadPattern", spinner_load_pattern.getSelectedItem() + "");
+//                         structure.put("ltFuseSet", spinner_lt_fuse_sets.getSelectedItem() + "");
+//                         structure.put("ltFuseType", spinner_lt_fuse_type.getSelectedItem() + "");
+//                         structure.put("plinthType", spinner_plinth_type.getSelectedItem() + "");
+//                         structure.put("ssCode", ((Option) spinner_ss33kv.getSelectedItem()).getOptionCode());
+//                         structure.put("ssName", ((Option) spinner_ss33kv.getSelectedItem()).getOptionName());
+//                         structure.put("ssNo", "SS-" +((checkBox_ss.isChecked())?"NA": (spinner_dtr_strut.getSelectedItem()+"")));
+//                     }
+//                     JSONArray dtrs=new JSONArray();
+//                     for (int i=0;i<list.size();i++){
+//                         JSONObject dtr = new JSONObject();
+//                         DTR d= list.get(i);
+//                         FileUploaderWithToken fileUploaderWithToken = new FileUploaderWithToken(context, ApiServices.IMAGE_UPLOAD_URL, d.getImageUrl(), LoginSdk.getInsatnce().getToken(context), LoginSdk.getInsatnce().getApiKey(context), "");
+//                         RxdResponse rxdResponse=fileUploaderWithToken.UploadFile();
+//                         if (rxdResponse==null||rxdResponse.getMessage()==null){
+//                             apptrolsProgressDialog.close();;
+//                             InfoDialog infoDialog = InfoDialog.newInstance("Failed to upload image, Please try again");
+//                             infoDialog.displayDialog(getSupportFragmentManager());
+//                             return;
+//                         }
+//                         if (!rxdResponse.isSuccess()){
+//                             apptrolsProgressDialog.close();;
+//                             InfoDialog infoDialog = InfoDialog.newInstance(rxdResponse.getMessage());
+//                             infoDialog.displayDialog(getSupportFragmentManager());
+//                             return;
+//                         }
+//                         dtr.put("capacity",d.getCapacity());
+//                         if (checkBox_spm.isChecked())
+//                         {
+//                             dtr.put("spmfl",((Option)spinner_spm_shed.getSelectedItem()).getOptionCode());
+//                         }
+//                         dtr.put("make",d.getMake());
+//                         dtr.put("makeVendorId",d.getMakeVendorId());
+//                         dtr.put("locationType",checkBox_structure.isChecked()?"STRUCTURE":checkBox_spm.isChecked()?"SPM":checkBox_ss.isChecked()?"SUBSTATION":"STORE");
+//                         dtr.put("physicalLocationAddress",checkBox_structure.isChecked()?"STRUCTURE":spinner_dtr_location.getSelectedItem().toString());
+//                         dtr.put("url",rxdResponse.getMessage());
+//                         dtr.put("phase",d.getPhase());
+//                         dtr.put("meterPhase",d.getMeterPhase());
+//                         dtr.put("chargeDate",d.getDtrChargeDate());
+//                         dtr.put("appVersion",BuildConfig.VERSION_CODE+"");
+//                         dtr.put("ratio",d.getRatio());
+//                         dtr.put("equipmentCode",d.getSapEquipmentNo());
+//                         dtr.put("slno",d.getSerialNo());
+//                         dtr.put("year",d.getYearOfMfg());
+//
+//                         dtrs.put(dtr);
+//                     }
+//                     structure.put("dtrs",dtrs);
+//
+//
+//                     runOnUiThread(new Runnable() {
+//                         @Override
+//                         public void run() {
+//                             apptrolsProgressDialog.setProgressText("Creating structure...");
+//                         }
+//                     });

@@ -10,6 +10,7 @@ import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/alerts.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
+import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/model/circle_model.dart';
 
 class DownloadFeederViewmodel extends ChangeNotifier {
@@ -277,6 +278,8 @@ class DownloadFeederViewmodel extends ChangeNotifier {
 
       if (!validateForm()) {
         return;
+      }else{
+        generateEquipmentNo();
       }
     }
   }
@@ -294,5 +297,78 @@ class DownloadFeederViewmodel extends ChangeNotifier {
     }
     return true;
   }
+
+  Future<void> generateEquipmentNo() async {
+    _isLoading = true;
+    notifyListeners();
+
+    final requestData = {
+      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "api": Apis.API_KEY,
+    };
+
+    final payload = {
+      "path": "/generateEquipmentNo",
+      "apiVersion": "1.0",
+      "method": "POST",
+      "data": jsonEncode(requestData),
+    };
+
+    try {
+      var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+          .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+
+      _isLoading = false;
+      notifyListeners();
+
+      print("post2sapGis response: $response");
+      if (response != null) {
+        var responseData = response.data;
+        if (responseData is String) {
+          try {
+            responseData = jsonDecode(responseData);
+          } catch (e) {
+            print("Error decoding response data: $e");
+            showErrorDialog(context, "Invalid response format. Please try again.");
+            return;
+          }
+        }
+
+        if (response.statusCode == successResponseCode) {
+          if (responseData['tokenValid'] == true) {
+            if (responseData['success'] == true) {
+              if (responseData['message'] != null) {
+                try {
+                  final jsonMessage = responseData['message'];
+                  showSuccessDialog(context, jsonMessage, () {
+                    Navigation.instance.pushBack();
+                  },);
+                } catch (e, stackTrace) {
+                  print("Error parsing message: $e");
+                  print("Stack trace: $stackTrace");
+                  showErrorDialog(context,
+                      "Failed to parse structure data. Please contact support.");
+                }
+              }
+            } else {
+              showAlertDialog(
+                  context, responseData['message'] ?? "Operation failed");
+            }
+          } else {
+            showSessionExpiredDialog(context);
+          }
+        } else {
+          showErrorDialog(context,
+              "Request failed with status: ${response.statusCode}");
+        }
+      }
+    } catch (e) {
+      print("Exception caught: $e");
+      _isLoading = false;
+      notifyListeners();
+      showErrorDialog(context, "An error occurred. Please try again.");
+    }
+  }
+
 
 }

@@ -5,7 +5,7 @@ import 'package:tsnpdcl_employee/dialogs/process_dialog.dart';
 import 'package:tsnpdcl_employee/network/api_provider.dart';
 import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
-import 'package:tsnpdcl_employee/utils/app_constants.dart';
+import 'package:tsnpdcl_employee/utils/alerts.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/model/circle_model.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/model/spinner_list.dart';
@@ -313,6 +313,66 @@ class CreateGisIdViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> createGisId() async {
+    _feeder.clear();
+    ProcessDialogHelper.showProcessDialog(
+      context,
+      message: "Loading...",
+    );
+
+    final requestData = {
+      "authToken": SharedPreferenceHelper.getStringValue(
+          LoginSdkPrefs.tokenPrefKey),
+      "api": Apis.API_KEY,
+      "ssCode": _selectedSubStation,
+      "feederCode": _selectedFeeder,
+      "work": workDescriptionController.text,
+      "land": landMarkController.text,
+      "voltage": selectedLineType
+    };
+
+    final payload = {
+      "path": "/createGisId",
+      "apiVersion": "1.1",
+      "method": "POST",
+      "data": jsonEncode(requestData),
+    };
+
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(
+        context, Apis.NPDCL_EMP_URL, payload);
+    if (context.mounted) {
+      ProcessDialogHelper.closeDialog(context);
+    }
+
+    try {
+      if (response != null) {
+        if (response.data is String) {
+          response.data = jsonDecode(response.data);
+        }
+        if (response.statusCode == successResponseCode) {
+          if (response.data['tokenValid'] == isTrue) {
+            if (response.data['success'] == isTrue) {
+              if (response.data['message'] != null) {
+               showSuccessDialog(context, response.data['message'], (){Navigator.pop(context);});
+              }
+            } else {
+              showAlertDialog(context, response.data['message']);
+            }
+          } else {
+            showSessionExpiredDialog(context);
+          }
+        } else {
+          showAlertDialog(context, response.data['message']);
+        }
+      }
+    } catch (e) {
+      showErrorDialog(context, "An error occurred. Please try again.");
+      rethrow;
+    }
+
+    notifyListeners();
+  }
+
   bool _33kvline = false;
   bool _11kvline = false;
 
@@ -320,8 +380,8 @@ class CreateGisIdViewModel extends ChangeNotifier {
   bool get is33KVLine2 => _11kvline;
 
   String? get selectedLineType {
-    if (_33kvline) return '33KV';
-    if (_11kvline) return '11KV';
+    if (_33kvline) return '33';
+    if (_11kvline) return '11';
     return null;
   }
 
@@ -329,10 +389,11 @@ class CreateGisIdViewModel extends ChangeNotifier {
     if (value == true) {
       _33kvline = true;
       _11kvline = false;
-      // Execute 33KV-specific APIs
-      get132KVSSLines(); // Fetch 132KV substations
+      _circle.clear();
+      _selectedCircle = null;
+      get132KVSSLines();
       if (_selectedSubStation != null) {
-        get33KVFeederOf132KVSSLines(_selectedSubStation!); // Fetch 33KV feeders if substation is selected
+        get33KVFeederOf132KVSSLines(_selectedSubStation!);
       }
     } else {
       _33kvline = false;
@@ -344,11 +405,11 @@ class CreateGisIdViewModel extends ChangeNotifier {
     if (value == true) {
       _11kvline = true;
       _33kvline = false;
-      // Optionally reset stations and feeders or call different APIs for 11KV
+
       _stations.clear();
       _feeder.clear();
       if (_selectedSubStation != null) {
-        get11KVFeederOf132KVSSLines(_selectedSubStation!); // Fetch 11KV feeders if substation is selected
+        get11KVFeederOf132KVSSLines(_selectedSubStation!);
       }
     } else {
       _11kvline = false;
@@ -369,71 +430,11 @@ class CreateGisIdViewModel extends ChangeNotifier {
     print('Selected Line Type: $selectedLineType');
     print('Land Mark: ${landMarkController.text}');
     print('Work Description: ${workDescriptionController.text}');
-    print("voltage:  11 or 13");
 
-    if(_selectedFeeder!=null||_selectedSubStation!=null||selectedLineType!=null||landMarkController.text.isNotEmpty||workDescriptionController.text.isNotEmpty){
-      Future<void> createGisId(String ss) async {
-        _feeder.clear();
-        ProcessDialogHelper.showProcessDialog(
-          context,
-          message: "Loading...",
-        );
-
-        final requestData = {
-          "authToken": SharedPreferenceHelper.getStringValue(
-              LoginSdkPrefs.tokenPrefKey),
-          "api": Apis.API_KEY,
-          "ssCode": _selectedSubStation,
-          " feederCode": _selectedFeeder,
-          " work": workDescriptionController.text,
-          " land": landMarkController.text,
-          "voltage":""
-        };
-
-        final payload = {
-          "path": "/createGisId",
-          "apiVersion": "1.0",
-          "method": "POST",
-          "data": jsonEncode(requestData),
-        };
-
-        var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.NPDCL_EMP_URL, payload);
-        if (context.mounted) {
-          ProcessDialogHelper.closeDialog(context);
-        }
-
-        try {
-          if (response != null) {
-            if (response.data is String) {
-              response.data = jsonDecode(response.data);
-            }
-            if (response.statusCode == successResponseCode) {
-              if (response.data['tokenValid'] == isTrue) {
-                if (response.data['success'] == isTrue) {
-                  if (response.data['objectJson'] != null) {
-                    final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
-                    final List<SpinnerList> listData = jsonList.map((json) => SpinnerList.fromJson(json)).toList();
-                    _feeder.addAll(listData);
-                  }
-                } else {
-                  showAlertDialog(context, response.data['message']);
-                }
-              } else {
-                showSessionExpiredDialog(context);
-              }
-            } else {
-              showAlertDialog(context, response.data['message']);
-            }
-          }
-        } catch (e) {
-          showErrorDialog(context, "An error occurred. Please try again.");
-          rethrow;
-        }
-
-        notifyListeners();
-      }
-
-
+    if(_selectedFeeder!=null||_selectedSubStation!=null||selectedLineType!=null||landMarkController.text.isNotEmpty||workDescriptionController.text.isNotEmpty) {
+      createGisId();
+    }else{
+      AlertUtils.showSnackBar(context,"Please fill all the fields", isTrue);
     }
   }
 

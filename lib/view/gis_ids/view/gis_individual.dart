@@ -68,7 +68,10 @@ class GisIndividualId extends StatelessWidget {
                               Align(
                                 alignment: Alignment.centerRight,
                                 child:
-                                SizedBox(width:200,child:PrimaryButton(text:'SAVE FOR OFFLINE' , onPressed: (){})),
+                                SizedBox(width:200,child:PrimaryButton(text:'SAVE FOR OFFLINE' , onPressed: (){
+                                  viewModel.saveForOffline(individualGIDId);
+
+                                })),
                               ),
                         ]
                         ),

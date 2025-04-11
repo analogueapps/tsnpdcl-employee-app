@@ -97,7 +97,7 @@ class CreateDtrOnline extends StatelessWidget {
                                          Text("Select Distribution", style: TextStyle(fontSize: 15,color:Colors.purple[300]),),
                                         DropdownButton<String>(
                                           isExpanded: true,
-                                          hint: const Text("Select"),
+                                          hint: const Text("Select", style: TextStyle(color: Colors.black),),
                                           value: viewModel.selectedDistribution,
                                           items: viewModel.distributions.map((SubstationModel item) {
                                             return DropdownMenuItem<String>(
@@ -226,205 +226,193 @@ class CreateDtrOnline extends StatelessWidget {
                                         ),
                                         const SizedBox(height: 10,),
                                         Column(
-                                            children: [
-                                              if (viewModel.selectedCapacity != null && viewModel.selectedCapacity != "0")
-                                                for (int i = 0; i < int.parse(viewModel.selectedCapacity!); i++)
-                                                  Visibility(
-                                                    visible: viewModel.selectedCapacity != null && viewModel.selectedCapacity != "0",
-                                                    child:
-                                                    Card(
-                                            elevation: 3,
-                                            color: Colors.white,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(8),
-                                            ),
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(12.0),
-                                              child: SizedBox(
-                                                width: double.infinity, // Ensure finite width
-                                                child: Column(
-                                                  mainAxisSize: MainAxisSize.min, // Use minimal vertical space
-                                                  children: [
-                                                    Row(
-                                                      children: [
-                                                        SizedBox(
-                                                          width: 150, // Fixed width for all labels
-                                                          child: Text(
-                                                            "Make",
-                                                            style: TextStyle(color: Colors.purple[300]),
-                                                          ),
-                                                        ),
-                                                        Expanded( // Ensure the dropdown has finite width
-                                                          child: DropdownButton<String>(
-                                                            isExpanded: true,
-                                                            hint: const Text("Select Make"),
-                                                            value: viewModel.selectedMake,
-                                                            items: viewModel.make.map<DropdownMenuItem<String>>((SubstationModel item) {
-                                                              return DropdownMenuItem<String>(
-                                                                value: item.optionCode,
-                                                                child: Text(item.optionName, overflow: TextOverflow.ellipsis,),
-                                                              );
-                                                            }).toList(),
-                                                            onChanged: viewModel.onListMake,
-                                                          ),
-                                                        ),
-                                                        const IconButton(
-                                                          onPressed: null,
-                                                          icon: Icon(Icons.search, color: CommonColors.pink),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    dtrDrops(
-                                                      "Capacity",
-                                                      viewModel.selectedDtrCapacity,
-                                                      viewModel.dtrCapacity,
-                                                      viewModel.onListDtrCapacity,
-                                                    ),
-                                                    Row(
-                                                      children: [
-                                                        SizedBox(
-                                                          width: 150, // Fixed width for all labels
-                                                          child:  Text("First time DTR\n "
-                                                              "Charged/Energised\n Date", style: TextStyle(color: Colors.purple[300]),),
-                                                        ),
-                                                        Expanded(
-                                                          child: InkWell(
-                                                            onTap: () async {
-                                                              final DateTime? pickedDate = await showDatePicker(
-                                                                context: context,
-                                                                initialDate: DateTime.now(),
-                                                                firstDate: DateTime(2000),
-                                                                lastDate: DateTime.now(),
-                                                              );
-                                                              if (pickedDate != null) {
-                                                                // Format the date as DD/MM/YYYY
-                                                                final formattedDate = "${pickedDate.day.toString().padLeft(2,'0')}/${pickedDate.month.toString().padLeft(2,'0')}/${pickedDate.year}";
-                                                                viewModel.first_time_charged_date.text = formattedDate;
-                                                              }
-                                                            },
-                                                            child: IgnorePointer(
-                                                              child: TextFormField(
-                                                                controller: viewModel.first_time_charged_date,
-                                                                decoration: const InputDecoration(
-                                                                  labelText: 'DD/MM/YYYY',
-                                                                  border: OutlineInputBorder(),
-                                                                  // suffixIcon: Icon(Icons.calendar_today),
+                                          children: [
+                                            if (viewModel.selectedCapacity != null && viewModel.selectedCapacity != "0")
+                                              for (int i = 0; i < int.parse(viewModel.selectedCapacity!); i++)
+                                                Visibility(
+                                                  visible: viewModel.selectedCapacity != null && viewModel.selectedCapacity != "0",
+                                                  child: Card(
+                                                    elevation: 3,
+                                                    color: Colors.white,
+                                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.all(12.0),
+                                                      child: SizedBox(
+                                                        width: double.infinity,
+                                                        child: Column(
+                                                          mainAxisSize: MainAxisSize.min,
+                                                          children: [
+                                                            Row(
+                                                              children: [
+                                                                SizedBox(
+                                                                  width: 150,
+                                                                  child: Text("Make", style: TextStyle(color: Colors.purple[300])),
                                                                 ),
-
+                                                                Expanded(
+                                                                  child: DropdownButton<String>(
+                                                                    isExpanded: true,
+                                                                    hint: const Text("Select Make"),
+                                                                    value: viewModel.dtrCardData[i].selectedMake,
+                                                                    items: viewModel.make.map<DropdownMenuItem<String>>((SubstationModel item) {
+                                                                      return DropdownMenuItem<String>(
+                                                                        value: item.optionCode,
+                                                                        child: Text(item.optionName, overflow: TextOverflow.ellipsis),
+                                                                      );
+                                                                    }).toList(),
+                                                                    onChanged: (value) => viewModel.onListMake(value, i),
+                                                                  ),
+                                                                ),
+                                                                const IconButton(
+                                                                  onPressed: null,
+                                                                  icon: Icon(Icons.search, color: CommonColors.pink),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            dtrDrops(
+                                                              "Capacity",
+                                                              viewModel.dtrCardData[i].selectedDtrCapacity,
+                                                              viewModel.dtrCapacity,
+                                                                  (value) => viewModel.onListDtrCapacity(value, i),
+                                                            ),
+                                                            Row(
+                                                              children: [
+                                                                SizedBox(
+                                                                  width: 150,
+                                                                  child: Text("First time DTR\nCharged/Energised\nDate",
+                                                                      style: TextStyle(color: Colors.purple[300])),
+                                                                ),
+                                                                Expanded(
+                                                                  child: InkWell(
+                                                                    onTap: () async {
+                                                                      final DateTime? pickedDate = await showDatePicker(
+                                                                        context: context,
+                                                                        initialDate: DateTime.now(),
+                                                                        firstDate: DateTime(2000),
+                                                                        lastDate: DateTime.now(),
+                                                                      );
+                                                                      if (pickedDate != null) {
+                                                                        final formattedDate =
+                                                                            "${pickedDate.day.toString().padLeft(2, '0')}/${pickedDate.month.toString().padLeft(2, '0')}/${pickedDate.year}";
+                                                                        viewModel.dtrCardData[i].firstTimeChargedDate.text = formattedDate;
+                                                                      }
+                                                                    },
+                                                                    child: IgnorePointer(
+                                                                      child: TextFormField(
+                                                                        controller: viewModel.dtrCardData[i].firstTimeChargedDate,
+                                                                        decoration: const InputDecoration(
+                                                                          labelText: 'DD/MM/YYYY',
+                                                                          border: OutlineInputBorder(),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            const Divider(),
+                                                            Row(
+                                                              children: [
+                                                                SizedBox(
+                                                                  width: 150,
+                                                                  child: Text("Serial No", style: TextStyle(color: Colors.purple[300])),
+                                                                ),
+                                                                Expanded(
+                                                                  child: FillTextFormField(
+                                                                    controller: viewModel.dtrCardData[i].serialNo,
+                                                                    labelText: '',
+                                                                    keyboardType: TextInputType.text,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            const Text(
+                                                              "If Serial No. is not available Please click here",
+                                                              style: TextStyle(color: Colors.red, fontSize: 12),
+                                                            ),
+                                                            Align(
+                                                              alignment: Alignment.bottomRight,
+                                                              child: TextButton(
+                                                                onPressed: () => viewModel.requestSerialNo(i),
+                                                                child: const Text(
+                                                                  "Request Serial No",
+                                                                  style: TextStyle(color: Colors.blueAccent),
+                                                                  textAlign: TextAlign.right,
+                                                                ),
                                                               ),
                                                             ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    const Divider(),
-                                                    Row(
-                                                      children: [
-                                                         SizedBox(
-                                                          width: 150, // Fixed width for all labels
-                                                          child:  Text("Serial No ", style: TextStyle(color: Colors.purple[300]),),
-                                                        ),
-                                                        Expanded(child:
-                                                        FillTextFormField(
-                                                          controller: viewModel.serialNo,
-                                                          labelText: '',
-                                                          keyboardType: TextInputType.text,
-                                                        )
-                                                        ),
-                                                      ],
-                                                    ),
-
-                                                    const Text("If Serial No. is not available Please click here", style: TextStyle(color: Colors.red,fontSize: 12),),
-                                                    Align(
-                                                      alignment: Alignment.bottomRight,
-                                                      child:
-                                                    TextButton(onPressed: viewModel.requestSerialNo,child:const Text("Request Serial No", style: TextStyle(color: Colors.blueAccent), textAlign: TextAlign.right,),),
-                                                    ),
-                                                    const SizedBox(height: 20,),
-                                                    const Text("👉🏻 Please Paint the Serial No on the DTR and capture the photo of DTR", style: TextStyle(
-                                                        color: Colors.red,
-                                                        fontSize: 13,
-                                                        fontWeight: FontWeight.bold
-                                                    ),
-                                                    ),
-                                                    const Divider(),
-                                                    dtrDrops(
-                                                      "Year of Mfg",
-                                                      viewModel.selectedYearOfMfg,
-                                                      viewModel.yearOfMfg,
-                                                      viewModel.onListYearOfMfg,
-                                                    ),
-
-                                                    dtrDrops(
-                                                      "Phase",
-                                                      viewModel.selectedPhase,
-                                                      viewModel.phase,
-                                                      viewModel.onListPhase,
-                                                    ),
-
-                                                    dtrDrops(
-                                                      "Ratio",
-                                                      viewModel.selectedRatio,
-                                                      viewModel.ratio,
-                                                      viewModel.onListRatio,
-                                                    ),
-                                                    const Divider(),
-                                                    dtrDrops(
-                                                      "Select Type of \n"
-                                                          "meter (LV side)",
-                                                      viewModel.selectedTypeOfMeter,
-                                                      viewModel.typeOfMeter,
-                                                      viewModel.onListTypeOfMeter,
-                                                    ),
-                                                    Row(
-                                                      children: [
-                                                         SizedBox(
-                                                          width: 150, // Fixed width for all labels
-                                                          child:  Text("SAP DTR Equp.\n"
-                                                              "No(Painted On DTR)", style: TextStyle(color: Colors.purple[300])),
-                                                        ),
-                                                        Expanded(child:
-                                                        FillTextFormField(
-                                                          controller: viewModel.sap_dtr,
-                                                          labelText: '',
-                                                          keyboardType: TextInputType.text,
-                                                        )
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    const Text("👉🏻 Please Paint the Serial No on the DTR and capture the photo of DTR", style: TextStyle(
-                                                        color: Colors.red,
-                                                        fontSize: 13,
-                                                        fontWeight: FontWeight.bold
-                                                    ),
-                                                    ),
-                                                    const SizedBox(height: 10,),
-                                                    _buildPlaceholder(viewModel.capturedImage),
-                                                    const SizedBox(height: 10,),
-                                                    SizedBox(
-                                                      width: double.infinity,
-                                                      child: ElevatedButton(
-                                                          style: ElevatedButton.styleFrom(
-                                                            backgroundColor:Colors.deepOrangeAccent,
-                                                            shape: RoundedRectangleBorder(
-                                                              borderRadius: BorderRadius.circular(5),
+                                                            const SizedBox(height: 20),
+                                                            const Text(
+                                                              "👉🏻 Please Paint the Serial No on the DTR and capture the photo of DTR",
+                                                              style: TextStyle(color: Colors.red, fontSize: 13, fontWeight: FontWeight.bold),
                                                             ),
-                                                            //elevation: 15.0,
-                                                          ),
-                                                          child: const Text("CAPTURE DTR PHOTO", style: TextStyle(color: Colors.white),),
-                                                          onPressed: () {
-                                                            viewModel.capturePhoto();
-                                                          }
+                                                            const Divider(),
+                                                            dtrDrops(
+                                                              "Year of Mfg",
+                                                              viewModel.dtrCardData[i].selectedYearOfMfg,
+                                                              viewModel.yearOfMfg,
+                                                                  (value) => viewModel.onListYearOfMfg(value, i),
+                                                            ),
+                                                            dtrDrops(
+                                                              "Phase",
+                                                              viewModel.dtrCardData[i].selectedPhase,
+                                                              viewModel.phase,
+                                                                  (value) => viewModel.onListPhase(value, i),
+                                                            ),
+                                                            dtrDrops(
+                                                              "Ratio",
+                                                              viewModel.dtrCardData[i].selectedRatio,
+                                                              viewModel.ratio,
+                                                                  (value) => viewModel.onListRatio(value, i),
+                                                            ),
+                                                            const Divider(),
+                                                            dtrDrops(
+                                                              "Select Type of\nmeter (LV side)",
+                                                              viewModel.dtrCardData[i].selectedTypeOfMeter,
+                                                              viewModel.typeOfMeter,
+                                                                  (value) => viewModel.onListTypeOfMeter(value, i),
+                                                            ),
+                                                            Row(
+                                                              children: [
+                                                                SizedBox(
+                                                                  width: 150,
+                                                                  child: Text("SAP DTR Equp.\nNo(Painted On DTR)",
+                                                                      style: TextStyle(color: Colors.purple[300])),
+                                                                ),
+                                                                Expanded(
+                                                                  child: FillTextFormField(
+                                                                    controller: viewModel.dtrCardData[i].sapDtr,
+                                                                    labelText: '',
+                                                                    keyboardType: TextInputType.text,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            const Text(
+                                                              "👉🏻 Please Paint the Serial No on the DTR and capture the photo of DTR",
+                                                              style: TextStyle(color: Colors.red, fontSize: 13, fontWeight: FontWeight.bold),
+                                                            ),
+                                                            const SizedBox(height: 10),
+                                                            _buildPlaceholder(viewModel.dtrCardData[i].capturedImage),
+                                                            const SizedBox(height: 10),
+                                                            SizedBox(
+                                                              width: double.infinity,
+                                                              child: ElevatedButton(
+                                                                style: ElevatedButton.styleFrom(
+                                                                  backgroundColor: Colors.deepOrangeAccent,
+                                                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                                                                ),
+                                                                child: const Text("CAPTURE DTR PHOTO", style: TextStyle(color: Colors.white)),
+                                                                onPressed: () => viewModel.capturePhoto(i),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
                                                       ),
-                                                    )
-                                                  ],
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
-                                            ),
-                                          ),
+                                          ],
                                         ),
-                                        ]
-                                       ),
                                       ]
                                   ),
                                 ),

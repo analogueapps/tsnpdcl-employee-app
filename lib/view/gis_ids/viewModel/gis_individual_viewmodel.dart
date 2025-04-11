@@ -9,6 +9,7 @@ import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
+import 'package:tsnpdcl_employee/view/gis_ids/database/pending_offline_list_db.dart';
 import 'package:tsnpdcl_employee/view/gis_ids/model/gis_ids_model.dart';
 import 'package:tsnpdcl_employee/view/gis_ids/model/gis_individual_model.dart';
 
@@ -128,10 +129,22 @@ class GisIndividualIdViewModel extends ChangeNotifier {
       showErrorDialog(context, "An error occurred. Please try again.");
     }
   }
-  // Save for offline action
-  // void saveForOffline() {
-  //   // Implement save logic here (e.g., local storage)
-  //   print('Saving GIS ID: $gisId for offline');
-  //   notifyListeners(); // Notify if UI needs to update after save
-  // }
+
+  //save for offline
+  Future<void> saveForOffline(int regNum) async {
+    try {
+      final data = gisData.firstWhere((item) => item.gisId == regNum);
+      await DatabaseHelper.instance.insertGisSurveyData(data);
+      // Show success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('GIS ID $regNum saved offline')),
+      );
+    } catch (e) {
+      // Show error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to save GIS ID $regNum: $e')),
+      );
+    }
+  }
+
 }

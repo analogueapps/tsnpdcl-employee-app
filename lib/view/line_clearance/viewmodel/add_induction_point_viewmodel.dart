@@ -50,8 +50,7 @@ class AddInductionPointViewModel extends ChangeNotifier {
     clearAllList();
     notifyListeners();
     if (selectedCheckboxId == id) {
-      selectedCheckboxId = null; // Uncheck if the same checkbox is clicked
-    } else {
+      selectedCheckboxId = null;
       selectedCheckboxId = id;
       if(id == "33KV LINE"){
         get132KVSSLines();
@@ -59,7 +58,7 @@ class AddInductionPointViewModel extends ChangeNotifier {
         addCircleList();
       }
     }
-    notifyListeners(); // Notify the view about the change
+    notifyListeners();
   }
 
   Future<void> get132KVSSLines() async {

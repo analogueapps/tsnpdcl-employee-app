@@ -18,11 +18,14 @@ class CreateGisId extends StatelessWidget {
       create: (_) => CreateGisIdViewModel(context: context),
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: CommonColors.colorPrimary,
           title: const Text(
             "Create Gis Id",
-            style: TextStyle(color: Colors.white),
+            style:  TextStyle(
+                color: Colors.white,
+                fontSize: toolbarTitleSize,
+                fontWeight: FontWeight.w700),
           ),
-          backgroundColor: Colors.blue,
           leading: IconButton(
             icon: const Icon(Icons.close, color: Colors.white),
             tooltip: 'Cancel',
@@ -33,7 +36,7 @@ class CreateGisId extends StatelessWidget {
           padding: const EdgeInsets.all(11),
           child: Consumer<CreateGisIdViewModel>(
             builder: (context, viewModel, child) {
-              return Column(
+              return SingleChildScrollView(child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 10),
@@ -73,7 +76,7 @@ class CreateGisId extends StatelessWidget {
                     width: double.infinity,
                     child:  DropdownButton<String>(
                       isExpanded: true,
-                      hint: const Text("Select"),
+                      hint:  const Text("Select"),
                       value: viewModel.selectedCircle,
                       items: viewModel.circle.map<DropdownMenuItem<String>>((Circle item) {
                         return DropdownMenuItem<String>(
@@ -162,6 +165,7 @@ class CreateGisId extends StatelessWidget {
                     ),
                   ),
                 ],
+              ),
               );
             },
           ),

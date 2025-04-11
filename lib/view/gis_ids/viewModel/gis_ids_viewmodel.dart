@@ -8,6 +8,7 @@ import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
+import 'package:tsnpdcl_employee/view/gis_ids/database/gis_offline_list_db.dart';
 import 'package:tsnpdcl_employee/view/gis_ids/model/gis_ids_model.dart';
 
 class GISIDsViewModel extends ChangeNotifier {
@@ -179,27 +180,6 @@ class GISIDsViewModel extends ChangeNotifier {
                   showSuccessDialog(context, jsonMessage,   () {
                     Navigation.instance.pushBack();
                   },);
-                  // List<FeederDisModel> dataList = [];
-                  //
-                  // if (jsonMessage is String) {
-                  //   // Parse the JSON string within message
-                  //   final structureJson = jsonDecode(jsonMessage);
-                  //   dataList.add(FeederDisModel.fromJson(structureJson));
-                  // } else if (jsonMessage is Map<String, dynamic>) {
-                  //   // If message is already a parsed object
-                  //   dataList.add(FeederDisModel.fromJson(jsonMessage));
-                  // }
-                  //
-                  // _structureData.addAll(dataList);
-                  // print(
-                  //     "Structure data: ${_structureData.length} items loaded");
-                  // print(
-                  //     "Structure details: ${_structureData.map((e) =>
-                  //         e.toJson())}");
-                  // Navigation.instance.navigateTo(
-                  //   Routes.dtrStructure,
-                  //   args: _structureData,
-                  // );
                 } catch (e, stackTrace) {
                   print("Error parsing message: $e");
                   print("Stack trace: $stackTrace");
@@ -230,9 +210,24 @@ class GISIDsViewModel extends ChangeNotifier {
 
 
   // Save for offline (placeholder)
-  void saveForOffline(String gisId) {
-    // Implement offline save logic here (e.g., local storage)
-    print('Saving GIS ID: $gisId for offline');
+  Future<void> saveForOffline(String regNum) async {
+    final gisItem = gisData.firstWhere(
+          (item) => item.regNum == regNum,
+      orElse: () => throw Exception('GIS item not found'),
+    );
+
+    try {
+      _isLoading = true;
+      notifyListeners();
+
+      await DatabaseHelper.instance.insertGisId(gisItem);
+      print('Saved GIS ID ${gisItem.gisId} for offline use');
+    } catch (e) {
+      print('Error saving GIS ID: $e');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 
   // Clean up

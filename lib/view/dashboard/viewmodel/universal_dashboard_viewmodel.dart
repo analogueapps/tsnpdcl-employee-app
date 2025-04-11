@@ -640,11 +640,11 @@ class UniversalDashboardViewModel extends ChangeNotifier {
         ),
         GlobalListDialogItem(
           title: "View Offline Forms",
-          routeName: "",
+          routeName: Routes.gisOfflineForms,
         ),
         GlobalListDialogItem(
           title: "View Offline Forms(Pending)",
-          routeName: "",
+          routeName:Routes.viewPendingOfflineForms,
         ),
       ]);
       showCustomListDialog(context, globalListDialogItem);

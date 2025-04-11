@@ -54,27 +54,27 @@ class GISIDsScreen extends StatelessWidget {
     final item = viewModel.gisData[index];
     return Column(
     children: [
-    InkWell(
-    onTap: () {
-    // print("gisId:${item.gisId} ");
+        InkWell(
+        onTap: () {
       Navigation.instance.navigateTo(Routes.gisIndividual, args: item.gisId);
-
     },
-    child: SizedBox(
-    child: Column(
-    mainAxisAlignment: MainAxisAlignment.start,
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-    Text(
-    'GIS ID: ${item.regNum}', // Using regNum as the display ID
-    style: const TextStyle(fontWeight: FontWeight.bold),
-    ),
-    Text('Work Description: ${item.workDescription}'),
-    Text('EMP ID: ${item.empId}'),
-    ],
-    ),
-    ),
-    ),
+      child: Container(
+      width: double.infinity, // Ensure the Column takes full width
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+      child: Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+      Text(
+      'GIS ID: ${item.regNum}',
+      style: const TextStyle(fontWeight: FontWeight.bold),
+      ),
+      Text('Work Description: ${item.workDescription}'),
+      Text('EMP ID: ${item.empId}'),
+      ],
+      ),
+      ),
+      ),
     Align(
     alignment: Alignment.bottomRight,
     child: Row(children:[
@@ -95,7 +95,7 @@ class GISIDsScreen extends StatelessWidget {
         width: 10,
       ),
       Visibility(
-      visible:item.sapUploadFlag=="F",
+      visible:item.sapUploadFlag=="F"||item.sapUploadFlag!.isEmpty,
       child:
       ElevatedButton(
       style: ElevatedButton.styleFrom(

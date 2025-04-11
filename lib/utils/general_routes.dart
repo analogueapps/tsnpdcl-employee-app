@@ -148,6 +148,9 @@ class Routes {
   static const String addGis="AddGisPoint";
   static const String viewWorkScreen="WorkDetailsPage";
   static const String viewWorkFloatButtonScreen="ViewWorkFloatingButton";
+  static const String viewPendingOfflineForms="PendingOfflineList";
+  static const String gisOfflineForms="GisOfflineList";
+
 
   // ACCOUNT * SWETHA
   static const String accountScreen = "AccountScreen";
