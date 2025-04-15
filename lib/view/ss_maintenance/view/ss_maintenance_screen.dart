@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
@@ -45,9 +46,14 @@ class SsMaintenanceScreen extends StatelessWidget {
                 final item = viewModel.ssMaintenanceMenuItems[index];
                 return GestureDetector(
                   onTap: () {
-                    viewModel.menuItemClicked(item.title, item.routeName);
-                    // Handle the item click (navigation or other actions)
-                    // Navigation.instance.navigateTo(item.routeName);
+                    if(item.title=="Inspect SS"){
+                      showAlertDialog(context, "Please use Schedules menu to inspect the substations. Substations need to be scheduled by ADE/OP for maintenance");
+                    }
+                    else {
+                      viewModel.menuItemClicked(item.title, item.routeName);
+                      // Handle the item click (navigation or other actions)
+                      // Navigation.instance.navigateTo(item.routeName);
+                    }
                     print('${item.title} clicked');
                   },
                   child: Column(

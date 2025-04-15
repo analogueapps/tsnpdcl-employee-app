@@ -44,7 +44,11 @@ class DtrFailureScreen extends StatelessWidget {
               shrinkWrap: true,
               itemBuilder: (context, index) {
                 final item = viewModel.dtrFailureMenuItems[index];
-                return Column(
+                return GestureDetector(
+                    onTap: () {
+                  viewModel.menuItemClicked(context, item.title, item.routeName);
+                },
+                child:  Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
@@ -82,6 +86,7 @@ class DtrFailureScreen extends StatelessWidget {
                       ),
                     ),
                   ],
+                ),
                 );
               },
             )

@@ -82,9 +82,9 @@ class OverloadedDtrsView extends StatelessWidget {
                         )),
                     const SizedBox(height: 20),
 
-                    Align(
+                    const Align(
                       alignment: Alignment.centerLeft,
-                      child: const Text("SELECT STRUCTURE CODE",
+                      child:  Text("SELECT STRUCTURE CODE",
                           style: TextStyle(fontSize: 16)),
                     ),
                     SizedBox(height: 5,),

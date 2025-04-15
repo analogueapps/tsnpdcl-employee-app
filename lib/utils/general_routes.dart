@@ -117,8 +117,9 @@ class Routes {
   static const String createOfflineDTR="CreateDtrOffline";
 
   //DTR Failures
-  static const String failureReporting="DtrFailureReporting";
+  static const String viewFailureReports="ViewRectifiedReports";
   static const String dtrFailureReportingScreen="ReportDTRFailure";
+  static const String dtrFailureRectifiedScreen="DtrFailureRectifiedReports";
 
   // Interruptions * swetha
   static const String breakdown33kvScreen = "Breakdown33kvScreen";

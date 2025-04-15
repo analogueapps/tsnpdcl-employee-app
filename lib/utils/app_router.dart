@@ -9,6 +9,7 @@ import 'package:tsnpdcl_employee/view/ctpt_menu/view/ctpt_menu_screen.dart';
 import 'package:tsnpdcl_employee/view/ctpt_menu/view/ui/view_detailed_ctpt_report.dart';
 import 'package:tsnpdcl_employee/view/dashboard/view/universal_dashboard_screen.dart';
 import 'package:tsnpdcl_employee/view/dtr_failure/view/dtr_failure_screen.dart';
+import 'package:tsnpdcl_employee/view/dtr_failure/view/dtr_view_rectified_reports.dart';
 import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_inspection_list_screen.dart';
 import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_maintenance_inspection_screen.dart';
 import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_maintenance_screen.dart';
@@ -93,13 +94,13 @@ import 'package:tsnpdcl_employee/view/dtr_master/view/create_dtr_offline.dart';
 import 'package:tsnpdcl_employee/view/rfss/view/non_agl_services.dart';
 import 'package:tsnpdcl_employee/view/rfss/view/agl_services.dart';
 import 'package:tsnpdcl_employee/view/rfss/view/new_inspection.dart';
-import 'package:tsnpdcl_employee/view/dtr_failure/view/dtr_failure_reporting.dart';
+import 'package:tsnpdcl_employee/view/dtr_failure/view/dtr_view_failure_reports.dart';
 import 'package:tsnpdcl_employee/view/ltmt/view/meters_OM.dart';
 import 'package:tsnpdcl_employee/view/ctpt_menu/view/ui/report_ct_pt_failure.dart';
 import 'package:tsnpdcl_employee/view/ctpt_menu/view/ui/view_ct_pt_report_list.dart';
 import 'package:tsnpdcl_employee/view/ctpt_menu/viewmodel/report_ct_pt_viewmodel.dart';
 import 'package:tsnpdcl_employee/view/dashboard/view/universal_dashboard_screen.dart';
-import 'package:tsnpdcl_employee/view/dtr_failure/view/dtr_fail_report.dart';
+import 'package:tsnpdcl_employee/view/dtr_failure/view/dtr_failure_reporting.dart';
 import 'package:tsnpdcl_employee/view/gis_ids/view/add_gis_point.dart';
 import 'package:tsnpdcl_employee/view/gis_ids/view/create_gis_id.dart';
 import 'package:tsnpdcl_employee/view/gis_ids/view/gis_ids.dart';
@@ -415,6 +416,9 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const DtrFailureReporting());
       case ReportDTRFailure.id:
         return MaterialPageRoute(builder: (_) => const ReportDTRFailure());
+      case DtrFailureRectifiedReports.id:
+        return MaterialPageRoute(builder: (_) => const DtrFailureRectifiedReports());
+
 
     //CT PT FAILURE
       case CTFailureReportScreen.id:

@@ -80,4 +80,22 @@ class StatusConstants {
         return "N/A";
     }
   }
+
+  //DTR Failure * BHAVANA
+  static const String TYPE_FAILURE_REPORTS = "dtrFailureReports";
+  static const String TYPE_VIEW_REPORTS = "viewFailureReports";
+  static const String TYPE_VIEW_RECTIFIED = "viewRectifiedReports";
+
+  static String getDTRFailureListScreenTitle(String status) {
+    switch (status) {
+      case TYPE_FAILURE_REPORTS:
+        return "Failure Reporting";
+      case TYPE_VIEW_REPORTS:
+        return "View Failure Reports";
+      case TYPE_VIEW_RECTIFIED:
+        return "View Rectified";
+      default:
+        return "N/A";
+    }
+  }
 }

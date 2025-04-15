@@ -13,6 +13,8 @@ class Apis{
 
   /// IMAGE
   static const NPDCL_STORAGE_SERVER_IP = "http://210.212.223.83:7000/NpdclFileStorageWebApi/";
+  ///IMAGE UPLOAD URL
+  static const IMAGE_UPLOAD_URL="$ROOT_URL/NpdclFileStorageWebApi/tsnpdcl/fd/api/imr";
 
   /// CONSUMER RELATED
   static const NPDCL_EMP_URL = "NpdclEmployeeWebApi/npemp/api";
@@ -88,6 +90,10 @@ class Apis{
   /// CTPT FAILURE
   static const String CTPT_END_POINT_BASE_URL = "$ROOT_URL$NPDCL_EMP_URL";
   static const String GET_HT_SERVICES = "getHTServices";
+
+  ///SS MAINTENANCE * BHAVANA
+  static const GET_SS_MAINTENANCE= "getSSInspections";
+  static const SS_MAINTENANCE_WEB_URL="$SERVER_IP:5656/NPFDAS/SSMaintenanceView?iid=";
 
 
 }
