@@ -113,7 +113,7 @@ class AglServices extends StatelessWidget {
                   Align(
                       alignment: Alignment.centerRight,
                       child: TextButton(
-                      onPressed: null,
+                      onPressed: (){viewModel.downloadOtherSectionDTRS();},
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(CommonColors.colorPrimary),
                       ),

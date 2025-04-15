@@ -26,7 +26,7 @@ class FeederDisModel {
   String? createdDate;
   double? lat;
   String? structureType;
-  List<DTRModel>? dtrs; // Added for nested DTRs
+  List<DTRModel>? dtrs;
 
   FeederDisModel({
     this.loadPattern,

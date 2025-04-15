@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:tsnpdcl_employee/utils/alerts.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
+import 'package:tsnpdcl_employee/utils/general_routes.dart';
+import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 
 class AglViewModel extends ChangeNotifier{
   final BuildContext context;
@@ -168,6 +170,37 @@ class AglViewModel extends ChangeNotifier{
       },
     );
   }
+
+  void downloadOtherSectionDTRS() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return WillPopScope(
+          onWillPop: () async => false,
+          child:AlertDialog(
+            title: const Text("Download Neighbor section structure codes?", style: TextStyle(fontSize:doubleEighteen),),
+            content: const Text("Do you want to download neighbor section structure codes also?"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+                child: const Text('CLOSE'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigation.instance.navigateTo(Routes.downloadStructures); // Close the dialog
+                },
+                child: const Text('YES'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
 
   void showDistributionDialog(BuildContext context, AglViewModel viewmodel) {
     final TextEditingController searchController = TextEditingController();

@@ -86,7 +86,8 @@ class Routes {
   // * Bhavana
   static const String nonAglService='NonAglServices';
   static const String aglService='AglServices';
-  static const String openNewInspection="Open New Inspection";
+  static const String openNewInspection="NewInspection";
+  static const String downloadStructures="DownloadStructuresScreen";
 
   // Middle Poles Screen * Swetha
   static const String middlePolesScreen = 'MiddlePolesScreen';

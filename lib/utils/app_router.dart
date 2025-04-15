@@ -77,6 +77,7 @@ import 'package:tsnpdcl_employee/view/pole_tracker/view/pole_tracker_selection_v
 import 'package:tsnpdcl_employee/view/pole_tracker/view/view_digital_sketch_screen.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/view/view_offline_feeders_screen.dart';
 import 'package:tsnpdcl_employee/view/reports/view/reports_screen.dart';
+import 'package:tsnpdcl_employee/view/rfss/view/download_structures_screen.dart';
 import 'package:tsnpdcl_employee/view/rfss/view/rfss_screen.dart';
 import 'package:tsnpdcl_employee/view/search_consumer/view/search_consumer_screen.dart';
 import 'package:tsnpdcl_employee/view/ss_maintenance/view/maintenance_due_screen.dart';
@@ -300,12 +301,17 @@ class AppRouter {
     // RFSS Screen * Swetha
       case RfssScreen.id:
         return MaterialPageRoute(builder: (_) => const RfssScreen());
+        //Bhavana
       case NonAglServices.id:
         return MaterialPageRoute(builder: (_) => const NonAglServices());
       case AglServices.id:
         return MaterialPageRoute(builder: (_) => const AglServices());
       case NewInspection.id:
         return MaterialPageRoute(builder: (_) => const NewInspection());
+      case DownloadStructuresScreen.id:
+        return MaterialPageRoute(builder: (_) => const DownloadStructuresScreen());
+
+
 
     // Middle Poles Screen * Swetha
       case MiddlePolesScreen.id:

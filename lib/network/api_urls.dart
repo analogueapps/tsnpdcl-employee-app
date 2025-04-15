@@ -95,5 +95,9 @@ class Apis{
   static const GET_SS_MAINTENANCE= "getSSInspections";
   static const SS_MAINTENANCE_WEB_URL="$SERVER_IP:5656/NPFDAS/SSMaintenanceView?iid=";
 
+  ///Dtr Failure
+  static const SAVE_DTR_FAILURE_URL = "saveDtrFailureReport";
+  static const GET_DTR_REPORTS_FR="getDtrFailureReports";
+
 
 }
