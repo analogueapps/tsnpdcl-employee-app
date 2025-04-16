@@ -1,34 +1,34 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
-import 'package:tsnpdcl_employee/utils/navigation_service.dart';
-import 'package:tsnpdcl_employee/view/ctpt_menu/viewModel/view_ct_pt_viewModel.dart';
+import 'package:tsnpdcl_employee/utils/global_constants.dart';
+import 'package:tsnpdcl_employee/view/ctpt_menu/viewmodel/view_failure_confirmed_viewmodel.dart';
 import 'package:tsnpdcl_employee/widget/month_year_selector.dart';
 
-class FailureReportedList extends StatelessWidget {
-  static const id = Routes.viewCtPtReportList;
-
-  const FailureReportedList({super.key});
+class ViewFailureConfirmedList extends StatelessWidget {
+  static const id = Routes.viewFailureConfirmedList;
+  const ViewFailureConfirmedList({super.key});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => FailureReportedListViewModel(context: context),
-      child: Consumer<FailureReportedListViewModel>(
+      create: (_) => ViewFailureConfirmedViewmodel(context: context, status: "ADEOP_CNF"),
+      child: Consumer<ViewFailureConfirmedViewmodel>(
         builder: (context, viewModel, child) {
           return Scaffold(
             appBar: AppBar(
+              backgroundColor: CommonColors.colorPrimary,
               title: const Text(
-                'Failure Reported List',
+                GlobalConstants.viewCtPtFailureConfirmedList,
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 20,
+                  fontSize: 16,
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              backgroundColor: CommonColors.colorPrimary,
               iconTheme: const IconThemeData(color: Colors.white),
               actions: [
                 TextButton(
@@ -53,7 +53,7 @@ class FailureReportedList extends StatelessWidget {
                         : 'SELECT MONTH/YEAR',
                     style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 16,
+                      fontSize: 12,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -61,8 +61,8 @@ class FailureReportedList extends StatelessWidget {
               ],
             ),
             body: viewModel.isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : ListView.builder(
+            ? const Center(child: CircularProgressIndicator())
+              : ListView.builder(
                     itemCount: viewModel.failureReports.length,
                     itemBuilder: (context, index) {
                       if (viewModel.failureReports.isEmpty) {
@@ -72,10 +72,6 @@ class FailureReportedList extends StatelessWidget {
                         print("ctpt responsee: $report");
                         return InkWell(
                           onTap: () {
-                            Navigation.instance.navigateTo(
-                              Routes.viewDetailedCtptReport,
-                              args: report, // report is a FailureReportModel
-                            );
                             // viewModel.navigateToIndividualReport();
                           },
                           child: Padding(

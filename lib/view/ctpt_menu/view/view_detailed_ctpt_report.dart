@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/widget/view_detailed_lc_tile_widget.dart';
-import '../../model/failure_report.dart'; // Adjust import path
+import '../model/failure_report.dart'; // Adjust import path
 
 class ViewDetailedCtptReport extends StatelessWidget {
   static const id = Routes.viewDetailedCtptReport;

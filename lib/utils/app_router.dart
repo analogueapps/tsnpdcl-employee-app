@@ -6,7 +6,10 @@ import 'package:tsnpdcl_employee/view/auth/view/employee_id_login_screen.dart';
 import 'package:tsnpdcl_employee/view/consumer_details/view/consumer_details_screen.dart';
 import 'package:tsnpdcl_employee/view/consumer_details/view/dlist_form_screen.dart';
 import 'package:tsnpdcl_employee/view/ctpt_menu/view/ctpt_menu_screen.dart';
-import 'package:tsnpdcl_employee/view/ctpt_menu/view/ui/view_detailed_ctpt_report.dart';
+import 'package:tsnpdcl_employee/view/ctpt_menu/view/view_detailed_ctpt_report.dart';
+import 'package:tsnpdcl_employee/view/ctpt_menu/view/view_failure_confirmed_list.dart';
+import 'package:tsnpdcl_employee/view/ctpt_menu/view/view_issued_list.dart';
+import 'package:tsnpdcl_employee/view/ctpt_menu/view/view_replaced_list.dart';
 import 'package:tsnpdcl_employee/view/dashboard/view/universal_dashboard_screen.dart';
 import 'package:tsnpdcl_employee/view/dtr_failure/view/dtr_failure_screen.dart';
 import 'package:tsnpdcl_employee/view/dtr_failure/view/dtr_view_rectified_reports.dart';
@@ -97,8 +100,8 @@ import 'package:tsnpdcl_employee/view/rfss/view/agl_services.dart';
 import 'package:tsnpdcl_employee/view/rfss/view/new_inspection.dart';
 import 'package:tsnpdcl_employee/view/dtr_failure/view/dtr_view_failure_reports.dart';
 import 'package:tsnpdcl_employee/view/ltmt/view/meters_OM.dart';
-import 'package:tsnpdcl_employee/view/ctpt_menu/view/ui/report_ct_pt_failure.dart';
-import 'package:tsnpdcl_employee/view/ctpt_menu/view/ui/view_ct_pt_report_list.dart';
+import 'package:tsnpdcl_employee/view/ctpt_menu/view/report_ct_pt_failure.dart';
+import 'package:tsnpdcl_employee/view/ctpt_menu/view/view_ct_pt_report_list.dart';
 import 'package:tsnpdcl_employee/view/ctpt_menu/viewmodel/report_ct_pt_viewmodel.dart';
 import 'package:tsnpdcl_employee/view/dashboard/view/universal_dashboard_screen.dart';
 import 'package:tsnpdcl_employee/view/dtr_failure/view/dtr_failure_reporting.dart';
@@ -431,6 +434,14 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const CTFailureReportScreen());
       case FailureReportedList.id:
         return MaterialPageRoute(builder: (_) => const FailureReportedList());
+      case ViewFailureConfirmedList.id:
+        return MaterialPageRoute(builder: (_) => const ViewFailureConfirmedList());
+      case ViewReplacedList.id:
+        return MaterialPageRoute(builder: (_) => const ViewReplacedList());
+      case ViewIssuedList.id:
+        return MaterialPageRoute(builder: (_) => const ViewIssuedList());
+
+
 
     //GIS DIS
       case GISIDsScreen.id:

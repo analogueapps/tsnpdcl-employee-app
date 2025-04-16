@@ -26,13 +26,13 @@ class CtptMenuViewModel extends ChangeNotifier {
           routeName: Routes.viewCtPtReportList),
       SubMenuListItem(
           title: GlobalConstants.viewCtPtFailureConfirmedList,
-          routeName: routeName),
+          routeName: Routes.viewFailureConfirmedList),
       SubMenuListItem(
           title: GlobalConstants.viewCtPtIssuedList,
-          routeName: routeName),
+          routeName:Routes.viewIssuedList),
       SubMenuListItem(
           title: GlobalConstants.viewCtPtReplacedList,
-          routeName: routeName),
+          routeName: Routes.viewReplacedList),
     ]);
 
     notifyListeners();

@@ -142,6 +142,9 @@ class Routes {
   static const String viewCtPtReportList = "FailureReportedList";
   static const String failureIndividual = "IndividualFailureReport";
   static const String viewDetailedCtptReport = "ViewDetailedCtptReport"; // * swetha
+  static const String viewFailureConfirmedList="ViewFailureConfirmedList"; // *Bhavana
+  static const String viewIssuedList="ViewFailureConfirmedList"; // *Bhavana
+  static const String viewReplacedList="ViewFailureConfirmedList"; // *Bhavana
 
   //GIS DIS * Bhavana
   static const String viewGisIdsScreen="GISIDsScreen";

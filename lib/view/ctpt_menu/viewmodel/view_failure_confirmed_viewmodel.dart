@@ -1,19 +1,19 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
+
+import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
+import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
 import 'package:tsnpdcl_employee/network/api_provider.dart';
 import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
-import 'package:tsnpdcl_employee/utils/general_routes.dart';
-import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/view/ctpt_menu/model/failure_report.dart';
-import 'dart:convert';
 
-class FailureReportedListViewModel extends ChangeNotifier {
-  FailureReportedListViewModel({required this.context}) {
-    final now = DateTime.now();//Apr2025
+class ViewFailureConfirmedViewmodel extends ChangeNotifier {
+  ViewFailureConfirmedViewmodel({required this.context, required this.status}) {
+    final now = DateTime.now();
     _selectedMonthYear = {
       'month': _getMonthName(now.month),
       'year': now.year,
@@ -22,7 +22,9 @@ class FailureReportedListViewModel extends ChangeNotifier {
   }
 
   final BuildContext context;
+  final String status;
   bool _isLoading = false;
+
   bool get isLoading => _isLoading;
 
   Map<String, dynamic>? _selectedMonthYear;
@@ -35,7 +37,7 @@ class FailureReportedListViewModel extends ChangeNotifier {
       'year': year,
     };
     fetchCtPtReports();
-    print("selectedMonthYear: $selectedMonthYear");
+   print("selectedMonthYear: $selectedMonthYear");
     notifyListeners();
   }
 
@@ -57,6 +59,7 @@ class FailureReportedListViewModel extends ChangeNotifier {
     return monthNames[month - 1];
   }
 
+
   List<FailureReportModel> _failureReports = [];
   List<FailureReportModel> get failureReports => _failureReports;
 
@@ -68,9 +71,9 @@ class FailureReportedListViewModel extends ChangeNotifier {
       "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       'm': _selectedMonthYear != null
-          ? '${_selectedMonthYear!['month']}${_selectedMonthYear!['year']}' // e.g., "Apr2025"
+          ? '${_selectedMonthYear!['month']}${_selectedMonthYear!['year']}'
           : DateFormat('MMMyyyy').format(DateTime.now()),
-      's': "AE_REP",
+      's': status,
     };
 
     final payload = {
@@ -97,14 +100,19 @@ class FailureReportedListViewModel extends ChangeNotifier {
           if (responseData['tokenValid'] == isTrue) {
             if (responseData['success'] == isTrue) {
               if (responseData['objectJson'] != null) {
-                List<dynamic> reportsJson = responseData['objectJson'] is String
-                    ? jsonDecode(responseData['objectJson']) as List<dynamic>
-                    : responseData['objectJson'] as List<dynamic>;
+                if(responseData['objectJson']=="[]"){
+                  showAlertDialog(context, "No Data Found");
+                }else {
+                  List<
+                      dynamic> reportsJson = responseData['objectJson'] is String
+                      ? jsonDecode(responseData['objectJson']) as List<dynamic>
+                      : responseData['objectJson'] as List<dynamic>;
 
-                _failureReports = reportsJson.map((reportJson) {
-                  return FailureReportModel.fromJson(reportJson);
-                }).toList();
-                notifyListeners();
+                  _failureReports = reportsJson.map((reportJson) {
+                    return FailureReportModel.fromJson(reportJson);
+                  }).toList();
+                  notifyListeners();
+                }
               } else {
                 _failureReports = []; // Clear list if no data
                 notifyListeners();
@@ -128,8 +136,4 @@ class FailureReportedListViewModel extends ChangeNotifier {
     }
   }
 
-  void navigateToIndividualReport() {
-    Navigation.instance.navigateTo(Routes.failureIndividual);
-  }
 }
-

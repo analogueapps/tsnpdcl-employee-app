@@ -25,9 +25,6 @@ class DownloadStructuresScreen extends StatelessWidget {
     iconTheme: const IconThemeData(
     color: Colors.white,
     ),
-    actions: [
-    IconButton(onPressed: (){}, icon: const Icon(Icons.upload))
-    ],
     ),
     body:ChangeNotifierProvider(
     create: (_) => DownloadStructureViewModel(context: context),
@@ -68,6 +65,35 @@ class DownloadStructuresScreen extends StatelessWidget {
             ),
             Text(
               viewModel.list33kVSsOfCircleSelect ?? "",
+              style: const TextStyle(
+                color: Colors.green,
+                fontSize: extraRegularSize,
+              ),
+            ),
+            const SizedBox(height: 10,),
+            const Text(
+              "CHOOSE FEEDER",
+              style: TextStyle(
+                color: CommonColors.colorPrimary,
+              ),
+            ),
+            const SizedBox(height: doubleTen),
+            DropdownButton<String>(
+              isExpanded: true,
+              hint: const Text("Select an option"),
+              value: viewModel.listFeederSelect,
+              items: viewModel.listFeederItem
+                  .map((item) => DropdownMenuItem<String>(
+                value: item.optionCode,
+                child: Text(item.optionName!),
+              ))
+                  .toList(),
+              onChanged: (value) {
+                viewModel.onListFeederValueChange(value);
+              },
+            ),
+            Text(
+              viewModel.listFeederSelect ?? "",
               style: const TextStyle(
                 color: Colors.green,
                 fontSize: extraRegularSize,

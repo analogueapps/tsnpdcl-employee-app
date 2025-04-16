@@ -1,10 +1,21 @@
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:tsnpdcl_employee/utils/alerts.dart';
+import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
+import 'package:tsnpdcl_employee/dialogs/process_dialog.dart';
+import 'package:tsnpdcl_employee/network/api_provider.dart';
+import 'package:tsnpdcl_employee/network/api_urls.dart';
+import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
-import 'package:tsnpdcl_employee/utils/general_routes.dart';
+import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
+import 'package:tsnpdcl_employee/utils/general_routes.dart';
+import 'package:tsnpdcl_employee/view/dtr_master/model/circle_model.dart';
+
+import '../database/mapping_of_services/agl_databases/distribution_db.dart';
+
+
 
 class AglViewModel extends ChangeNotifier{
   final BuildContext context;
@@ -17,7 +28,7 @@ class AglViewModel extends ChangeNotifier{
     Future.delayed(Duration.zero, () {
       _handleLocationIconClick();
       downloadDistributions();
-      // getCurrentLocation();
+
     });
   }
 
@@ -57,30 +68,8 @@ class AglViewModel extends ChangeNotifier{
       }
     }
 
-    // if (!isLocationEnabled) {
-    //   // Show a snackbar if the location service is still disabled
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(
-    //       content: Text("Location services are still disabled."),
-    //     ),
-    //   );
-    //   return;
-    // }
-
     // Check location permissions
     LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Location permissions are denied."),
-          ),
-        );
-        return;
-      }
-    }
-
     if (permission == LocationPermission.deniedForever) {
       // Show a dialog to open app settings
       bool? shouldOpenSettings = await showDialog(
@@ -105,21 +94,10 @@ class AglViewModel extends ChangeNotifier{
 
       if (shouldOpenSettings == true) {
         await Geolocator.openAppSettings();
-        // After opening settings, check again if the permissions are granted
+
         permission = await Geolocator.checkPermission();
       }
     }
-
-    if (permission != LocationPermission.whileInUse && permission != LocationPermission.always) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Location permissions are still denied."),
-        ),
-      );
-      return;
-    }
-
-    // Fetch current location if permissions are granted
     await _getCurrentLocation();
 
   }
@@ -135,11 +113,10 @@ class AglViewModel extends ChangeNotifier{
         notifyListeners();
     } catch (e) {
       print("Error fetching location: $e");
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //     SnackBar(content: Text("Failed to fetch location."))
-      // );
     }
   }
+
+
 
   void downloadDistributions() {
     showDialog(
@@ -154,13 +131,15 @@ class AglViewModel extends ChangeNotifier{
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
+                loadOfflineDistributions();
               },
               child: const Text('OFFLINE'),
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
+                getDistributions();
               },
               child: const Text('DOWNLOAD'),
             ),
@@ -171,6 +150,7 @@ class AglViewModel extends ChangeNotifier{
     );
   }
 
+  //DOWNLOAD OTHER SECTION DTRS BUTTON
   void downloadOtherSectionDTRS() {
     showDialog(
       context: context,
@@ -190,6 +170,7 @@ class AglViewModel extends ChangeNotifier{
               ),
               TextButton(
                 onPressed: () {
+                  Navigator.of(context).pop();
                   Navigation.instance.navigateTo(Routes.downloadStructures); // Close the dialog
                 },
                 child: const Text('YES'),
@@ -201,8 +182,8 @@ class AglViewModel extends ChangeNotifier{
     );
   }
 
-
-  void showDistributionDialog(BuildContext context, AglViewModel viewmodel) {
+//SEARCH DIALOG FOR DISTRIBUTION
+  void showDistributionDialog(BuildContext context) {
     final TextEditingController searchController = TextEditingController();
     String searchQuery = '';
 
@@ -211,10 +192,17 @@ class AglViewModel extends ChangeNotifier{
       builder: (BuildContext dialogContext) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
+            final filteredDistributions = listDistributionItem
+                .where((distribution) => distribution.optionName!
+                .toLowerCase()
+                .contains(searchQuery.toLowerCase()))
+                .toList();
+
             return AlertDialog(
-              title: const Text('Select '),
+              title: const Text('Select Distribution'),
               content: SizedBox(
-                width: double.maxFinite,
+                width: 300,
+                height: double.infinity,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -233,26 +221,20 @@ class AglViewModel extends ChangeNotifier{
                       },
                     ),
                     const SizedBox(height: 10),
-                    // Substation List
+                    // Distribution List
                     SizedBox(
-                      height: 200,
-                      child: ListView.builder(
+                      height: 600,
+                      child: filteredDistributions.isEmpty
+                          ? const Center(child: Text('No distributions found'))
+                          : ListView.builder(
                         shrinkWrap: true,
-                        itemCount: viewmodel.distri
-                            .where((substation) => substation
-                            .toLowerCase()
-                            .contains(searchQuery.toLowerCase()))
-                            .length,
+                        itemCount: filteredDistributions.length,
                         itemBuilder: (context, index) {
-                          final filteredSubstations = viewmodel.distri
-                              .where((substation) => substation
-                              .toLowerCase()
-                              .contains(searchQuery.toLowerCase()))
-                              .toList();
+                          final distribution = filteredDistributions[index];
                           return ListTile(
-                            title: Text(filteredSubstations[index]),
+                            title: Text(distribution.optionName ?? 'Unknown'),
                             onTap: () {
-                              viewmodel.onListDistributionSelected(filteredSubstations[index]);
+                              onListDistributionValueChange(distribution.optionCode);
                               Navigator.pop(dialogContext);
                             },
                           );
@@ -271,31 +253,234 @@ class AglViewModel extends ChangeNotifier{
     });
   }
 
+  List<SubstationModel> listDistributionItem = [];
+  String? listDistributionSelect;
 
-  String? _selectedDistribution;
-  String? get selectedDistribution => _selectedDistribution;
+  Future<void> getDistributions() async {
+    ProcessDialogHelper.showProcessDialog(
+      context,
+      message: "Loading...",
+    );
 
-  List _distribution = ["10808-R T C COLONY", "12236-NAKKALAGUTTA-NKG", "12237-BALASAMUDRAM"];
+    final requestData = {
+      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "api": Apis.API_KEY,
+      "sc":SharedPreferenceHelper.getStringValue(
+          LoginSdkPrefs.sectionCodePrefKey),
+    };
 
-  List get distri => _distribution;
-  void onListDistributionSelected(String? value) {
-    _selectedDistribution = value;
+    final payload = {
+      "path": "/load/distributions",
+      "apiVersion": "1.0",
+      "method": "POST",
+      "data": jsonEncode(requestData),
+    };
+
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    if (context.mounted) {
+      ProcessDialogHelper.closeDialog(context);
+    }
+
+    try {
+      if (response != null) {
+        if (response.data is String) {
+          response.data = jsonDecode(response.data); // Parse string to JSON
+        }
+        if (response.statusCode == successResponseCode) {
+          if(response.data['tokenValid'] == isTrue) {
+            if (response.data['success'] == isTrue) {
+              if(response.data['objectJson'] != null) {
+                final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
+                final List<SubstationModel> listData = jsonList.map((json) => SubstationModel.fromJson(json)).toList();
+                listDistributionItem.addAll(listData);
+
+
+                if (listDistributionItem.isNotEmpty) {
+                  listDistributionSelect = listDistributionItem.first.optionCode;
+                }
+                // Store in database
+                await DatabaseHelper.instance.clearSubstations();
+                await DatabaseHelper.instance.insertSubstations(listData);
+              }
+            } else {
+              showAlertDialog(context,response.data['message']);
+            }
+          } else {
+            showSessionExpiredDialog(context);
+          }
+        } else {
+          showAlertDialog(context,response.data['message']);
+        }
+      }
+    } catch (e) {
+      showErrorDialog(context,  "An error occurred. Please try again.");
+      rethrow;
+    }
+
     notifyListeners();
   }
+
+  //OFFLINE DISTRIBUTIONS
+  Future<void> loadOfflineDistributions() async {
+    try {
+      // Fetch data from database
+      final List<SubstationModel> dbData = await DatabaseHelper.instance.getSubstations();
+
+      listDistributionItem.clear();
+      listDistributionItem.addAll(dbData);
+
+      listDistributionSelect = listDistributionItem.isNotEmpty ? listDistributionItem.first.optionCode : null;
+
+      notifyListeners();
+    } catch (e) {
+      showErrorDialog(context, "Failed to load offline data: $e");
+    }
+  }
+
+  void onListDistributionValueChange(String? value) {
+    listDistributionSelect = value;
+    print("10808: $listDistributionSelect");
+    notifyListeners();
+  }
+
 
   String? _selectedStructure;
   String? get selectedStructure => _selectedStructure;
 
-  List _structure = [
-    "12236-NAKKALAGUTTA-NKG-SS-0071",
-    "12236-NAKKALAGUTTA-NKG-SS-0066",
-    "12236-NAKKALAGUTTA-NKG-SS-0059"];
+  List _structure = [];
 
   List get struct => _structure;
+
+  Future<void> getStructuresOfSection() async {
+    ProcessDialogHelper.showProcessDialog(
+      context,
+      message: "Loading...",
+    );
+
+    final requestData = {
+      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "api": Apis.API_KEY,
+
+    };
+
+    final payload = {
+      "path": "/getStructuresOfSection",
+      "apiVersion": "1.0",
+      "method": "POST",
+      "data": jsonEncode(requestData),
+    };
+
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    if (context.mounted) {
+      ProcessDialogHelper.closeDialog(context);
+    }
+
+    try {
+      if (response != null) {
+        if (response.data is String) {
+          response.data = jsonDecode(response.data); // Parse string to JSON
+        }
+        if (response.statusCode == successResponseCode) {
+          if(response.data['tokenValid'] == isTrue) {
+            if (response.data['success'] == isTrue) {
+              if(response.data['objectJson'] != null) {
+                final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
+                final List<SubstationModel> listData = jsonList.map((json) => SubstationModel.fromJson(json)).toList();
+                listDistributionItem.addAll(listData);
+                listDistributionItem.clear();
+                listDistributionItem.addAll(listData);
+
+                // Store in database
+                await DatabaseHelper.instance.clearSubstations(); // Clear old data
+                await DatabaseHelper.instance.insertSubstations(listData); // Insert new data
+              }
+            } else {
+              showAlertDialog(context,response.data['message']);
+            }
+          } else {
+            showSessionExpiredDialog(context);
+          }
+        } else {
+          showAlertDialog(context,response.data['message']);
+        }
+      }
+    } catch (e) {
+      showErrorDialog(context,  "An error occurred. Please try again.");
+      rethrow;
+    }
+
+    notifyListeners();
+  }
+
   void onListStructureSelected(String? value) {
     _selectedStructure = value;
     notifyListeners();
   }
+
+  //DOWNLOAD UNMAPPED SERVICES
+  Future<void> getUnmappedServices(String distributionCode) async {
+    ProcessDialogHelper.showProcessDialog(
+      context,
+      message: "Loading...",
+    );
+
+    final requestData = {
+      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "api": Apis.API_KEY,
+      "dc":distributionCode,
+      "agl":true,
+      "rfss":false
+
+    };
+
+    final payload = {
+      "path": "/getUnMappedServices",
+      "apiVersion": "1.0",
+      "method": "POST",
+      "data": jsonEncode(requestData),
+    };
+
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    if (context.mounted) {
+      ProcessDialogHelper.closeDialog(context);
+    }
+
+    try {
+      if (response != null) {
+        if (response.data is String) {
+          response.data = jsonDecode(response.data); // Parse string to JSON
+        }
+        if (response.statusCode == successResponseCode) {
+          if(response.data['tokenValid'] == isTrue) {
+            if (response.data['success'] == isTrue) {
+              if(response.data['objectJson'] != null) {
+                final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
+                final List<SubstationModel> listData = jsonList.map((json) => SubstationModel.fromJson(json)).toList();
+
+
+                // Store in database
+                await DatabaseHelper.instance.clearSubstations(); // Clear old data
+                await DatabaseHelper.instance.insertSubstations(listData); // Insert new data
+              }
+            } else {
+              showAlertDialog(context,response.data['message']);
+            }
+          } else {
+            showSessionExpiredDialog(context);
+          }
+        } else {
+          showAlertDialog(context,response.data['message']);
+        }
+      }
+    } catch (e) {
+      showErrorDialog(context,  "An error occurred. Please try again.");
+      rethrow;
+    }
+
+    notifyListeners();
+  }
+
+
 
   String? _selectedServiceNo;
   String? get selectedServiceNo => _selectedServiceNo;
@@ -313,6 +498,68 @@ class AglViewModel extends ChangeNotifier{
   void toggleOption(String value) {
     selectedOption = value;
     print("$selectedOption :choose option");
+    notifyListeners();
+  }
+
+
+  //UPLOAD API
+  Future<void> savedMappedServices(String distributionCode) async {
+    ProcessDialogHelper.showProcessDialog(
+      context,
+      message: "Loading...",
+    );
+
+    final requestData = {
+      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "api": Apis.API_KEY,
+      "data":"[uscno, structure,lat, lon, loadInHp, areaCode, authorisationFlag, farmerName]",
+
+    };
+
+    final payload = {
+      "path": "/savedMappedServices",
+      "apiVersion": "1.0",
+      "method": "POST",
+      "data": jsonEncode(requestData),
+    };
+
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    if (context.mounted) {
+      ProcessDialogHelper.closeDialog(context);
+    }
+
+    try {
+      if (response != null) {
+        if (response.data is String) {
+          response.data = jsonDecode(response.data); // Parse string to JSON
+        }
+        if (response.statusCode == successResponseCode) {
+          if(response.data['tokenValid'] == isTrue) {
+            if (response.data['success'] == isTrue) {
+              if(response.data['objectJson'] != null) {
+                final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
+                final List<SubstationModel> listData = jsonList.map((json) => SubstationModel.fromJson(json)).toList();
+
+
+                // Store in database
+                await DatabaseHelper.instance.clearSubstations(); // Clear old data
+                await DatabaseHelper.instance.insertSubstations(listData); // Insert new data
+              }
+            } else {
+              showAlertDialog(context,response.data['message']);
+            }
+          } else {
+            showSessionExpiredDialog(context);
+          }
+        } else {
+          showAlertDialog(context,response.data['message']);
+        }
+      }
+    } catch (e) {
+      showErrorDialog(context,  "An error occurred. Please try again.");
+      rethrow;
+    }
+
     notifyListeners();
   }
 

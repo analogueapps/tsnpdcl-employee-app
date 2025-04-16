@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/view/ctpt_menu/viewmodel/report_ct_pt_viewmodel.dart';
-import '../../../../utils/app_constants.dart';
-import '../../../../widget/primary_button.dart';
+import '../../../utils/app_constants.dart';
+import '../../../widget/primary_button.dart';
 
 class CTFailureReportScreen extends StatelessWidget {
   static const id = Routes.reportCtPtFailure;

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
 import 'package:tsnpdcl_employee/dialogs/process_dialog.dart';
 import 'package:tsnpdcl_employee/network/api_provider.dart';
@@ -13,10 +14,17 @@ class DownloadStructureViewModel extends ChangeNotifier {
   final BuildContext context;
 
   bool _isLoading = false;
+
   bool get isLoading => _isLoading;
 
   List<SpinnerList> list33kVSsOfCircleItem = [];
   String? list33kVSsOfCircleSelect;
+
+  List<SpinnerList> listFeederItem = [];
+  String? listFeederSelect;
+
+  List<SpinnerList> list33KvFeederOf132kVssItem = [];
+  String? list33KvFeederOf132kVssSelect;
 
   DownloadStructureViewModel({required this.context}) {
     get33kVSsOfCircle();
@@ -25,6 +33,12 @@ class DownloadStructureViewModel extends ChangeNotifier {
   Future<void> get33kVSsOfCircle() async {
     if (_isLoading) return; // Prevent multiple calls
     _isLoading = true;
+
+    list33kVSsOfCircleItem.clear();
+    list33kVSsOfCircleSelect = null;
+    listFeederItem.clear();
+    listFeederSelect = null;
+    notifyListeners();
     notifyListeners();
 
     // Show dialog safely
@@ -39,7 +53,8 @@ class DownloadStructureViewModel extends ChangeNotifier {
 
     try {
       final requestData = {
-        "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ?? '',
+        "authToken": SharedPreferenceHelper.getStringValue(
+            LoginSdkPrefs.tokenPrefKey) ?? '',
         "api": Apis.API_KEY,
       };
 
@@ -50,7 +65,8 @@ class DownloadStructureViewModel extends ChangeNotifier {
         "data": jsonEncode(requestData),
       };
 
-      var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+      var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(
+          context, Apis.NPDCL_EMP_URL, payload);
 
       // Close dialog safely
       if (context.mounted) {
@@ -67,18 +83,22 @@ class DownloadStructureViewModel extends ChangeNotifier {
           if (response.data['tokenValid'] == true) {
             if (response.data['success'] == true) {
               if (response.data['objectJson'] != null) {
-                final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
-                final List<SpinnerList> listData = jsonList.map((json) => SpinnerList.fromJson(json)).toList();
+                final List<dynamic> jsonList = jsonDecode(
+                    response.data['objectJson']);
+                final List<SpinnerList> listData = jsonList.map((json) =>
+                    SpinnerList.fromJson(json)).toList();
                 list33kVSsOfCircleItem.clear(); // Clear existing data
                 list33kVSsOfCircleItem.addAll(listData);
               } else {
                 if (context.mounted) {
-                  showAlertDialog(context, response.data['message'] ?? 'No data available');
+                  showAlertDialog(
+                      context, response.data['message'] ?? 'No data available');
                 }
               }
             } else {
               if (context.mounted) {
-                showAlertDialog(context, response.data['message'] ?? 'Operation failed');
+                showAlertDialog(
+                    context, response.data['message'] ?? 'Operation failed');
               }
             }
           } else {
@@ -88,7 +108,8 @@ class DownloadStructureViewModel extends ChangeNotifier {
           }
         } else {
           if (context.mounted) {
-            showAlertDialog(context, response.data['message'] ?? 'Request failed with status: ${response.statusCode}');
+            showAlertDialog(context, response.data['message'] ??
+                'Request failed with status: ${response.statusCode}');
           }
         }
       } else {
@@ -109,7 +130,178 @@ class DownloadStructureViewModel extends ChangeNotifier {
   }
 
   void onList33kVSsOfCircleValueChange(String? value) {
+    listFeederItem.clear();
+    listFeederSelect = null;
+    notifyListeners();
     list33kVSsOfCircleSelect = value;
+    if (value != null) {
+      print("subStation: $list33kVSsOfCircleSelect");
+      getFeedersData(value);
+    }
     notifyListeners();
   }
-}
+
+
+  Future<void> getFeedersData(String ss) async {
+    listFeederItem.clear();
+    listFeederSelect = null;
+    notifyListeners();
+
+    ProcessDialogHelper.showProcessDialog(
+      context,
+      message: "Loading...",
+    );
+
+    final requestData = {
+      "authToken": SharedPreferenceHelper.getStringValue(
+          LoginSdkPrefs.tokenPrefKey),
+      "api": Apis.API_KEY,
+      "ss": ss,
+    };
+
+    final payload = {
+      "path": "/load/feeders",
+      "apiVersion": "1.0",
+      "method": "POST",
+      "data": jsonEncode(requestData),
+    };
+
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(
+        context, Apis.NPDCL_EMP_URL, payload);
+    if (context.mounted) {
+      ProcessDialogHelper.closeDialog(context);
+    }
+
+    try {
+      if (response != null) {
+        if (response.data is String) {
+          response.data = jsonDecode(response.data); // Parse string to JSON
+        }
+        if (response.statusCode == successResponseCode) {
+          if (response.data['tokenValid'] == isTrue) {
+            if (response.data['success'] == isTrue) {
+              if (response.data['objectJson'] != null) {
+                final List<dynamic> jsonList = jsonDecode(
+                    response.data['objectJson']);
+                final List<SpinnerList> listData = jsonList.map((json) =>
+                    SpinnerList.fromJson(json)).toList();
+                listFeederItem.addAll(listData);
+              }
+            } else {
+              showAlertDialog(context, response.data['message']);
+            }
+          } else {
+            showSessionExpiredDialog(context);
+          }
+        } else {
+          showAlertDialog(context, response.data['message']);
+        }
+      }
+    } catch (e) {
+      showErrorDialog(context, "An error occurred. Please try again.");
+      rethrow;
+    }
+
+    notifyListeners();
+  }
+
+  void downloadAnother() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return WillPopScope(
+          onWillPop: () async => false,
+          child: AlertDialog(
+            title: const Text(
+              "Success", style: TextStyle(fontSize: doubleEighteen),),
+            content: const Text(
+                "DTR structure codes downloaded and made available for offline!"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+                child: const Text('CLOSE'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+                child: const Text('DOWNLOAD ANOTHER'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+
+  void onListFeederValueChange(String? value) {
+    listFeederSelect = value;
+    if (value != null) {
+      print("feeder data: $listFeederSelect");
+      getStructFeederDis(listFeederSelect!);
+    }
+    notifyListeners();
+  }
+
+  Future<void> getStructFeederDis(String feederValue) async {
+    ProcessDialogHelper.showProcessDialog(
+      context,
+      message: "Loading...",
+    );
+
+      final requestFData = {
+        "authToken": SharedPreferenceHelper.getStringValue(
+            LoginSdkPrefs.tokenPrefKey) ?? "",
+        "api": Apis.API_KEY,
+        "dc": "null",
+        "fc": feederValue,
+        "status": "",
+        "ignoreSection": "true"
+      };
+
+
+      final payload = {
+        "path": "/getStructuresOfFeederOrDistribution",
+        "apiVersion": "1.0",
+        "method": "POST",
+        "data": jsonEncode(requestFData),
+      };
+
+      final response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+          .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    if (context.mounted) {
+      ProcessDialogHelper.closeDialog(context);
+    }
+
+      try {
+        if (response != null) {
+          if (response.data is String) {
+            response.data = jsonDecode(response.data);
+          }
+          if (response.statusCode == successResponseCode) {
+            if (response.data['tokenValid'] == isTrue) {
+              if (response.data['success'] == isTrue) {
+                if (response.data['message'] != null) {
+                  downloadAnother();
+                }
+              } else {
+                showAlertDialog(context, response.data['message']);
+              }
+            } else {
+              showSessionExpiredDialog(context);
+            }
+          } else {
+            showAlertDialog(context, response.data['message']);
+          }
+        }
+      } catch (e) {
+        showErrorDialog(context, "An error occurred. Please try again.");
+        rethrow;
+      }
+      notifyListeners();
+    }
+  }

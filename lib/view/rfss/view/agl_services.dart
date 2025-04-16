@@ -53,41 +53,33 @@ class AglServices extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   GestureDetector(
-                    onTap: () => viewModel.showDistributionDialog(context, viewModel),
+                    onTap: () => viewModel.showDistributionDialog(context),
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text("Select Distribution"),
-                          Container(
-                            height: 50,
-                            width: double.infinity,
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              // color: CommonColors.textFieldColor,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  viewModel.selectedDistribution ?? "Select ",
-                                  style: const TextStyle(color: Colors.black),
-                                ),
-                                const Icon(
-                                  Icons.arrow_drop_down,
-                                  color: Colors.black,
-                                  size: 24,
-                                ),
-                              ],
-                            ),
+                          DropdownButton<String>(
+                            isExpanded: true,
+                            hint: const Text("Select a distribution"),
+                            value: viewModel.listDistributionSelect,
+                            items: viewModel.listDistributionItem.map((item) {
+                              return DropdownMenuItem<String>(
+                                value: item.optionCode,
+                                child: Text(item.optionName),
+                              );
+                            }).toList(),
+                            onChanged: viewModel.listDistributionItem.isNotEmpty
+                                ? (value) => viewModel.onListDistributionValueChange(value)
+                                : null,
                           ),
                         ]
                     ),
                   ),
                   Center(
                     child: TextButton(
-                      onPressed: (){},
+                      onPressed: (){
+                        viewModel.getUnmappedServices(viewModel.listDistributionSelect??"");
+                      },
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(Colors.grey[200]),
                       ),
