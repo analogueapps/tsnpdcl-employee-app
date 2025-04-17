@@ -2,66 +2,77 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:tsnpdcl_employee/view/rfss/model/save_mapped_model.dart';
 
-
-class ServiceDatabaseHelper {
-  static final ServiceDatabaseHelper instance = ServiceDatabaseHelper._init();
+class AGLUnMappedDatabaseHelper {
+  static final AGLUnMappedDatabaseHelper _instance = AGLUnMappedDatabaseHelper._internal();
   static Database? _database;
 
-  ServiceDatabaseHelper._init();
+  factory AGLUnMappedDatabaseHelper() => _instance;
+
+  AGLUnMappedDatabaseHelper._internal();
 
   Future<Database> get database async {
     if (_database != null) return _database!;
-    _database = await _initDB('services.db');
+    _database = await _initDatabase();
     return _database!;
   }
 
-  Future<Database> _initDB(String fileName) async {
-    final dbPath = await getDatabasesPath();
-    final path = join(dbPath, fileName);
-
+  Future<Database> _initDatabase() async {
+    final path = join(await getDatabasesPath(), 'unmapped_services.db');
     return await openDatabase(
       path,
       version: 1,
-      onCreate: _createDB,
+      onCreate: _onCreate,
     );
   }
 
-  Future _createDB(Database db, int version) async {
-    const String createTable = '''
-    CREATE TABLE unmapped_services (
-      uscno TEXT PRIMARY KEY,
-      digitalDtrStructureCode TEXT,
-      latitude REAL,
-      longitude REAL,
-      unAuthorisedLoadInHp REAL,
-      areaCode TEXT,
-      authorisationFlag TEXT,
-      farmerName TEXT
-    )
-    ''';
-
-    await db.execute(createTable);
+  Future<void> _onCreate(Database db, int version) async {
+    await db.execute('''
+      CREATE TABLE unmapped_services(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        eroCode TEXT,
+        sectionCode TEXT,
+        eroSecCode TEXT,
+        areaCode TEXT,
+        uscno TEXT UNIQUE,
+        scno TEXT,
+        name TEXT,
+        cat TEXT
+      )
+    ''');
   }
 
-  Future<List<UnMappedService>> getUnMappedServices() async {
+  // Insert or replace services
+  Future<void> insertUnMappedServices(List<UploadMappedService> services) async {
     final db = await database;
-    final maps = await db.query(
-      'unmapped_services',
-      where: 'digitalDtrStructureCode IS NOT NULL',
-    );
+    final batch = db.batch();
 
-    return maps.map((map) => UnMappedService.fromMap(map)).toList();
+    for (final service in services) {
+      batch.insert(
+        'unmapped_services',
+        service.toJson(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
+
+    await batch.commit();
   }
 
-  Future<void> deleteUnMappedService(String uscno) async {
+  // Get all services
+  Future<List<UploadMappedService>> getUnMappedServices() async {
     final db = await database;
-    await db.delete(
-      'unmapped_services',
-      where: 'uscno = ?',
-      whereArgs: [uscno],
-    );
+    final List<Map<String, dynamic>> maps = await db.query('unmapped_services');
+    return List.generate(maps.length, (i) {
+      return UploadMappedService.fromJson(maps[i]);
+    });
   }
 
+  // Clear all services
+  Future<void> clearUnMappedServices() async {
+    final db = await database;
+    await db.delete('unmapped_services');
+  }
+
+  // Close the database
   Future<void> close() async {
     final db = await database;
     await db.close();

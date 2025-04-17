@@ -10,6 +10,8 @@ import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/model/spinner_list.dart';
 
+import '../database/mapping_of_services/agl_databases/structure_code_db.dart';
+
 class DownloadStructureViewModel extends ChangeNotifier {
   final BuildContext context;
 
@@ -220,7 +222,8 @@ class DownloadStructureViewModel extends ChangeNotifier {
             actions: [
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop(); // Close the dialog
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
                 },
                 child: const Text('CLOSE'),
               ),
@@ -257,7 +260,6 @@ class DownloadStructureViewModel extends ChangeNotifier {
         "authToken": SharedPreferenceHelper.getStringValue(
             LoginSdkPrefs.tokenPrefKey) ?? "",
         "api": Apis.API_KEY,
-        "dc": "null",
         "fc": feederValue,
         "status": "",
         "ignoreSection": "true"
@@ -285,7 +287,18 @@ class DownloadStructureViewModel extends ChangeNotifier {
           if (response.statusCode == successResponseCode) {
             if (response.data['tokenValid'] == isTrue) {
               if (response.data['success'] == isTrue) {
-                if (response.data['message'] != null) {
+                if (response.data['message'] != "[]") {
+                  // Parse the message field which contains the list of structures
+                  final List<dynamic> structures = jsonDecode(response.data['message']);
+                  final dbHelper = StructureDatabaseHelper.instance;
+
+                  // Save each structureCode to the database
+                  print("Structure codes insertion starting ");
+                  for (var structure in structures) {
+                    final structureCode = structure['structureCode'] as String;
+                    await dbHelper.insertStructureCode(structureCode);
+                    print("Structure codes insertion done ");
+                  }
                   downloadAnother();
                 }
               } else {

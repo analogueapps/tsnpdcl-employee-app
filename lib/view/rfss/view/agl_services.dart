@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_searchable_dropdown/flutter_searchable_dropdown.dart';
 import 'package:provider/provider.dart';
+import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
@@ -39,7 +40,12 @@ class AglServices extends StatelessWidget {
           color: Colors.white,
         ),
         actions: [
-          IconButton(onPressed: (){}, icon: const Icon(Icons.upload))
+          IconButton(onPressed: () {
+            if(viewModel.latitude!=""&&viewModel.longitude!="") {
+              viewModel.addService();
+              viewModel.savedMappedServices(viewModel.usersData);
+            }
+          }, icon: const Icon(Icons.upload))
         ],
       ),
       body:SingleChildScrollView(
@@ -120,7 +126,7 @@ class AglServices extends StatelessWidget {
                       Row(
                         children: [
                           Radio<String>(
-                            value: "Authorised AGL Services",
+                            value: "A",
                             groupValue: viewModel.selectedOption,
                             onChanged: (value) => viewModel.toggleOption(value!),
                           ),
@@ -137,7 +143,7 @@ class AglServices extends StatelessWidget {
                       Row(
                         children: [
                           Radio<String>(
-                            value: "Un authorised AGL Services",
+                            value: "U",
                             groupValue: viewModel.selectedOption,
                             onChanged: (value) => viewModel.toggleOption(value!),
                           ),
@@ -154,7 +160,7 @@ class AglServices extends StatelessWidget {
                       Row(
                         children: [
                           Radio<String>(
-                            value: "Metered Service(NON-AGL)",
+                            value: "M",
                             groupValue: viewModel.selectedOption,
                             onChanged: (value) => viewModel.toggleOption(value!),
                           ),
@@ -172,44 +178,52 @@ class AglServices extends StatelessWidget {
                   ),
                   const SizedBox(height: doubleTwenty),
                   Visibility(
-                      visible:viewModel.selectedOption=="Authorised AGL Services",
+                      visible:viewModel.selectedOption=="A",
                       child:Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                         const Text("Select Service No"),
-                        DropdownButton<String>(
-                          isExpanded: true,
-                          hint: const Text(""),
-                          value: viewModel.selectedServiceNo,
-                          items: viewModel.serviceNo.map((item) {
-                            return DropdownMenuItem<String>(
-                              value: item,
-                              child: Text(item),
-                            );
-                          }).toList(),
-                          onChanged: (value) => viewModel.onListServiceNoSelected(value),
-                        ),
-                      ],
+                          DropdownButton<String>(
+                                isExpanded: true,
+                                hint: const Text("Select Service"),
+                                value: viewModel.selectedServiceNo != null
+                                    ? '${viewModel.selectedServiceNo} - ${viewModel.services.firstWhere(
+                                        (s) =>
+                                            s['scno'] ==
+                                            viewModel.selectedServiceNo,
+                                        orElse: () => {'name': ''},
+                                      )['name']}'
+                                    : null,
+                                items: viewModel.serviceDisplayItems
+                                    .map((displayItem) {
+                                  return DropdownMenuItem<String>(
+                                    value: displayItem,
+                                    child: Text(displayItem),
+                                  );
+                                }).toList(),
+                                onChanged: viewModel.onServiceSelected,
+                              ),
+                            ],
                       )
                   ),
-                  Visibility(visible:viewModel.selectedOption=="Un authorised AGL Services",child:Column(
+                  Visibility(visible:viewModel.selectedOption=="U",child:Column(
                     children: [
                     FillTextFormField(
                         controller: viewModel.farmerName,
                         labelText:"FARMER NAME(Optional)",
                         keyboardType: TextInputType.text
                     ),
-                      SizedBox(height: 20,),
+                      const SizedBox(height: 20,),
                       FillTextFormField(
-                          controller: viewModel.farmerName,
+                          controller: viewModel.connectedLoad,
                           labelText: "CONNECTED LOAD(HP)",
-                          keyboardType: TextInputType.text
+                          keyboardType: TextInputType.number
                       )
                   ],
                   )
                   ),
                   Visibility(
-                    visible: viewModel.selectedOption=="Metered Service(NON-AGL)",
+                    visible: viewModel.selectedOption=="M",
                       child: FillTextFormField(
                           controller:viewModel.uscno ,
                       labelText: "USCNO(NON - AGL)",

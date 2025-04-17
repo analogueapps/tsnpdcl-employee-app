@@ -1,59 +1,51 @@
-class UnMappedService {
+class UploadMappedService {
+  final String eroCode;
+  final String sectionCode;
+  final String eroSecCode;
+  final String areaCode;
   final String uscno;
-  final String? digitalDtrStructureCode;
-  final double? latitude;
-  final double? longitude;
-  final double? unAuthorisedLoadInHp;
-  final String? areaCode;
-  final String? authorisationFlag;
-  final String? farmerName;
+  final String scno;
+  final String name;
+  final String cat;
 
-  UnMappedService({
+  UploadMappedService({
+    required this.eroCode,
+    required this.sectionCode,
+    required this.eroSecCode,
+    required this.areaCode,
     required this.uscno,
-    this.digitalDtrStructureCode,
-    this.latitude,
-    this.longitude,
-    this.unAuthorisedLoadInHp,
-    this.areaCode,
-    this.authorisationFlag,
-    this.farmerName,
+    required this.scno,
+    required this.name,
+    required this.cat,
   });
 
-  Map<String, dynamic> toMap() {
+  factory UploadMappedService.fromJson(Map<String, dynamic> json) {
+    return UploadMappedService(
+      eroCode: json['eroCode'] as String? ?? '',
+      sectionCode: json['sectionCode'] as String? ?? '',
+      eroSecCode: json['eroSecCode'] as String? ?? '',
+      areaCode: json['areaCode'] as String? ?? '',
+      uscno: json['uscno'] as String? ?? '',
+      scno: json['scno'] as String? ?? '',
+      name: json['name'] as String? ?? '',
+      cat: json['cat'] as String? ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
     return {
-      'uscno': uscno,
-      'digitalDtrStructureCode': digitalDtrStructureCode,
-      'latitude': latitude,
-      'longitude': longitude,
-      'unAuthorisedLoadInHp': unAuthorisedLoadInHp,
+      'eroCode': eroCode,
+      'sectionCode': sectionCode,
+      'eroSecCode': eroSecCode,
       'areaCode': areaCode,
-      'authorisationFlag': authorisationFlag,
-      'farmerName': farmerName,
+      'uscno': uscno,
+      'scno': scno,
+      'name': name,
+      'cat': cat,
     };
   }
-
-  factory UnMappedService.fromMap(Map<String, dynamic> map) {
-    return UnMappedService(
-      uscno: map['uscno'] as String,
-      digitalDtrStructureCode: map['digitalDtrStructureCode'] as String?,
-      latitude: map['latitude'] as double?,
-      longitude: map['longitude'] as double?,
-      unAuthorisedLoadInHp: map['unAuthorisedLoadInHp'] as double?,
-      areaCode: map['areaCode'] as String?,
-      authorisationFlag: map['authorisationFlag'] as String?,
-      farmerName: map['farmerName'] as String?,
-    );
-  }
 }
 
-class Option {
-  final String optionCode;
 
-  Option({required this.optionCode});
 
-  factory Option.fromJson(Map<String, dynamic> json) {
-    return Option(
-      optionCode: json['optionCode'] as String? ?? '',
-    );
-  }
-}
+
