@@ -41,10 +41,7 @@ class AglServices extends StatelessWidget {
         ),
         actions: [
           IconButton(onPressed: () {
-            if(viewModel.latitude!=""&&viewModel.longitude!="") {
-              viewModel.addService();
-              viewModel.savedMappedServices(viewModel.usersData);
-            }
+            viewModel.submitForm();
           }, icon: const Icon(Icons.upload))
         ],
       ),

@@ -3,16 +3,20 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
+import 'package:tsnpdcl_employee/dialogs/process_dialog.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
+import 'package:tsnpdcl_employee/utils/alerts.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
-import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/model/circle_model.dart';
 import 'package:tsnpdcl_employee/network/api_provider.dart';
 import 'package:tsnpdcl_employee/network/api_urls.dart';
-import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/model/dtr_feedet_distribution_model.dart';
+import 'package:tsnpdcl_employee/view/rfss/database/mapping_non_agl_db/non_agl_distribution_db.dart';
+import 'package:tsnpdcl_employee/view/rfss/database/mapping_non_agl_db/non_agl_structure_db.dart';
+import 'package:tsnpdcl_employee/view/rfss/database/mapping_non_agl_db/non_agl_unmapped_services_db.dart';
+import 'package:tsnpdcl_employee/view/rfss/model/save_mapped_model.dart';
 
 class NonAglViewModel extends ChangeNotifier {
   final BuildContext context;
@@ -25,7 +29,7 @@ class NonAglViewModel extends ChangeNotifier {
     });
   }
 
-
+  final formKey = GlobalKey<FormState>();
   bool _isLoading = isFalse;
   bool get isLoading => _isLoading;
 
@@ -40,14 +44,16 @@ class NonAglViewModel extends ChangeNotifier {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
+                loadOfflineData();
               },
               child: const Text('OFFLINE'),
             ),
             TextButton(
               onPressed: () {
+                Navigator.of(context).pop();
                 getDistributions();
-                Navigator.of(context).pop(); // Close the dialog
+                getStructOfCode();
               },
               child: const Text('DOWNLOAD'),
             ),
@@ -57,25 +63,56 @@ class NonAglViewModel extends ChangeNotifier {
     );
   }
 
+  //DOWNLOAD OFFLINE
+  Future<void> loadOfflineData() async {
+    try {
+      // Fetch data from database
+      final List<SubstationModel> dbData = await NonAglDistributionDb.instance
+          .getAllNonAglDistribution();
+      final List<String> dbstructuredata = await NonAglStructureDb
+          .instance.getAllStructureCodes();
+
+      // deleteAllUnMappedServices();
+      distributionList.clear();
+      distributionList.addAll(dbData);
+
+      _structure.clear();
+      _structure.addAll(dbstructuredata.toSet().toList());
+      if (_structure.isNotEmpty) {
+        _selectedStructure = _structure.first;
+      }
+
+      _selectedDistribution = distributionList.isNotEmpty
+          ? distributionList.first.optionCode
+          : null;
+
+
+      notifyListeners();
+    } catch (e) {
+      showErrorDialog(context, "Failed to load offline data: $e");
+    }
+  }
+
+
   String? _selectedDistribution;
   String? get selectedDistribution => _selectedDistribution;
 
   List<SubstationModel> _distribution = [];
 
-  List<SubstationModel> get distri => _distribution;
+  List<SubstationModel> get distributionList => _distribution;
 
   Future<void> getDistributions() async {
-    if (_isLoading) return; // Prevent duplicate calls
-
-    _isLoading = true;
-    notifyListeners();
+    ProcessDialogHelper.showProcessDialog(
+      context,
+      message: "Loading...",
+    );
 
     try {
       final requestData = {
         "authToken": SharedPreferenceHelper.getStringValue(
             LoginSdkPrefs.tokenPrefKey),
         "api": Apis.API_KEY,
-        "sc":SharedPreferenceHelper.getStringValue(
+        "sc": SharedPreferenceHelper.getStringValue(
             LoginSdkPrefs.sectionCodePrefKey),
       };
 
@@ -89,97 +126,67 @@ class NonAglViewModel extends ChangeNotifier {
       final response = await ApiProvider(baseUrl: Apis.ROOT_URL)
           .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
 
-      if (response == null) {
-        throw Exception("No response received from server");
+      if (context.mounted) {
+        ProcessDialogHelper.closeDialog(context);
       }
 
-      // Process response data
-      dynamic responseData = response.data;
-      if (responseData is String) {
-        responseData = jsonDecode(responseData);
-      }
-
-      // Validate response
-      if (response.statusCode != successResponseCode) {
-        throw Exception(responseData['message'] ??
-            "Request failed with status ${response.statusCode}");
-      }
-
-      if (responseData['tokenValid'] != true) {
-        showSessionExpiredDialog(context);
-        return;
-      }
-
-      if (responseData['success'] != true) {
-        throw Exception(responseData['message'] ?? "Operation failed");
-      }
-
-      // Process station data
-      if (responseData['objectJson'] == null) {
-        throw Exception("No _distribution data received");
-      }
-
-      final jsonList = responseData['objectJson'];
-      List<SubstationModel> dataList = [];
-
-      if (jsonList is String) {
-        // Clean and parse JSON string
-        String cleanedJson = jsonList
-            .replaceAll(r'\"', '"')
-            .trim();
-
-        if (cleanedJson.endsWith(',')) {
-          cleanedJson = cleanedJson.substring(0, cleanedJson.length - 1);
+        if (response != null) {
+          if (response.data is String) {
+            response.data = jsonDecode(response.data); // Parse string to JSON
+          }
+          if (response.statusCode == successResponseCode) {
+            if (response.data['tokenValid'] == isTrue) {
+              if (response.data['success'] == isTrue) {
+                if (response.data['objectJson'] != null) {
+                  final List<dynamic> jsonList = jsonDecode(
+                      response.data['objectJson']);
+                  final List<SubstationModel> listData = jsonList.map((json) =>
+                      SubstationModel.fromJson(json)).toList();
+                  distributionList.addAll(listData);
+                  if (distributionList.isNotEmpty) {
+                    _selectedDistribution =
+                        distributionList.first.optionCode;
+                  }
+                  // Store in database
+                  await NonAglDistributionDb.instance.clearAllData();
+                  await NonAglDistributionDb.instance.insertNonAglDistribution(
+                      listData);
+                }
+              } else {
+                showAlertDialog(context, response.data['message']);
+              }
+            } else {
+              showSessionExpiredDialog(context);
+            }
+          } else {
+            showAlertDialog(context, response.data['message']);
+          }
         }
-
-        if (!cleanedJson.startsWith('[')) {
-          cleanedJson = '[$cleanedJson]';
-        }
-
-        dataList = (jsonDecode(cleanedJson) as List)
-            .map((json) => SubstationModel.fromJson(json))
-            .toList();
-      }
-      else if (jsonList is List) {
-        dataList = jsonList
-            .map((json) => SubstationModel.fromJson(json))
-            .toList();
+      } catch (e) {
+        showErrorDialog(context, "An error occurred. Please try again.");
+        rethrow;
       }
 
-      _distribution.addAll(dataList);
-      print("Successfully loaded ${_distribution.length} stations");
-    } catch (e, stackTrace) {
-      print("Error fetching _distribution: $e\n$stackTrace");
-      showErrorDialog(
-          context, "Failed to load _distribution: ${e.toString()}");
-      rethrow;
-    } finally {
-      _isLoading = false;
       notifyListeners();
-    }
   }
-  
   void onListDistributionSelected(String? value) {
     _selectedDistribution = value;
-    getStructFeederDis();
     notifyListeners();
   }
 
   String? _selectedStructure;
   String? get selectedStructure => _selectedStructure;
 
-  List<FeederDisModel> _structure = [];
-  List<FeederDisModel> get struct => _structure;
+  List _structure = [];
+  List get struct => _structure;
 
-  Future<void> getStructFeederDis() async {
-    if (_isLoading) return;
+  Future<void> getStructOfCode() async {
+    ProcessDialogHelper.showProcessDialog(
+      context,
+      message: "Loading...",
+    );
 
-    _isLoading = true;
-    notifyListeners();
-
-    try {
-
-      final requestSData = {
+    final requestSData = {
         "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
         "api": Apis.API_KEY,
       };
@@ -193,75 +200,58 @@ class NonAglViewModel extends ChangeNotifier {
 
       final response = await ApiProvider(baseUrl: Apis.ROOT_URL)
           .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    // if (context.mounted) {
+    //   ProcessDialogHelper.closeDialog(context);
+    // }
 
-      if (response == null) {
-        throw Exception("No response received from server");
-      }
-
-      dynamic responseData = response.data;
-      if (responseData is String) {
-        responseData = jsonDecode(responseData);
-      }
-
-      print("API Response: $responseData");
-
-      if (response.statusCode != successResponseCode) {
-        throw Exception(responseData['message'] ?? "Request failed with status ${response.statusCode}");
-      }
-
-      if (responseData['tokenValid'] != true) {
-        showSessionExpiredDialog(context);
-        return;
-      }
-
-      if (responseData['success'] != true) {
-        throw Exception(responseData['message'] ?? "Operation failed");
-      }
-
-      final jsonList = responseData['message'];
-      List<FeederDisModel> dataList = [];
-
-      if (jsonList == null) {
-        print("No feeder/distribution data received in message");
-        _structure.clear();
-      } else if (jsonList is String) {
-        print("Raw message string: $jsonList");
-        String cleanedJson = jsonList.trim();
-        try {
-          if (!cleanedJson.startsWith('[') || !cleanedJson.endsWith(']')) {
-            throw FormatException("Invalid JSON array format in message: $cleanedJson");
-          }
-          dataList = (jsonDecode(cleanedJson) as List<dynamic>)
-              .map((json) => FeederDisModel.fromJson(json as Map<String, dynamic>))
-              .toList();
-          _structure = dataList;
-        } catch (e) {
-          print("Error decoding JSON string: $e");
-          throw e;
+    try {
+      if (response != null) {
+        if (response.data is String) {
+          response.data = jsonDecode(response.data);
         }
-      } else if (jsonList is List) {
-        print("Processing JSON list: $jsonList");
-        dataList = (jsonList as List<dynamic>)
-            .map((json) => FeederDisModel.fromJson(json as Map<String, dynamic>))
-            .toList();
-        _structure = dataList;
-      } else {
-        throw Exception("Unexpected message format: ${jsonList.runtimeType}");
+        if (response.statusCode == successResponseCode) {
+          if (response.data['tokenValid'] == isTrue) {
+            if (response.data['success'] == isTrue) {
+              if (response.data['message'] != "[]") {
+                final List<dynamic> structures = jsonDecode(
+                    response.data['message']);
+                final dbHelper = NonAglStructureDb.instance;
+                // // Clear existing data first
+                await dbHelper.deleteAllData();
+                _structure.clear();
+                for (var structure in structures) {
+                  final structureCode = structure['structureCode'] as String;
+                  await dbHelper.insertStructureCode(structureCode);
+                  if (!_structure.contains(structureCode)) {
+                    _structure.add(structureCode);
+                    notifyListeners();
+                  }
+                }
+                if (_structure.isNotEmpty) {
+                  _selectedStructure = _structure.first;
+                  notifyListeners();
+                  print("Done _structure.first");
+                }
+              }
+            } else {
+              showAlertDialog(context, response.data['message']);
+            }
+          } else {
+            showSessionExpiredDialog(context);
+          }
+        } else {
+          showAlertDialog(context, response.data['message']);
+        }
       }
-
-      print("Successfully loaded ${_structure.length} structure entities");
-      print("Navigating to MappedDtr with ${_structure.length} items: ${_structure.map((e) => e.toJson())}");
-      Navigation.instance.navigateTo(Routes.mappedDtrScreen, args: _structure);
-
-    } catch (e, stackTrace) {
-      print("Error fetching feeder/distribution data: $e\n$stackTrace");
-      showErrorDialog(context, "Failed to load data: ${e.toString()}");
+    } catch (e) {
+      showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-      print("Finished getStructFeederDis");
+    }finally{
+      if (context.mounted) {
+        ProcessDialogHelper.closeDialog(context);
+      }
     }
+
   }
 
   void onListStructureSelected(String? value) {
@@ -269,7 +259,231 @@ class NonAglViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  // void showSubstationDialog(BuildContext context, NonAglViewModel viewmodel) {
+  //DOWNLOAD UNMAPPED SERVICES
+  List<UploadMappedService> unmappedServices = [];
+  Future<void> nonAGLUnmappedServices(String distributionCode) async {
+    ProcessDialogHelper.showProcessDialog(
+      context,
+      message: "Loading...",
+    );
+
+    final requestData = {
+      "authToken": SharedPreferenceHelper.getStringValue(
+          LoginSdkPrefs.tokenPrefKey),
+      "api": Apis.API_KEY,
+      "dc": distributionCode,
+      "agl": false,
+      "rfss": false
+    };
+
+    final payload = {
+      "path": "/getUnMappedServices",
+      "apiVersion": "1.0",
+      "method": "POST",
+      "data": jsonEncode(requestData),
+    };
+
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(
+        context, Apis.NPDCL_EMP_URL, payload);
+    if (context.mounted) {
+      ProcessDialogHelper.closeDialog(context);
+    }
+
+    try {
+      if (response != null) {
+        if (response.data is String) {
+          response.data = jsonDecode(response.data); // Parse string to JSON
+        }
+        if (response.statusCode == successResponseCode) {
+          if (response.data['tokenValid'] == isTrue) {
+            if (response.data['success'] == isTrue) {
+              if (response.data['message'] != null) {
+                AlertUtils.showSnackBar(context,  response.data['message'],isFalse);
+                if (response.data['objectJson'] != null) {
+                  final List<dynamic> jsonList = jsonDecode(
+                      response.data['objectJson']);
+                  final List<UploadMappedService> listData = jsonList.map((json) =>
+                      UploadMappedService.fromJson(json)).toList();
+                  deleteAllAGLUnMappedData();
+                  await NonAglUnmappedServicesDb().insertUnMappedServices(
+                      listData.toSet().toList());
+                  print("Store data in SQLite in Unmmaped in AGL");
+                  unmappedServices = await NonAglUnmappedServicesDb()
+                      .getUnMappedServices();
+                  for (var service in unmappedServices) {
+                    _checkboxStates[service.uscno] = false;
+                  }
+                  print('Stored ${unmappedServices.length} services');
+                }
+              }
+            } else {
+              showAlertDialog(context, response.data['message']);
+            }
+          } else {
+            showSessionExpiredDialog(context);
+          }
+        } else {
+          showAlertDialog(context, response.data['message']);
+        }
+      }
+    } catch (e) {
+      showErrorDialog(context, "An error occurred. Please try again.");
+      rethrow;
+    }
+
+    notifyListeners();
+  }
+
+  Future<void> deleteAllAGLUnMappedData() async {
+    try {
+      final dbHelper = NonAglUnmappedServicesDb();
+      await dbHelper.clearUnMappedServices();
+      notifyListeners();
+      print('Deleted  records');
+    } catch (e) {
+      print('Error deleting services: $e');
+
+    }
+  }
+
+  //CHECKBOX IMPLEMENTATION
+  final Map<String, bool> _checkboxStates = {};
+  final Map<String, String?> _serviceMappings = {};
+  bool isChecked(String? checkUSNCO) => _checkboxStates[checkUSNCO] ?? false;
+
+  String? _selectedServiceStructureCode;
+  String? get selectedServiceStructureCode => _selectedServiceStructureCode;
+
+  Map<String, String?> get checkedServices {
+    return Map.fromEntries(
+        _checkboxStates.entries
+            .where((entry) => entry.value == true)
+            .map((entry) => MapEntry(entry.key, _serviceMappings[entry.key]))
+    );
+  }
+
+// Update your toggleCheckbox method
+  void toggleCheckbox(UploadMappedService service, bool? isChecked) {
+    if (isChecked == true) {
+      _checkboxStates[service.uscno] = true;
+      _serviceMappings[service.uscno] = _selectedStructure;
+      print("Checked USCNO: ${service.uscno}");
+      print("With Structure Code: $_selectedStructure");
+    } else {
+      _checkboxStates.remove(service.uscno);
+      _serviceMappings.remove(service.uscno);
+    }
+
+    // Print all currently checked items
+    printAllCheckedServices();
+
+    notifyListeners();
+  }
+
+  void printAllCheckedServices() {
+    print("--- Currently Checked Services ---");
+    checkedServices.forEach((uscno, structureCode) {
+      print("USCNO: $uscno | Structure Code: $structureCode");
+    });
+    print("---------------------------------");
+  }
+
+  //SAVE AND UPLOAD
+  Future<void> submitForm() async {
+    formKey.currentState!.save();
+    notifyListeners();
+    if (!validateForm()) {
+      return;
+    }else{
+      savedMappedServices(checkedServices);
+    }
+
+  }
+  bool validateForm() {
+
+    if (unmappedServices.isEmpty) {
+      AlertUtils.showSnackBar(context, "No mapped services found, to upload", isTrue);
+      return false;
+    } else if (_checkboxStates == {} && _serviceMappings == {}) {
+      AlertUtils.showSnackBar(
+          context, "Please select any one check box", isTrue);
+      return false;
+    }
+    return true;
+  }
+
+
+  Future<void> savedMappedServices(Map<String, String?> uploadData) async {
+    ProcessDialogHelper.showProcessDialog(
+      context,
+      message: "Loading...",
+    );
+
+    final List<Map<String, dynamic>> mappedData = uploadData.entries.map((entry) {
+      return {
+        "uscno": entry.key,
+        "structure": entry.value,
+      };
+    }).toList();
+
+    final requestData = {
+      "authToken": SharedPreferenceHelper.getStringValue(
+          LoginSdkPrefs.tokenPrefKey),
+      "api": Apis.API_KEY,
+      "data":mappedData,
+
+    };
+
+    final payload = {
+      "path": "/savedMappedServices",
+      "apiVersion": "1.0",
+      "method": "POST",
+      "data": jsonEncode(requestData),
+    };
+
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(
+        context, Apis.NPDCL_EMP_URL, payload);
+    if (context.mounted) {
+      ProcessDialogHelper.closeDialog(context);
+    }
+
+    try {
+      if (response != null) {
+        if (response.data is String) {
+          response.data = jsonDecode(response.data); // Parse string to JSON
+        }
+        if (response.statusCode == successResponseCode) {
+          if (response.data['tokenValid'] == isTrue) {
+            if (response.data['success'] == isTrue) {
+              if (response.data['message'] != null) {
+                showSuccessDialog(context, response.data['message'], (){});//Navigation.instance.pushBack();
+                _checkboxStates.clear();
+                _serviceMappings.clear();
+                notifyListeners();
+                nonAGLUnmappedServices(selectedDistribution!);
+
+              }
+            } else {
+              showAlertDialog(context, response.data['message']);
+            }
+          } else {
+            showSessionExpiredDialog(context);
+          }
+        } else {
+          showAlertDialog(context, response.data['message']);
+        }
+      }
+    } catch (e) {
+      showErrorDialog(context, "An error occurred. Please try again.");
+      rethrow;
+    }
+
+    notifyListeners();
+  }
+
+
+
+// void showSubstationDialog(BuildContext context, NonAglViewModel viewmodel) {
   //   final TextEditingController searchController = TextEditingController();
   //   String searchQuery = '';
   //

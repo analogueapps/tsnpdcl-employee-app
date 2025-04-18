@@ -9,8 +9,8 @@ import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/model/spinner_list.dart';
+import 'package:tsnpdcl_employee/view/rfss/database/mapping_agl_db/agl_databases/structure_code_db.dart';
 
-import '../database/mapping_of_services/agl_databases/structure_code_db.dart';
 
 class DownloadStructureViewModel extends ChangeNotifier {
   final BuildContext context;

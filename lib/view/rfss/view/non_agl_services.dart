@@ -18,7 +18,7 @@ class NonAglServices extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) {
+      create:(context) {
         final viewModel = NonAglViewModel(context: context);
         viewModel.initialize();
         return viewModel;
@@ -42,7 +42,10 @@ class NonAglServices extends StatelessWidget {
                     IconButton(onPressed: (){}, icon: const Icon(Icons.upload))
                   ],
                 ),
-                body: Padding(
+                body:SingleChildScrollView(
+                  child: Form(
+            key: viewModel.formKey,
+            child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   // Adds spacing around the content
                   child: Column(
@@ -62,51 +65,22 @@ class NonAglServices extends StatelessWidget {
                                 isExpanded: true,
                                 hint: const Text("Select"),
                                 value: viewModel.selectedDistribution,
-                                items: viewModel.distri.map((SubstationModel item) {
+                                items: viewModel.distributionList.map(( item) {
                                   return DropdownMenuItem<String>(
                                     value: item.optionCode,
                                     child: Text(item.optionName),
                                   );
                                 }).toList(),
-                                onChanged: (String? value) {
-                                  if (value != null) {
-                                    final selectedItem = viewModel.distri.firstWhere(
-                                          (item) => item.optionCode == value,
-                                    );
-                                    viewModel.onListDistributionSelected(value);
-                                  }
-                                },
-                              )
-                          //     Container(
-                          //   height: 50,
-                          //   width: double.infinity,
-                          //   padding: const EdgeInsets.symmetric(horizontal: 12),
-                          //   decoration: BoxDecoration(
-                          //     color: Colors.white,
-                          //     // color: CommonColors.textFieldColor,
-                          //     borderRadius: BorderRadius.circular(8),
-                          //   ),
-                          //   child: Row(
-                          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          //     children: [
-                          //       Text(
-                          //         viewModel.selectedDistribution ?? "Select ",
-                          //         style: const TextStyle(color: Colors.black),
-                          //       ),
-                          //       const Icon(
-                          //         Icons.arrow_drop_down,
-                          //         color: Colors.black,
-                          //         size: 24,
-                          //       ),
-                          //     ],
-                          //   ),
-                          // ),
+                                onChanged: viewModel.distributionList.isNotEmpty?
+                                    (value) => viewModel.onListDistributionSelected(value)
+                                    : null,
+                              ),
                           ]
                           ),
                         ),
                         Center(
                         child: TextButton(
-                            onPressed: (){},
+                            onPressed: (){viewModel.nonAGLUnmappedServices(viewModel.selectedDistribution??"");},
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(Colors.grey[200]),
                           ),
@@ -115,21 +89,87 @@ class NonAglServices extends StatelessWidget {
                         ),
                         const SizedBox(height: 5,),
                         const Text("Select Structure Code"),
-                        // DropdownButton<String>(
-                        //   isExpanded: true,
-                        //   hint: const Text(""),
-                        //   value: viewModel.selectedStructure,
-                        //   items: viewModel.struct.map((item) {
-                        //     return DropdownMenuItem<String>(
-                        //       value: item,
-                        //       child: Text(item),
-                        //     );
-                        //   }).toList(),
-                        //   onChanged: (value) => viewModel.onListStructureSelected(value),
-                        // ),
-                        Text(viewModel.selectedStructure??"", style: const TextStyle(color: Colors.green),),
+                        DropdownButton<String>(
+                          isExpanded: true,
+                          hint: const Text("Select Structure Code"),
+                          value: viewModel.selectedStructure,
+                          items: viewModel.struct.map((item) {
+                            return DropdownMenuItem<String>(
+                              value: item,
+                              child: Text(item),
+                            );
+                          }).toList(),
+                          onChanged: (value) => viewModel.onListStructureSelected(value),
+                        ),
+                        if (viewModel.selectedStructure != null)
+                          Text(
+                             viewModel.selectedStructure!,
+                            style: const TextStyle(color: Colors.green),
+                          ),
+                        const SizedBox(height: 20,),
 
-                      ]
+
+                        Container(
+                          height: 450,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.2),
+                                spreadRadius: 2,
+                                blurRadius: 5,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                        child: ListView.builder(
+                        itemCount: viewModel.unmappedServices.length,
+                          itemBuilder: (context, index) {
+                        final service = viewModel.unmappedServices[index];
+                        return   Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child:
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Checkbox(
+                                      value: viewModel.isChecked(service.uscno),
+                                      onChanged: (bool? value) {
+                                        viewModel.toggleCheckbox(service, value);
+                                      },
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(service.name),
+                                          Text(" ${service.uscno} | ${service.scno}"),
+                                          Align(
+                                            alignment: Alignment.bottomRight,
+                                            child: Text("Cat: ${service.cat}"),
+                                          ),
+                                          if (viewModel.isChecked(service.uscno) &&
+                                              viewModel.selectedStructure != null)
+                                            Text(
+                                              " ${viewModel.selectedStructure}",
+                                              style: const TextStyle(
+                                                  color: Colors.green,
+                                                  fontSize: 12
+                                              ),
+                                            ),
+                                          const Divider(),
+                                        ],
+                                    ),
+                                    ),
+                                  ],
+                                ),
+                        );
+                      },
+                    ),
+                  ),
+
+                ]
                       ),
                       const SizedBox(height: 20),
                       Row(
@@ -149,6 +189,7 @@ class NonAglServices extends StatelessWidget {
                             child: PrimaryButton(
                               text: "SAVE",
                               onPressed: () {
+                                viewModel.submitForm();
                                 // viewModel.submitForm();
                               },
                             ),
@@ -157,6 +198,8 @@ class NonAglServices extends StatelessWidget {
                       ),
                     ],
                   ),
+                ),
+                ),
                 ),
             );
           }

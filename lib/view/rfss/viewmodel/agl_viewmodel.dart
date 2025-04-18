@@ -7,16 +7,18 @@ import 'package:tsnpdcl_employee/dialogs/process_dialog.dart';
 import 'package:tsnpdcl_employee/network/api_provider.dart';
 import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
+import 'package:tsnpdcl_employee/utils/alerts.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/model/circle_model.dart';
-import 'package:tsnpdcl_employee/view/rfss/database/mapping_of_services/agl_databases/saveMapped_db.dart';
-import 'package:tsnpdcl_employee/view/rfss/database/mapping_of_services/agl_databases/structure_code_db.dart';
+import 'package:tsnpdcl_employee/view/rfss/database/mapping_agl_db/agl_databases/saveMapped_db.dart';
+import 'package:tsnpdcl_employee/view/rfss/database/mapping_agl_db/agl_databases/structure_code_db.dart';
 import 'package:tsnpdcl_employee/view/rfss/model/save_agl_data_model.dart';
 import 'package:tsnpdcl_employee/view/rfss/model/save_mapped_model.dart';
-import '../database/mapping_of_services/agl_databases/distribution_db.dart';
+
+import '../database/mapping_agl_db/agl_databases/distribution_db.dart';
 
 
 
@@ -25,8 +27,8 @@ class AglViewModel extends ChangeNotifier {
 
   AglViewModel({required this.context});
 
-  String? latitude;
-  String? longitude;
+  String latitude="";
+  String longitude="";
 
   void initialize() {
     Future.delayed(Duration.zero, () {
@@ -506,7 +508,7 @@ class AglViewModel extends ChangeNotifier {
     if (selectedService.isNotEmpty) {
       _selectedServiceNo = selectedService['scno'];
       _selectedAreaCode = selectedService['areaCode'];
-      _selectedUSCNO=selectedService['uscno'];
+      _selectedUSCNO=selectedService['uscno']??uscno.text;
       print(
           "Slected Service no and $_selectedServiceNo, area:$_selectedAreaCode , uscon: $_selectedUSCNO");
       notifyListeners();
@@ -597,8 +599,7 @@ class AglViewModel extends ChangeNotifier {
 
       print('Deleted  records');
     } catch (e) {
-      debugPrint('Error deleting services: $e');
-      // You might want to show an error message here
+      print('Error deleting services: $e');
     }
   }
 
@@ -615,7 +616,7 @@ class AglViewModel extends ChangeNotifier {
 
   //UPLOAD Data API
   Future<void> submitForm() async {
-    if (formKey.currentState!.validate()) {
+
       formKey.currentState!.save();
       notifyListeners();
 
@@ -625,32 +626,33 @@ class AglViewModel extends ChangeNotifier {
         addService();
         savedMappedServices(usersData);
       }
-    }
+
   }
   bool validateForm() {
     String usCNO = uscno.text.trim();
     String load = connectedLoad.text.trim();
 
     if (latitude == "" && longitude == "") {
-      showAlertDialog(context, "Please turn on location");
+      AlertUtils.showSnackBar(context, "Please turn on location", isTrue);
+      _handleLocationIconClick();
       return false;
     } else if (selectedOption == "") {
-      showAlertDialog(context, "Please choose a option");
+      AlertUtils.showSnackBar(context, "Please select service authorised or not", isTrue);
       return false;
     } else if (selectedOption == "A" && selectedAreaCode == "") {
-      showAlertDialog(context, "Please select service, you want to map");
+      AlertUtils.showSnackBar(context, "Please select service, you want to map", isTrue);
       return false;
     } else if (selectedOption == "U" && load.isEmpty) {
-      showAlertDialog(context, "Please specify unauthorised service load in HP");
+      AlertUtils.showSnackBar(context, "Please specify unauthorised service load in HP", isTrue);
       return false;
     } else if (selectedOption == "M" && usCNO.length < 8) {
-      showAlertDialog(context, "USCNO should be 8 characters");
+      AlertUtils.showSnackBar(context, "USCNO should be 8 characters", isTrue);
       return false;
     } else if (services.isEmpty) {
-      showAlertDialog(context, "No mapped services found, to upload");
+      AlertUtils.showSnackBar(context, "No mapped services found, to upload", isTrue);
       return false;
     } else if (selectedOption == "M" && usCNO.isEmpty) {
-      showAlertDialog(context, "Please specify valid non agl service number");
+      AlertUtils.showSnackBar(context, "Please specify valid non agl service number", isTrue);
       return false;
     }
     return true;
@@ -659,7 +661,7 @@ class AglViewModel extends ChangeNotifier {
 
   void addService() {
     usersData.add(SaveAglDataModel(
-      uscno: uscno.text==""?selectedUSCNO!:uscno.text,
+      uscno: selectedUSCNO!,
       digitalDtrStructureCode: selectedStructure,
       latitude: latitude,
       longitude: longitude,
@@ -672,7 +674,6 @@ class AglViewModel extends ChangeNotifier {
 
 
   Future<void> savedMappedServices(List<SaveAglDataModel> uploadServices) async {
-    _handleLocationIconClick();
     ProcessDialogHelper.showProcessDialog(
       context,
       message: "Loading...",
@@ -721,8 +722,9 @@ class AglViewModel extends ChangeNotifier {
           if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
               if (response.data['message'] != null) {
-                showSuccessDialog(context, response.data['message'], () {});
+                showSuccessDialog(context, response.data['message'], (){Navigation.instance.pushBack();});
                 usersData.clear();
+                clearData();
               }
             } else {
               showAlertDialog(context, response.data['message']);
@@ -740,5 +742,18 @@ class AglViewModel extends ChangeNotifier {
     }
 
     notifyListeners();
+  }
+
+  void clearData(){
+    formKey.currentState!.reset();
+    uscno.clear();
+    farmerName.clear();
+    _selectedUSCNO=null;
+    selectedOption=null;
+    _selectedAreaCode=null;
+    _selectedServiceNo=null;
+    _selectedStructure=null;
+    deleteAllUnMappedServices();
+
   }
 }
