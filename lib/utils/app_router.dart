@@ -3,8 +3,11 @@ import 'package:tsnpdcl_employee/view/account_screen/view/account_screen.dart';
 import 'package:tsnpdcl_employee/view/asset_mapping/view/asset_mapping_screen.dart';
 import 'package:tsnpdcl_employee/view/auth/view/corporate_login_screen.dart';
 import 'package:tsnpdcl_employee/view/auth/view/employee_id_login_screen.dart';
+import 'package:tsnpdcl_employee/view/check_readings/view/check_readings_screen.dart';
+import 'package:tsnpdcl_employee/view/check_readings/view/enter_service_details.dart';
 import 'package:tsnpdcl_employee/view/consumer_details/view/consumer_details_screen.dart';
 import 'package:tsnpdcl_employee/view/consumer_details/view/dlist_form_screen.dart';
+import 'package:tsnpdcl_employee/view/ctpt_menu/model/failure_report.dart';
 import 'package:tsnpdcl_employee/view/ctpt_menu/view/ctpt_menu_screen.dart';
 import 'package:tsnpdcl_employee/view/ctpt_menu/view/view_detailed_ctpt_report.dart';
 import 'package:tsnpdcl_employee/view/ctpt_menu/view/view_failure_confirmed_list.dart';
@@ -21,12 +24,16 @@ import 'package:tsnpdcl_employee/view/dtr_master/model/dtr_feedet_distribution_m
 import 'package:tsnpdcl_employee/view/dtr_master/view/create_dtr_online.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/view/download_feeder_data.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/view/mis_matched_dtrs.dart';
+import 'package:tsnpdcl_employee/view/dtr_master/view/view_mapped/mapped_dtr.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/view/view_mapped/struct_details.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/view/view_offline_data.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/viewmodel/download_feeder_viewmodel.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/view/view_mapped/configure_filter.dart';
 import 'package:tsnpdcl_employee/view/exceptionals/view/exceptionals_screen.dart';
+import 'package:tsnpdcl_employee/view/failure_dtr_inspection/view/dtr_inspection.dart';
 import 'package:tsnpdcl_employee/view/failure_dtr_inspection/view/failure_dtr_inspection_screen.dart';
+import 'package:tsnpdcl_employee/view/failure_dtr_inspection/view/view_closed_reports.dart';
+import 'package:tsnpdcl_employee/view/failure_dtr_inspection/view/view_inspection_reports.dart';
 import 'package:tsnpdcl_employee/view/filter/view/filter_screen.dart';
 import 'package:tsnpdcl_employee/view/ganesh_pandal/view/ganesh_pandal_info_screen.dart';
 import 'package:tsnpdcl_employee/view/ganesh_pandal/view/ganesh_pandal_information_screen.dart';
@@ -53,6 +60,8 @@ import 'package:tsnpdcl_employee/view/line_clearance/view/lc_master_feeder_list_
 import 'package:tsnpdcl_employee/view/line_clearance/view/line_clearance_screen.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/view/lc_master_ss_list_screen.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/view/view_detailed_lc_screen.dart';
+import 'package:tsnpdcl_employee/view/ltmt/view/ltmt_menu.dart';
+import 'package:tsnpdcl_employee/view/ltmt/view/meters_stock.dart';
 import 'package:tsnpdcl_employee/view/manage_staff/view/manage_staffs_screen.dart';
 import 'package:tsnpdcl_employee/view/measure_distance/view/measure_distance_screen.dart';
 import 'package:tsnpdcl_employee/view/meeseva/view/meeseva_menu_screen.dart';
@@ -90,10 +99,6 @@ import 'package:tsnpdcl_employee/view/tong_tester_readings/view/overloaded_dtrs_
 import 'package:tsnpdcl_employee/view/web_view/view/web_view_screen.dart';
 import 'package:tsnpdcl_employee/widget/month_year_selector.dart';
 import 'package:tsnpdcl_employee/widget/pinch_zoom_imageview.dart';
-import '../view/ctpt_menu/model/failure_report.dart';
-import '../view/dtr_master/view/view_mapped/mapped_dtr.dart';
-import '../view/ltmt/view/ltmt_menu.dart';
-import '../view/ltmt/view/meters_stock.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/view/create_dtr_offline.dart';
 import 'package:tsnpdcl_employee/view/rfss/view/non_agl_services.dart';
 import 'package:tsnpdcl_employee/view/rfss/view/agl_services.dart';
@@ -420,13 +425,22 @@ class AppRouter {
             builder: (_) => StructDetails(
                 structData: settings.arguments as List<FeederDisModel>));
 
-    // DTR FAILURE
+    // DTR FAILURE* bhavana
       case DtrFailureReporting.id:
         return MaterialPageRoute(builder: (_) => const DtrFailureReporting());
       case ReportDTRFailure.id:
         return MaterialPageRoute(builder: (_) => const ReportDTRFailure());
       case DtrFailureRectifiedReports.id:
         return MaterialPageRoute(builder: (_) => const DtrFailureRectifiedReports());
+
+    //FAILURE DTR(S) INSPECTION * BHAVANA
+      case ReportedDTRFailure.id:
+        return MaterialPageRoute(builder: (_) => const ReportedDTRFailure());
+        case ViewClosedReports.id:
+        return MaterialPageRoute(builder: (_) => const ViewClosedReports());
+        case ViewInspectionReports.id:
+        return MaterialPageRoute(builder: (_) => const ViewInspectionReports());
+
 
 
     //CT PT FAILURE
@@ -443,7 +457,7 @@ class AppRouter {
 
 
 
-    //GIS DIS
+    //GIS DIS *bhavana
       case GISIDsScreen.id:
         return MaterialPageRoute(builder: (_) => const GISIDsScreen());
       case CreateGisId.id:
@@ -467,6 +481,12 @@ class AppRouter {
     // ACCOUNT * SWETHA
       case AccountScreen.id:
         return MaterialPageRoute(builder: (_) => const AccountScreen());
+
+    //CHECK READINGS
+      case CheckReadings.id:
+        return MaterialPageRoute(builder: (_) => const CheckReadings());
+      case EnterServiceDetails.id:
+        return MaterialPageRoute(builder: (_) => const EnterServiceDetails());
 
       default:
         return MaterialPageRoute(

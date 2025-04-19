@@ -122,6 +122,11 @@ class Routes {
   static const String dtrFailureReportingScreen="ReportDTRFailure";
   static const String dtrFailureRectifiedScreen="DtrFailureRectifiedReports";
 
+  //Failure DTR(s) Inspected *Bhavana
+  static const String failureDTRsInspectionScreen="ReportedDTRFailure";
+  static const String viewDTRsInspectionScreen="ViewInspectionReports";
+  static const String viewDTRsClosedScreen="ViewClosedReports";
+
   // Interruptions * swetha
   static const String breakdown33kvScreen = "Breakdown33kvScreen";
   static const String breakdown11kvScreen = "Breakdown11kvScreen";
@@ -159,5 +164,11 @@ class Routes {
 
   // ACCOUNT * SWETHA
   static const String accountScreen = "AccountScreen";
+
+  //CHECK READINGS
+  static const String checkReadingScreen = "CheckReadings";
+  static const String enterServicesScreen = "EnterServiceDetails";
+
+
 
 }

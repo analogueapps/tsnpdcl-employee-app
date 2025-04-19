@@ -38,7 +38,9 @@ class NonAglViewModel extends ChangeNotifier {
       context: context,
       barrierDismissible: false,
       builder: (context) {
-        return AlertDialog(
+        return WillPopScope(
+            onWillPop: () async => false,
+        child: AlertDialog(
           title: const Text("Download Distributions ?"),
           content: const Text("To Download Distributions from the server, please click the DOWNLOAD button. If you have already downloaded the distributions, click OFFLINE."),
           actions: [
@@ -58,6 +60,7 @@ class NonAglViewModel extends ChangeNotifier {
               child: const Text('DOWNLOAD'),
             ),
           ],
+        ),
         );
       },
     );

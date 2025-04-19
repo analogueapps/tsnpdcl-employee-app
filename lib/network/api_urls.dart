@@ -19,6 +19,9 @@ class Apis{
   /// CONSUMER RELATED
   static const NPDCL_EMP_URL = "NpdclEmployeeWebApi/npemp/api";
 
+  ///CHECK READING ROOT DOMAIN * BHAVANA
+  static const CHECK_ROOT_URL="http://210.212.223.87:8181/NPDCL2019WebApi/rest/";
+
   /// LINE RELATED
   static const SERVER_IP = "http://210.212.223.88";
   static const SS_END_POINT_BASE_URL = "$SERVER_IP:5656/NPFDAS/ep/ss/";
@@ -98,6 +101,9 @@ class Apis{
   ///Dtr Failure
   static const SAVE_DTR_FAILURE_URL = "saveDtrFailureReport";
   static const GET_DTR_REPORTS_FR="getDtrFailureReports";
+
+  ///CHECK READINGS * BHAVANA
+  static const GET_EROS="api/getEros";
 
 
 }

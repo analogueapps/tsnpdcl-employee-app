@@ -15,6 +15,7 @@ class GlobalConstants {
   static const String dtrMaintenanceTitle = "Dtr maintenance";
   static const String dtrFailureTitle = "Dtr failure";
   static const String failureDtrInspectionTitle = "Failure dtr(s) inspection";
+  static const String reportDtrFailure="Report DTR Failure";
   static const String ssMaintenanceTitle = "Ss maintenance";
   static const String pmiOfLinesTitle = "Pmi of lines";
   static const String rfssTitle = "RFSS";

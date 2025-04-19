@@ -129,7 +129,7 @@ class AglViewModel extends ChangeNotifier {
       barrierDismissible: false,
       builder: (context) {
         return WillPopScope(
-          onWillPop: () async => false,
+            onWillPop: () async => false,
           child: AlertDialog(
             title: const Text("Download Distributions ?"),
             content: const Text(

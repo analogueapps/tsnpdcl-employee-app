@@ -249,7 +249,7 @@ class AglServices extends StatelessWidget {
                   child:PrimaryButton(
                     text: "SAVE",
                     onPressed: () {
-                      // viewModel.submitForm();
+                      viewModel.submitForm();
                     },
                   ),
                   ),

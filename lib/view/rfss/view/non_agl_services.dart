@@ -39,7 +39,7 @@ class NonAglServices extends StatelessWidget {
                     color: Colors.white,
                   ),
                   actions: [
-                    IconButton(onPressed: (){}, icon: const Icon(Icons.upload))
+                    IconButton(onPressed: viewModel.submitForm, icon: const Icon(Icons.upload))
                   ],
                 ),
                 body:SingleChildScrollView(

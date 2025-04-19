@@ -466,7 +466,7 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.checkReadingsTitle,
           imageAsset: Assets.checkReadings,
-          routeName: routeName),
+          routeName: Routes.checkReadingScreen),
       UniversalDashboardItem(
           title: GlobalConstants.bsUdcInspectionTitle,
           imageAsset: Assets.bsUdcInspection,
@@ -565,7 +565,6 @@ class UniversalDashboardViewModel extends ChangeNotifier {
           'title': title,
           'url': urlMapping[title],
         };
-        //Navigator.pushNamed(context, routeName, arguments: argument);
         Navigation.instance.navigateTo(routeName, args: argument);
       }
     } else if(routeName == GlobalConstants.reportsTitle) {

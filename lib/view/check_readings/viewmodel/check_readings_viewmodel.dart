@@ -1,24 +1,24 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
+
+import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
+import 'package:tsnpdcl_employee/dialogs/process_dialog.dart';
 import 'package:tsnpdcl_employee/network/api_provider.dart';
 import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
-import 'package:tsnpdcl_employee/view/ctpt_menu/model/failure_report.dart';
-import 'dart:convert';
 
-class FailureReportedListViewModel extends ChangeNotifier {
-  FailureReportedListViewModel({required this.context}) {
-    final now = DateTime.now();//Apr2025
+class CheckReadingViewModel extends ChangeNotifier{
+  CheckReadingViewModel({required this.context}){
+    final now = DateTime.now();
     _selectedMonthYear = {
       'month': _getMonthName(now.month),
       'year': now.year,
     };
-    fetchCtPtReports();
+    fetchCheckedReading(_selectedMonthYear, bsudcScreen);
   }
-
   final BuildContext context;
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -27,12 +27,14 @@ class FailureReportedListViewModel extends ChangeNotifier {
 
   Map<String, dynamic>? get selectedMonthYear => _selectedMonthYear;
 
+  String bsudcScreen="";
+
   void setSelectedMonthYear(String month, int year, BuildContext context) {
     _selectedMonthYear = {
       'month': month,
       'year': year,
     };
-    fetchCtPtReports();
+    fetchCheckedReading(_selectedMonthYear, bsudcScreen);
     print("selectedMonthYear: $selectedMonthYear");
     notifyListeners();
   }
@@ -55,25 +57,25 @@ class FailureReportedListViewModel extends ChangeNotifier {
     return monthNames[month - 1];
   }
 
-  List<FailureReportModel> _failureReports = [];
-  List<FailureReportModel> get failureReports => _failureReports;
+  List<dynamic> _failureReports = [];
+  List<dynamic> get failureReports => _failureReports;
 
-  Future<void> fetchCtPtReports() async {
+  Future<void> fetchCheckedReading(  Map<String, dynamic>? dateMonth, String flagBsUdc ) async {
     _isLoading = true;
     notifyListeners();
 
     final requestData = {
       "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
-      'm': _selectedMonthYear != null
-          ? '${_selectedMonthYear!['month']}${_selectedMonthYear!['year']}' // e.g., "Apr2025"
+      'my': dateMonth != null
+          ? '${dateMonth['month']}${dateMonth['year']}'
           : DateFormat('MMMyyyy').format(DateTime.now()),
-      's': "AE_REP",
+      'bsudc': flagBsUdc == "" ? "No" : "Yes",
     };
 
     final payload = {
-      "path": "/getCtPtReports",
-      "apiVersion": "1.0.1",
+      "path": "/getCheckReadings",
+      "apiVersion": "1.1",
       "method": "POST",
       "data": jsonEncode(requestData),
     };
@@ -94,19 +96,23 @@ class FailureReportedListViewModel extends ChangeNotifier {
         if (response.statusCode == successResponseCode) {
           if (responseData['tokenValid'] == isTrue) {
             if (responseData['success'] == isTrue) {
+            if (responseData['message'] !="" ) {
+              showErrorDialog(context, responseData['message']);
               if (responseData['objectJson'] != null) {
                 List<dynamic> reportsJson = responseData['objectJson'] is String
                     ? jsonDecode(responseData['objectJson']) as List<dynamic>
                     : responseData['objectJson'] as List<dynamic>;
+                print("data recevied: $reportsJson");
 
-                _failureReports = reportsJson.map((reportJson) {
-                  return FailureReportModel.fromJson(reportJson);
-                }).toList();
+                // _failureReports = reportsJson.map((reportJson) {
+                //   return FailureReportModel.fromJson(reportJson);
+                // }).toList();
                 notifyListeners();
               } else {
                 _failureReports = []; // Clear list if no data
                 notifyListeners();
               }
+            }
             } else {
               showAlertDialog(context, responseData['message'] ?? "Request failed");
             }
@@ -125,5 +131,6 @@ class FailureReportedListViewModel extends ChangeNotifier {
       showErrorDialog(context, "An error occurred: ${e.toString()}");
     }
   }
-}
 
+
+}
