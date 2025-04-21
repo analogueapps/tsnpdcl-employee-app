@@ -64,7 +64,10 @@ import 'package:tsnpdcl_employee/view/ltmt/view/ltmt_menu.dart';
 import 'package:tsnpdcl_employee/view/ltmt/view/meters_stock.dart';
 import 'package:tsnpdcl_employee/view/manage_staff/view/manage_staffs_screen.dart';
 import 'package:tsnpdcl_employee/view/measure_distance/view/measure_distance_screen.dart';
+import 'package:tsnpdcl_employee/view/meeseva/view/form_loader_screen.dart';
+import 'package:tsnpdcl_employee/view/meeseva/view/mee_seva_abstract_screen.dart';
 import 'package:tsnpdcl_employee/view/meeseva/view/meeseva_menu_screen.dart';
+import 'package:tsnpdcl_employee/view/meeseva/view/services_app_list_screen.dart';
 import 'package:tsnpdcl_employee/view/middle_poles/view/middle_pole_11kv.dart';
 import 'package:tsnpdcl_employee/view/middle_poles/view/middle_pole_33kv.dart';
 import 'package:tsnpdcl_employee/view/middle_poles/view/middle_poles_screen.dart';
@@ -309,7 +312,7 @@ class AppRouter {
     // RFSS Screen * Swetha
       case RfssScreen.id:
         return MaterialPageRoute(builder: (_) => const RfssScreen());
-        //Bhavana
+    //Bhavana
       case NonAglServices.id:
         return MaterialPageRoute(builder: (_) => const NonAglServices());
       case AglServices.id:
@@ -436,9 +439,9 @@ class AppRouter {
     //FAILURE DTR(S) INSPECTION * BHAVANA
       case ReportedDTRFailure.id:
         return MaterialPageRoute(builder: (_) => const ReportedDTRFailure());
-        case ViewClosedReports.id:
+      case ViewClosedReports.id:
         return MaterialPageRoute(builder: (_) => const ViewClosedReports());
-        case ViewInspectionReports.id:
+      case ViewInspectionReports.id:
         return MaterialPageRoute(builder: (_) => const ViewInspectionReports());
 
 
@@ -487,6 +490,15 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const CheckReadings());
       case EnterServiceDetails.id:
         return MaterialPageRoute(builder: (_) => const EnterServiceDetails());
+
+
+    // MEESEVA * Surya
+      case MeeSevaAbstractScreen.id:
+        return MaterialPageRoute(builder: (_)=> MeeSevaAbstractScreen(above: settings.arguments as String));
+      case ServicesAppListScreen.id:
+        return MaterialPageRoute(builder: (_)=> ServicesAppListScreen(data: settings.arguments as Map<String, dynamic>,));
+      case FormLoaderScreen.id:
+        return MaterialPageRoute(builder: (_)=> FormLoaderScreen(data: settings.arguments as Map<String, dynamic>,));
 
       default:
         return MaterialPageRoute(

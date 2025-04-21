@@ -4,7 +4,7 @@ import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
-import 'package:tsnpdcl_employee/view/meeseva/viewmodel/meeseve_menu_viewmodel.dart';
+import 'package:tsnpdcl_employee/view/meeseva/viewmodel/meeseva_menu_viewmodel.dart';
 import 'package:tsnpdcl_employee/view/online_pr_menu/viewmodel/online_pr_menu_viewmodel.dart';
 
 class MeesevaMenuScreen extends StatelessWidget {
@@ -28,23 +28,26 @@ class MeesevaMenuScreen extends StatelessWidget {
         ),
       ),
       body: ChangeNotifierProvider(
-        create: (_) => MeeseveMenuViewModel(),
-        child: Consumer<MeeseveMenuViewModel>(
+        create: (_) => MeesevaMenuViewModel(context: context),
+        child: Consumer<MeesevaMenuViewModel>(
           builder: (context, viewModel, child) {
             return viewModel.meesevaMenuItems.isNotEmpty
-                ? Expanded(
-              child: GridView.builder(
-                padding: const EdgeInsets.all(8.0),
-                gridDelegate:
-                const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: numThree, // Number of columns
-                  childAspectRatio: 1,
-                ),
-                itemCount: viewModel.meesevaMenuItems.length,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  final item = viewModel.meesevaMenuItems[index];
-                  return Column(
+                ? GridView.builder(
+              padding: const EdgeInsets.all(8.0),
+              gridDelegate:
+              const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: numThree, // Number of columns
+                childAspectRatio: 1,
+              ),
+              itemCount: viewModel.meesevaMenuItems.length,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                final item = viewModel.meesevaMenuItems[index];
+                return GestureDetector(
+                  onTap: () {
+                    viewModel.menuItemClicked(item.title, item.routeName);
+                  },
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Container(
@@ -82,9 +85,9 @@ class MeesevaMenuScreen extends StatelessWidget {
                         ),
                       ),
                     ],
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             )
                 : const Expanded(
                 child: Center(

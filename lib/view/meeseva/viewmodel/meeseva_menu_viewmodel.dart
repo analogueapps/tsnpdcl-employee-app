@@ -1,14 +1,18 @@
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:tsnpdcl_employee/model/sub_menu_grid_item.dart';
+import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
+import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 
-class MeeseveMenuViewModel extends ChangeNotifier {
+class MeesevaMenuViewModel extends ChangeNotifier {
+  final BuildContext context;
   final List<SubMenuGridItem> _meesevaMenuItems = [];
 
   List<SubMenuGridItem> get meesevaMenuItems => _meesevaMenuItems;
 
   // Constructor to initialize the items
-  MeeseveMenuViewModel() {
+  MeesevaMenuViewModel({required this.context}) {
     _initializeItems();
   }
 
@@ -21,7 +25,8 @@ class MeeseveMenuViewModel extends ChangeNotifier {
           title: GlobalConstants.daysPendingAbstract,
           iconAsset: Icons.assignment_late_rounded,
           cardColor: Colors.orange,
-          routeName: routeName),
+          routeName: routeName,
+      ),
       SubMenuGridItem(
           title: GlobalConstants.lmWiseAbstract,
           iconAsset: Icons.summarize,
@@ -90,5 +95,35 @@ class MeeseveMenuViewModel extends ChangeNotifier {
     ]);
 
     notifyListeners();
+  }
+
+  Future<void> menuItemClicked(String title, String routeName) async {
+    if(title == GlobalConstants.daysPendingAbstract) {
+      final result = await showTextInputDialog(
+        context: context,
+        title: 'Enter No. Of Days',
+        message: 'Enter no. of days from date of registration/repayment',
+        okLabel: 'LOAD ABSTRACT',
+        cancelLabel: 'CANCEL',
+        isDestructiveAction: true,
+        barrierDismissible: false,
+        textFields: [
+          const DialogTextField(
+            keyboardType: TextInputType.number,
+          ),
+        ],
+      );
+
+      if (result != null &&
+          result[0] != null &&
+          result[0] is String) {
+        // Get the service number from the dialog result
+        String serviceNumber = result[0];
+
+        Navigation.instance.navigateTo(Routes.meeSevaAbstractScreen, args: serviceNumber);
+      }
+    } else if(title == GlobalConstants.lmWiseAbstract) {
+      Navigation.instance.navigateTo(Routes.meeSevaAbstractScreen, args: "0");
+    }
   }
 }

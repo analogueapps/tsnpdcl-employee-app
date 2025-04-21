@@ -42,7 +42,7 @@ class SearchConsumerScreen extends StatelessWidget {
                       message: 'Enter unique service number',
                       okLabel: 'Search',
                       cancelLabel: 'Cancel',
-                      isDestructiveAction: false,
+                      isDestructiveAction: true,
                       barrierDismissible: false,
                       textFields: [
                         const DialogTextField(
