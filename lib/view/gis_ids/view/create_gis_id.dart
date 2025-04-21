@@ -22,9 +22,10 @@ class CreateGisId extends StatelessWidget {
           title: const Text(
             "Create Gis Id",
             style:  TextStyle(
-                color: Colors.white,
-                fontSize: toolbarTitleSize,
-                fontWeight: FontWeight.w700),
+              color: Colors.white,
+              fontSize: toolbarTitleSize,
+              fontWeight: FontWeight.w700,
+            ),
           ),
           leading: IconButton(
             icon: const Icon(Icons.close, color: Colors.white),

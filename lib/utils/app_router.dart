@@ -3,6 +3,7 @@ import 'package:tsnpdcl_employee/view/account_screen/view/account_screen.dart';
 import 'package:tsnpdcl_employee/view/asset_mapping/view/asset_mapping_screen.dart';
 import 'package:tsnpdcl_employee/view/auth/view/corporate_login_screen.dart';
 import 'package:tsnpdcl_employee/view/auth/view/employee_id_login_screen.dart';
+import 'package:tsnpdcl_employee/view/bs_udc_inspection/view/bs_udc_list.dart';
 import 'package:tsnpdcl_employee/view/check_readings/view/check_readings_screen.dart';
 import 'package:tsnpdcl_employee/view/check_readings/view/enter_service_details.dart';
 import 'package:tsnpdcl_employee/view/consumer_details/view/consumer_details_screen.dart';
@@ -27,7 +28,6 @@ import 'package:tsnpdcl_employee/view/dtr_master/view/mis_matched_dtrs.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/view/view_mapped/mapped_dtr.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/view/view_mapped/struct_details.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/view/view_offline_data.dart';
-import 'package:tsnpdcl_employee/view/dtr_master/viewmodel/download_feeder_viewmodel.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/view/view_mapped/configure_filter.dart';
 import 'package:tsnpdcl_employee/view/exceptionals/view/exceptionals_screen.dart';
 import 'package:tsnpdcl_employee/view/failure_dtr_inspection/view/dtr_inspection.dart';
@@ -491,6 +491,9 @@ class AppRouter {
       case EnterServiceDetails.id:
         return MaterialPageRoute(builder: (_) => const EnterServiceDetails());
 
+    //BS_UDC
+      case BsUdcList.id:
+        return MaterialPageRoute(builder: (_) => const BsUdcList());
 
     // MEESEVA * Surya
       case MeeSevaAbstractScreen.id:

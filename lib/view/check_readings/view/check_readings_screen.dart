@@ -15,7 +15,7 @@ class CheckReadings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-        create: (_) => CheckReadingViewModel(context: context),
+        create: (_) => CheckReadingViewModel(context: context, bsudcScreen: "", ),
         child: Consumer<CheckReadingViewModel>(
         builder: (context, viewModel, child) {
           return Scaffold(
@@ -78,23 +78,3 @@ class CheckReadings extends StatelessWidget {
     );
   }
 }
-
-//public void onConfirm(CheckResponseWraper checkResponseWraper) {
-//    ///     linkAadhar(checkResponseWraper.getCircle(),checkResponseWraper.getErono(),checkResponseWraper.getScno());
-//  if (getIntent().getBooleanExtra("bs_udc",false))
-// {
-// Intent webIntent = new Intent(context, WebActivity.class);
-// webIntent.putExtra("url", ApiServices.PAGE_ROOT_URL + "bsUdcEntryForm.jsp?scno=" + checkResponseWraper.getUscno() + "&ero=" + LoginSdk.getInsatnce().getNpdclUser(context).getSecMasterEntity().getEroId() + "&emp_id=" + LoginSdk.getInsatnce().getNpdclUser(context).getEmpId() + "&sectionId=" + LoginSdk.getInsatnce().getNpdclUser(context).getSecMasterEntity().getSectionId());
-// webIntent.putExtra("t", "BS/UDC Inspection");
-// startActivity(webIntent);
-// }else {
-// Intent webIntent = new Intent(context, WebActivity.class);
-// webIntent.putExtra("url", ApiServices.PAGE_ROOT_URL + "checkReadingEntryForm.jsp?scno=" + checkResponseWraper.getUscno() + "&ero=" + LoginSdk.getInsatnce().getNpdclUser(context).getSecMasterEntity().getEroId() + "&emp_id=" + LoginSdk.getInsatnce().getNpdclUser(context).getEmpId() + "&sectionId=" + LoginSdk.getInsatnce().getNpdclUser(context).getSecMasterEntity().getSectionId());
-//  webIntent.putExtra("t", "Check Reading");
-//   startActivity(webIntent);
-//    }
-//  }
-
-
-//class : ServiceAndUscNo
-// Request Body: {"token":"26973097C0CE4D15A995879E87A81729","cid":"1","app":"in.tsnpdcl.npdclemployee"}

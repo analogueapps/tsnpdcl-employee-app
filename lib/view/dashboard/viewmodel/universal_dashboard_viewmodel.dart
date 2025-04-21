@@ -68,10 +68,7 @@ class UniversalDashboardViewModel extends ChangeNotifier {
           imageAsset: Assets.onlinePr,
           routeName: Routes.onlinePrMenuScreen
           ),
-      UniversalDashboardItem(
-          title: GlobalConstants.uploadCasteCertificateTitle,
-          imageAsset: Assets.uploadCasteCertificate,
-          routeName: routeName),
+
       UniversalDashboardItem(
           title: GlobalConstants.meesevaTitle,
           imageAsset: Assets.meeseva,
@@ -248,11 +245,7 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.mappingOfNonAglServicesTitle,
           imageAsset: Assets.mappingOfNonAglServices,
-          routeName: routeName),
-      UniversalDashboardItem(
-          title: GlobalConstants.uploadCasteCertificateTitle,
-          imageAsset: Assets.uploadCasteCertificate,
-          routeName: routeName),
+          routeName:routeName),
       UniversalDashboardItem(
           title: GlobalConstants.electroMechTitle,
           imageAsset: Assets.electroMech,
@@ -337,11 +330,6 @@ class UniversalDashboardViewModel extends ChangeNotifier {
           imageAsset: Assets.assetMapping,
           routeName: Routes.assetMappingScreen
       ),
-      // UniversalDashboardItem(
-      //     title: GlobalConstants.ganeshPandalInfoTitle,
-      //     imageAsset: Assets.ganeshPandalInfo,
-      //     routeName: Routes.ganeshPandalInfoScreen
-      // ),
       UniversalDashboardItem(
           title: GlobalConstants.onlinePrTitle,
           imageAsset: Assets.onlinePr,
@@ -382,10 +370,7 @@ class UniversalDashboardViewModel extends ChangeNotifier {
           imageAsset: Assets.ssMaintenance,
           routeName: Routes.ssMaintenanceScreen
       ),
-      UniversalDashboardItem(
-          title: GlobalConstants.pmiOfLinesTitle,
-          imageAsset: Assets.pmiOfLines,
-          routeName: routeName),
+
       UniversalDashboardItem(
           title: GlobalConstants.rfssTitle,
           imageAsset: Assets.rfss,
@@ -398,7 +383,7 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.mappingOfNonAglServicesTitle,
           imageAsset: Assets.mappingOfNonAglServices,
-          routeName: routeName),
+          routeName: Routes.nonAglService),
       UniversalDashboardItem(
           title: GlobalConstants.tongTesterReadingsTitle,
           imageAsset: Assets.tongTesterReadings,
@@ -414,10 +399,6 @@ class UniversalDashboardViewModel extends ChangeNotifier {
           imageAsset: Assets.gisIds,
           routeName: GlobalConstants.gisIdsTitle
       ),
-      UniversalDashboardItem(
-          title: GlobalConstants.uploadCasteCertificateTitle,
-          imageAsset: Assets.uploadCasteCertificate,
-          routeName: routeName),
       UniversalDashboardItem(
           title: GlobalConstants.meesevaTitle,
           imageAsset: Assets.meeseva,
@@ -460,17 +441,13 @@ class UniversalDashboardViewModel extends ChangeNotifier {
           routeName: Routes.middlePolesScreen
       ),
       UniversalDashboardItem(
-          title: GlobalConstants.maintenanceTitle,
-          imageAsset: Assets.maintenance,
-          routeName: routeName),
-      UniversalDashboardItem(
           title: GlobalConstants.checkReadingsTitle,
           imageAsset: Assets.checkReadings,
           routeName: Routes.checkReadingScreen),
       UniversalDashboardItem(
           title: GlobalConstants.bsUdcInspectionTitle,
           imageAsset: Assets.bsUdcInspection,
-          routeName: routeName),
+          routeName: Routes.bsUdcInspectionList),
       UniversalDashboardItem(
           title: GlobalConstants.interruptionsTitle,
           imageAsset: Assets.interruptions,
@@ -481,10 +458,10 @@ class UniversalDashboardViewModel extends ChangeNotifier {
           imageAsset: Assets.manageStaff,
           routeName: Routes.manageStaffsScreen
       ),
-      UniversalDashboardItem(
-          title: GlobalConstants.newServicesTitle,
-          imageAsset: Assets.newServices,
-          routeName: routeName),
+      // UniversalDashboardItem(
+      //     title: GlobalConstants.newServicesTitle,
+      //     imageAsset: Assets.newServices,
+      //     routeName: routeName),
       UniversalDashboardItem(
           title: GlobalConstants.ctPtFailureTitle,
           imageAsset: Assets.ctPtFailure,

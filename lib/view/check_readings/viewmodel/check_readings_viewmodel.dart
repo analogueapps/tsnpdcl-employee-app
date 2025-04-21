@@ -11,7 +11,7 @@ import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 
 class CheckReadingViewModel extends ChangeNotifier{
-  CheckReadingViewModel({required this.context}){
+  CheckReadingViewModel({required this.context, required this.bsudcScreen}){
     final now = DateTime.now();
     _selectedMonthYear = {
       'month': _getMonthName(now.month),
@@ -20,14 +20,13 @@ class CheckReadingViewModel extends ChangeNotifier{
     fetchCheckedReading(_selectedMonthYear, bsudcScreen);
   }
   final BuildContext context;
+  final String bsudcScreen;
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
   Map<String, dynamic>? _selectedMonthYear;
 
   Map<String, dynamic>? get selectedMonthYear => _selectedMonthYear;
-
-  String bsudcScreen="";
 
   void setSelectedMonthYear(String month, int year, BuildContext context) {
     _selectedMonthYear = {

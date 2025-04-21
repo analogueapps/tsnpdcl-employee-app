@@ -169,6 +169,9 @@ class Routes {
   static const String checkReadingScreen = "CheckReadings";
   static const String enterServicesScreen = "EnterServiceDetails";
 
+  //BS/UDC
+  static const String bsUdcInspectionList = "BsUdcList";
+
   // Meeseva * Surya
   static const String meeSevaAbstractScreen = "MeeSevaAbstractScreen";
   static const String servicesAppListScreen = "ServicesAppListScreen";

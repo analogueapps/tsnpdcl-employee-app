@@ -1,16 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
 import 'package:tsnpdcl_employee/network/api_provider.dart';
 import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
-import 'package:tsnpdcl_employee/utils/general_routes.dart';
-import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/view/gis_ids/database/pending_offline_list_db.dart';
-import 'package:tsnpdcl_employee/view/gis_ids/model/gis_ids_model.dart';
 import 'package:tsnpdcl_employee/view/gis_ids/model/gis_individual_model.dart';
 
 class GisIndividualIdViewModel extends ChangeNotifier {

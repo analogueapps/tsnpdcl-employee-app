@@ -34,11 +34,7 @@ class CreateDtrOnline extends StatelessWidget {
               fontSize: toolbarTitleSize,
               fontWeight: FontWeight.w700),
         ),
-        leading: IconButton(onPressed: (){
-          Navigator.pop(context);
-        },
-            icon: const Icon(Icons.close)
-        ),
+
         iconTheme: const IconThemeData(
           color: Colors.white,
         ),

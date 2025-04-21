@@ -13,7 +13,7 @@ class FeederModel {
 
   FeederModel.fromJson(dynamic json) {
     optionId = json['optionId']?.toString();
-    optionName = json['optionName'];
+    optionName = json['optionName']?.toString();
   }
 
   String? optionId;

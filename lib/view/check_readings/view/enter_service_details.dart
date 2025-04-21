@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
+import 'package:tsnpdcl_employee/view/check_readings/model/ero_model.dart';
 import 'package:tsnpdcl_employee/view/check_readings/viewmodel/enter_services_details_viewmodel.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/model/circle_model.dart';
 import 'package:tsnpdcl_employee/view/interruptions/model/feeder_model.dart';
@@ -65,17 +66,31 @@ class EnterServiceDetails extends StatelessWidget {
                         'Select ERO',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
+                      // DropdownButton<String>(
+                      //   isExpanded: true,
+                      //   hint: const Text("Select"),
+                      //   value: viewModel.selectedEro,
+                      //   items: viewModel.eroList.map<DropdownMenuItem<String>>((EroModel item) {
+                      //     return DropdownMenuItem<String>(
+                      //       value: item.optionId,
+                      //       child: Text(item.optionName ?? ''),
+                      //     );
+                      //   }).toList(),
+                      //   onChanged: (String? value) => viewModel.onSelectedERO(value),
+                      // ),
                       DropdownButton<String>(
                         isExpanded: true,
-                        hint: const Text("Select"),
+                        hint: const Text("Select ERO"),
                         value: viewModel.selectedEro,
-                        items: viewModel.eroList.map<DropdownMenuItem<String>>((FeederModel item) {
-                          return DropdownMenuItem<String>(
-                            value: item.optionId, // This should be String now
-                            child: Text(item.optionName ?? ''),
-                          );
-                        }).toList(),
-                        onChanged: (String? value) => viewModel.onSelectedERO(value),
+                        items: viewModel.eroList.map((ero) => DropdownMenuItem<String>(
+                          value: ero.optionId,
+                          child: Text(ero.optionName),
+                        )).toList(),
+                        onChanged: (value) {
+                          if (value != null) {
+                            viewModel.onSelectedERO(value);
+                          }
+                        },
                       ),
                       const SizedBox(height: 15),
                       const Text('SCNO'),

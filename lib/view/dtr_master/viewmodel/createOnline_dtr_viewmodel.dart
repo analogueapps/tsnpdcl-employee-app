@@ -17,6 +17,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
+import 'package:tsnpdcl_employee/dialogs/process_dialog.dart';
 import 'package:tsnpdcl_employee/utils/alerts.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/network/api_provider.dart';
@@ -25,6 +26,8 @@ import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/model/circle_model.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/model/create_online_card_model.dart';
+import 'package:tsnpdcl_employee/view/dtr_master/model/online_submit_model.dart';
+import 'package:tsnpdcl_employee/view/dtr_master/viewmodel/image_upload.dart';
 
 class OnlineDtrViewmodel extends ChangeNotifier {
   // all fields are required
@@ -43,7 +46,7 @@ class OnlineDtrViewmodel extends ChangeNotifier {
   String? _latitude;
   String? _longitude;
 
-
+  final ImageUploader _imageUploader = ImageUploader();
   final formKey = GlobalKey<FormState>();
   final TextEditingController sapDTRStructCode = TextEditingController();
   final TextEditingController dtrLocatLandMark = TextEditingController();
@@ -977,17 +980,195 @@ class OnlineDtrViewmodel extends ChangeNotifier {
   }
 
 
+  String? _errorMessage;
+  String? get errorMessage => _errorMessage;
 
-  Future<void> submitForm() async {
+  Future<void> submitForm(
+      ) async {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
       notifyListeners();
 
       if (!validateForm()) {
         return;
+      } else {
+        try {
+          // Collect DTR data
+          final dtrs = <DTR>[];
+          for (var i = 0; i < dtrCardData.length; i++) {
+            final card = dtrCardData[i];
+            if (card.selectedMake == null ||
+                card.selectedDtrCapacity == null ||
+                card.selectedYearOfMfg == null ||
+                card.selectedPhase == null ||
+                card.selectedRatio == null ||
+                card.selectedTypeOfMeter == null ||
+                card.serialNo.text.isEmpty ||
+                card.firstTimeChargedDate.text.isEmpty ||
+                card.sapDtr.text.isEmpty ||
+                card.capturedImage == null) {
+              AlertUtils.showSnackBar(
+                  context, "Please complete all DTR details for DTR ${i + 1}",
+                  isTrue);
+              _isLoading = false;
+              notifyListeners();
+              return;
+            }
+
+            final makeVendorId = _make
+                .firstWhere((m) => m.optionCode == card.selectedMake)
+                .optionCode;
+            dtrs.add(DTR(
+              capacity: card.selectedDtrCapacity!,
+              make: card.selectedMake!,
+              makeVendorId: makeVendorId,
+              imageFile: card.capturedImage!,
+              phase: card.selectedPhase!,
+              meterPhase: card.selectedTypeOfMeter!,
+              dtrChargeDate: card.firstTimeChargedDate.text,
+              ratio: card.selectedRatio!,
+              sapEquipmentNo: card.sapDtr.text,
+              serialNo: card.serialNo.text,
+              yearOfMfg: card.selectedYearOfMfg!,
+            ));
+          }
+
+          // Create Structure object
+          final structure = Structure(
+            replace: "false",
+            // Adjust as needed
+            structureCode: sapDTRStructCode.text,
+            abSwitch: _selectedABSwitch!,
+            capacity: _selectedCapacity!,
+            landMark: dtrLocatLandMark.text,
+            distributionCode: _selectedDistribution!,
+            distribution: _distributions
+                .firstWhere((d) => d.optionCode == _selectedDistribution)
+                .optionName,
+            structureType: _selectedDTRType!,
+            feederCode: _selectedFeeder!,
+            feederName: _feeder
+                .firstWhere((f) => f.optionCode == _selectedFeeder)
+                .optionName,
+            hgFuseSet: _selectedHGFuse!,
+            lat: double.parse(_latitude!),
+            lon: double.parse(_longitude!),
+            loadPattern: _selectedLoadPattern!,
+            ltFuseSet: _selectedLTFuseSet!,
+            ltFuseType: _selectedLTFuseType!,
+            plinthType: _selectedPlintType!,
+            ssCode: _selectedStation!,
+            ssName: _stations
+                .firstWhere((s) => s.optionCode == _selectedStation)
+                .optionName,
+            ssNo: _selectedSSNo!,
+            spmfl: null,
+            // Adjust as needed
+            dtrs: dtrs,
+          );
+
+          // Call createStructure
+          final success = await createStructure(context, structure);
+          if (success && context.mounted) {
+            showSuccessDialog(context, "Structure created successfully", () {
+              Navigator.pop(context);
+            });
+          }
+        } catch (e, stackTrace) {
+          print("Error submitting form: $e\n$stackTrace");
+          if (context.mounted) showErrorDialog(
+              context, "Failed to submit form: ${e.toString()}");
+        } finally {
+          _isLoading = false;
+          notifyListeners();
+        }
       }
     }
   }
+
+    Future<bool> createStructure(BuildContext context, Structure structure) async {
+      _isLoading = true;
+      _errorMessage = null;
+      if (context.mounted) {
+        ProcessDialogHelper.showProcessDialog(context, message: "Uploading images...");
+      }
+      notifyListeners();
+
+      try {
+        // Upload images for each DTR
+        final imageUrls = <String>[];
+        for (final dtr in structure.dtrs) {
+          final imageUrl = await _imageUploader.uploadImage(context, dtr.imageFile);
+          if (imageUrl == null) {
+            _errorMessage = 'Failed to upload image for DTR';
+            if (context.mounted) {
+              ProcessDialogHelper.closeDialog(context);
+              showAlertDialog(context, _errorMessage!);
+            }
+            return false;
+          }
+          imageUrls.add(imageUrl);
+        }
+
+        // Update progress dialog
+        if (context.mounted) {
+          ProcessDialogHelper.showProcessDialog(context, message: "Creating structure...");
+        }
+
+        final structureJson = structure.toJson(imageUrls);
+        final requestData = {
+          "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+          "api": Apis.API_KEY,
+          "dtrData": jsonEncode(structureJson),
+        };
+
+
+        final payload = {
+          "path": "/saveDTRStructure",
+          "apiVersion": "1.0",
+          "method": "POST",
+          "data": requestData,
+        };
+
+        //.put("authToken", authToken);
+        //             o.put("api", api);
+
+        // Send request
+        final response = await ApiProvider(baseUrl: Apis.CHECK_ROOT_URL)
+            .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+
+        if (context.mounted) {
+          ProcessDialogHelper.closeDialog(context);
+        }
+
+        if (response == null) {
+          throw Exception("No response received from server");
+        }
+
+        dynamic responseData = response.data;
+        if (responseData is String) responseData = jsonDecode(responseData);
+
+        if (response.statusCode == 200) {
+          if (responseData['taskSuccess'] == true) {
+            return true;
+          } else {
+            throw Exception(responseData['message'] ?? "Structure creation failed");
+          }
+        } else {
+          throw Exception(responseData['message'] ?? "Request failed with status ${response.statusCode}");
+        }
+      } catch (e, stackTrace) {
+        print("Error creating structure: $e\n$stackTrace");
+        if (context.mounted) {
+          ProcessDialogHelper.closeDialog(context);
+          showAlertDialog(context, "Failed to create structure: ${e.toString()}");
+        }
+        return false;
+      } finally {
+        _isLoading = false;
+        notifyListeners();
+      }
+    }
 
 
   bool validateForm() {
@@ -1072,6 +1253,23 @@ class OnlineDtrViewmodel extends ChangeNotifier {
     return true;
   }
 }
+
+// Create Dio instance
+// Dio dio = Dio();
+// // Send POST request as byte stream
+// Response response = await dio.post(
+//   uploadUrl,
+//   data: Stream.fromIterable(imageBytes.map((e) => [e])),
+//   options: Options(
+//     headers: {
+//       'Content-Type': 'image/jpeg', // Set proper JPEG MIME type
+//       'filename': 'ImageFile',
+//       'username': 'pdms',
+//       'Connection': 'Keep-Alive',
+//     },
+//     contentType: 'image/jpeg', // Ensure Content-Type is consistent
+//   ),
+// );
 
 //TSNPDCL
 // rivate void saveDtrStructure(boolean replace) {

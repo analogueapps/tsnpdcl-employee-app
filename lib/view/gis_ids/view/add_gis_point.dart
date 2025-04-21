@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tsnpdcl_employee/utils/app_constants.dart';
+import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/view/gis_ids/viewModel/add_gis_viewmodel.dart';
 
@@ -17,8 +19,14 @@ class AddGisPoint extends StatelessWidget {
       onWillPop: () async => false,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.blue,
-          title: const Text('NEW', style: TextStyle(color: Colors.white),),
+          backgroundColor: CommonColors.colorPrimary,
+          title: const Text('NEW', style: const TextStyle(
+            color: Colors.white,
+            fontSize: toolbarTitleSize,
+            fontWeight: FontWeight.w700,
+          ),
+          ),
+          iconTheme: const IconThemeData(color: Colors.white),
           leading: IconButton(
             icon: const Icon(Icons.close, color: Colors.white,),
             onPressed: () {
