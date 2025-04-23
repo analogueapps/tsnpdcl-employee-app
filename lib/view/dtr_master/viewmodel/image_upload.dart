@@ -1,119 +1,112 @@
-import 'dart:convert';
+import 'dart:async';
 import 'dart:io';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
-import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
 import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
+import 'package:tsnpdcl_employee/utils/alerts.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
-
 
 class ImageUploader {
   final Dio _dio = Dio();
 
-  // Compress image
-  Future<File> compressImage(File imageFile) async {
+  Future<bool> isNetworkAvailable() async {
+    final connectivityResult = await Connectivity().checkConnectivity();
+    return connectivityResult != ConnectivityResult.none;
+  }
+
+  Future<img.Image?> _decodeImage(File file) async {
     try {
-      final bytes = await imageFile.readAsBytes();
-      final image = img.decodeImage(bytes);
-      if (image == null) {
-        print('Failed to decode image: ${imageFile.path}');
-        return imageFile;
-      }
-      final compressed = img.encodeJpg(image, quality: 85); // Adjust quality (0-100)
+      final bytes = await file.readAsBytes();
+      return img.decodeImage(bytes);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<File> compressImage(File file, {int quality = 85}) async {
+    try {
+      final decodedImage = await _decodeImage(file);
+      if (decodedImage == null) return file;
+
+      final compressed = img.encodeJpg(decodedImage, quality: quality);
       final tempDir = Directory.systemTemp;
-      final tempFile = File('${tempDir.path}/${imageFile.path.split('/').last}.compressed.jpg');
-      await tempFile.writeAsBytes(compressed);
-      print('Compressed image: ${imageFile.path} -> ${tempFile.lengthSync()} bytes');
-      return tempFile;
-    } catch (e) {
-      print('Error compressing image: $e');
-      return imageFile;
+      final compressedFile = File('${tempDir.path}/${file.uri.pathSegments.last}.compressed.jpg');
+      await compressedFile.writeAsBytes(compressed);
+      return compressedFile;
+    } catch (_) {
+      return file;
     }
   }
 
-  // Encode image to Base64
-  Future<String> encodeImageFileToBase64(File imageFile) async {
-    try {
-      final imageBytes = await imageFile.readAsBytes();
-      final base64Image = base64Encode(imageBytes);
-      print('Encoded image to Base64: ${imageFile.path}, length=${base64Image.length}');
-      return base64Image;
-    } catch (e) {
-      print('Error encoding image to Base64: $e');
-      return '';
-    }
-  }
-
-  // Upload image as Base64 using Dio
   Future<String?> uploadImage(BuildContext context, File imageFile) async {
-    print('Uploading image: ${imageFile.path}');
+    print("Uploading image: ${imageFile.path}");
+
+    if (!(await isNetworkAvailable())) {
+      if (context.mounted) {
+        AlertUtils.showSnackBar(context, "Please check your internet connection!", true);
+      }
+      return null;
+    }
 
     try {
-      // Compress image
       final compressedFile = await compressImage(imageFile);
 
-      // Encode to Base64
-      final base64Image = await encodeImageFileToBase64(compressedFile);
-      if (base64Image.isEmpty) {
-        print('Failed to encode image to Base64');
-        if (context.mounted) {
-          showAlertDialog(context, 'Failed to encode image');
-        }
-        return null;
-      }
+      final authToken = SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ?? '';
+      const apkName = 'in.tsnpdcl.npdclemployee';
+      const apiKey = Apis.API_KEY;
 
-      // Create JSON payload
-      final payload = {
-        'file': base64Image,
-        'token': SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ?? '',
-        'app': 'in.tsnpdcl.npdclemployee',
-        'apiKey': Apis.API_KEY, // From Java FileUploaderWithToken
+      final headers = {
+        'Content-Type': 'image/jpeg',
+        'filename': 'ImageFile',
+        'token': authToken,
+        'apk': apkName,
+        'api': apiKey,
+        'Connection': 'Keep-Alive',
       };
-      print('Image upload payload: ${payload.keys}');
 
-      // Send request with Dio
+      final fileBytes = await compressedFile.readAsBytes();
+
       final response = await _dio.post(
         Apis.IMAGE_UPLOAD_URL,
-        data: payload,
+        data: Stream.fromIterable([fileBytes]),
         options: Options(
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ${payload['token']}',
-            'X-API-Key': payload['apiKey'],
-          },
+          headers: headers,
+          contentType: 'image/jpeg',
+          responseType: ResponseType.json,
         ),
       );
 
-      print('Image upload response: status=${response.statusCode}, body=${response.data}');
+      print("Image upload status: ${response.statusCode}");
+      print("Response body: ${response.data}");
 
       if (response.statusCode == 200) {
-        final jsonResponse = response.data;
-        if (jsonResponse is Map<String, dynamic> && jsonResponse.containsKey('message')) {
-          print('Image uploaded successfully: ${jsonResponse['message']}');
-          return jsonResponse['message']; // Image URL
+        final json = response.data;
+        if (json is Map<String, dynamic> && json.containsKey('message')) {
+          print("Upload success: ${json['message']}");
+          return json['message'];
         } else {
-          print('Response does not contain message field');
           if (context.mounted) {
-            showAlertDialog(context, 'Invalid response format');
+            AlertUtils.showSnackBar(context, 'Invalid response format', true);
           }
           return null;
         }
       } else {
-        print('Image upload failed: status=${response.statusCode}, body=${response.data}');
         if (context.mounted) {
-          showAlertDialog(context, 'Image upload failed: ${response.statusMessage}');
+          AlertUtils.showSnackBar(context, 'Upload failed: ${response.statusMessage}', true);
         }
         return null;
       }
-    } catch (e, stackTrace) {
-      print('Failed to upload image: $e');
-      print('Stack trace: $stackTrace');
+    } catch (e, st) {
+      print("Exception: $e\n$st");
       if (context.mounted) {
-        showAlertDialog(context, 'Failed to upload image: $e');
+        AlertUtils.showSnackBar(context, 'Failed to upload image', true);
       }
       return null;
     }
   }
 }
+
+

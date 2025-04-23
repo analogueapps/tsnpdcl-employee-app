@@ -82,16 +82,19 @@ class EnterServiceDetails extends StatelessWidget {
                         isExpanded: true,
                         hint: const Text("Select ERO"),
                         value: viewModel.selectedEro,
-                        items: viewModel.eroList.map((ero) => DropdownMenuItem<String>(
-                          value: ero.optionId,
-                          child: Text(ero.optionName),
-                        )).toList(),
+                        items: viewModel.eroList.map((ero) {
+                          return DropdownMenuItem<String>(
+                            value: ero.optionId,
+                            child: Text(ero.optionName),
+                          );
+                        }).toList(),
                         onChanged: (value) {
                           if (value != null) {
                             viewModel.onSelectedERO(value);
                           }
                         },
                       ),
+
                       const SizedBox(height: 15),
                       const Text('SCNO'),
                       TextField(

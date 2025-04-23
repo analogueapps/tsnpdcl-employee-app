@@ -54,11 +54,12 @@ class EnterServicesDetailsViewmodel extends ChangeNotifier {
 
   List<EroModel> _getEro = [];
   String? _selectedEro;
+
   List<EroModel> get eroList => _getEro;
   String? get selectedEro => _selectedEro;
 
 
-  Future<void> getEroList(String selectedCircleId) async {
+  Future<void> getEroList( String selectedCircleId) async {
     ProcessDialogHelper.showProcessDialog(context, message: "Loading...");
 
     final payload = {
@@ -74,37 +75,29 @@ class EnterServicesDetailsViewmodel extends ChangeNotifier {
       if (context.mounted) ProcessDialogHelper.closeDialog(context);
 
       if (response != null) {
-        // Parse response.data (handle both String and Map)
         dynamic responseData = response.data is String
             ? jsonDecode(response.data)
             : response.data;
 
+        // Fix: handle List as root
+        if (responseData is List && responseData.isNotEmpty) {
+          responseData = responseData.first;
+        }
+
         if (response.statusCode == successResponseCode &&
             responseData['login'] == true &&
             responseData['success'] == true) {
+          if (responseData['objectList'] is List) {
+            _getEro = (responseData['objectList'] as List)
+                .map((item) => EroModel.fromJson(item))
+                .toList();
 
-          // Always parse through parseEroData
-          _getEro = parseEroData(response.data);
+            if (_getEro.isNotEmpty) {
+              _selectedEro = _getEro.first.optionId;
+            }
 
-          // Parse objectList (handle String or List)
-          // List<dynamic> jsonList = [];
-          // if (responseData['objectList'] is String) {
-          //   jsonList = jsonDecode(responseData['objectList']);
-          // } else if (responseData['objectList'] is List) {
-          //   jsonList = responseData['objectList'];
-          // }
-
-          // Map to EroModel
-          // _getEro = jsonList.map((json) => EroModel.fromJson(json)).toList();
-
-          print('ERO List: ${_getEro.map((e) => '${e.optionId}: ${e.optionName}').toList()}');
-
-          // Select first item by default
-          if (_getEro.isNotEmpty) {
-            _selectedEro = _getEro.first.optionId;
+            notifyListeners();
           }
-
-          notifyListeners();
         } else {
           showAlertDialog(
             context,
@@ -117,37 +110,6 @@ class EnterServicesDetailsViewmodel extends ChangeNotifier {
       if (context.mounted) {
         showAlertDialog(context, "Failed to load EROs: ${e.toString()}");
       }
-    }
-  }
-
-  List<EroModel> parseEroData(dynamic data) {
-    try {
-      if (data is List) {
-        return data.map((item) => EroModel.fromJson(item)).toList();
-      }
-
-      String rawString = data is String ? data : jsonEncode(data);
-
-      rawString = rawString
-          .replaceAllMapped(RegExp(r'(\w+):'), (m) => '"${m.group(1)}":')
-          .replaceAllMapped(RegExp(r':\s*([a-zA-Z][^,}\s]+)'),
-              (m) => ': "${m.group(1)}"')
-          .replaceAll("'", '"');
-
-      final parsed = jsonDecode(rawString);
-
-
-      if (parsed is List) {
-        return parsed.map((item) => EroModel.fromJson(item)).toList();
-      }
-      else if (parsed is Map && parsed['objectList'] != null) {
-        return parseEroData(parsed['objectList']);
-      }
-
-      throw Exception('Unsupported data format');
-    } catch (e) {
-      print('Parser error: $e');
-      return [];
     }
   }
 
