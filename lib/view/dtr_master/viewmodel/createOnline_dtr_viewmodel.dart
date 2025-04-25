@@ -1,18 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:ui';
-import 'dart:convert';
-import 'dart:io';
-import 'dart:ui' as ui;
-import 'package:dio/dio.dart';
-import 'package:image/image.dart' as img;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:flutter/services.dart';
 // import 'package:vendor_app/services/environment.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -30,10 +21,10 @@ import 'package:tsnpdcl_employee/view/dtr_master/model/online_submit_model.dart'
 import 'package:tsnpdcl_employee/view/dtr_master/viewmodel/image_upload.dart';
 
 class OnlineDtrViewmodel extends ChangeNotifier {
-  // all fields are required
   OnlineDtrViewmodel({required this.context}) {
     init();
     notifyListeners();
+    print("Designation Code: ${SharedPreferenceHelper.getStringValue(LoginSdkPrefs.designationCodeKey)}");
   }
 
   final BuildContext context;
@@ -246,7 +237,7 @@ class OnlineDtrViewmodel extends ChangeNotifier {
 
   Future<void> getSubstations() async {
     _stations.clear();
-    if (_isLoading) return; // Prevent duplicate calls
+    if (_isLoading) return;
 
     _isLoading = true;
     notifyListeners();
@@ -510,6 +501,7 @@ class OnlineDtrViewmodel extends ChangeNotifier {
   void onListCapacitySelected(int? index) {
     _selectedCapacityIndex = index;
     _selectedCapacity = index != null ? _capacity[index].optionCode : null;
+    generateYearOfMfgList();
     print("$_selectedCapacity: selected Capacity ");
 
     final capacityCount = int.tryParse(_selectedCapacity ?? "0") ?? 0;
@@ -771,7 +763,30 @@ class OnlineDtrViewmodel extends ChangeNotifier {
   String? _selectedDtrCapacity;
   String? get selectedDtrCapacity => _selectedDtrCapacity;
 
-  List _dtrCapacity = ["Select", "Idle", "HT Service", "Mixed Load"];
+  List _dtrCapacity = ["Select",
+    "2500KVA",
+    "2000KVA",
+    "1600KVA",
+    "1000KVA",
+    "800KVA",
+    "500KVA",
+    "400KVA",
+    "315KVA",
+    "250KVA",
+    "200KVA",
+    "160KVA",
+    "100KVA",
+    "75KVA",
+    "63KVA",
+    "50KVA",
+    "40KVA",
+    "3.Ph.25KVA",
+    "3.Ph.16KVA",
+    "S.Ph.25KVA",
+    "15KVALTN",
+    "15KVAAGL",
+    "10KVALTN",
+    "10KVAAGL"];
   List get dtrCapacity => _dtrCapacity;
 
   void onListDtrCapacity(String? value,int cardIndex) {
@@ -785,21 +800,29 @@ class OnlineDtrViewmodel extends ChangeNotifier {
   String? _selectedYearOfMfg;
   String? get selectedYearOfMfg => _selectedYearOfMfg;
 
-  List _yearOfMfg = ["Select", "Idle", "HT Service", "Mixed Load"];
+  List _yearOfMfg = [];
   List get yearOfMfg => _yearOfMfg;
 
-  void onListYearOfMfg(String? value, int cardIndex) {
-  if (cardIndex < dtrCardData.length) {
-  dtrCardData[cardIndex].selectedYearOfMfg = value;
-  notifyListeners();
+  void generateYearOfMfgList() {
+    _yearOfMfg = List.generate(
+      DateTime.now().year - 1952 + 1,
+          (index) => (1952 + index).toString(),
+    );
+    notifyListeners();
   }
+
+  void onListYearOfMfg(String? value, int cardIndex) {
+    if (cardIndex < dtrCardData.length) {
+      dtrCardData[cardIndex].selectedYearOfMfg = value;
+      notifyListeners();
+    }
   }
 
   //Phase
   String? _selectedPhase;
   String? get selectedPhase => _selectedPhase;
 
-  List _phase = ["Select", "Idle", "HT Service", "Mixed Load"];
+  List _phase = ["Select","Single Phase","3-Phase"];
   List get phase => _phase;
 
   void onListPhase(String? value, int cardIndex) {
@@ -813,7 +836,7 @@ class OnlineDtrViewmodel extends ChangeNotifier {
   String? _selectedRatio;
   String? get selectedRatio => _selectedRatio;
 
-  List _ratio = ["Select", "Idle", "HT Service", "Mixed Load"];
+  List _ratio = ["Select","6.6KV/240V","11KV/440V"];
   List get ratio => _ratio;
 
   void onListRatio(String? value,int cardIndex) {
@@ -827,7 +850,7 @@ class OnlineDtrViewmodel extends ChangeNotifier {
   String? _selectedTypeOfMeter;
   String? get selectedTypeOfMeter => _selectedTypeOfMeter;
 
-  List _typeOfMeter = ["Select", "Idle", "HT Service", "Mixed Load"];
+  List _typeOfMeter = ["Select","Not Available","1Ph Meter","3Ph Meter","CT Meter","HT Meter"];
   List get typeOfMeter => _typeOfMeter;
 
   void onListTypeOfMeter(String? value, int cardIndex) {
@@ -976,6 +999,76 @@ class OnlineDtrViewmodel extends ChangeNotifier {
     } finally {
       _isLoading = false;
       notifyListeners();
+    }
+  }
+
+  Future<void> generateEquipmentNo() async {
+    _isLoading = true;
+    notifyListeners();
+
+    final requestData = {
+      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "api": Apis.API_KEY,
+    };
+
+    final payload = {
+      "path": "/generateEquipmentNo",
+      "apiVersion": "1.0",
+      "method": "POST",
+      "data": jsonEncode(requestData),
+    };
+
+    try {
+      var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+          .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+
+      _isLoading = false;
+      notifyListeners();
+
+      print("post2sapGis response: $response");
+      if (response != null) {
+        var responseData = response.data;
+        if (responseData is String) {
+          try {
+            responseData = jsonDecode(responseData);
+          } catch (e) {
+            print("Error decoding response data: $e");
+            showErrorDialog(context, "Invalid response format. Please try again.");
+            return;
+          }
+        }
+
+        if (response.statusCode == successResponseCode) {
+          if (responseData['tokenValid'] == true) {
+            if (responseData['success'] == true) {
+              if (responseData['message'] != null) {
+                try {
+                  final jsonMessage = responseData['message'];
+                  print("jsonMessage: $jsonMessage");
+                } catch (e, stackTrace) {
+                  print("Error parsing message: $e");
+                  print("Stack trace: $stackTrace");
+                  showErrorDialog(context,
+                      "Failed to parse structure data. Please contact support.");
+                }
+              }
+            } else {
+              showAlertDialog(
+                  context, responseData['message'] ?? "Operation failed");
+            }
+          } else {
+            showSessionExpiredDialog(context);
+          }
+        } else {
+          showErrorDialog(context,
+              "Request failed with status: ${response.statusCode}");
+        }
+      }
+    } catch (e) {
+      print("Exception caught: $e");
+      _isLoading = false;
+      notifyListeners();
+      showErrorDialog(context, "An error occurred. Please try again.");
     }
   }
 
@@ -1130,10 +1223,6 @@ class OnlineDtrViewmodel extends ChangeNotifier {
           "data": requestData,
         };
 
-        //.put("authToken", authToken);
-        //             o.put("api", api);
-
-        // Send request
         final response = await ApiProvider(baseUrl: Apis.CHECK_ROOT_URL)
             .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
 
@@ -1254,106 +1343,5 @@ class OnlineDtrViewmodel extends ChangeNotifier {
   }
 }
 
-// Create Dio instance
-// Dio dio = Dio();
-// // Send POST request as byte stream
-// Response response = await dio.post(
-//   uploadUrl,
-//   data: Stream.fromIterable(imageBytes.map((e) => [e])),
-//   options: Options(
-//     headers: {
-//       'Content-Type': 'image/jpeg', // Set proper JPEG MIME type
-//       'filename': 'ImageFile',
-//       'username': 'pdms',
-//       'Connection': 'Keep-Alive',
-//     },
-//     contentType: 'image/jpeg', // Ensure Content-Type is consistent
-//   ),
-// );
 
-//TSNPDCL
-// rivate void saveDtrStructure(boolean replace) {
-//
-//         final ApptrolsProgressDialog apptrolsProgressDialog = new ApptrolsProgressDialog();
-//         apptrolsProgressDialog.setProgressText("Uploading Image's....");
-//         apptrolsProgressDialog.displayDialog(getSupportFragmentManager());
-//         JSONObject structure = new JSONObject();
-//             new Thread(new Runnable() {
-//                 @Override
-//                 public void run() {
-//
-//                     try {
-//                         structure.put("replace",replace);
-//                     if (checkBox_structure.isChecked()||checkBox_ss.isChecked()) {
-//                         structure.put("structureCode", et_sap_structure_code.getText().toString());
-//                         structure.put("abSwitch", spinner_ab_switch.getSelectedItem() + "");
-//                         structure.put("capacity", ((Option) spinner_capacity.getSelectedItem()).getOptionName() + "");
-//                         structure.put("landMark", et_landmark.getText().toString());
-//
-//
-//                         structure.put("distributionCode", ((Option) spinner_distribution.getSelectedItem()).getOptionCode());
-//                         structure.put("distribution", ((Option) spinner_distribution.getSelectedItem()).getOptionName());
-//                         structure.put("structureType", spinner_structure_type.getSelectedItem() + "");
-//
-//                         structure.put("feederCode", (checkBox_ss.isChecked())?"NA":((Option) spinner_ss11kv.getSelectedItem()).getOptionCode());
-//                         structure.put("feederName", (checkBox_ss.isChecked())?"NA":((Option) spinner_ss11kv.getSelectedItem()).getOptionName());
-//                         structure.put("hgFuseSet", spinner_hg_fuse_sets.getSelectedItem() + "");
-//                         structure.put("lat", location.getLatitude());
-//                         structure.put("lon", location.getLongitude());
-//
-//                         structure.put("loadPattern", spinner_load_pattern.getSelectedItem() + "");
-//                         structure.put("ltFuseSet", spinner_lt_fuse_sets.getSelectedItem() + "");
-//                         structure.put("ltFuseType", spinner_lt_fuse_type.getSelectedItem() + "");
-//                         structure.put("plinthType", spinner_plinth_type.getSelectedItem() + "");
-//                         structure.put("ssCode", ((Option) spinner_ss33kv.getSelectedItem()).getOptionCode());
-//                         structure.put("ssName", ((Option) spinner_ss33kv.getSelectedItem()).getOptionName());
-//                         structure.put("ssNo", "SS-" +((checkBox_ss.isChecked())?"NA": (spinner_dtr_strut.getSelectedItem()+"")));
-//                     }
-//                     JSONArray dtrs=new JSONArray();
-//                     for (int i=0;i<list.size();i++){
-//                         JSONObject dtr = new JSONObject();
-//                         DTR d= list.get(i);
-//                         FileUploaderWithToken fileUploaderWithToken = new FileUploaderWithToken(context, ApiServices.IMAGE_UPLOAD_URL, d.getImageUrl(), LoginSdk.getInsatnce().getToken(context), LoginSdk.getInsatnce().getApiKey(context), "");
-//                         RxdResponse rxdResponse=fileUploaderWithToken.UploadFile();
-//                         if (rxdResponse==null||rxdResponse.getMessage()==null){
-//                             apptrolsProgressDialog.close();;
-//                             InfoDialog infoDialog = InfoDialog.newInstance("Failed to upload image, Please try again");
-//                             infoDialog.displayDialog(getSupportFragmentManager());
-//                             return;
-//                         }
-//                         if (!rxdResponse.isSuccess()){
-//                             apptrolsProgressDialog.close();;
-//                             InfoDialog infoDialog = InfoDialog.newInstance(rxdResponse.getMessage());
-//                             infoDialog.displayDialog(getSupportFragmentManager());
-//                             return;
-//                         }
-//                         dtr.put("capacity",d.getCapacity());
-//                         if (checkBox_spm.isChecked())
-//                         {
-//                             dtr.put("spmfl",((Option)spinner_spm_shed.getSelectedItem()).getOptionCode());
-//                         }
-//                         dtr.put("make",d.getMake());
-//                         dtr.put("makeVendorId",d.getMakeVendorId());
-//                         dtr.put("locationType",checkBox_structure.isChecked()?"STRUCTURE":checkBox_spm.isChecked()?"SPM":checkBox_ss.isChecked()?"SUBSTATION":"STORE");
-//                         dtr.put("physicalLocationAddress",checkBox_structure.isChecked()?"STRUCTURE":spinner_dtr_location.getSelectedItem().toString());
-//                         dtr.put("url",rxdResponse.getMessage());
-//                         dtr.put("phase",d.getPhase());
-//                         dtr.put("meterPhase",d.getMeterPhase());
-//                         dtr.put("chargeDate",d.getDtrChargeDate());
-//                         dtr.put("appVersion",BuildConfig.VERSION_CODE+"");
-//                         dtr.put("ratio",d.getRatio());
-//                         dtr.put("equipmentCode",d.getSapEquipmentNo());
-//                         dtr.put("slno",d.getSerialNo());
-//                         dtr.put("year",d.getYearOfMfg());
-//
-//                         dtrs.put(dtr);
-//                     }
-//                     structure.put("dtrs",dtrs);
-//
-//
-//                     runOnUiThread(new Runnable() {
-//                         @Override
-//                         public void run() {
-//                             apptrolsProgressDialog.setProgressText("Creating structure...");
-//                         }
-//                     });
+

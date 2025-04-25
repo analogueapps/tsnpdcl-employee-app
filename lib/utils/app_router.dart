@@ -466,7 +466,7 @@ class AppRouter {
       case CreateGisId.id:
         return MaterialPageRoute(builder: (_) => const CreateGisId());
       case AddGisPoint.id:
-        return MaterialPageRoute(builder: (_) => const AddGisPoint());
+        return MaterialPageRoute(builder: (_) => AddGisPoint(gisIndividualData:settings.arguments as GisSurveyData));
       case ViewWorkFloatingButton.id:
         return MaterialPageRoute(builder: (_)=> const ViewWorkFloatingButton());
       case GisIndividualId.id:

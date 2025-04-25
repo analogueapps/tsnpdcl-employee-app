@@ -180,4 +180,37 @@ class GisSurveyData {
     map['pointVoltage'] = pointVoltage;
     return map;
   }
+
+  @override
+  String toString() {
+    return '''
+GisSurveyData(
+  surveyId: $surveyId,
+  sectionCode: $sectionCode,
+  sanctionNo: $sanctionNo,
+  beforeLat: $beforeLat,
+  pbeforeLon: $pbeforeLon,
+  beforeImageUrl: $beforeImageUrl,
+  surveyorId: $surveyorId,
+  timeOfSurveyor: $timeOfSurveyor,
+  feederCode: $feederCode,
+  lineType: $lineType,
+  dateOfBeforeMarked: $dateOfBeforeMarked,
+  feederName: $feederName,
+  status: $status,
+  monthYear: $monthYear,
+  workDescription: $workDescription,
+  circleCode: $circleCode,
+  circle: $circle,
+  divisionCode: $divisionCode,
+  division: $division,
+  subdivision: $subdivision,
+  subdivisionCode: $subdivisionCode,
+  section: $section,
+  gisId: $gisId,
+  sapUploadFlag: $sapUploadFlag,
+  pointVoltage: $pointVoltage
+)''';
+  }
+
 }

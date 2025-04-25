@@ -16,6 +16,7 @@ class FillTextFormField extends StatefulWidget {
   final String? Function(String?)? validator;
   final String? Function(String?)? onChange;
   final VoidCallback? onFieldSubmitted;
+  final VoidCallback? onTap;
 
   const FillTextFormField({
     super.key,
@@ -30,6 +31,7 @@ class FillTextFormField extends StatefulWidget {
     this.validator,
     this.onChange,
     this.onFieldSubmitted,
+    this.onTap,
   });
 
   @override
@@ -39,6 +41,7 @@ class FillTextFormField extends StatefulWidget {
 class _FillTextFormFieldState extends State<FillTextFormField> {
   late bool _isObscure;
   late bool _isEnable;
+
 
   @override
   void initState() {
@@ -86,6 +89,7 @@ class _FillTextFormFieldState extends State<FillTextFormField> {
       ),
       validator: widget.validator,
       onChanged: widget.onChange,
+      onTap: widget.onTap,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       onFieldSubmitted: widget.onFieldSubmitted != null
           ? (value) => widget.onFieldSubmitted!()

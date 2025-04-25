@@ -144,3 +144,4 @@ class GisIndividualIdViewModel extends ChangeNotifier {
   }
 
 }
+

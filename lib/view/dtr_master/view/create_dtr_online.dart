@@ -190,12 +190,14 @@ class CreateDtrOnline extends StatelessWidget {
                                         ),
                                         const SizedBox(height: 20,),
                                          Text("SAP DTR Structure Code(*)", style: TextStyle(fontSize:15,color:Colors.purple[300]),),
+
                                         FillTextFormField(
                                           controller: viewModel.sapDTRStructCode,
                                           labelText: '',
                                           isEnable: false,
                                           keyboardType: TextInputType.number,
                                         ),
+
                                         const SizedBox(height: 20,),
                                          Text("DTR Structure Location LandMark", style: TextStyle(fontSize:15, color:Colors.purple[300] ),),
                                         FillTextFormField(
@@ -375,12 +377,13 @@ class CreateDtrOnline extends StatelessWidget {
                                                                       style: TextStyle(color: Colors.purple[300])),
                                                                 ),
                                                                 Expanded(
-                                                                  child: FillTextFormField(
+                                                                    child:FillTextFormField(
                                                                     controller: viewModel.dtrCardData[i].sapDtr,
                                                                     labelText: '',
                                                                     keyboardType: TextInputType.text,
+                                                                      onTap:viewModel.generateEquipmentNo,
                                                                   ),
-                                                                ),
+                                                                  ),
                                                               ],
                                                             ),
                                                             const Text(
@@ -441,7 +444,7 @@ class CreateDtrOnline extends StatelessWidget {
                                 child: PrimaryButton(
                                     text: "SUBMIT",
                                     onPressed: () {
-                                    viewModel.submitForm();
+                                    viewModel.submitForm();// capacity, year of mfg, phase, ratio, type of meter is wrong
                                     }
                                 ),
                               ),

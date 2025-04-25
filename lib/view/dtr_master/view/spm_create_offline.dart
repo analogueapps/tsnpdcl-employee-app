@@ -150,12 +150,17 @@ class SpmCreateOffline extends StatelessWidget {
                     const Text(
                       "If Serial No. is not available Please click here",
                       style: TextStyle(color: Colors.red, fontSize: 12),),
-                    const Align(
+                    Align(
                       alignment: Alignment.bottomRight,
                       child:
-                      Text("Request Serial No",
-                        style: TextStyle(color: Colors.blueAccent),
-                        textAlign: TextAlign.right,),
+                      TextButton(
+                        onPressed: () => viewModel.requestSerialNo(1),
+                        child: const Text(
+                          "Request Serial No",
+                          style: TextStyle(color: Colors.blueAccent),
+                          textAlign: TextAlign.right,
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 20,),
                     const Text(

@@ -73,7 +73,7 @@ class WorkDetailsPage extends StatelessWidget {
                   // child: CachedNetworkImage(
                   //   imageUrl: workDetails.first.beforeImageUrl ?? '',
                   //   placeholder: (context, url) => const Center(child: Icon(Icons.image, size: 50)),
-                  //   errorWidget: (context, url, error) => const Center(child: Icon(Icons.broken_image, size: 50)),
+                  //   e.rorWidget: (context, url, error) => const Center(child: Icon(Icons.broken_image, size: 50)),
                   //   fit: BoxFit.cover,
                   // ),
                   child:Image.network(

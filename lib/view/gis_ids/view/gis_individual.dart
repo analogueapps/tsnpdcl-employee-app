@@ -26,7 +26,7 @@ class GisIndividualId extends StatelessWidget {
             appBar: AppBar(
               backgroundColor: CommonColors.colorPrimary,
               title: Text(
-                "GIS- $individualGIDId",
+                "GIS- 00$individualGIDId",
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: toolbarTitleSize,
@@ -37,7 +37,7 @@ class GisIndividualId extends StatelessWidget {
               actions: [
                 TextButton(
                     onPressed: () {
-                      Navigation.instance.navigateTo(Routes.addGis);
+                      Navigation.instance.navigateTo(Routes.addGis, args: viewModel.gisData.first);
                     },
                     child: const Text(
                       "ADD GIS POINT",

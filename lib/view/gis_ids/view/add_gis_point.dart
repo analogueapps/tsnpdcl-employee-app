@@ -1,26 +1,30 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
+import 'package:tsnpdcl_employee/view/gis_ids/model/gis_individual_model.dart';
 import 'package:tsnpdcl_employee/view/gis_ids/viewModel/add_gis_viewmodel.dart';
 
 
 class AddGisPoint extends StatelessWidget {
   static const id = Routes.addGis;
-  const AddGisPoint({super.key});
+  const AddGisPoint({super.key, required this.gisIndividualData, });
+
+  final  GisSurveyData gisIndividualData;
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => AddGisPointViewModel(context:context),
+      create: (_) => AddGisPointViewModel(context:context, gisIndiData: gisIndividualData),
       child: WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: CommonColors.colorPrimary,
-          title: const Text('NEW', style: const TextStyle(
+          title:  Text('NEW', style: const TextStyle(
             color: Colors.white,
             fontSize: toolbarTitleSize,
             fontWeight: FontWeight.w700,
@@ -128,7 +132,7 @@ class AddGisPoint extends StatelessWidget {
                               items: viewModel.pointTypeItems.map((String value) {
                                 return DropdownMenuItem<String>(
                                   value: value,
-                                  child: Text(value),
+                                  child: Text(value, overflow: TextOverflow.ellipsis,),
                                 );
                               }).toList(),
                               onChanged: (String? newValue) {
@@ -169,28 +173,35 @@ class AddGisPoint extends StatelessWidget {
                         border: Border.all(color: Colors.grey),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: Image.network(
-                        'https://via.placeholder.com/150', // Placeholder URL; replace with actual logic
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return const Center(child: Text('Image not available'));
-                        },
-                      ),
+                      // child: Image.network(
+                      //   'https://via.placeholder.com/150', // Placeholder URL; replace with actual logic
+                      //   fit: BoxFit.cover,
+                      //   errorBuilder: (context, error, stackTrace) {
+                      //     return const Center(child: Text('Image not available'));
+                      //   },
+                      // ),
+                      child:const Icon(Icons.image, size: 50,),
                     ),
                     const SizedBox(height: 11),
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(12),
-                      color: Colors.orange.shade300,
+                SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.deepOrangeAccent,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                ),
                       child: const Text(
                         'CAPTURE PHOTO BEFORE MAINTENANCE',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
+                          color: Colors.white
                         ),
                       ),
-                    ),
+                  onPressed: () => viewModel.capturePhoto(),
+                ),
+                ),
                     Table(
                       columnWidths: const {
                         0: FlexColumnWidth(0.4), // 40% of the width

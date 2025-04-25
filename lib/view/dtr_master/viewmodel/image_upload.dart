@@ -84,23 +84,24 @@ class ImageUploader {
 
       if (response.statusCode == 200) {
         final json = response.data;
-        if (json is Map<String, dynamic> && json.containsKey('message')) {
-          print("Upload success: ${json['message']}");
-          return json['message'];
-        } else {
-          if (context.mounted) {
-            AlertUtils.showSnackBar(context, 'Invalid response format', true);
+        if (json is Map<String, dynamic> && json.containsKey('success')) {
+          if(json['success']==true&& json['tokenValid']==true){
+            print(json['message']);
+            print("Upload success");
+            AlertUtils.showSnackBar(context, 'Image upload successfully', false);
+          }else{
+            print("failed to upload image");
           }
-          return null;
+          return json['message'];
         }
       } else {
         if (context.mounted) {
-          AlertUtils.showSnackBar(context, 'Upload failed: ${response.statusMessage}', true);
+          AlertUtils.showSnackBar(context, 'Invalid response format', true);
         }
         return null;
       }
-    } catch (e, st) {
-      print("Exception: $e\n$st");
+    } catch (e) {
+      print("Exception: $e\n");
       if (context.mounted) {
         AlertUtils.showSnackBar(context, 'Failed to upload image', true);
       }
@@ -109,4 +110,5 @@ class ImageUploader {
   }
 }
 
+//http://210.212.223.83:7000/NpdclFileStorageWebApi/tsnpdcl/fd/api/imr/images/in.tsnpdcl.npdclemployee/d0bbef01-87c6-4629-9659-d95c59c22a9c/images/IMG_B12909ECF39441B6.jpeg
 

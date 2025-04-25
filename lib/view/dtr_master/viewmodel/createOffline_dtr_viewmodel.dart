@@ -14,6 +14,7 @@ import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
 import 'package:tsnpdcl_employee/network/api_provider.dart';
 import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
+import 'package:tsnpdcl_employee/view/dtr_master/model/create_online_card_model.dart';
 
 class OfflineDtrViewmodel extends ChangeNotifier{
   OfflineDtrViewmodel({required this.context}) {
@@ -38,7 +39,9 @@ class OfflineDtrViewmodel extends ChangeNotifier{
       999,
           (index) => (index + 1).toString().padLeft(3, '0'),
     );
-    sap_dtrOffline.text = "SELECT-SS-0001";
+    sapDTRStructCodeOffline.text = "SELECT-SS-0001";
+    getMake();
+
   }
 
   final formKey = GlobalKey<FormState>();
@@ -47,6 +50,8 @@ class OfflineDtrViewmodel extends ChangeNotifier{
   final TextEditingController serialNoOffline= TextEditingController();
   final TextEditingController first_time_charged_dateOffline= TextEditingController();
   final TextEditingController sap_dtrOffline= TextEditingController();
+
+  List<DtrCardData> dtrCardData = [];
 
   String? _selectedFilterOffline;
   String? get selectedFilter => _selectedFilterOffline;
@@ -62,7 +67,6 @@ class OfflineDtrViewmodel extends ChangeNotifier{
   String? _selectedDistributionOffline;
   String? get selectedDistributionOffline => _selectedDistributionOffline;
 
-  // List<Option> _circles = [];
   List<SubstationModel> _distributionsOffline = [];
   List<SubstationModel> get distributionsOffline => _distributionsOffline;
 
@@ -705,7 +709,30 @@ class OfflineDtrViewmodel extends ChangeNotifier{
   String? _selectedDtrCapacityOffline;
   String? get selectedDtrCapacityOffline => _selectedDtrCapacityOffline;
 
-  List _dtrCapacityOffline = ["Select", "Idle", "HT Service", "Mixed Load"];
+  List _dtrCapacityOffline = ["Select",
+  "2500KVA",
+  "2000KVA",
+  "1600KVA",
+  "1000KVA",
+  "800KVA",
+  "500KVA",
+  "400KVA",
+  "315KVA",
+  "250KVA",
+  "200KVA",
+  "160KVA",
+  "100KVA",
+  "75KVA",
+  "63KVA",
+  "50KVA",
+  "40KVA",
+  "3.Ph.25KVA",
+  "3.Ph.16KVA",
+  "S.Ph.25KVA",
+  "15KVALTN",
+  "15KVAAGL",
+  "10KVALTN",
+  "10KVAAGL"];
   List get dtrCapacity => _dtrCapacityOffline;
 
   void onListDtrCapacityOffline(String? value) {
@@ -717,8 +744,16 @@ class OfflineDtrViewmodel extends ChangeNotifier{
   String? _selectedYearOfMfgOffline;
   String? get selectedYearOfMfgOffline => _selectedYearOfMfgOffline;
 
-  List _yearOfMfgOffline = ["Select", "Idle", "HT Service", "Mixed Load"];
+  List _yearOfMfgOffline = [];
   List get yearOfMfg => _yearOfMfgOffline;
+
+  void generateYearOfMfgList() {
+    _yearOfMfgOffline = List.generate(
+      DateTime.now().year - 1952 + 1,
+          (index) => (1952 + index).toString(),
+    );
+    notifyListeners();
+  }
 
   void onListYearOfMfgOffline(String? value) {
     _selectedYearOfMfgOffline= value;
@@ -729,7 +764,7 @@ class OfflineDtrViewmodel extends ChangeNotifier{
   String? _selectedPhaseOffline;
   String? get selectedPhaseOffline => _selectedPhaseOffline;
 
-  List _phaseOffline = ["Select", "Idle", "HT Service", "Mixed Load"];
+  List _phaseOffline = ["Select","Single Phase","3-Phase"];
   List get phase => _phaseOffline;
 
   void onListPhaseOffline(String? value) {
@@ -741,7 +776,7 @@ class OfflineDtrViewmodel extends ChangeNotifier{
   String? _selectedRatioOffline;
   String? get selectedRatioOffline => _selectedRatioOffline;
 
-  List _ratioOffline = ["Select", "Idle", "HT Service", "Mixed Load"];
+  List _ratioOffline = ["Select","6.6KV/240V","11KV/440V"];
   List get ratio => _ratioOffline;
 
   void onListRatioOffline(String? value) {
@@ -753,7 +788,7 @@ class OfflineDtrViewmodel extends ChangeNotifier{
   String? _selectedTypeOfMeterOffline;
   String? get selectedTypeOfMeterOffline => _selectedTypeOfMeterOffline;
 
-  List _typeOfMeterOffline = ["Select", "Idle", "HT Service", "Mixed Load"];
+  List _typeOfMeterOffline = ["Select","Not Available","1Ph Meter","3Ph Meter","CT Meter","HT Meter"];
   List get typeOfMeter => _typeOfMeterOffline;
 
   void onListTypeOfMeterOffline(String? value) {
@@ -923,7 +958,72 @@ class OfflineDtrViewmodel extends ChangeNotifier{
     }
   }
 
+  Future<void> requestSerialNo(int cardIndex) async {
+    if (_isLoading || cardIndex >= dtrCardData.length) return;
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final requestData = {
+        "authToken": SharedPreferenceHelper.getStringValue(
+            LoginSdkPrefs.tokenPrefKey) ?? "",
+        "api": Apis.API_KEY,
+      };
+
+      final payload = {
+        "path": "/generateSerialNo",
+        "apiVersion": "1.0",
+        "method": "POST",
+        "data": jsonEncode(requestData),
+      };
+
+      final response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+          .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+
+      if (response == null) {
+        throw Exception("No response received from server");
+      }
+
+      dynamic responseData = response.data;
+      if (responseData is String) {
+        responseData = jsonDecode(responseData);
+      }
+
+      if (response.statusCode != successResponseCode) {
+        throw Exception(responseData['message'] ??
+            "Request failed with status ${response.statusCode}");
+      }
+
+      if (responseData['tokenValid'] != true) {
+        showSessionExpiredDialog(context);
+        return;
+      }
+
+      if (responseData['success'] != true) {
+        throw Exception(responseData['message'] ?? "Operation failed");
+      }
+
+      if (responseData['message'] == null) {
+        throw Exception("No serial number received");
+      }
+      final serialNumber = responseData['message'] as String?;
+      if (serialNumber != null) {
+        dtrCardData[cardIndex].serialNo.text = serialNumber;
+      }
+      print("Successfully generated serial number: $serialNumber");
+    } catch (e, stackTrace) {
+      print("Error fetching feeders: $e\n$stackTrace");
+      showErrorDialog(context, "Failed to load feeders: ${e.toString()}");
+      rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
 }
+
+
 
 //private String[] storesArray = new String[]{"SELECT","KHAMMAM-STORE","WARANGAL-STORE", "KARIMNAGAR STORE","NIZAMABAD-STORE","ADILABAD-STORE","MANCHERIAL-STORE"};
 //     private String[] spmArray = new String[]{
