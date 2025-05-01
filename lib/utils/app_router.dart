@@ -468,7 +468,7 @@ class AppRouter {
       case AddGisPoint.id:
         return MaterialPageRoute(builder: (_) => AddGisPoint(gisIndividualData:settings.arguments as GisSurveyData));
       case ViewWorkFloatingButton.id:
-        return MaterialPageRoute(builder: (_)=> const ViewWorkFloatingButton());
+        return MaterialPageRoute(builder: (_)=> ViewWorkFloatingButton(surId: settings.arguments as String));
       case GisIndividualId.id:
         return MaterialPageRoute(
             builder: (_) => GisIndividualId(
@@ -479,7 +479,13 @@ class AppRouter {
       case GisOfflineList.id:
         return MaterialPageRoute(builder: (_)=> const GisOfflineList());
       case WorkDetailsPage.id:
-        return MaterialPageRoute(builder: (_)=> WorkDetailsPage(workDetails: settings.arguments as List<GisSurveyData>,));
+        final args = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(
+          builder: (_) => WorkDetailsPage(
+            surveyID: args['surveyID'] ?? '',
+            status: args['status'] ?? '',
+          ),
+        );
 
     // ACCOUNT * SWETHA
       case AccountScreen.id:

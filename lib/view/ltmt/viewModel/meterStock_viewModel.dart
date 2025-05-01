@@ -67,7 +67,7 @@ class MeterStockViewmodel extends ChangeNotifier {
       "path": "/load/metersStock",
       "apiVersion": "1.0",
       "method": "POST",
-      "data": jsonEncode(requestData), //"data": "{\"authToken\":\"{{TOKEN}}\",\"api\":\"{{API_KEY}}\", \"empId\":\"70000000\"}"
+      "data": jsonEncode(requestData),
     };
 
 

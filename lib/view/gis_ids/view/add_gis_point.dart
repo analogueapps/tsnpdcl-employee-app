@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
+import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
@@ -40,7 +43,7 @@ class AddGisPoint extends StatelessWidget {
           actions: [
             Consumer<AddGisPointViewModel>(
               builder: (context, viewModel, child) => IconButton(
-                onPressed: viewModel.save,
+                onPressed: viewModel.submitForm,
                 icon: const Icon(Icons.save, color: Colors.white),
               ),
             ),
@@ -51,7 +54,9 @@ class AddGisPoint extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Consumer<AddGisPointViewModel>(
               builder: (context, viewModel, child) {
-                return Column(
+                return Form(
+                    key: viewModel.formKey,
+                    child:Column(
                   children: [
                     Table(
                       columnWidths: const {
@@ -126,17 +131,17 @@ class AddGisPoint extends StatelessWidget {
                               child: Text('POINT TYPE'),
                             ),
                             DropdownButton<String>(
-                              value: viewModel.pointType,
+                              value: viewModel.lineType,
                               isExpanded: true,
                               hint: const Text('SELECT'),
-                              items: viewModel.pointTypeItems.map((String value) {
+                              items: viewModel.lineTypeItems.map((String value) {
                                 return DropdownMenuItem<String>(
                                   value: value,
                                   child: Text(value, overflow: TextOverflow.ellipsis,),
                                 );
                               }).toList(),
                               onChanged: (String? newValue) {
-                                viewModel.setPointType(newValue);
+                                viewModel.setlineType(newValue);
                               },
                             ),
                           ],
@@ -173,15 +178,16 @@ class AddGisPoint extends StatelessWidget {
                         border: Border.all(color: Colors.grey),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      // child: Image.network(
-                      //   'https://via.placeholder.com/150', // Placeholder URL; replace with actual logic
-                      //   fit: BoxFit.cover,
-                      //   errorBuilder: (context, error, stackTrace) {
-                      //     return const Center(child: Text('Image not available'));
-                      //   },
-                      // ),
-                      child:const Icon(Icons.image, size: 50,),
+                      child: viewModel.capturedImage.isEmpty
+                          ? const Icon(Icons.image, size: 50)
+                          : Image.network(
+                        Apis.NPDCL_STORAGE_SERVER_IP +viewModel.capturedImage,
+                        fit: BoxFit.cover,
+                        height: 180,
+                        width: double.infinity,
+                      ),
                     ),
+
                     const SizedBox(height: 11),
                 SizedBox(
                 width: double.infinity,
@@ -217,7 +223,6 @@ class AddGisPoint extends StatelessWidget {
                             TextField(
                               controller: viewModel.longitudeController,
                               readOnly: true,
-                              style: const TextStyle(color: Colors.red),
                             ),
                           ],
                         ),
@@ -230,7 +235,6 @@ class AddGisPoint extends StatelessWidget {
                             TextField(
                               controller: viewModel.latitudeController,
                               readOnly: true,
-                              style: const TextStyle(color: Colors.red),
                             ),
                           ],
                         ),
@@ -246,6 +250,7 @@ class AddGisPoint extends StatelessWidget {
                     ),
                     const SizedBox(height: 11),
                   ],
+                    ),
                 );
               },
             ),

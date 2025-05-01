@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
@@ -44,6 +45,7 @@ class ImageUploader {
   Future<String?> uploadImage(BuildContext context, File imageFile) async {
     print("Uploading image: ${imageFile.path}");
 
+
     if (!(await isNetworkAvailable())) {
       if (context.mounted) {
         AlertUtils.showSnackBar(context, "Please check your internet connection!", true);
@@ -83,16 +85,22 @@ class ImageUploader {
       print("Response body: ${response.data}");
 
       if (response.statusCode == 200) {
-        final json = response.data;
-        if (json is Map<String, dynamic> && json.containsKey('success')) {
-          if(json['success']==true&& json['tokenValid']==true){
-            print(json['message']);
+        var jsonResponse;
+        if (response.data is String) {
+          jsonResponse = jsonDecode(response.data);
+        } else {
+          jsonResponse = response.data;
+        }
+
+        if (jsonResponse is Map<String, dynamic> && jsonResponse.containsKey('success')) {
+          if (jsonResponse['success'] == true && jsonResponse['tokenValid'] == true) {
+            print(jsonResponse['message']);
             print("Upload success");
             AlertUtils.showSnackBar(context, 'Image upload successfully', false);
-          }else{
+          } else {
             print("failed to upload image");
           }
-          return json['message'];
+          return jsonResponse['message'];
         }
       } else {
         if (context.mounted) {
@@ -110,5 +118,5 @@ class ImageUploader {
   }
 }
 
-//http://210.212.223.83:7000/NpdclFileStorageWebApi/tsnpdcl/fd/api/imr/images/in.tsnpdcl.npdclemployee/d0bbef01-87c6-4629-9659-d95c59c22a9c/images/IMG_B12909ECF39441B6.jpeg
+
 

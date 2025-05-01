@@ -20,7 +20,7 @@ class Navigation {
         .pushNamedAndRemoveUntil(routeName, (route) => false, arguments: args));
   }
 
-  Future<dynamic> navigateTo(String routeName, {Object? args, Function(dynamic)? onReturn, }) {
+  Future<dynamic> navigateTo(String routeName,  {Object? args, Function(dynamic)? onReturn, }) {
     return _safeNavigation(() => navigationKey.currentState!
         .pushNamed(routeName, arguments: args)
         .then((result) {

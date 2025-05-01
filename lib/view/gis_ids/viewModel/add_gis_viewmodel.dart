@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -6,9 +7,14 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
 import 'package:tsnpdcl_employee/dialogs/process_dialog.dart';
+import 'package:tsnpdcl_employee/network/api_provider.dart';
 import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
+import 'package:tsnpdcl_employee/utils/alerts.dart';
+import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
+import 'package:tsnpdcl_employee/utils/general_routes.dart';
+import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/viewmodel/image_upload.dart';
 import 'package:tsnpdcl_employee/view/gis_ids/model/gis_individual_model.dart';
 
@@ -24,6 +30,7 @@ class AddGisPointViewModel extends ChangeNotifier {
     }
   }
   final  GisSurveyData gisIndiData;
+  final formKey = GlobalKey<FormState>();
   // Text controllers
   final TextEditingController gisRegController = TextEditingController();
   final TextEditingController gisIdController = TextEditingController();
@@ -35,7 +42,7 @@ class AddGisPointViewModel extends ChangeNotifier {
 
   // Dropdown values
   String? voltageLevel;
-  String? pointType;
+  String? lineType;
 
   String? _latitude;
   String? _longitude;
@@ -58,7 +65,7 @@ class AddGisPointViewModel extends ChangeNotifier {
     'LT',
   ];
 
-  final List<String> pointTypeItems = [
+  final List<String> lineTypeItems = [
     '--SELECT--',
     'LINE TRAPPING POINT',
     'LINE TURNING/ANGLE POINT',
@@ -92,8 +99,8 @@ class AddGisPointViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setPointType(String? newValue) {
-    pointType = newValue;
+  void setlineType(String? newValue) {
+    lineType = newValue;
     notifyListeners();
   }
 
@@ -102,11 +109,6 @@ class AddGisPointViewModel extends ChangeNotifier {
     remarksFocusNode.requestFocus();
   }
 
-  // Placeholder methods for save and folder actions
-  void save() {
-    print("Save action triggered");
-    // Implement save logic here
-  }
 
   void openFolder() {
     print("Folder action triggered");
@@ -188,13 +190,12 @@ class AddGisPointViewModel extends ChangeNotifier {
       return;
     }
 
-    await _getCurrentLocation();
   }
 
 
   //capture image
-  File? _capturedImage;
-  File? get capturedImage => _capturedImage;
+  String _capturedImage="";
+  String get capturedImage => _capturedImage;
   final ImageUploader _imageUploader = ImageUploader();
 
   final ImagePicker _picker = ImagePicker();
@@ -233,10 +234,22 @@ class AddGisPointViewModel extends ChangeNotifier {
       }
 
       // Upload photo if captured
+        ProcessDialogHelper.showProcessDialog(context, message: "Uploading images...");
+      notifyListeners();
       final imageUrl = await _imageUploader.uploadImage(context, File(photo.path));
+      print("add gis $imageUrl");
       if (imageUrl != null) {
+        _capturedImage=imageUrl;
         print("Image uploaded successfully: $imageUrl");
+        await _getCurrentLocation();
+        if (context.mounted) {
+          ProcessDialogHelper.closeDialog(context);
+        }
       } else {
+        if (context.mounted) {
+          ProcessDialogHelper.closeDialog(context);
+          // showAlertDialog(context, _errorMessage!);
+        }
         showErrorDialog(context, "Image upload failed");
       }
     } catch (e) {
@@ -253,11 +266,136 @@ class AddGisPointViewModel extends ChangeNotifier {
 
       _latitude = position.latitude.toString();
       _longitude = position.longitude.toString();
+      if(_capturedImage!=null) {
+        latitudeController.text = _latitude!;
+        longitudeController.text = _longitude!;
+        notifyListeners();
+      }
       notifyListeners();
     } catch (e) {
       print("Error fetching location: $e");
     }
   }
+
+  Future<void> submitForm() async {
+    if (formKey.currentState!.validate()) {
+      formKey.currentState!.save();
+      notifyListeners();
+
+      if (!validateForm()) {
+        return;
+      }else{
+        submitData();
+        print("in else block");
+      }
+    }
+  }
+  bool validateForm() {
+    if (_capturedImage==null||_capturedImage=="") {
+      AlertUtils.showSnackBar(
+          context, "Please capture the image",
+          isTrue);
+      return false;
+    }
+    if ((_latitude==''||_latitude==null)&&(_longitude==''||_longitude==null)) {
+      AlertUtils.showSnackBar(context, "Please wait until we capture your location", isTrue);
+      return false;
+    }else if (voltageLevel==null) {
+      AlertUtils.showSnackBar(
+          context, "Please select voltage leve;",
+          isTrue);
+      return false;
+    }
+    else if (lineType==null) {
+      AlertUtils.showSnackBar(
+          context, "Please select point type ",
+          isTrue);
+      return false;
+    }
+    return true;
+  }
+
+  Map<String, dynamic>   getUpdateData() {
+    return {
+      "gisId": gisIndiData.gisId.toString(),
+      "remarksBySurveyor":remarksController.text,
+      "gisReg":"GIS -00${gisIndiData.gisId. toString()}",
+      "beforeLat":_latitude,
+      "pointVoltage": voltageLevel,
+      "lineType":lineType,
+      "pbeforeLon": _longitude,
+      "workDescription": gisIndiData.workDescription. toString(),
+      "feederNameCodeGis": gisIndiData.feederName. toString(),
+      "beforeImageUrl": capturedImage
+    };
+  }
+
+  Future<void> submitData() async {
+    print("${jsonEncode(getUpdateData())}:JsoonEncode data");
+
+
+    final requestData = {
+      "authToken":
+      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "api": Apis.API_KEY,
+      "updateDataJson":jsonEncode(getUpdateData()),
+    };
+
+    final payload = {
+      "path": "/submitMaintenance",
+      "apiVersion": "1.0",
+      "method": "POST",
+      "data": jsonEncode(requestData),
+    };
+
+    try {
+      var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+          .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+
+      print("load structure response: $response");
+      if (response != null) {
+        var responseData = response.data;
+        if (responseData is String) {
+          try {
+            responseData = jsonDecode(responseData);
+          } catch (e) {
+            print("Error decoding response data: $e");
+            showErrorDialog(
+                context, "Invalid response format. Please try again.");
+            return;
+          }
+        }
+
+        if (response.statusCode == successResponseCode) {
+          if (responseData['tokenValid'] == true) {
+            if (responseData['success'] == true) {
+              if (responseData['message'] != null) {
+                showSuccessDialog(context,responseData['message'] , () {
+                  Navigator.pop(context);
+                });
+                Navigation.instance.navigateTo(
+                  Routes.gisIndividual,
+                );
+              }
+            } else {
+              showAlertDialog(
+                  context, responseData['message'] ?? "Operation failed");
+            }
+          } else {
+            showSessionExpiredDialog(context);
+          }
+        } else {
+          showErrorDialog(context,
+              "Request failed with status: ${response.statusCode}");
+        }
+      }
+    } catch (e) {
+      print("Exception caught: $e");
+      showErrorDialog(context, "An error occurred. Please try again.");
+    }
+  }
+
+
 
   @override
   void dispose() {
@@ -272,10 +410,3 @@ class AddGisPointViewModel extends ChangeNotifier {
     super.dispose();
   }
 }
-
-////init: /load11KVmaintenanceForm :{"path":"\/load11KVmaintenanceForm","apiVersion":"1.0","method":"POST","data":"{\"authToken\":\"D105ACE3F88684F6F625C1A8B2928107\",\"api\":\"d0bbef01-87c6-4629-9659-d95c59c22a9c\",\"gis\":true,\"gisId\":\"127616\",\"gisReg\":\"GIS-00127616\"}"}
-//
-//
-// // save:
-// // images/in.tsnpdcl.npdclemployee/d0bbef01-87c6-4629-9659-d95c59c22a9c/images/IMG_4320AB43C0DB421B.jpeg
-// // Build Request:: {"path":"\/submitMaintenance","apiVersion":"1.0","method":"POST","data":"{\"authToken\":\"D105ACE3F88684F6F625C1A8B2928107\",\"api\":\"d0bbef01-87c6-4629-9659-d95c59c22a9c\",\"updateDataJson\":\"{\\\"gisId\\\":\\\"127616\\\",\\\"remarksBySurveyor\\\":\\\"test \\\",\\\"gisReg\\\":\\\"GIS-00127616\\\",\\\"beforeLat\\\":\\\"17.4446106\\\",\\\"pointVoltage\\\":\\\"33KV\\\",\\\"lineType\\\":\\\"LINE TAPPING POINT\\\",\\\"pbeforeLon\\\":\\\"78.3844279\\\",\\\"workDescription\\\":\\\"Test12\\\",\\\"feederNameCodeGis\\\":\\\"0113-05-33KV-F PEDDAPALLY\\\",\\\"beforeImageUrl\\\":\\\"images\\\\\\\/in.tsnpdcl.npdclemployee\\\\\\\/d0bbef01-87c6-4629-9659-d95c59c22a9c\\\\\\\/images\\\\\\\/IMG_4320AB43C0DB421B.jpeg\\\"}\"}"}

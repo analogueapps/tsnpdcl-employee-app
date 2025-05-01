@@ -3,6 +3,7 @@ import 'package:geolocator/geolocator.dart';
 
 class PendingListFloatingButtonViewmodel extends ChangeNotifier {
   final BuildContext context;
+
   PendingListFloatingButtonViewmodel({required this.context});
 
   void initialize() {

@@ -15,7 +15,7 @@ class PendingListFloatingButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) {
-        final viewModel = PendingListFloatingButtonViewmodel(context: context);
+        final viewModel = PendingListFloatingButtonViewmodel(context: context );
         viewModel.initialize();
         return viewModel;
       },

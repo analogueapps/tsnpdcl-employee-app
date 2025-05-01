@@ -52,17 +52,20 @@ class GisIndividualId extends StatelessWidget {
                       ? const Center(child: CircularProgressIndicator())
                       : viewModel.gisData.isEmpty
                           ? const Center(child: Text('No GIS data available'))
-                          : InkWell(
-                              onTap: () {
-                                Navigation.instance.navigateTo(
-                                    Routes.viewWorkScreen,
-                                    args: viewModel.gisData);
-                              },
-                              child: ListView.builder(
+                          :  ListView.builder(
                                 itemCount: viewModel.gisData.length,
                                 itemBuilder: (context, index) {
                                   final item = viewModel.gisData[index];
-                                  return ListTile(
+                                  return InkWell(
+                                  onTap: () {
+                                    Navigation.instance.navigateTo(
+                                    Routes.viewWorkScreen,
+                                      args: {
+                                        'surveyID': item.surveyId as int,
+                                        'status': item.status,
+                                      },);
+                                    },
+                                    child: ListTile(
                                     title: Text(
                                         'SURVEY ID: ${item.surveyId ?? 'N/A'}'),
                                     subtitle: Column(
@@ -109,10 +112,10 @@ class GisIndividualId extends StatelessWidget {
                                               : Colors.green,
                                           fontSize: 15),
                                     ),
+                                    ),
                                   );
                                 },
                               ),
-                            ),
                 ),
               ],
             ),
