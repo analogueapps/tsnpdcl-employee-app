@@ -1,26 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
-import 'package:tsnpdcl_employee/utils/global_constants.dart';
-import 'package:tsnpdcl_employee/utils/navigation_service.dart';
-import 'package:tsnpdcl_employee/view/middle_poles/viewmodel/pending_list_floating_button_viewmodel.dart';
+import 'package:tsnpdcl_employee/view/gis_ids/viewModel/view_work_floating_viewmodel.dart';
 
 class ViewWorkFloatingButton extends StatelessWidget {
   static const id = Routes.viewWorkFloatButtonScreen;
-  const ViewWorkFloatingButton({super.key});
+  final String surId;
+  const ViewWorkFloatingButton({super.key, required this.surId});
+
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) {
-        final viewModel = PendingListFloatingButtonViewmodel(context: context);
+        final viewModel = ViewWorkFloatingViewmodel(context: context,surveyID: surId );
         viewModel.initialize();
         return viewModel;
       },
       lazy: false,
-      child: Consumer<PendingListFloatingButtonViewmodel>(
+      child: Consumer<ViewWorkFloatingViewmodel>(
         builder: (context, viewModel, child) {
           return Scaffold(
             appBar: AppBar(
@@ -38,9 +39,9 @@ class ViewWorkFloatingButton extends StatelessWidget {
                   ),
                   const Spacer(),
                   IconButton(
-                    icon: const Icon(Icons.folder_outlined),
+                    icon: const Icon(Icons.save),
                     color: Colors.white,
-                    onPressed: () => print("Folder icon pressed"),
+                    onPressed: viewModel.submitForm
                   ),
                 ],
               ),
@@ -53,25 +54,69 @@ class ViewWorkFloatingButton extends StatelessWidget {
               automaticallyImplyLeading: false,
             ),
             body: SingleChildScrollView(
-              child: Column(
+              child:  Padding(padding: const EdgeInsets.all(15),
+                child:Form(
+                key: viewModel.formKey,
+                child:Column(
                 children: [
-                  _buildPoleSection(
-                    photoPath: viewModel.poleAPhotoPath,
-                    onCapturePressed: () {
-                      // viewModel.setPoleAPhotoPath("path/to/photo");
-                    },
+                  const SizedBox(height: doubleTwenty,),
+                  Container(
+                    width: double.infinity,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: viewModel.viewWorkCapturedImage.isEmpty
+                        ? const Icon(Icons.image, size: 50)
+                        : Image.network(
+                      Apis.NPDCL_STORAGE_SERVER_IP +viewModel.viewWorkCapturedImage,
+                      fit: BoxFit.cover,
+                      height: 180,
+                      width: double.infinity,
+                    ),
+                  ),
+
+                  const SizedBox(height: 11),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.deepOrangeAccent,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                      ),
+                      child: const Text(
+                        'CAPTURE WORK COMPLETION PHOTO',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.white
+                        ),
+                      ),
+                      onPressed: () => viewModel.viewWorkCapturePhoto(),
+                    ),
                   ),
                   const SizedBox(height: 10),
                   _reusableLastRow(
                       label: "AFTER LATITUDE",
-                      controller: viewModel.sanctionNoController),
+                      controller: viewModel.latitudeController),
                   _reusableLastRow(
                       label: "AFTER LONGITUDE",
-                      controller: viewModel.sanctionNoController),
+                      controller: viewModel.longitudeController),
                   const SizedBox(height: 10),
+                  TextField(
+                    decoration: const InputDecoration(
+                      label: Text('REMARKS(if any)'),
+                    ),
+                    controller: viewModel.remarksController,
+                    // focusNode: viewModel.remarksFocusNode,
+                  ),
 
                 ],
               ),
+            ),
+            ),
             ),
             floatingActionButton: FloatingActionButton(
               onPressed: () {
@@ -128,6 +173,7 @@ class ViewWorkFloatingButton extends StatelessWidget {
           Expanded(
             child: TextField(
               controller: controller,
+              readOnly: true,
               decoration: InputDecoration(
                 hintText: label,
                 hintStyle: TextStyle(color: Colors.grey[200]),
@@ -138,32 +184,6 @@ class ViewWorkFloatingButton extends StatelessWidget {
           const SizedBox(width: 10),
         ],
       ),
-    );
-  }
-
-  Widget _buildPoleSection({
-    required String? photoPath,
-    required VoidCallback onCapturePressed,
-  }) {
-    return Column(
-      children: [
-        _buildPlaceholder(photoPath),
-
-        Container(
-          margin: const EdgeInsets.only(left: 16.0, right: 16.0, top: 8),
-          child: SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.deepOrangeAccent,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-              ),
-              onPressed: onCapturePressed,
-              child:const Text("CAPTURE WORK COMPLETION PHOTO", style:  TextStyle(color: Colors.white)),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

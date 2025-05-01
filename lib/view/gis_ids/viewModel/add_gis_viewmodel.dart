@@ -240,6 +240,7 @@ class AddGisPointViewModel extends ChangeNotifier {
       print("add gis $imageUrl");
       if (imageUrl != null) {
         _capturedImage=imageUrl;
+        notifyListeners();
         print("Image uploaded successfully: $imageUrl");
         await _getCurrentLocation();
         if (context.mounted) {
@@ -410,3 +411,6 @@ class AddGisPointViewModel extends ChangeNotifier {
     super.dispose();
   }
 }
+
+//Build Request:: {"path":"\/load11KVmaintenanceForm","apiVersion":"1.0","method":"POST","data":"{\"authToken\":\"D105ACE3F88684F6F625C1A8B2928107\",\"api\":\"d0bbef01-87c6-4629-9659-d95c59c22a9c\",\"gis\":true,\"gisId\":\"127607\",\"gisReg\":\"GIS-00127607\"}"}
+// 2025-05-01 21:54:35.851 21386-21386 WindowManager           in.tsnpdcl.npdclemployee             D  Add to mViews: com.android.internal.policy.DecorView{7dc60dc V.E...... R.....I. 0,0-0,0 alpha=1.0 viewInfo = }[NewMaintenanceActivity],pkg= in.tsnpdcl.npdclemployee

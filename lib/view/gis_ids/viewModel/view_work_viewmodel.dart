@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
 import 'package:tsnpdcl_employee/dialogs/process_dialog.dart';
@@ -86,10 +87,14 @@ class WorkDetailsViewModel extends ChangeNotifier {
   List<GisSurveyData> get workDetails => _workDetails;
 
   Future<void> getData() async {
-    ProcessDialogHelper.showProcessDialog(
-      context,
-      message: "Loading available data...",
-    );
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      if (context.mounted) {
+        ProcessDialogHelper.showProcessDialog(
+          context,
+          message: "Loading available data...",
+        );
+      }
+    });
 
     try {
       final requestData = {
@@ -187,9 +192,14 @@ class WorkDetailsViewModel extends ChangeNotifier {
       notifyListeners();
       showErrorDialog(context, "An error occurred. Please try again.");
     } finally {
-      if (context.mounted) {
-        ProcessDialogHelper.closeDialog(context);
-      }
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        if (context.mounted) {
+          ProcessDialogHelper.closeDialog(context);
+        }
+      });
+      // if (context.mounted) {
+      //   ProcessDialogHelper.closeDialog(context);
+      // }
     }
   }
 

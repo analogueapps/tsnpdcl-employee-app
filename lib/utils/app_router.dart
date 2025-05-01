@@ -110,8 +110,6 @@ import 'package:tsnpdcl_employee/view/dtr_failure/view/dtr_view_failure_reports.
 import 'package:tsnpdcl_employee/view/ltmt/view/meters_OM.dart';
 import 'package:tsnpdcl_employee/view/ctpt_menu/view/report_ct_pt_failure.dart';
 import 'package:tsnpdcl_employee/view/ctpt_menu/view/view_ct_pt_report_list.dart';
-import 'package:tsnpdcl_employee/view/ctpt_menu/viewmodel/report_ct_pt_viewmodel.dart';
-import 'package:tsnpdcl_employee/view/dashboard/view/universal_dashboard_screen.dart';
 import 'package:tsnpdcl_employee/view/dtr_failure/view/dtr_failure_reporting.dart';
 import 'package:tsnpdcl_employee/view/gis_ids/view/add_gis_point.dart';
 import 'package:tsnpdcl_employee/view/gis_ids/view/create_gis_id.dart';
