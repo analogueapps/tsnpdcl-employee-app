@@ -464,7 +464,8 @@ class AppRouter {
       case CreateGisId.id:
         return MaterialPageRoute(builder: (_) => const CreateGisId());
       case AddGisPoint.id:
-        return MaterialPageRoute(builder: (_) => AddGisPoint(gisIndividualData:settings.arguments as GisSurveyData));
+        final args = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(builder: (_) => AddGisPoint(gis: args['gis'],gisId:args['gisId'] ,gisReg:args['gisReg'] ,t:args['t'] ,));
       case ViewWorkFloatingButton.id:
         return MaterialPageRoute(builder: (_)=> ViewWorkFloatingButton(surId: settings.arguments as String));
       case GisIndividualId.id:

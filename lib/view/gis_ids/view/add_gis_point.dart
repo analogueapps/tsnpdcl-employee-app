@@ -14,20 +14,22 @@ import 'package:tsnpdcl_employee/view/gis_ids/viewModel/add_gis_viewmodel.dart';
 
 class AddGisPoint extends StatelessWidget {
   static const id = Routes.addGis;
-  const AddGisPoint({super.key, required this.gisIndividualData, });
-
-  final  GisSurveyData gisIndividualData;
+  const AddGisPoint({super.key, required this.gisId, required this.gisReg,required this.gis,required this.t,});
+  final int gisId;
+  final String gisReg;
+  final bool gis;
+  final String t;
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => AddGisPointViewModel(context:context, gisIndiData: gisIndividualData),
+      create: (_) => AddGisPointViewModel(context:context,gis: gis, gisId: gisId, gisReg: gisReg, t:t),
       child: WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: CommonColors.colorPrimary,
-          title:  Text('NEW', style: const TextStyle(
+          title:  const Text('NEW', style: const TextStyle(
             color: Colors.white,
             fontSize: toolbarTitleSize,
             fontWeight: FontWeight.w700,

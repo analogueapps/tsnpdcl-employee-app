@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -21,15 +22,20 @@ import 'package:tsnpdcl_employee/view/gis_ids/model/gis_individual_model.dart';
 class AddGisPointViewModel extends ChangeNotifier {
   final BuildContext context;
 
-  AddGisPointViewModel( {required this.context,  required this.gisIndiData,}) {
+  AddGisPointViewModel( {required this.context,  required this.gisId, required this.gisReg,required this.gis,required this.t}) {
     remarksFocusNode = FocusNode();
     _handleLocationIconClick();
-    print("gisIndiData: $gisIndiData");
-    if(gisIndiData!=[]){
+    if(gisId!=[]){
       init();
     }
+    print("add gisID viewmodel: $gisId, $gisReg, $gis, $t ");
   }
-  final  GisSurveyData gisIndiData;
+
+  final int gisId;
+  final String gisReg;
+  final bool gis;
+  final String t;
+
   final formKey = GlobalKey<FormState>();
   // Text controllers
   final TextEditingController gisRegController = TextEditingController();
@@ -48,11 +54,9 @@ class AddGisPointViewModel extends ChangeNotifier {
   String? _longitude;
 
   void init(){
-    gisRegController.text="GIS -00${gisIndiData.gisId. toString()}";
-    gisIdController.text=gisIndiData.gisId. toString();
-    feederController.text=gisIndiData.feederName. toString();
-    workDescriptionController.text=gisIndiData.workDescription. toString();
-
+    gisRegController.text=gisReg;
+    gisIdController.text=gisId .toString();
+    getLoadMaintenanceForm(gis, gisId, gisReg, t);
   }
   // Focus node
   late FocusNode remarksFocusNode;
@@ -192,6 +196,71 @@ class AddGisPointViewModel extends ChangeNotifier {
 
   }
 
+  Future<void> getLoadMaintenanceForm(bool gis, int gisId, String gisReg, String t) async {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      if (context.mounted) {
+        ProcessDialogHelper.showProcessDialog(
+          context,
+          message: "Loading available data...",
+        );
+      }
+    });
+
+    final requestData = {
+      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "api": Apis.API_KEY,
+      "gis": gis,
+      "gisId":gisId. toInt()??0,
+      "gisReg":gisReg
+    };
+
+    final payload = {
+      "path": t=="11KV"?"/load11KVmaintenanceForm":"/load33KVmaintenanceForm",
+      "apiVersion": "1.0",
+      "method": "POST",
+      "data": jsonEncode(requestData),
+    };
+
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    try {
+      if (response != null) {
+        if (response.data is String) {
+          response.data = jsonDecode(response.data);
+          if (response.data['tokenValid'] == isTrue) {
+            if (response.data['success'] == isTrue) {
+              if (response.data['objectJson'] != null) {
+                final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
+                print("/load11KVmaintenanceForm data: $jsonList");
+                final firstItem = jsonList[0];
+                feederController.text = firstItem['feederCode11kv'] ?? '';
+                workDescriptionController.text=firstItem['workDescription']??"";
+                notifyListeners();
+              }
+            } else {
+              showAlertDialog(context, response.data['message']);
+            }
+          } else {
+            showSessionExpiredDialog(context);
+          }
+        } else {
+          showAlertDialog(context, response.data['message']);
+        }
+      }
+    } catch (e) {
+      showErrorDialog(context, "An error occurred. Please try again.");
+      rethrow;
+    }
+    finally {
+      if (context.mounted) {
+        ProcessDialogHelper.closeDialog(context);
+      }
+    }
+
+    notifyListeners();
+  }
+
+
+
 
   //capture image
   String _capturedImage="";
@@ -249,7 +318,6 @@ class AddGisPointViewModel extends ChangeNotifier {
       } else {
         if (context.mounted) {
           ProcessDialogHelper.closeDialog(context);
-          // showAlertDialog(context, _errorMessage!);
         }
         showErrorDialog(context, "Image upload failed");
       }
@@ -313,20 +381,42 @@ class AddGisPointViewModel extends ChangeNotifier {
           isTrue);
       return false;
     }
+    else if (gisRegController.text=="") {
+      AlertUtils.showSnackBar(
+          context, "Please enter GIS REG ",
+          isTrue);
+      return false;
+    }
+    else if (gisIdController.text=="") {
+      AlertUtils.showSnackBar(
+          context, "Please enter GIS ID ",
+          isTrue);
+      return false;
+    }else if (workDescriptionController.text=="") {
+      AlertUtils.showSnackBar(
+          context, "Please enter Work Description ",
+          isTrue);
+      return false;
+    }else if (feederController.text=="") {
+      AlertUtils.showSnackBar(
+          context, "Please enter 11KV Feeder ",
+          isTrue);
+      return false;
+    }
     return true;
   }
 
   Map<String, dynamic>   getUpdateData() {
     return {
-      "gisId": gisIndiData.gisId.toString(),
+      "gisId": gisId,
       "remarksBySurveyor":remarksController.text,
-      "gisReg":"GIS -00${gisIndiData.gisId. toString()}",
+      "gisReg":gisReg,
       "beforeLat":_latitude,
       "pointVoltage": voltageLevel,
       "lineType":lineType,
       "pbeforeLon": _longitude,
-      "workDescription": gisIndiData.workDescription. toString(),
-      "feederNameCodeGis": gisIndiData.feederName. toString(),
+      "workDescription": workDescriptionController.text,
+      "feederNameCodeGis": feederController.text,
       "beforeImageUrl": capturedImage
     };
   }
@@ -371,9 +461,7 @@ class AddGisPointViewModel extends ChangeNotifier {
           if (responseData['tokenValid'] == true) {
             if (responseData['success'] == true) {
               if (responseData['message'] != null) {
-                showSuccessDialog(context,responseData['message'] , () {
-                  Navigator.pop(context);
-                });
+                AlertUtils.showSnackBar(context,responseData['message'] , isFalse);
                 Navigation.instance.navigateTo(
                   Routes.gisIndividual,
                 );
@@ -412,5 +500,4 @@ class AddGisPointViewModel extends ChangeNotifier {
   }
 }
 
-//Build Request:: {"path":"\/load11KVmaintenanceForm","apiVersion":"1.0","method":"POST","data":"{\"authToken\":\"D105ACE3F88684F6F625C1A8B2928107\",\"api\":\"d0bbef01-87c6-4629-9659-d95c59c22a9c\",\"gis\":true,\"gisId\":\"127607\",\"gisReg\":\"GIS-00127607\"}"}
-// 2025-05-01 21:54:35.851 21386-21386 WindowManager           in.tsnpdcl.npdclemployee             D  Add to mViews: com.android.internal.policy.DecorView{7dc60dc V.E...... R.....I. 0,0-0,0 alpha=1.0 viewInfo = }[NewMaintenanceActivity],pkg= in.tsnpdcl.npdclemployee
+//error: type 'Null' is not a subtype of type 'int' in type cast

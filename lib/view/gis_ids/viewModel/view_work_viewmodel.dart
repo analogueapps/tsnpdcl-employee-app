@@ -197,9 +197,6 @@ class WorkDetailsViewModel extends ChangeNotifier {
           ProcessDialogHelper.closeDialog(context);
         }
       });
-      // if (context.mounted) {
-      //   ProcessDialogHelper.closeDialog(context);
-      // }
     }
   }
 

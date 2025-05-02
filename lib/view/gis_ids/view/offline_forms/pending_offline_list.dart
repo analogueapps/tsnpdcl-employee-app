@@ -56,7 +56,10 @@ class PendingOfflineList extends StatelessWidget {
                 ],
               ),
               onTap: () {
-                Navigation.instance.navigateTo(Routes.viewWorkScreen, args: gisData);
+                Navigation.instance.navigateTo(Routes.viewWorkScreen, args: {
+                  'surveyID': item.surveyId as int,
+                  'status': item.status,
+                },);
               },
             );
           },

@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
@@ -129,6 +128,94 @@ class CheckReadingViewModel extends ChangeNotifier{
       notifyListeners();
       showErrorDialog(context, "An error occurred: ${e.toString()}");
     }
+  }
+
+  // showConsumerDialog(objectList[0]);
+  // void showConsumerDialog(ObjectList objectList) {
+  //   showCupertinoDialog<void>(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return CupertinoAlertDialog(
+  //         title: Text(
+  //           "Confirm Services Details",
+  //         ),
+  //         content: SingleChildScrollView(
+  //           child: Column(
+  //             mainAxisSize: MainAxisSize.min,
+  //             children: [
+  //               SizedBox(
+  //                 child: Padding(
+  //                   padding: const EdgeInsets.symmetric(vertical: 8.0),
+  //                   child: Column(
+  //                     crossAxisAlignment: CrossAxisAlignment.start,
+  //                     children: [
+  //                       _buildInfoRow("Consumer Name:", objectList.name!),
+  //                       _buildInfoRow("Service No:", objectList.scno!),
+  //                       _buildInfoRow("Circle Code:", objectList.circle!),
+  //                       _buildInfoRow("ERO Code:", objectList.erono!),
+  //                       _buildInfoRow("USCNO:", objectList.uscno!),
+  //                     ],
+  //                   ),
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //         actions: <Widget>[
+  //           CupertinoDialogAction(
+  //             onPressed: () {
+  //               Navigator.of(context).pop(); // Close the dialog
+  //               Navigator.of(context).pop(); // Close the dialog
+  //             },
+  //             child: const Text(
+  //               'CANCEL',
+  //               style: TextStyle(color: CupertinoColors.destructiveRed),
+  //             ),
+  //           ),
+  //           CupertinoDialogAction(
+  //             onPressed: () {
+  //               // Navigator.of(context).pop(); // Close the dialog
+  //               // addServiceToServer(objectList);
+  //             },
+  //             child: const Text(
+  //               "CONFIRM",
+  //               style: TextStyle(color: CupertinoColors.activeGreen),
+  //             ),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
+
+  Widget _buildInfoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start, // Align text to the top
+        children: [
+          Expanded(
+            flex: 2, // Adjust flex for the label
+            child: Text(
+              label,
+              style: TextStyle(fontWeight: FontWeight.bold),
+              textAlign: TextAlign.start,
+            ),
+          ),
+          SizedBox(width: 25), // Space between label and value
+          Expanded(
+            flex: 3, // Adjust flex for the value
+            child: Text(
+              value,
+              style: TextStyle(fontWeight: FontWeight.bold),
+              textAlign: TextAlign.start,
+              softWrap: true,
+              overflow: TextOverflow.visible, // Ensures wrapping
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
 

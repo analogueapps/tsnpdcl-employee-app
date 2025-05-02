@@ -44,7 +44,16 @@ class GisOfflineList extends StatelessWidget {
           itemCount: viewModel.offlineGisData.length,
           itemBuilder: (context, index) {
             final item = viewModel.offlineGisData[index];
-            return ListTile(
+            return GestureDetector(
+                onTap:  () {
+              Navigation.instance.navigateTo(Routes.addGis,  args: {
+                'gis': true,
+                'gisId': item.gisId,
+                'gisReg': "GIS-00${item.regNum}",
+                't': "11KV",
+              },);
+            },
+                child:ListTile(
               title: Text('GIS ID: ${item.regNum}'),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,9 +62,10 @@ class GisOfflineList extends StatelessWidget {
                   Text('EMP ID: ${item.empId}'),
                 ],
               ),
-              onTap: () {
-                Navigation.instance.navigateTo(Routes.addGis);
-              },
+              // onTap: () {
+              //   Navigation.instance.navigateTo(Routes.addGis);
+              // },
+                ),
             );
           },
         );

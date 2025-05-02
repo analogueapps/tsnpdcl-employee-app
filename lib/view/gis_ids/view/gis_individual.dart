@@ -37,7 +37,12 @@ class GisIndividualId extends StatelessWidget {
               actions: [
                 TextButton(
                     onPressed: () {
-                      Navigation.instance.navigateTo(Routes.addGis, args: viewModel.gisData.first);
+                      Navigation.instance.navigateTo(Routes.addGis,  args: {
+                        'gis': true,
+                        'gisId': viewModel.gisID,
+                        'gisReg': "GIS-00${viewModel.gisID}",
+                        't': "11KV",
+                      },);
                     },
                     child: const Text(
                       "ADD GIS POINT",
