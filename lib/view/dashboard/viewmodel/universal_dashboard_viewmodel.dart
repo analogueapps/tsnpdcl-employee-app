@@ -434,7 +434,7 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.dListReportTitle,
           imageAsset: Assets.dListReport,
-          routeName: routeName),
+          routeName: Routes.webViewScreen),
       UniversalDashboardItem(
           title: GlobalConstants.middlePolesTitle,
           imageAsset: Assets.middlePoles,
@@ -535,6 +535,7 @@ class UniversalDashboardViewModel extends ChangeNotifier {
         GlobalConstants.ebsTitle: UrlConstants.ebsUrl,
         GlobalConstants.matsTitle: UrlConstants.matsUrl,
         GlobalConstants.viewReport: UrlConstants.viewReportUrl,
+        GlobalConstants.dListReportTitle: UrlConstants.dListReportUrl,
       };
 
       if (urlMapping.containsKey(title)) {

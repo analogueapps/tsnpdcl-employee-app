@@ -2,15 +2,14 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
-import 'package:tsnpdcl_employee/dialogs/process_dialog.dart';
 import 'package:tsnpdcl_employee/network/api_provider.dart';
 import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 
-class CheckReadingViewModel extends ChangeNotifier{
-  CheckReadingViewModel({required this.context, required this.bsudcScreen}){
+class CheckReadingViewModel extends ChangeNotifier {
+  CheckReadingViewModel({required this.context, required this.bsudcScreen}) {
     final now = DateTime.now();
     _selectedMonthYear = {
       'month': _getMonthName(now.month),
@@ -18,9 +17,11 @@ class CheckReadingViewModel extends ChangeNotifier{
     };
     fetchCheckedReading(_selectedMonthYear, bsudcScreen);
   }
+
   final BuildContext context;
   final String bsudcScreen;
   bool _isLoading = false;
+
   bool get isLoading => _isLoading;
 
   Map<String, dynamic>? _selectedMonthYear;
@@ -56,14 +57,17 @@ class CheckReadingViewModel extends ChangeNotifier{
   }
 
   List<dynamic> _failureReports = [];
+
   List<dynamic> get failureReports => _failureReports;
 
-  Future<void> fetchCheckedReading(  Map<String, dynamic>? dateMonth, String flagBsUdc ) async {
+  Future<void> fetchCheckedReading(Map<String, dynamic>? dateMonth,
+      String flagBsUdc) async {
     _isLoading = true;
     notifyListeners();
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "authToken": SharedPreferenceHelper.getStringValue(
+          LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       'my': dateMonth != null
           ? '${dateMonth['month']}${dateMonth['year']}'
@@ -94,31 +98,34 @@ class CheckReadingViewModel extends ChangeNotifier{
         if (response.statusCode == successResponseCode) {
           if (responseData['tokenValid'] == isTrue) {
             if (responseData['success'] == isTrue) {
-            if (responseData['message'] !="" ) {
-              showErrorDialog(context, responseData['message']);
-              if (responseData['objectJson'] != null) {
-                List<dynamic> reportsJson = responseData['objectJson'] is String
-                    ? jsonDecode(responseData['objectJson']) as List<dynamic>
-                    : responseData['objectJson'] as List<dynamic>;
-                print("data recevied: $reportsJson");
+              if (responseData['message'] != "") {
+                showErrorDialog(context, responseData['message']);
+                if (responseData['objectJson'] != null) {
+                  List<
+                      dynamic> reportsJson = responseData['objectJson'] is String
+                      ? jsonDecode(responseData['objectJson']) as List<dynamic>
+                      : responseData['objectJson'] as List<dynamic>;
+                  print("data recevied: $reportsJson");
 
-                // _failureReports = reportsJson.map((reportJson) {
-                //   return FailureReportModel.fromJson(reportJson);
-                // }).toList();
-                notifyListeners();
-              } else {
-                _failureReports = []; // Clear list if no data
-                notifyListeners();
+                  // _failureReports = reportsJson.map((reportJson) {
+                  //   return FailureReportModel.fromJson(reportJson);
+                  // }).toList();
+                  notifyListeners();
+                } else {
+                  _failureReports = []; // Clear list if no data
+                  notifyListeners();
+                }
               }
-            }
             } else {
-              showAlertDialog(context, responseData['message'] ?? "Request failed");
+              showAlertDialog(
+                  context, responseData['message'] ?? "Request failed");
             }
           } else {
             showSessionExpiredDialog(context);
           }
         } else {
-          showAlertDialog(context, responseData['message'] ?? "Request failed with status ${response.statusCode}");
+          showAlertDialog(context, responseData['message'] ??
+              "Request failed with status ${response.statusCode}");
         }
       } else {
         showAlertDialog(context, "No response received from server");
@@ -129,94 +136,4 @@ class CheckReadingViewModel extends ChangeNotifier{
       showErrorDialog(context, "An error occurred: ${e.toString()}");
     }
   }
-
-  // showConsumerDialog(objectList[0]);
-  // void showConsumerDialog(ObjectList objectList) {
-  //   showCupertinoDialog<void>(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return CupertinoAlertDialog(
-  //         title: Text(
-  //           "Confirm Services Details",
-  //         ),
-  //         content: SingleChildScrollView(
-  //           child: Column(
-  //             mainAxisSize: MainAxisSize.min,
-  //             children: [
-  //               SizedBox(
-  //                 child: Padding(
-  //                   padding: const EdgeInsets.symmetric(vertical: 8.0),
-  //                   child: Column(
-  //                     crossAxisAlignment: CrossAxisAlignment.start,
-  //                     children: [
-  //                       _buildInfoRow("Consumer Name:", objectList.name!),
-  //                       _buildInfoRow("Service No:", objectList.scno!),
-  //                       _buildInfoRow("Circle Code:", objectList.circle!),
-  //                       _buildInfoRow("ERO Code:", objectList.erono!),
-  //                       _buildInfoRow("USCNO:", objectList.uscno!),
-  //                     ],
-  //                   ),
-  //                 ),
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //         actions: <Widget>[
-  //           CupertinoDialogAction(
-  //             onPressed: () {
-  //               Navigator.of(context).pop(); // Close the dialog
-  //               Navigator.of(context).pop(); // Close the dialog
-  //             },
-  //             child: const Text(
-  //               'CANCEL',
-  //               style: TextStyle(color: CupertinoColors.destructiveRed),
-  //             ),
-  //           ),
-  //           CupertinoDialogAction(
-  //             onPressed: () {
-  //               // Navigator.of(context).pop(); // Close the dialog
-  //               // addServiceToServer(objectList);
-  //             },
-  //             child: const Text(
-  //               "CONFIRM",
-  //               style: TextStyle(color: CupertinoColors.activeGreen),
-  //             ),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
-
-  Widget _buildInfoRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start, // Align text to the top
-        children: [
-          Expanded(
-            flex: 2, // Adjust flex for the label
-            child: Text(
-              label,
-              style: TextStyle(fontWeight: FontWeight.bold),
-              textAlign: TextAlign.start,
-            ),
-          ),
-          SizedBox(width: 25), // Space between label and value
-          Expanded(
-            flex: 3, // Adjust flex for the value
-            child: Text(
-              value,
-              style: TextStyle(fontWeight: FontWeight.bold),
-              textAlign: TextAlign.start,
-              softWrap: true,
-              overflow: TextOverflow.visible, // Ensures wrapping
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-
 }

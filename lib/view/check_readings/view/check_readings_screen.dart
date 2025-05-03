@@ -68,7 +68,7 @@ class CheckReadings extends StatelessWidget {
           foregroundColor: Colors.white,
           shape: const CircleBorder(),
           onPressed: () {
-            Navigation.instance.navigateTo(Routes.enterServicesScreen);
+            Navigation.instance.navigateTo(Routes.enterServicesScreen, args:false);
             },
           child: const Icon(Icons.add),
         ),

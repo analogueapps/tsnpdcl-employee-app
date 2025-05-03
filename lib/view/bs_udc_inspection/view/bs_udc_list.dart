@@ -68,7 +68,7 @@ class BsUdcList extends StatelessWidget {
                 foregroundColor: Colors.white,
                 shape: const CircleBorder(),
                 onPressed: () {
-                  Navigation.instance.navigateTo(Routes.enterServicesScreen);
+                  Navigation.instance.navigateTo(Routes.enterServicesScreen, args:true);
                 },
                 child: const Icon(Icons.add),
               ),

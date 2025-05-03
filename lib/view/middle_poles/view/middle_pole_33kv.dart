@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
@@ -58,7 +59,9 @@ class MiddlePoles33kv extends StatelessWidget {
               automaticallyImplyLeading: false,
             ),
             body: SingleChildScrollView(
-              child: Column(
+              child: Form(
+          key: viewModel.formKey,
+          child:Column(
                 children: [
                   _reusableLabel("33KV MIDDLE POLES"),
                   _reusableLastRow(
@@ -72,32 +75,32 @@ class MiddlePoles33kv extends StatelessWidget {
                   const SizedBox(height: 7),
                   _buildPoleSection(
                     title: "POLE A DETAILS",
-                    photoPath: viewModel.poleAPhotoPath,
+                    photoPath:viewModel.poleAPhotoPath!=""? Apis.NPDCL_STORAGE_SERVER_IP +viewModel.poleAPhotoPath:"",
                     onCapturePressed: () {
-                      // viewModel.setPoleAPhotoPath("path/to/photo");
+                      viewModel.capturePoleAPhoto();
                     },
                   ),
                   const SizedBox(height: 10),
                   _reusableLastRow(
                       label: "POLE - A LATITUDE",
-                      controller: viewModel.sanctionNoController),
+                      controller: viewModel.latPoleA),
                   _reusableLastRow(
                       label: "POLE - A LONGITUDE",
-                      controller: viewModel.sanctionNoController),
+                      controller: viewModel.logPoleA),
                   const SizedBox(height: 10),
                   _buildPoleSection(
                     title: "POLE B DETAILS",
-                    photoPath: viewModel.poleBPhotoPath,
+                    photoPath:viewModel.poleBPhotoPath!=""? Apis.NPDCL_STORAGE_SERVER_IP +viewModel.poleBPhotoPath:"",
                     onCapturePressed: () {
-                      // viewModel.setPoleBPhotoPath("path/to/photo");
+                      viewModel.capturePoleBPhoto();
                     },
                   ),
                   _reusableLastRow(
                       label: "POLE-B LATITUDE",
-                      controller: viewModel.sanctionNoController),
+                      controller: viewModel.latPoleB),
                   _reusableLastRow(
                       label: "POLE-B LONGITUDE",
-                      controller: viewModel.poleBLongitudeController),
+                      controller: viewModel.logPoleB),
                   _reusableLastRow(
                       label: "DISTANCE B/W A&B",
                       controller: viewModel.distanceController),
@@ -122,13 +125,14 @@ class MiddlePoles33kv extends StatelessWidget {
                 ],
               ),
             ),
+            ),
           );
         },
       ),
     );
   }
 
-  Widget _buildPlaceholder(String? photoPath) {
+  Widget _buildPlaceholder(String photoPath) {
     return Container(
       margin: const EdgeInsets.all(20),
       height: 180,
@@ -137,10 +141,12 @@ class MiddlePoles33kv extends StatelessWidget {
         color: Colors.grey[200],
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Center(
-        child: photoPath == null
-            ? const Icon(Icons.photo_library, size: 50, color: Colors.grey)
-            : const Text("Photo captured"),
+      child: photoPath.isEmpty
+          ? const Icon(Icons.image, size: 50)
+          : Image.network( photoPath,
+        fit: BoxFit.cover,
+        height: 180,
+        width: double.infinity,
       ),
     );
   }
@@ -194,7 +200,7 @@ class MiddlePoles33kv extends StatelessWidget {
     return Column(
       children: [
         _reusableLabel(title),
-        _buildPlaceholder(photoPath),
+        _buildPlaceholder(photoPath!),
         Padding(
           padding: const EdgeInsets.only(left: 8),
           child: SizedBox(

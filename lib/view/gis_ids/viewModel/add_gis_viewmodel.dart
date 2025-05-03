@@ -371,7 +371,7 @@ class AddGisPointViewModel extends ChangeNotifier {
       return false;
     }else if (voltageLevel==null) {
       AlertUtils.showSnackBar(
-          context, "Please select voltage leve;",
+          context, "Please select voltage level",
           isTrue);
       return false;
     }

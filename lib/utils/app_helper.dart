@@ -14,6 +14,8 @@ class LoginSdkPrefs {
   static const String sectionCodePrefKey = "SECTION_CODE_PREF_KEY";
   static const String circleIdPrefKey = "CIRCLE_ID_PREF_KEY";
   static const String sectionPrefKey = "SECTION_PREF_KEY";
+  static const String sectionIdKey = "SECTION_ID_KEY";
+  static const String divisionIdKey="DIVISION_ID_KEY";
   static const String designationCodeKey="DESIGNATION_CODE_KEY";
 }
 

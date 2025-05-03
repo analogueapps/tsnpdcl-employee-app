@@ -490,13 +490,13 @@ class AppRouter {
       case AccountScreen.id:
         return MaterialPageRoute(builder: (_) => const AccountScreen());
 
-    //CHECK READINGS
+    //CHECK READINGS * BHAVANA
       case CheckReadings.id:
         return MaterialPageRoute(builder: (_) => const CheckReadings());
       case EnterServiceDetails.id:
-        return MaterialPageRoute(builder: (_) => const EnterServiceDetails());
+        return MaterialPageRoute(builder: (_) => EnterServiceDetails(bs_udc:settings.arguments as bool ,));
 
-    //BS_UDC
+    //BS_UDC * BHAVANA
       case BsUdcList.id:
         return MaterialPageRoute(builder: (_) => const BsUdcList());
 
