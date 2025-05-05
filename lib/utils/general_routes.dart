@@ -177,4 +177,6 @@ class Routes {
   static const String servicesAppListScreen = "ServicesAppListScreen";
   static const String formLoaderScreen = "FormLoaderScreen";
 
+  // Dlist * Surya
+  static const String dlistMenuScreen = "DlistMenuScreen";
 }

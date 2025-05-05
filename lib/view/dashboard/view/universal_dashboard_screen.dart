@@ -109,7 +109,7 @@ class _UniversalDashboardScreenState extends State<UniversalDashboardScreen> {
                           shape: BoxShape
                               .rectangle, // Set to rectangle (square in this case)
                           image: DecorationImage(
-                            image: AssetImage("assets/icons/icon.png"),
+                            image: AssetImage("assets/icon/icon.png"),
                             fit: BoxFit.cover, // Cover the area with the image
                           ),
                         ),

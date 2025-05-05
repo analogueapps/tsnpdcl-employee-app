@@ -1,5 +1,5 @@
-package in.tsnpdcl.npdclemployee
+package `in`.tsnpdcl.npdclemployee
 
 import io.flutter.embedding.android.FlutterActivity
 
-class MainActivity: FlutterActivity()
+class MainActivity : FlutterActivity()

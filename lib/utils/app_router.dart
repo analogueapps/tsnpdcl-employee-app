@@ -15,6 +15,7 @@ import 'package:tsnpdcl_employee/view/ctpt_menu/view/view_failure_confirmed_list
 import 'package:tsnpdcl_employee/view/ctpt_menu/view/view_issued_list.dart';
 import 'package:tsnpdcl_employee/view/ctpt_menu/view/view_replaced_list.dart';
 import 'package:tsnpdcl_employee/view/dashboard/view/universal_dashboard_screen.dart';
+import 'package:tsnpdcl_employee/view/dlist/view/dlist_menu_screen.dart';
 import 'package:tsnpdcl_employee/view/dtr_failure/view/dtr_failure_screen.dart';
 import 'package:tsnpdcl_employee/view/dtr_failure/view/dtr_view_rectified_reports.dart';
 import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_inspection_list_screen.dart';
@@ -507,6 +508,10 @@ class AppRouter {
         return MaterialPageRoute(builder: (_)=> ServicesAppListScreen(data: settings.arguments as Map<String, dynamic>,));
       case FormLoaderScreen.id:
         return MaterialPageRoute(builder: (_)=> FormLoaderScreen(data: settings.arguments as Map<String, dynamic>,));
+
+    // DLIST * Surya
+      case DlistMenuScreen.id:
+        return MaterialPageRoute(builder: (_) => const DlistMenuScreen());
 
       default:
         return MaterialPageRoute(

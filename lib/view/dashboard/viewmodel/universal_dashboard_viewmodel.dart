@@ -339,7 +339,7 @@ class UniversalDashboardViewModel extends ChangeNotifier {
         ),
         GlobalListDialogItem(
           title: GlobalConstants.dListTitle,
-          routeName: "",
+          routeName: Routes.dlistMenuScreen,
           imageAsset: Assets.dList,
         ),
         GlobalListDialogItem(
