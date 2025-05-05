@@ -5,10 +5,17 @@ class GlobalConstants {
   // Global dashboard title
   static const String updateAppTitle = "Update app";
   static const String searchConsumerTitle = "Search consumer";
+  static const String consumerRelatedTitle = "Consumer Related";
+  static const String locateConsumerTitle = "Locate Consumer";
+  static const String cccTitle = "CCC";
   static const String lineClearanceTitle = "Line clearance";
+  static const String lineRelatedTitle = "Line Related";
+  static const String billingRelatedTitle = "Billing Related";
+  static const String toolsTitle = "Tools";
   static const String assetMappingTitle = "Asset mapping";
   static const String ganeshPandalInfoTitle = "Ganesh pandal info";
   static const String onlinePrTitle = "Online pr";
+  static const String verifyWrongCatConfirmed = "Verify wrong category confirmed";
   static const String measureDistTitle = "Measure dist.";
   static const String consumerDetailsTitle = "Consumer details";
   static const String gruhaJyothiTitle = "Gruha jyothi";
@@ -20,6 +27,7 @@ class GlobalConstants {
   static const String pmiOfLinesTitle = "Pmi of lines";
   static const String rfssTitle = "RFSS";
   static const String schedulesTitle = "Schedules";
+  static const String usefulLinksTitle = "Useful links";
   static const String mappingOfNonAglServicesTitle = "Mapping of non-agl services";
   static const String tongTesterReadingsTitle = "Tong tester readings";
   static const String uscNoTitle = "Uscno<=>scno";
@@ -31,6 +39,8 @@ class GlobalConstants {
   static const String electroMechTitle = "Electro-mech meters replacement";
   static const String poleTrackerTitle = "Pole tracker";
   static const String dtrMasterTitle = "Dtr master";
+  static const String dtrTitle = "Dtr";
+  static const String subStationTitle = "Sub station";
   static const String dListTitle = "D'list";
   static const String dListReportTitle = "D'list report";
   static const String middlePolesTitle = "Middle poles";

@@ -31,8 +31,10 @@ class Assets {
   static const String exceptionals = 'assets/images/meter.png';
   static const String ltmt = 'assets/images/delegation.png';
   static const String electroMech = 'assets/images/meter.png';
+  static const String electricMeter = 'assets/images/electric_meter.png';
   static const String poloTracker = 'assets/images/electric_pole.png';
   static const String dtrMaster = 'assets/images/power_transformer.png';
+  static const String subStation = 'assets/images/sub_station.png';
   static const String dList = 'assets/images/tool.png';
   static const String dListReport = 'assets/images/result.png';
   static const String middlePoles = 'assets/images/electric_pole__1_.png';
@@ -50,6 +52,7 @@ class Assets {
   static const String ebs = 'assets/images/desktop.png';
   static const String mats = 'assets/images/fraud_alert.png';
   static const String account = 'assets/images/profile.png';
+  static const String yesOrNo = 'assets/images/yes_or_no.png';
   static const String logout = 'assets/images/logout.png';
 
   // line clearance menu

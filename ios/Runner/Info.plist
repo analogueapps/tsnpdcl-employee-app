@@ -7,7 +7,7 @@
 	<key>NSCameraUsageDescription</key>
     <string>Need camera access to take photos</string>
 	<key>CFBundleDisplayName</key>
-	<string>TGNPDCL</string>
+	<string>NPDCL EMPLOYEE</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -60,5 +60,12 @@
       <string>http</string>
       <string>https</string>
     </array>
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>We need access to your local network for...</string>
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <true/>
+    </dict>
 </dict>
 </plist>

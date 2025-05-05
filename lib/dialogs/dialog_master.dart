@@ -1,5 +1,6 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:tsnpdcl_employee/dialogs/custom_list_dialog.dart';
 import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
@@ -111,51 +112,52 @@ Future<void> showAlertActionDialog({
   }
 }
 
-// Custom List Items in dialog
-Future<void> showCustomListDialog(BuildContext context, List<GlobalListDialogItem> globalListDialogItem) async {
-  return showDialog(
-    context: context,
-    barrierDismissible: isFalse,
-    builder: (context) {
-      return AlertDialog(
-        title: const Text("Choose Option", style: TextStyle(fontWeight: FontWeight.w700),),
-        content: SizedBox(
-          width: double.maxFinite,
-          child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: globalListDialogItem.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(globalListDialogItem[index].title),
-                onTap: () {
-                  //onOptionSelected(index);
-                  Navigator.pop(context);
-                  if(globalListDialogItem[index].title == "CT PT Failure Reports") {
-                    Navigation.instance.navigateTo(globalListDialogItem[index].routeName, args: Apis.GET_CTPT_BAR_GRAPH_DATA_URL);
-                  } else if(globalListDialogItem[index].title == "Middle Poles Reports") {
-                    Navigation.instance.navigateTo(globalListDialogItem[index].routeName, args: Apis.GET_MIDDLE_POLES_BAR_GRAPH_DATA_URL);
-                  } else if(globalListDialogItem[index].title == "Maintenance Reports") {
-                    Navigation.instance.navigateTo(globalListDialogItem[index].routeName, args: Apis.GET_MAINTENANCE_BAR_GRAPH_DATA_URL);
-                  } else {
-                    Navigation.instance.navigateTo(globalListDialogItem[index].routeName);
-                  }
-                },
-              );
-            },
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text('Cancel'),
-          ),
-        ],
-      );
-    },
-  );
-}
+// // Custom List Items in dialog
+// Future<void> showCustomListDialog(BuildContext context, List<GlobalListDialogItem> globalListDialogItem) async {
+//   return showDialog(
+//     context: context,
+//     barrierDismissible: isFalse,
+//     builder: (context) {
+//       return AlertDialog(
+//         title: const Text("Choose Option", style: TextStyle(fontWeight: FontWeight.w700),),
+//         content: SizedBox(
+//           width: double.maxFinite,
+//           child: ListView.builder(
+//             shrinkWrap: true,
+//             itemCount: globalListDialogItem.length,
+//             itemBuilder: (context, index) {
+//               return ListTile(
+//                 title: Text(globalListDialogItem[index].title),
+//                 onTap: () {
+//                   //onOptionSelected(index);
+//                   Navigator.pop(context);
+//                   if(globalListDialogItem[index].title == "CT PT Failure Reports") {
+//                     Navigation.instance.navigateTo(globalListDialogItem[index].routeName, args: Apis.GET_CTPT_BAR_GRAPH_DATA_URL);
+//                   } else if(globalListDialogItem[index].title == "Middle Poles Reports") {
+//                     Navigation.instance.navigateTo(globalListDialogItem[index].routeName, args: Apis.GET_MIDDLE_POLES_BAR_GRAPH_DATA_URL);
+//                   } else if(globalListDialogItem[index].title == "Maintenance Reports") {
+//                     Navigation.instance.navigateTo(globalListDialogItem[index].routeName, args: Apis.GET_MAINTENANCE_BAR_GRAPH_DATA_URL);
+//                   } else {
+//                     Navigation.instance.navigateTo(globalListDialogItem[index].routeName);
+//                   }
+//                 },
+//               );
+//             },
+//           ),
+//         ),
+//         actions: [
+//           TextButton(
+//             onPressed: () {
+//               Navigator.of(context).pop();
+//             },
+//             child: const Text('Cancel'),
+//           ),
+//         ],
+//       );
+//     },
+//   );
+// }
+
 
 // RFSS, middle poles Screen dialog box * swetha
 void showCustomListRfssDialog(BuildContext context, List<listDialogItem> listDialogItem, {String? heading}) {

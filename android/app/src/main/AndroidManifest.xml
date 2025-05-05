@@ -6,7 +6,7 @@
 
 
     <application
-        android:label="TGNPDCL"
+        android:label="NPDCL EMPLOYEE"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon"
         android:usesCleartextTraffic="true"

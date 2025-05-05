@@ -116,27 +116,6 @@ class _UniversalDashboardScreenState extends State<UniversalDashboardScreen> {
                       ),
                       currentAccountPictureSize: const Size(50, 50),
                     ),
-                    ...viewModel.sections.map((section) {
-                      return ExpansionTile(
-                        title: Text(section.title,
-                            style: const TextStyle(fontWeight: FontWeight.w500)),
-                        leading: Icon(section.leadingIcon),
-                        children: section.items
-                            .map((item) => ListTile(
-                          leading: Image.asset(item.imageAsset,
-                              width: 24, height: 24),
-                          title: Text(item.title,
-                              style: const TextStyle(
-                                  fontSize: normalSize,
-                                  fontWeight: FontWeight.w300)),
-                          onTap: () async {
-                            FocusScope.of(context).unfocus();
-                            viewModel.menuItemClicked(context, item.title, item.routeName);
-                          },
-                        )
-                        ).toList(),
-                      );
-                    }),
                   ],
                 ),
               );
