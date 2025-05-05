@@ -49,204 +49,6 @@ class UniversalDashboardViewModel extends ChangeNotifier {
   void _initializeItems() {
     const String routeName = '';
 
-    // _allItems.addAll([
-    //   // UniversalDashboardItem(
-    //   //     title: GlobalConstants.updateAppTitle,
-    //   //     imageAsset: Assets.updateApp,
-    //   //     routeName: routeName),
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.searchConsumerTitle,
-    //       imageAsset: Assets.searchConsumer,
-    //       routeName: Routes.searchConsumerScreen
-    //   ),
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.lineClearanceTitle,
-    //       imageAsset: Assets.lineClearance,
-    //       routeName: Routes.lineClearanceScreen
-    //   ),
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.assetMappingTitle,
-    //       imageAsset: Assets.assetMapping,
-    //       routeName: Routes.assetMappingScreen
-    //   ),
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.onlinePrTitle,
-    //       imageAsset: Assets.onlinePr,
-    //       routeName: Routes.onlinePrMenuScreen
-    //   ),
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.measureDistTitle,
-    //       imageAsset: Assets.measureDist,
-    //       routeName: Routes.measureDistanceScreen
-    //   ),
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.consumerDetailsTitle,
-    //       imageAsset: Assets.consumerDetails,
-    //       routeName: Routes.consumerDetailsScreen
-    //   ),
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.gruhaJyothiTitle,
-    //       imageAsset: Assets.gruhaJyothi,
-    //       routeName: Routes.gruhaJyothiScreen
-    //   ),
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.dtrMaintenanceTitle,
-    //       imageAsset: Assets.dtrMaintenance,
-    //       routeName: Routes.dtrMaintenanceScreen
-    //   ),
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.dtrFailureTitle,
-    //       imageAsset: Assets.dtrFailure,
-    //       routeName: Routes.dtrFailureScreen
-    //   ),
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.failureDtrInspectionTitle,
-    //       imageAsset: Assets.failureDtrInspection,
-    //       routeName: Routes.failureDtrInspectionScreen
-    //   ),
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.ssMaintenanceTitle,
-    //       imageAsset: Assets.ssMaintenance,
-    //       routeName: Routes.ssMaintenanceScreen
-    //   ),
-    //
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.rfssTitle,
-    //       imageAsset: Assets.rfss,
-    //       routeName: Routes.rfssScreen
-    //   ),
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.schedulesTitle,
-    //       imageAsset: Assets.schedules,
-    //       routeName: routeName),
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.mappingOfNonAglServicesTitle,
-    //       imageAsset: Assets.mappingOfNonAglServices,
-    //       routeName: Routes.nonAglService),
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.tongTesterReadingsTitle,
-    //       imageAsset: Assets.tongTesterReadings,
-    //       routeName: Routes.overloadedDtrsView,
-    //   ),
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.uscNoTitle,
-    //       imageAsset: Assets.uscNo,
-    //       routeName: Routes.webViewScreen
-    //   ),
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.gisIdsTitle,
-    //       imageAsset: Assets.gisIds,
-    //       routeName: GlobalConstants.gisIdsTitle
-    //   ),
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.meesevaTitle,
-    //       imageAsset: Assets.meeseva,
-    //       routeName: Routes.meesevaMenuScreen
-    //   ),
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.exceptionalsTitle,
-    //       imageAsset: Assets.exceptionals,
-    //       routeName: Routes.exceptionalsScreen
-    //   ),
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.ltmtTitle,
-    //       imageAsset: Assets.ltmt,
-    //       routeName: Routes.ltmtScreen),
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.electroMechTitle,
-    //       imageAsset: Assets.electroMech,
-    //       routeName: routeName),
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.poleTrackerTitle,
-    //       imageAsset: Assets.poloTracker,
-    //       routeName: GlobalConstants.poleTrackerTitle,
-    //   ),
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.dtrMasterTitle,
-    //       imageAsset: Assets.dtrMaster,
-    //       routeName: GlobalConstants.dtrMasterTitle
-    //   ),
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.dListTitle,
-    //       imageAsset: Assets.dList,
-    //       routeName: routeName),
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.dListReportTitle,
-    //       imageAsset: Assets.dListReport,
-    //       routeName: routeName),
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.middlePolesTitle,
-    //       imageAsset: Assets.middlePoles,
-    //       routeName: Routes.middlePolesScreen
-    //   ),
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.checkReadingsTitle,
-    //       imageAsset: Assets.checkReadings,
-    //       routeName: Routes.checkReadingScreen),
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.bsUdcInspectionTitle,
-    //       imageAsset: Assets.bsUdcInspection,
-    //       routeName: Routes.bsUdcInspectionList),
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.interruptionsTitle,
-    //       imageAsset: Assets.interruptions,
-    //       routeName: GlobalConstants.interruptionsTitle,
-    //   ),
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.manageStaffTitle,
-    //       imageAsset: Assets.manageStaff,
-    //       routeName: Routes.manageStaffsScreen
-    //   ),
-    //   // UniversalDashboardItem(
-    //   //     title: GlobalConstants.newServicesTitle,
-    //   //     imageAsset: Assets.newServices,
-    //   //     routeName: routeName),
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.ctPtFailureTitle,
-    //       imageAsset: Assets.ctPtFailure,
-    //       routeName: Routes.ctptMenuScreen
-    //   ),
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.pdmsTitle,
-    //       imageAsset: Assets.pdms,
-    //       routeName: Routes.pdmsScreen
-    //   ),
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.reportsTitle,
-    //       imageAsset: Assets.reports,
-    //       routeName: GlobalConstants.reportsTitle
-    //   ),
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.checkMeasurementTitle,
-    //       imageAsset: Assets.checkMeasurement,
-    //       routeName: Routes.measureDistanceScreen
-    //   ),
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.foccTitle,
-    //       imageAsset: Assets.focc,
-    //       routeName: Routes.webViewScreen
-    //   ),
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.ebsTitle,
-    //       imageAsset: Assets.ebs,
-    //       routeName: Routes.webViewScreen
-    //   ),
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.matsTitle,
-    //       imageAsset: Assets.mats,
-    //       routeName: Routes.webViewScreen
-    //   ),
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.accountTitle,
-    //       imageAsset: Assets.account,
-    //       routeName: Routes.accountScreen
-    //   ),
-    //   UniversalDashboardItem(
-    //       title: GlobalConstants.logoutTitle,
-    //       imageAsset: Assets.logout,
-    //       routeName: routeName),
-    // ]);
-
     _allItems.addAll([
       // UniversalDashboardItem(
       //     title: GlobalConstants.updateAppTitle,
@@ -255,37 +57,37 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.cccTitle,
           imageAsset: Assets.focc,
-          routeName: ""
+          routeName: routeName
       ),
       UniversalDashboardItem(
           title: GlobalConstants.consumerRelatedTitle,
           imageAsset: Assets.searchConsumer,
-          routeName: ""
+          routeName: routeName
       ),
       UniversalDashboardItem(
           title: GlobalConstants.lineRelatedTitle,
           imageAsset: Assets.lineClearance,
-          routeName: ""
+          routeName: routeName
       ),
       UniversalDashboardItem(
           title: GlobalConstants.billingRelatedTitle,
           imageAsset: Assets.onlinePr,
-          routeName: ""
+          routeName: routeName
       ),
       UniversalDashboardItem(
           title: GlobalConstants.toolsTitle,
           imageAsset: Assets.ssMaintenance,
-          routeName: ""
+          routeName: routeName
       ),
       UniversalDashboardItem(
           title: GlobalConstants.dtrTitle,
           imageAsset: Assets.dtrMaster,
-          routeName: ""
+          routeName: routeName
       ),
       UniversalDashboardItem(
           title: GlobalConstants.subStationTitle,
           imageAsset: Assets.subStation,
-          routeName: ""
+          routeName: routeName
       ),
       UniversalDashboardItem(
           title: GlobalConstants.schedulesTitle,
@@ -295,27 +97,27 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.meesevaTitle,
           imageAsset: Assets.meeseva,
-          routeName: ""
+          routeName: Routes.meesevaMenuScreen
       ),
       UniversalDashboardItem(
           title: GlobalConstants.ltmtTitle,
           imageAsset: Assets.ltmt,
-          routeName: ""
+          routeName: Routes.ltmtScreen
       ),
       UniversalDashboardItem(
           title: GlobalConstants.manageStaffTitle,
           imageAsset: Assets.manageStaff,
-          routeName: ""
+          routeName: Routes.manageStaffsScreen
       ),
       UniversalDashboardItem(
           title: GlobalConstants.pdmsTitle,
           imageAsset: Assets.pdms,
-          routeName: ""
+          routeName: Routes.pdmsScreen
       ),
       UniversalDashboardItem(
           title: GlobalConstants.reportsTitle,
           imageAsset: Assets.reports,
-          routeName: ""
+          routeName: routeName
       ),
       UniversalDashboardItem(
           title: GlobalConstants.usefulLinksTitle,
@@ -344,23 +146,25 @@ class UniversalDashboardViewModel extends ChangeNotifier {
   Future<void> menuItemClicked(BuildContext context, String title, String routeName) async {
     if (title == GlobalConstants.logoutTitle) {
       showLogoutDialog(context);
-    } else if (routeName == Routes.webViewScreen) {
-      final urlMapping = {
-        GlobalConstants.uscNoTitle: UrlConstants.onlineLTConsCheckUrl,
-        GlobalConstants.foccTitle: UrlConstants.foccUrl,
-        GlobalConstants.ebsTitle: UrlConstants.ebsUrl,
-        GlobalConstants.matsTitle: UrlConstants.matsUrl,
-        GlobalConstants.viewReport: UrlConstants.viewReportUrl,
-      };
-
-      if (urlMapping.containsKey(title)) {
-        var argument = {
-          'title': title,
-          'url': urlMapping[title],
-        };
-        Navigation.instance.navigateTo(routeName, args: argument);
-      }
-    } else if(title == GlobalConstants.usefulLinksTitle) {
+    }
+    // else if (routeName == Routes.webViewScreen) {
+    //   final urlMapping = {
+    //     GlobalConstants.uscNoTitle: UrlConstants.onlineLTConsCheckUrl,
+    //     GlobalConstants.foccTitle: UrlConstants.foccUrl,
+    //     GlobalConstants.ebsTitle: UrlConstants.ebsUrl,
+    //     GlobalConstants.matsTitle: UrlConstants.matsUrl,
+    //     GlobalConstants.viewReport: UrlConstants.viewReportUrl,
+    //   };
+    //
+    //   if (urlMapping.containsKey(title)) {
+    //     var argument = {
+    //       'title': title,
+    //       'url': urlMapping[title],
+    //     };
+    //     Navigation.instance.navigateTo(routeName, args: argument);
+    //   }
+    // }
+    else if(title == GlobalConstants.usefulLinksTitle) {
       List<GlobalListDialogItem> globalListDialogItem = [];
       globalListDialogItem.addAll([
         GlobalListDialogItem(
@@ -576,7 +380,252 @@ class UniversalDashboardViewModel extends ChangeNotifier {
           },
         ),
       );
-    } else if(routeName == "") {
+    } else if(title == GlobalConstants.toolsTitle) {
+      List<GlobalListDialogItem> globalListDialogItem = [];
+      globalListDialogItem.addAll([
+        GlobalListDialogItem(
+          title: GlobalConstants.assetMappingTitle,
+          routeName: Routes.assetMappingScreen,
+          imageAsset: Assets.assetMapping,
+        ),
+        GlobalListDialogItem(
+          title: GlobalConstants.measureDistTitle,
+          routeName: Routes.measureDistanceScreen,
+          imageAsset: Assets.measureDist,
+        ),
+        GlobalListDialogItem(
+          title: GlobalConstants.rfssTitle,
+          routeName: Routes.rfssScreen,
+          imageAsset: Assets.rfss,
+        ),
+        GlobalListDialogItem(
+          title: GlobalConstants.mappingOfNonAglServicesTitle,
+          routeName: Routes.nonAglService,
+          imageAsset: Assets.mappingOfNonAglServices,
+        ),
+        GlobalListDialogItem(
+          title: GlobalConstants.gisIdsTitle,
+          routeName: "",
+          imageAsset: Assets.gisIds,
+        ),
+        GlobalListDialogItem(
+          title: GlobalConstants.middlePolesTitle,
+          routeName: Routes.middlePolesScreen,
+          imageAsset: Assets.middlePoles,
+        ),
+        GlobalListDialogItem(
+          title: GlobalConstants.ctPtFailureTitle,
+          routeName:  Routes.ctptMenuScreen,
+          imageAsset: Assets.ctPtFailure,
+        ),
+        GlobalListDialogItem(
+          title: GlobalConstants.checkMeasurementTitle,
+          routeName: Routes.measureDistanceScreen,
+          imageAsset: Assets.checkMeasurement,
+        ),
+      ]);
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
+        ),
+        builder: (_) => CustomBottomSheet(
+          title: title,
+          items: globalListDialogItem,
+          onItemSelected: (item) {
+            if(item.title == GlobalConstants.gisIdsTitle) {
+              List<GlobalListDialogItem> globalListDialogItem = [];
+              globalListDialogItem.addAll([
+                GlobalListDialogItem(
+                  title: "View GIS List",
+                  routeName: Routes.viewGisIdsScreen,
+                ),
+                GlobalListDialogItem(
+                  title: "View Offline Forms",
+                  routeName: Routes.gisOfflineForms,
+                ),
+                GlobalListDialogItem(
+                  title: "View Offline Forms(Pending)",
+                  routeName:Routes.viewPendingOfflineForms,
+                ),
+              ]);
+              showDialog(
+                context: context,
+                builder: (_) => CustomListDialog(
+                  title: item.title,
+                  items: globalListDialogItem,
+                  onItemSelected: (item) {
+                    Navigation.instance.navigateTo(item.routeName);
+                  },
+                ),
+              );
+            } else {
+              Navigation.instance.navigateTo(item.routeName);
+            }
+          },
+        ),
+      );
+    } else if(title == GlobalConstants.dtrTitle) {
+      List<GlobalListDialogItem> globalListDialogItem = [];
+      globalListDialogItem.addAll([
+        GlobalListDialogItem(
+          title: GlobalConstants.dtrMaintenanceTitle,
+          routeName: Routes.dtrMaintenanceScreen,
+          imageAsset: Assets.dtrMaintenance,
+        ),
+        GlobalListDialogItem(
+          title: GlobalConstants.dtrFailureTitle,
+          routeName: Routes.dtrFailureScreen,
+          imageAsset: Assets.dtrFailure,
+        ),
+        GlobalListDialogItem(
+          title: GlobalConstants.failureDtrInspectionTitle,
+          routeName: Routes.failureDtrInspectionScreen,
+          imageAsset: Assets.failureDtrInspection,
+        ),
+        GlobalListDialogItem(
+          title: GlobalConstants.tongTesterReadingsTitle,
+          routeName: Routes.structureDtrList,
+          imageAsset: Assets.tongTesterReadings,
+        ),
+        GlobalListDialogItem(
+          title: GlobalConstants.dtrMasterTitle,
+          routeName: "",
+          imageAsset: Assets.dtrMaster,
+        ),
+      ]);
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
+        ),
+        builder: (_) => CustomBottomSheet(
+          title: title,
+          items: globalListDialogItem,
+          onItemSelected: (item) {
+            if(item.title == GlobalConstants.dtrMasterTitle) {
+              List<GlobalListDialogItem> globalListDialogItem = [];
+              globalListDialogItem.addAll([
+                GlobalListDialogItem(
+                    title: "Create DTR Master(Online)",
+                    routeName: Routes.createOnlineDTR
+                ),
+                GlobalListDialogItem(
+                  title: "View Mapped DTR's",
+                  routeName: Routes.configureFilter,
+                ),
+                GlobalListDialogItem(
+                  title: "Create DTR Master(Offline)",
+                  routeName: Routes.createOfflineDTR,
+                ),
+                GlobalListDialogItem(
+                  title: "Download For Offline",
+                  routeName: Routes.downloadFeederScreen,
+                ),
+                GlobalListDialogItem(
+                  title: "View Offline Data",
+                  routeName: Routes.offlineData,
+                ),
+                GlobalListDialogItem(
+                  title: "View Mismatch DTR's",
+                  routeName: Routes.misMatched,
+                ),
+              ]);
+              showDialog(
+                context: context,
+                builder: (_) => CustomListDialog(
+                  title: item.title,
+                  items: globalListDialogItem,
+                  onItemSelected: (item) {
+                    Navigation.instance.navigateTo(item.routeName);
+                  },
+                ),
+              );
+            } else {
+              Navigation.instance.navigateTo(item.routeName);
+            }
+          },
+        ),
+      );
+    } else if(title == GlobalConstants.subStationTitle) {
+      List<GlobalListDialogItem> globalListDialogItem = [];
+      globalListDialogItem.addAll([
+        GlobalListDialogItem(
+          title: GlobalConstants.ssMaintenanceTitle,
+          routeName: Routes.ssMaintenanceScreen,
+          imageAsset: Assets.ssMaintenance,
+        ),
+        GlobalListDialogItem(
+          title: GlobalConstants.interruptionsTitle,
+          routeName: "",
+          imageAsset: Assets.interruptions,
+        ),
+      ]);
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
+        ),
+        builder: (_) => CustomBottomSheet(
+          title: title,
+          items: globalListDialogItem,
+          onItemSelected: (item) {
+            if(item.title == GlobalConstants.interruptionsTitle) {
+              List<GlobalListDialogItem> globalListDialogItem = [];
+              globalListDialogItem.addAll([
+                GlobalListDialogItem(
+                  title: "33KV Breakdown Entry",
+                  routeName: Routes.breakdown33kvScreen,
+                ),
+                GlobalListDialogItem(
+                  title: "View 33KV Breakdowns",
+                  routeName: Routes.view33kvBreakdownScreen,
+                ),
+                GlobalListDialogItem(
+                  title: "11KV Breakdown Entry",
+                  routeName: Routes.breakdown11kvScreen,
+                ),
+                GlobalListDialogItem(
+                  title: "View 11KV Breakdowns",
+                  routeName: Routes.view11kvBreakdownScreen,
+                ),
+                GlobalListDialogItem(
+                  title: "Interruptions Entry",
+                  routeName: Routes.interruptionsEntryScreen,
+                ),
+                GlobalListDialogItem(
+                  title: "SAIDI SAIFI CALCULATOR",
+                  routeName: Routes.saidiSaifiCalculatorScreen,
+                ),
+                GlobalListDialogItem(
+                    title: "VIEW SAIDI SAIFI",
+                    routeName: Routes.viewSaidiSaifiScreen
+                ),
+                GlobalListDialogItem(
+                    title: "View Report",
+                    routeName: Routes.viewReportScreen
+                ),
+              ]);
+              showDialog(
+                context: context,
+                builder: (_) => CustomListDialog(
+                  title: item.title,
+                  items: globalListDialogItem,
+                  onItemSelected: (item) {
+                    Navigation.instance.navigateTo(item.routeName);
+                  },
+                ),
+              );
+            } else {
+              Navigation.instance.navigateTo(item.routeName);
+            }
+          },
+        ),
+      );
+    } else if(title == GlobalConstants.reports) {
       List<GlobalListDialogItem> globalListDialogItem = [];
       globalListDialogItem.addAll([
         GlobalListDialogItem(
@@ -592,93 +641,17 @@ class UniversalDashboardViewModel extends ChangeNotifier {
             routeName: Routes.reportsScreen
         ),
       ]);
-    } else if(routeName == GlobalConstants.dtrMasterTitle) {
-      List<GlobalListDialogItem> globalListDialogItem = [];
-      globalListDialogItem.addAll([
-        GlobalListDialogItem(
-            title: "Create DTR Master(Online)",
-            routeName: Routes.createOnlineDTR
+      showDialog(
+        context: context,
+        builder: (_) => CustomListDialog(
+          title: title,
+          items: globalListDialogItem,
+          onItemSelected: (item) {
+            Navigation.instance.navigateTo(item.routeName);
+          },
         ),
-        GlobalListDialogItem(
-          title: "View Mapped DTR's",
-          routeName: Routes.configureFilter,
-        ),
-        GlobalListDialogItem(
-          title: "Create DTR Master(Offline)",
-          routeName: Routes.createOfflineDTR,
-        ),
-        GlobalListDialogItem(
-          title: "Download For Offline",
-          routeName: Routes.downloadFeederScreen,
-        ),
-        GlobalListDialogItem(
-          title: "View Offline Data",
-          routeName: Routes.offlineData,
-        ),
-        GlobalListDialogItem(
-          title: "View Mismatch DTR's",
-          routeName: Routes.misMatched,
-        ),
-      ]);
-      //showCustomListDialog(context, globalListDialogItem);
-    } else if(routeName == GlobalConstants.poleTrackerTitle) {
-      //showCustomListDialog(context, globalListDialogItem);
-    } else if(routeName == GlobalConstants.gisIdsTitle) {
-      List<GlobalListDialogItem> globalListDialogItem = [];
-      globalListDialogItem.addAll([
-        GlobalListDialogItem(
-          title: "View GIS List",
-          routeName: Routes.viewGisIdsScreen,
-        ),
-        GlobalListDialogItem(
-          title: "View Offline Forms",
-          routeName: Routes.gisOfflineForms,
-        ),
-        GlobalListDialogItem(
-          title: "View Offline Forms(Pending)",
-          routeName:Routes.viewPendingOfflineForms,
-        ),
-      ]);
-      //showCustomListDialog(context, globalListDialogItem);
-    } else if(routeName == GlobalConstants.interruptionsTitle) { // swetha
-      List<GlobalListDialogItem> globalListDialogItem = [];
-      globalListDialogItem.addAll([
-        GlobalListDialogItem(
-          title: "33KV Breakdown Entry",
-          routeName: Routes.breakdown33kvScreen,
-        ),
-        GlobalListDialogItem(
-          title: "View 33KV Breakdowns",
-          routeName: Routes.view33kvBreakdownScreen,
-        ),
-        GlobalListDialogItem(
-          title: "11KV Breakdown Entry",
-          routeName: Routes.breakdown11kvScreen,
-        ),
-        GlobalListDialogItem(
-          title: "View 11KV Breakdowns",
-          routeName: Routes.view11kvBreakdownScreen,
-        ),
-        GlobalListDialogItem(
-          title: "Interruptions Entry",
-          routeName: Routes.interruptionsEntryScreen,
-        ),
-        GlobalListDialogItem(
-          title: "SAIDI SAIFI CALCULATOR",
-          routeName: Routes.saidiSaifiCalculatorScreen,
-        ),
-        GlobalListDialogItem(
-            title: "VIEW SAIDI SAIFI",
-            routeName: Routes.viewSaidiSaifiScreen
-        ),
-        GlobalListDialogItem(
-            title: "View Report",
-            routeName: Routes.viewReportScreen
-        ),
-      ]);
-      //showCustomListDialog(context, globalListDialogItem);
+      );
     } else {
-      //Navigator.pushNamed(context, routeName);
       Navigation.instance.navigateTo(routeName);
     }
   }

@@ -116,6 +116,14 @@ class _UniversalDashboardScreenState extends State<UniversalDashboardScreen> {
                       ),
                       currentAccountPictureSize: const Size(50, 50),
                     ),
+                    ListTile(
+                      leading: const Icon(Icons.logout),
+                      title: const Text(GlobalConstants.logoutTitle),
+                      onTap: () {
+                        Navigator.pop(context);
+                        viewModel.menuItemClicked(context, GlobalConstants.logoutTitle, "");
+                      },
+                    ),
                   ],
                 ),
               );
