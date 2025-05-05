@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
 import 'package:tsnpdcl_employee/dialogs/process_dialog.dart';
@@ -20,6 +21,7 @@ class MiddlePoles33kvViewModel extends ChangeNotifier {
 
   // Text controllers for all text fields
   final formKey = GlobalKey<FormState>();
+  final Map<String, String> paramsHashMap = {};
   final TextEditingController feederController = TextEditingController();
   final TextEditingController workDescriptionController = TextEditingController();
   final TextEditingController sanctionNoController = TextEditingController();
@@ -83,14 +85,20 @@ class MiddlePoles33kvViewModel extends ChangeNotifier {
 
       if (imageUrl != null) {
         _poleAPhotoPath=imageUrl;
-        if((_longitude!=null&&_longitude!=null)||(_longitude==null&&_longitude==null)) {
+        await _getCurrentLocation();
+        print("Pole A Lat: $_latitude, Pole B Lon: $_longitude");
+        if (_latitude != null && _longitude != null) {
           _handleLocationIconClick();
-          latPoleA.text = _latitude!;
-          logPoleA.text = _longitude!;
+          // latPoleA.text = _latitude!;
+          // logPoleA.text = _longitude!;
+
+          print("calculating distance pole A");
+          final double lat = double.tryParse(_latitude!) ?? 0.0;
+          final double lon = double.tryParse(_longitude!) ?? 0.0;
+          capturePoleLocation("poleA",lat,lon );
         }
         notifyListeners();
         print("Image uploaded successfully: $imageUrl");
-        await _getCurrentLocation();
         if (context.mounted) {
           ProcessDialogHelper.closeDialog(context);
         }
@@ -155,13 +163,15 @@ class MiddlePoles33kvViewModel extends ChangeNotifier {
         _poleBPhotoPath=imageUrl;
         if((_longitude!=null&&_longitude!=null)||(_longitude==null&&_longitude==null)) {
           _handleLocationIconClick();
-          latPoleB.text = _latitude!;
-          logPoleB.text = _longitude!;
+          print("calculating distance pole B");
+          final double lat = double.tryParse(_latitude!) ?? 0.0;
+          final double lon = double.tryParse(_longitude!) ?? 0.0;
+          capturePoleLocation("poleB",lat, lon );
         }
         notifyListeners();
         print("Image uploaded successfully: $imageUrl");
-        // calculateDistance();
         await _getCurrentLocation();
+        // handleCalculateDistance();
         if (context.mounted) {
           ProcessDialogHelper.closeDialog(context);
         }
@@ -220,17 +230,6 @@ class MiddlePoles33kvViewModel extends ChangeNotifier {
         isLocationEnabled = await Geolocator.isLocationServiceEnabled();
       }
     }
-
-    // if (!isLocationEnabled) {
-    //   // Show a snackbar if the location service is still disabled
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(
-    //       content: Text("Location services are still disabled."),
-    //     ),
-    //   );
-    //   return;
-    // }
-
     // Check location permissions
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
@@ -246,7 +245,6 @@ class MiddlePoles33kvViewModel extends ChangeNotifier {
     }
 
     if (permission == LocationPermission.deniedForever) {
-      // Show a dialog to open app settings
       bool? shouldOpenSettings = await showDialog(
         context: context,
         builder: (context) {
@@ -269,7 +267,6 @@ class MiddlePoles33kvViewModel extends ChangeNotifier {
 
       if (shouldOpenSettings == true) {
         await Geolocator.openAppSettings();
-        // After opening settings, check again if the permissions are granted
         permission = await Geolocator.checkPermission();
       }
     }
@@ -282,8 +279,6 @@ class MiddlePoles33kvViewModel extends ChangeNotifier {
       );
       return;
     }
-
-    // Fetch current location if permissions are granted
     await _getCurrentLocation();
 
   }
@@ -299,12 +294,68 @@ class MiddlePoles33kvViewModel extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       print("Error fetching location: $e");
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //     SnackBar(content: Text("Failed to fetch location."))
-      // );
+
     }
   }
+
   //Calculate distance between to lat poleA,log poleA, lat poleB, log poleB
+
+  void capturePoleLocation(String poleId, double lat, double lon) {
+    print("capturePoleLocation started");
+    // Simulating captured location
+      paramsHashMap["${poleId}Lat"] = lat.toString();
+      paramsHashMap["${poleId}Lon"] = lon.toString();
+
+      // Optionally fill text fields
+      if (poleId == "poleA") {
+        latPoleA.text = lat.toString();
+        logPoleA.text = lon.toString();
+        print("capturePoleLocation  pole A");
+        notifyListeners();
+      } else {
+        latPoleB.text = lat.toString();
+        logPoleB.text = lon.toString();
+        print("capturePoleLocation pole B");
+        notifyListeners();
+      }
+
+      // If both poles are captured, calculate the distance
+      if (paramsHashMap.containsKey("poleALat") && paramsHashMap.containsKey("poleBLat")) {
+        LatLng poleA = LatLng(
+          double.parse(paramsHashMap["poleALat"]!),
+          double.parse(paramsHashMap["poleALon"]!),
+        );
+        LatLng poleB = LatLng(
+          double.parse(paramsHashMap["poleBLat"]!),
+          double.parse(paramsHashMap["poleBLon"]!),
+        );
+        String dist = calculateDistance(poleA, poleB);
+        paramsHashMap["distance"] = dist;
+        distanceController.text = dist;
+        notifyListeners();
+      }
+    print("capturePoleLocation ended");
+  }
+
+  // void handleCalculateDistance() {
+  //   // Get text from controllers and convert to double
+  //   double latA = double.parse(latPoleA.text);
+  //   double lonA = double.parse(logPoleA.text);
+  //   double latB = double.parse(latPoleB.text);
+  //   double lonB = double.parse(logPoleB.text);
+  //
+  //   // Create LatLng instances
+  //   LatLng poleA = LatLng(latA, lonA);
+  //   LatLng poleB = LatLng(latB, lonB);
+  //
+  //   String result = calculateDistance(poleA, poleB);
+  //   distanceController.text=result;
+  //   notifyListeners();
+  //
+  //   print("Distance: $result meters");
+  // }
+
+
   String calculateDistance(LatLng from, LatLng to) {
     return distance(from.latitude, from.longitude, to.latitude, to.longitude);
   }
@@ -316,9 +367,23 @@ class MiddlePoles33kvViewModel extends ChangeNotifier {
     dist = acos(dist);
     dist = rad2deg(dist);
     dist = dist * 60 * 1.1515; // miles
-    double distanceInMeters = dist * 1609.344; // convert to meters
-    return distanceInMeters.toStringAsFixed(2); // two decimal places
+    double distanceInMeters = dist * 1000 * 1.609344;  // convert to meters
+    return NumberFormat("0.00").format(distanceInMeters); // two decimal places
   }
+
+  // String distance(double lat1, double lon1, double lat2, double lon2) {
+  //   double theta = lon1 - lon2;
+  //   double dist = sin(deg2rad(lat1)) * sin(deg2rad(lat2)) +
+  //       cos(deg2rad(lat1)) * cos(deg2rad(lat2)) * cos(deg2rad(theta));
+  //
+  //   // Clamp for floating point stability
+  //   dist = acos(dist.clamp(-1.0, 1.0));
+  //   dist = rad2deg(dist);
+  //   dist = dist * 60 * 1.1515; // miles
+  //   double distanceInMeters = dist * 1609.344;
+  //   return distanceInMeters.toStringAsFixed(2);
+  // }
+
 
   double deg2rad(double deg) {
     return deg * pi / 180.0;

@@ -101,6 +101,10 @@ class MiddlePoles33kv extends StatelessWidget {
                   _reusableLastRow(
                       label: "POLE-B LONGITUDE",
                       controller: viewModel.logPoleB),
+                  ElevatedButton(onPressed: (){
+                    viewModel.capturePoleLocation("poleA", double.parse(viewModel.latPoleA.text), double.parse(viewModel.logPoleA.text));
+                    viewModel.capturePoleLocation("poleB", double.parse(viewModel.latPoleB.text), double.parse(viewModel.logPoleB.text));
+                  }, child: const Text("Calculate")),
                   _reusableLastRow(
                       label: "DISTANCE B/W A&B",
                       controller: viewModel.distanceController),
