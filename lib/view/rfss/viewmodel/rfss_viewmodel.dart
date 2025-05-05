@@ -65,7 +65,7 @@ class RfssViewModel extends ChangeNotifier {
             routeName:Routes.createOnlineDTR
         ),listDialogItem(
             title: "View Mapped DTR's",
-            routeName: Routes.mappedDtrScreen,
+            routeName: Routes.configureFilter,
         ),
         listDialogItem(
             title: "Create DTR Master(Offline)",

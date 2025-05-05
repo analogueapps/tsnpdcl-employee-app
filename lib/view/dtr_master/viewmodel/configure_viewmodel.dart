@@ -471,11 +471,19 @@ class MapDtrViewMobel extends ChangeNotifier {
           throw e;
         }
       } else if (jsonList is List) {
-        print("Processing JSON list: $jsonList");
-        dataList = (jsonList as List<dynamic>)
+        dataList = jsonList
             .map((json) => FeederDisModel.fromJson(json as Map<String, dynamic>))
             .toList();
-        _fDEntityList = dataList;
+      } else if (jsonList is String) {
+        // Parse the string only if it appears to be a valid JSON list
+        final cleaned = jsonList.trim();
+        if (cleaned.startsWith('[') && cleaned.endsWith(']')) {
+          dataList = (jsonDecode(cleaned) as List)
+              .map((json) => FeederDisModel.fromJson(json))
+              .toList();
+      } else {
+        throw Exception("Unexpected message format: ${jsonList.runtimeType}");
+      }
       } else {
         throw Exception("Unexpected message format: ${jsonList.runtimeType}");
       }
@@ -497,7 +505,7 @@ class MapDtrViewMobel extends ChangeNotifier {
     }
   }
 
-  //Equipment no/Structure code
+  // Equipment no/Structure code
   List<FeederDisModel> _structureDataConfi = [];
   List<FeederDisModel> get structureData => _structureDataConfi;
 

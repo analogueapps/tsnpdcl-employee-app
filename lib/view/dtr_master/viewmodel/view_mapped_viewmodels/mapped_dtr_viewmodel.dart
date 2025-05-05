@@ -13,7 +13,9 @@ import 'package:tsnpdcl_employee/view/dtr_master/model/dtr_feedet_distribution_m
 
 
 class MappedDtrViewmodel extends ChangeNotifier {
-  MappedDtrViewmodel({required this.context});
+  MappedDtrViewmodel({required this.context}){
+
+  }
 
   // Current View Context
   final BuildContext context;

@@ -41,7 +41,7 @@ class MiddlePoles33kv extends StatelessWidget {
                   IconButton(
                     icon: const Icon(Icons.save_outlined),
                     color: Colors.white,
-                    onPressed: () => print("Save icon pressed"),
+                    onPressed: () {viewModel.submitForm();}
                   ),
                   IconButton(
                     icon: const Icon(Icons.folder_outlined),
@@ -65,13 +65,13 @@ class MiddlePoles33kv extends StatelessWidget {
                 children: [
                   _reusableLabel("33KV MIDDLE POLES"),
                   _reusableLastRow(
-                      label: "33KV FEEDER", controller: viewModel.feederController),
+                      label: "33KV FEEDER", controller: viewModel.feederController, value:isFalse),
                   _reusableLastRow(
                       label: "WORK DESCRIPTION",
-                      controller: viewModel.workDescriptionController),
+                      controller: viewModel.workDescriptionController, value:isFalse),
                   _reusableLastRow(
                       label: "SANCTION NO.",
-                      controller: viewModel.sanctionNoController),
+                      controller: viewModel.sanctionNoController, value:isFalse),
                   const SizedBox(height: 7),
                   _buildPoleSection(
                     title: "POLE A DETAILS",
@@ -83,11 +83,11 @@ class MiddlePoles33kv extends StatelessWidget {
                   const SizedBox(height: 10),
                   _reusableLastRow(
                       label: "POLE - A LATITUDE",
-                      controller: viewModel.latPoleA),
+                      controller: viewModel.latPoleA, value:isTrue),
                   _reusableLastRow(
                       label: "POLE - A LONGITUDE",
-                      controller: viewModel.logPoleA),
-                  const SizedBox(height: 10),
+                      controller: viewModel.logPoleA, value: isTrue),
+                  const SizedBox(height: 10,),
                   _buildPoleSection(
                     title: "POLE B DETAILS",
                     photoPath:viewModel.poleBPhotoPath!=""? Apis.NPDCL_STORAGE_SERVER_IP +viewModel.poleBPhotoPath:"",
@@ -97,23 +97,23 @@ class MiddlePoles33kv extends StatelessWidget {
                   ),
                   _reusableLastRow(
                       label: "POLE-B LATITUDE",
-                      controller: viewModel.latPoleB),
+                      controller: viewModel.latPoleB, value: isTrue),
                   _reusableLastRow(
                       label: "POLE-B LONGITUDE",
-                      controller: viewModel.logPoleB),
-                  ElevatedButton(onPressed: (){
-                    viewModel.capturePoleLocation("poleA", double.parse(viewModel.latPoleA.text), double.parse(viewModel.logPoleA.text));
-                    viewModel.capturePoleLocation("poleB", double.parse(viewModel.latPoleB.text), double.parse(viewModel.logPoleB.text));
-                  }, child: const Text("Calculate")),
+                      controller: viewModel.logPoleB, value: isTrue),
+                  // ElevatedButton(onPressed: (){
+                  //   viewModel.capturePoleLocation("poleA", double.parse(viewModel.latPoleA.text), double.parse(viewModel.logPoleA.text));
+                  //   viewModel.capturePoleLocation("poleB", double.parse(viewModel.latPoleB.text), double.parse(viewModel.logPoleB.text));
+                  // }, child: const Text("Calculate")),
                   _reusableLastRow(
                       label: "DISTANCE B/W A&B",
-                      controller: viewModel.distanceController),
+                      controller: viewModel.distanceController, value: isTrue),
                   const SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.only(top: 8, bottom: 20, left: 20, right: 20),
                     child: TextFormField(
-                      controller: viewModel.villagesAffectedController,
-                      keyboardType: TextInputType.number,
+                      controller: viewModel.remarksController,
+                      // keyboardType: TextInputType.number,
                       decoration: const InputDecoration(
                         labelText: 'REMARKS(If Any)',
                         border: UnderlineInputBorder(),
@@ -167,6 +167,7 @@ class MiddlePoles33kv extends StatelessWidget {
   Widget _reusableLastRow({
     required String label,
     required TextEditingController controller,
+    required bool value
   }) {
     return Container(
       padding: const EdgeInsets.only(top: 15.0, left: 10),
@@ -183,6 +184,7 @@ class MiddlePoles33kv extends StatelessWidget {
           Expanded(
             child: TextField(
               controller: controller,
+              readOnly: value,
               decoration: InputDecoration(
                 hintText: label,
                 hintStyle: TextStyle(color: Colors.grey[200]),

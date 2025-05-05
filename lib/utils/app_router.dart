@@ -100,6 +100,7 @@ import 'package:tsnpdcl_employee/view/ss_maintenance/view/maintenance_due_screen
 import 'package:tsnpdcl_employee/view/ss_maintenance/view/maintenance_finished_screen.dart';
 import 'package:tsnpdcl_employee/view/ss_maintenance/view/ss_maintenance_screen.dart';
 import 'package:tsnpdcl_employee/view/tong_tester_readings/view/overloaded_dtrs_screen.dart';
+import 'package:tsnpdcl_employee/view/tong_tester_readings/view/structure_dtr_list.dart';
 import 'package:tsnpdcl_employee/view/web_view/view/web_view_screen.dart';
 import 'package:tsnpdcl_employee/widget/month_year_selector.dart';
 import 'package:tsnpdcl_employee/widget/pinch_zoom_imageview.dart';
@@ -305,6 +306,8 @@ class AppRouter {
                 PinchZoomImageView(imageUrl: settings.arguments as String));
 
     // Tong tester readings * Swetha
+      case StructureDtrList.id:
+        return MaterialPageRoute(builder: (_) => StructureDtrList(structure: settings.arguments as Map<String, dynamic>,));
       case OverloadedDtrsView.id:
         return MaterialPageRoute(builder: (_) => OverloadedDtrsView());
 
