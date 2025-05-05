@@ -50,19 +50,22 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBbJVk8VzegTwn_NjbufRF9x_oSRk7nGyk',
-    appId: '1:744583032069:android:0eda7e4bbbed3bc8721b6c',
-    messagingSenderId: '744583032069',
-    projectId: 'aits-tsnpdcl-employee',
-    storageBucket: 'aits-tsnpdcl-employee.firebasestorage.app',
+    apiKey: 'AIzaSyDrdHNT12M1LWHlb_Qe5pGILOH9qUBgwX8',
+    appId: '1:1086526059926:android:dfca1dccffcc4966',
+    messagingSenderId: '1086526059926',
+    projectId: 'npdclemployee',
+    databaseURL: 'https://npdclemployee.firebaseio.com',
+    storageBucket: 'npdclemployee.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCDwWFkz1FouRxZBYnAmxnkO_XPVO_ICls',
-    appId: '1:744583032069:ios:76ec32d4c401b811721b6c',
-    messagingSenderId: '744583032069',
-    projectId: 'aits-tsnpdcl-employee',
-    storageBucket: 'aits-tsnpdcl-employee.firebasestorage.app',
-    iosBundleId: 'com.aits.tsnpdclEmployee',
+    apiKey: 'AIzaSyDXbi8KsBUhIcRnQuZ9XOScLUe_2BeQyXs',
+    appId: '1:1086526059926:ios:99782bd7dc4075543f19b7',
+    messagingSenderId: '1086526059926',
+    projectId: 'npdclemployee',
+    databaseURL: 'https://npdclemployee.firebaseio.com',
+    storageBucket: 'npdclemployee.appspot.com',
+    iosBundleId: 'in.tsnpdcl.npdclemployee',
   );
+
 }
