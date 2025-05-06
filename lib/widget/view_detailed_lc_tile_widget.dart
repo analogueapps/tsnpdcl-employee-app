@@ -43,6 +43,7 @@ class ViewDetailedLcTileWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 10.0,),
+          const Divider(),
         ],
       ),
     );

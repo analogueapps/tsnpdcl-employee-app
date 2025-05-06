@@ -9,114 +9,116 @@ import 'package:tsnpdcl_employee/view/middle_poles/viewmodel/pending_list_viewmo
 import 'package:tsnpdcl_employee/widget/month_year_selector.dart';
 
 class PendingListScreen extends StatelessWidget {
-  static const id = Routes.pendingListScreen;
-  const PendingListScreen({super.key});
-
+  static const id = Routes.pendingCompletedListScreen;
+  const PendingListScreen({super.key, required this.status});
+  final String status;
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-        create: (_) => PendingListViewModel(context: context, status: "p", ),
-        child: Consumer<PendingListViewModel>(
-        builder: (context, viewModel, child) {
-          return Scaffold(
-              appBar: AppBar(
-                title: const Text(
-                  "Middle Pole List",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: toolbarTitleSize,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                backgroundColor: CommonColors.colorPrimary,
-                iconTheme: const IconThemeData(color: Colors.white),
-                actions: [
-                  TextButton(
-                    onPressed: () async {
-                      final result = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const MonthYearSelector(),
-                        ),
-                      );
-                      if (result != null && result is Map) {
-                        viewModel.setSelectedMonthYear(
-                          result['month'] as String,
-                          result['year'] as int,
-                          context,
-                        );
-                      }
-                    },
-                    child: Text(
-                      viewModel.selectedMonthYear != null
-                          ? '${viewModel
-                          .selectedMonthYear!['month']} ${viewModel
-                          .selectedMonthYear!['year']}'
-                          : 'SELECT MONTH/YEAR',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ],
+      create: (_) => PendingListViewModel(
+        context: context,
+        status: status,
+      ),
+      child:
+          Consumer<PendingListViewModel>(builder: (context, viewModel, child) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text(
+              "Middle Pole List",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: toolbarTitleSize,
+                fontWeight: FontWeight.w700,
               ),
-              body: GestureDetector(
-                onTap: () {
-                  Navigation.instance.navigateTo(
-                      Routes.viewDetailedPendingListScreen);
+            ),
+            backgroundColor: CommonColors.colorPrimary,
+            iconTheme: const IconThemeData(color: Colors.white),
+            actions: [
+              TextButton(
+                onPressed: () async {
+                  final result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const MonthYearSelector(),
+                    ),
+                  );
+                  if (result != null && result is Map) {
+                    viewModel.setSelectedMonthYear(
+                      result['month'] as String,
+                      result['year'] as int,
+                      context,
+                    );
+                  }
                 },
-                child: Container(
-                  margin: const EdgeInsets.all(14),
-                  child: const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Survey Id: 31125",
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold
-                        ),),
-                      Text(
-                        "Survey",
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold
-                        ),),
-                      Text(
-                        "Survey - LatA 17.4446414, LonA 78.3843504",
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold
-                        ),),
-                      Text(
-                        "EMP ID: 70000000|Section: NAKKALAGUTTA",
-                        style: TextStyle(
-                          fontSize: 16,
-                        ),),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "01 Apr 2025 03:22",
-                            style: TextStyle(color: Colors.blue),
-                          ),
-                          Text(
-                            "PENDING",
-                            style: TextStyle(color: Colors.red),
-                          ),
-                        ],
-                      ),
-                      Divider(),
-                    ],
+                child: Text(
+                  viewModel.selectedMonthYear != null
+                      ? '${viewModel.selectedMonthYear!['month']} ${viewModel.selectedMonthYear!['year']}'
+                      : 'SELECT MONTH/YEAR',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
-              )
-          );
-        }
-        ),
+              ),
+            ],
+          ),
+          body: viewModel.isLoading
+              ? const Center(child: CircularProgressIndicator())
+              :  ListView.builder(
+                itemCount: viewModel.pendingAndFinishedList.length,
+                itemBuilder: (context, index) {
+                  final item = viewModel.pendingAndFinishedList[index];
+                  return InkWell(
+                    onTap: () {
+                      Navigation.instance.navigateTo(
+                      Routes.viewDetailedPendingListScreen,
+                      args: {
+                      'surveyID': item.surveyId,
+                      'status': item.status,
+                      },
+                      );
+                    },
+                    child: viewModel.pendingAndFinishedList.isEmpty?
+                        Center(child: Text("No data found"),):
+                    ListTile(
+                      title: Text(
+                        "Survey Id: ${item.surveyId}",
+                      ),
+                      subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              item.sanctionNo,
+                            ),
+                            Text(
+                              "${item.sanctionNo} - LatA ${item.poleALat}, LonA ${item.poleALon}",
+                            ),
+                            Text(
+                              "EMP ID:${item.surveyorId}|Section: ${item.section}",
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  item.dateOfAbMarked,
+                                ),
+                                Text(
+                                  item.status,
+                                  style: TextStyle(
+                                      color: item.status == "PENDING"
+                                          ? Colors.red
+                                          : Colors.green),
+                                ),
+                              ],
+                            ),
+                            const Divider(),
+                          ]),
+                    ),
+                  );
+                }),
         );
+      }),
+    );
   }
-
 }

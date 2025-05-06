@@ -100,13 +100,14 @@ class AuthViewmodel extends ChangeNotifier {
                 await SharedPreferenceHelper.setStringValue(LoginSdkPrefs.sectionPrefKey, user[0].secMasterEntity!.section ?? '',);
                 ///Bhavana
                 await SharedPreferenceHelper.setStringValue(LoginSdkPrefs.sectionIdKey, user[0].secMasterEntity!.sectionId ?? '',);
+                await SharedPreferenceHelper.setStringValue(LoginSdkPrefs.subDivisionPrefKey, user[0].secMasterEntity!.subDivisionId ?? '',);
                 await SharedPreferenceHelper.setStringValue(LoginSdkPrefs.divisionIdKey, user[0].secMasterEntity!.divisionId ?? '0000',);
                 await SharedPreferenceHelper.setStringValue(LoginSdkPrefs.designationCodeKey, user[0].designationCode.toString() ?? '',);
 
                 print("login responseee: ${response.data}");
                 //Bhavana
                 print("sectionnn: ${user[0].secMasterEntity!.section}");
-                print("designationCode: ${ user[0].designationCode.toString() }");
+                print("subdivisionCode: ${ user[0].secMasterEntity!.subDivisionId }");
 
 
                 Navigation.instance.pushAndRemoveUntil(Routes.universalDashboardScreen);

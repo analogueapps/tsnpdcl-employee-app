@@ -334,10 +334,15 @@ class AppRouter {
       case MiddlePole11kv.id:
         return MaterialPageRoute(builder: (_) => const MiddlePole11kv());
       case PendingListScreen.id:
-        return MaterialPageRoute(builder: (_) => const PendingListScreen());
+        return MaterialPageRoute(builder: (_) =>  PendingListScreen(status: settings.arguments as String,));
       case ViewDetailedPendingListScreen.id:
+        final args = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
-            builder: (_) => const ViewDetailedPendingListScreen());
+            builder: (_) =>  ViewDetailedPendingListScreen(
+              surveyID: args['surveyID'] ?? '',
+              status: args['status'] ?? '',
+            )
+        );
       case PendingListFloatingButton.id:
         return MaterialPageRoute(
             builder: (_) => const PendingListFloatingButton());

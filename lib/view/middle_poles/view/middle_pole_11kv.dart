@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
@@ -39,7 +40,9 @@ class MiddlePole11kv extends StatelessWidget {
                   IconButton(
                     icon: const Icon(Icons.save_outlined),
                     color: Colors.white,
-                    onPressed: () => print("Save icon pressed"),
+                    onPressed: (){
+                      viewModel.submitForm();
+                    }
                   ),
                   IconButton(
                     icon: const Icon(Icons.folder_outlined),
@@ -56,11 +59,55 @@ class MiddlePole11kv extends StatelessWidget {
               ),
               automaticallyImplyLeading: false,
             ),
-            body: SingleChildScrollView(
+            body:viewModel.isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : Form(
+          key: viewModel.formKey,
+          child: SingleChildScrollView(
               child: Column(
                 children: [
-                  _reusableLastRow(
-                      label: "11KV FEEDER", controller: viewModel.feederController),
+                  // _reusableLastRow(
+                  //     label: "11KV FEEDER", controller: viewModel.feederController, status: isFalse),
+                  SizedBox(height: doubleTen,),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Expanded(
+                        flex: 3,
+                        child: Text(
+                          " 11KV FEEDER",
+                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                          textAlign: TextAlign.start,
+                        ),
+                      ),
+                      Expanded(
+                        flex: 3,
+                        child: DropdownButtonFormField<String>(
+                          value: viewModel.feeder.any((f) => f.optionCode == viewModel.selectedFeeder)
+                              ? viewModel.selectedFeeder
+                              : null,
+                          isExpanded: true,
+                          onChanged: (String? newValue) {
+                            viewModel.onListFeederSelected(newValue);
+                          },
+                          items: viewModel.feeder.map((feeder) {
+                            return DropdownMenuItem<String>(
+                              value: feeder.optionCode,
+                              child: Text(feeder.optionName),
+                            );
+                          }).toList(),
+                          // decoration: InputDecoration(
+                          //   hintText:"label",
+                          //   hintStyle: TextStyle(color: Colors.grey[200]),
+                          //   contentPadding:
+                          //   const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                          //   border: const OutlineInputBorder(),
+                          // ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                    ],
+                  ),
                 Padding(
                   padding: const EdgeInsets.only(top: 15.0, left: 10, right: 10),
                   child: Row(
@@ -79,7 +126,7 @@ class MiddlePole11kv extends StatelessWidget {
                         child: DropdownButton<String>(
                           isExpanded: true,
                           value: viewModel.selectedPoleType,
-                          hint: const Text("SELECT"),
+                          hint: const Text(""),
                           items: const [
                             DropdownMenuItem<String>(
                               value: "SELECT",
@@ -105,48 +152,47 @@ class MiddlePole11kv extends StatelessWidget {
                 ),
                   _reusableLastRow(
                       label: "WORK DESCRIPTION",
-                      controller: viewModel.workDescriptionController),
+                      controller: viewModel.workDescriptionController, status: isFalse),
                   _reusableLastRow(
                       label: "SANCTION NO.",
-                      controller: viewModel.sanctionNoController),
+                      controller: viewModel.sanctionNoController, status: isFalse),
                   const SizedBox(height: 7),
                   _buildPoleSection(
                     title: "POLE A DETAILS",
-                    photoPath: viewModel.poleAPhotoPath,
+                    photoPath: viewModel.poleAPhoto11KV!=""? Apis.NPDCL_STORAGE_SERVER_IP +viewModel.poleAPhoto11KV:"",
                     onCapturePressed: () {
-                      // viewModel.setPoleAPhotoPath("path/to/photo");
+                      viewModel.capturePoleA11Photo();
                     },
                   ),
                   const SizedBox(height: 10),
                   _reusableLastRow(
                       label: "POLE - A LATITUDE",
-                      controller: viewModel.sanctionNoController),
+                      controller: viewModel.latPoleA11kv, status: isTrue),
                   _reusableLastRow(
                       label: "POLE - A LONGITUDE",
-                      controller: viewModel.sanctionNoController),
+                      controller: viewModel.logPoleA11kv, status: isTrue),
                   const SizedBox(height: 10),
                   _buildPoleSection(
                     title: "POLE B DETAILS",
-                    photoPath: viewModel.poleBPhotoPath,
+                    photoPath: viewModel.poleB11PhotoPath!=""? Apis.NPDCL_STORAGE_SERVER_IP +viewModel.poleB11PhotoPath:"",
                     onCapturePressed: () {
-                      // viewModel.setPoleBPhotoPath("path/to/photo");
+                      viewModel.capturePoleB11Photo();
                     },
                   ),
                   _reusableLastRow(
                       label: "POLE-B LATITUDE",
-                      controller: viewModel.sanctionNoController),
+                      controller: viewModel.latPoleB11kv, status: isTrue),
                   _reusableLastRow(
                       label: "POLE-B LONGITUDE",
-                      controller: viewModel.poleBLongitudeController),
+                      controller: viewModel.latPoleB11kv, status: isTrue),
                   _reusableLastRow(
                       label: "DISTANCE B/W A&B",
-                      controller: viewModel.distanceController),
+                      controller: viewModel.distanceController, status: isTrue),
                   const SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.only(top: 8, bottom: 20, left: 20, right: 20),
                     child: TextFormField(
-                      controller: viewModel.villagesAffectedController,
-                      keyboardType: TextInputType.number,
+                      controller: viewModel.remarksController,
                       decoration: const InputDecoration(
                         labelText: 'REMARKS(If Any)',
                         border: UnderlineInputBorder(),
@@ -162,13 +208,14 @@ class MiddlePole11kv extends StatelessWidget {
                 ],
               ),
             ),
+            ),
           );
         },
       ),
     );
   }
 
-  Widget _buildPlaceholder(String? photoPath) {
+  Widget _buildPlaceholder(String photoPath) {
     return Container(
       margin: const EdgeInsets.all(20),
       height: 180,
@@ -177,10 +224,12 @@ class MiddlePole11kv extends StatelessWidget {
         color: Colors.grey[200],
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Center(
-        child: photoPath == null
-            ? const Icon(Icons.photo_library, size: 50, color: Colors.grey)
-            : const Text("Photo captured"),
+      child: photoPath.isEmpty
+          ? const Icon(Icons.image, size: 50)
+          : Image.network( photoPath,
+        fit: BoxFit.cover,
+        height: 180,
+        width: double.infinity,
       ),
     );
   }
@@ -197,6 +246,7 @@ class MiddlePole11kv extends StatelessWidget {
   Widget _reusableLastRow({
     required String label,
     required TextEditingController controller,
+    required bool status
   }) {
     return Container(
       padding: const EdgeInsets.only(top: 15.0, left: 10),
@@ -213,6 +263,7 @@ class MiddlePole11kv extends StatelessWidget {
           Expanded(
             child: TextField(
               controller: controller,
+              readOnly: status,
               decoration: InputDecoration(
                 hintText: label,
                 hintStyle: TextStyle(color: Colors.grey[200]),
@@ -234,7 +285,7 @@ class MiddlePole11kv extends StatelessWidget {
     return Column(
       children: [
         _reusableLabel(title),
-        _buildPlaceholder(photoPath),
+        _buildPlaceholder(photoPath!),
         Padding(
           padding: const EdgeInsets.only(left: 8),
           child: SizedBox(

@@ -1,4 +1,4 @@
-class Survey {
+class PendingFinishedListModel {
   final int surveyId;
   final String sectionCode;
   final String sanctionNo;
@@ -10,7 +10,7 @@ class Survey {
   final String poleBImageUrl;
   final String surveyorId;
   final String timeOfSurveyor;
-  final String remarksBySurveyor;
+   String? remarksBySurveyor;
   final String feederCode;
   final String poleType;
   final String dateOfAbMarked;
@@ -27,7 +27,7 @@ class Survey {
   final String circle;
   final String distance;
 
-  Survey({
+  PendingFinishedListModel({
     required this.surveyId,
     required this.sectionCode,
     required this.sanctionNo,
@@ -39,7 +39,7 @@ class Survey {
     required this.poleBImageUrl,
     required this.surveyorId,
     required this.timeOfSurveyor,
-    required this.remarksBySurveyor,
+     this.remarksBySurveyor,
     required this.feederCode,
     required this.poleType,
     required this.dateOfAbMarked,
@@ -57,8 +57,8 @@ class Survey {
     required this.distance,
   });
 
-  factory Survey.fromJson(Map<String, dynamic> json) {
-    return Survey(
+  factory PendingFinishedListModel.fromJson(Map<String, dynamic> json) {
+    return PendingFinishedListModel(
       surveyId: json['surveyId'],
       sectionCode: json['sectionCode'],
       sanctionNo: json['sanctionNo'],

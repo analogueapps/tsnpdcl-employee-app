@@ -33,8 +33,10 @@ class MiddlePolesViewModel extends ChangeNotifier {
       // Show the custom dialog
       showCustomListRfssDialog(context, listDialogItemArray, heading: GlobalConstants.networkType);
     } else if (title == GlobalConstants.pendingList) {
-      // Navigate to PendingListScreen
-      Navigator.pushNamed(context, Routes.pendingListScreen);
+      Navigation.instance.navigateTo( Routes.pendingCompletedListScreen, args: "p");
+    }
+    else if (title == GlobalConstants.completedList) {
+      Navigation.instance.navigateTo( Routes.pendingCompletedListScreen, args: "f");
     }
   }
 }

@@ -38,7 +38,7 @@ class MiddlePolesScreen extends StatelessWidget {
                 final item = viewModel.menuItems[index];
                 return GestureDetector(
                   onTap: () {
-                    // Call the method for all items
+
                     viewModel.mpNewMenuItemClicked(context, item);
                   },
                   child: Column(

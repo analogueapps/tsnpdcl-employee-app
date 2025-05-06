@@ -4,6 +4,7 @@ import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
+import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 
 class ViewOfflineData extends StatelessWidget {
   static const id = Routes.offlineData;
@@ -28,7 +29,11 @@ class ViewOfflineData extends StatelessWidget {
       ),
       body: Container(),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigation.instance.navigateTo(
+            Routes.createOfflineDTR,
+          );
+        },
         backgroundColor: CommonColors.pink,
         child: const Icon(Icons.add, color: Colors.white),
       ),
