@@ -179,4 +179,6 @@ class Routes {
 
   // Dlist * Surya
   static const String dlistMenuScreen = "DlistMenuScreen";
+  static const String rangeWiseDlistScreen = "RangeWiseDlistScreen";
+  static const String clusterMapScreen = "ClusterMapScreen";
 }

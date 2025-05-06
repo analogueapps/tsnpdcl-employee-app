@@ -22,14 +22,15 @@ import 'package:tsnpdcl_employee/view/line_clearance/model/induction_points_of_f
 import 'package:tsnpdcl_employee/view/line_clearance/model/lc_master_ss_list.dart';
 import 'package:tsnpdcl_employee/view/pdms/model/pole_request_indent_entity.dart';
 import 'package:tsnpdcl_employee/widget/fill_text_form_field.dart';
+import 'package:tsnpdcl_employee/widget/month_year_selector.dart';
 
 class DlistMenuViewmodel extends ChangeNotifier {
   // Current View Context
   final BuildContext context;
-  late NpdclUser npdclUser;
+
+  String currentMonthYear = getCurrentMonthYear();
 
   bool _isLoading = isFalse;
-
   bool get isLoading => _isLoading;
 
   List<DlistMetaData> _dlistMetaData = [];
@@ -79,6 +80,8 @@ class DlistMenuViewmodel extends ChangeNotifier {
                 _dlistMetaData = listData;
                 notifyListeners();
               }
+            } else {
+              showAlertDialog(context, response.data['message']);
             }
           } else {
             showSessionExpiredDialog(context);
@@ -93,6 +96,22 @@ class DlistMenuViewmodel extends ChangeNotifier {
     }
 
     notifyListeners();
+  }
+
+  Future<void> monthYearClicked() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const MonthYearSelector(),
+      ),
+    );
+    if (result != null && result is Map) {
+      String month = result['month']!;
+      String year = result['year'].toString().substring(2); // Get last 2 digits
+      currentMonthYear = '$month$year';
+      dlistMetaDataListFromServer(currentMonthYear);
+      notifyListeners();
+    }
   }
 }
 
