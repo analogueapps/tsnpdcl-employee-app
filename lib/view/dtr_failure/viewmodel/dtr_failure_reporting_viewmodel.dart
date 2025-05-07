@@ -222,7 +222,7 @@ class ReportDTRFailureViewModel extends ChangeNotifier {
 
     if (failedEquipmentList.isNotEmpty) {
       _failedEquipmentCode = failedEquipmentList.firstWhere(
-            (code) => code != "00000",
+            (code) => code != "",
         orElse: () => failedEquipmentList.first,
       );
     }
@@ -344,12 +344,13 @@ class ReportDTRFailureViewModel extends ChangeNotifier {
           for (var dtr in structure.dtrs!) {
             if (dtr.equipmentCode != null) {
               failedEquipmentList.add(dtr.equipmentCode!);
+              _failedEquipmentCode ??= dtr.equipmentCode!;
             }
           }
         }
       }
       if (failedEquipmentList.isEmpty) {
-        failedEquipmentList.add("00000"); // Default value if none found
+        failedEquipmentList.add("");
       }
 
       notifyListeners();

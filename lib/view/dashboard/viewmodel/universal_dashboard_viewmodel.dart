@@ -486,7 +486,8 @@ class UniversalDashboardViewModel extends ChangeNotifier {
         ),
         GlobalListDialogItem(
           title: GlobalConstants.tongTesterReadingsTitle,
-          routeName: Routes.structureDtrList,
+          routeName: Routes.overLoadDTRList,
+          // routeName: Routes.structureDtrList,
           imageAsset: Assets.tongTesterReadings,
         ),
         GlobalListDialogItem(

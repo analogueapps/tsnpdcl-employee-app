@@ -32,46 +32,12 @@ class ViewBriefDetailsPfViewmodel extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   void init() {
-    getCurrentLocation();
+
     print("individualStatus $individualStatus");
     getData(surId);
   }
 
 
-  Future<void> getCurrentLocation() async {
-    try {
-      LocationPermission permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-          AlertUtils.showSnackBar(
-              context, "Location permission denied", isTrue);
-          return;
-        }
-      }
-
-      if (permission == LocationPermission.deniedForever) {
-        AlertUtils.showSnackBar(
-            context, "Location permissions are permanently denied", isTrue);
-        return;
-      }
-
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
-
-      _latitude = position.latitude.toString();
-      _longitude = position.longitude.toString();
-      isLocationGranted = true;
-
-      print("Geo Current location: $_latitude , $_longitude");
-
-      notifyListeners();
-    } catch (e) {
-      print("Error fetching location: $e");
-      AlertUtils.showSnackBar(context, "Error fetching location", isTrue);
-    }
-  }
 
   List<PFDetailModel> _workDetails = [];
   List<PFDetailModel> get workDetails => _workDetails;

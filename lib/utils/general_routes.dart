@@ -78,8 +78,10 @@ class Routes {
   static const String pinchZoomImageView = 'PinchZoomImageView';
 
   //tong tester readings * swetha
-  static const String overloadedDtrsView = 'OverloadedDtrsView';
-  static const String structureDtrList = 'StructureDtrList';
+  static const String tongTesterReadingsScreen = 'TongTesterReading';
+  static const String overLoadDTRList = 'OverLoadDTRList';
+  static const String viewDetailedTongTesterReadings="ViewDetailedTongTesterReadings";
+
 
   // RFSS Screen * swetha
   static const String rfssScreen = 'RfssScreen';
@@ -165,12 +167,19 @@ class Routes {
   // ACCOUNT * SWETHA
   static const String accountScreen = "AccountScreen";
 
-  //CHECK READINGS
+  //CHECK READINGS * Bhavana
   static const String checkReadingScreen = "CheckReadings";
   static const String enterServicesScreen = "EnterServiceDetails";
 
-  //BS/UDC
+  //BS/UDC * Bhavana
   static const String bsUdcInspectionList = "BsUdcList";
+
+  //Online PR * Bhavana
+  static const String issueDuplicateReceipt="IssueDuplicateReceipt";
+  static const String printLastPR="PrintLastPrView";
+  static const String onlinePRReports="ReportsView";
+  static const String onlineCollection="OnlineCollectionView";
+
 
   // Meeseva * Surya
   static const String meeSevaAbstractScreen = "MeeSevaAbstractScreen";

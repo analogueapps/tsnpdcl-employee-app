@@ -42,7 +42,11 @@ class OnlinePrMenuScreen extends StatelessWidget {
               shrinkWrap: true,
               itemBuilder: (context, index) {
                 final item = viewModel.onlinePrMenuItems[index];
-                return Column(
+                return GestureDetector(
+                    onTap: () {
+                  viewModel.menuItemClicked(context, item.title, item.routeName);
+                },
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
@@ -80,6 +84,7 @@ class OnlinePrMenuScreen extends StatelessWidget {
                       ),
                     ),
                   ],
+                ),
                 );
               },
             )

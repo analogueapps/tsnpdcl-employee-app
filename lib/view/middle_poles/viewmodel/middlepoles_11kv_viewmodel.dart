@@ -557,10 +557,12 @@ class Middlepoles11kvViewmodel extends ChangeNotifier {
       "poleAImageUrl":poleAPhoto11KV,
       "remarksBySurveyor":remarksController.text,
       "workDescription":workDescriptionController.text,
-      "feederName11kv":selectedFeeder=="00"?"":selectedFeeder,
+      "feederCode11kv":selectedFeeder=="00"?"":selectedFeeder,//feederName11kv
       "poleType":selectedPoleType,
       "sanctionNo":sanctionNoController.text,
       "distance":distanceController.text,
+      //sectionnn: NAKKALAGUTTA
+      // I/flutter (25728): subdivisionCode: 402911001
 
     };
   }
@@ -591,35 +593,38 @@ class Middlepoles11kvViewmodel extends ChangeNotifier {
       print("load structure response: $response");
       if (response != null) {
         var responseData = response.data;
-        if (responseData is String) {
-          try {
-            responseData = jsonDecode(responseData);
-          } catch (e) {
-            print("Error decoding response data: $e");
-            showErrorDialog(
-                context, "Invalid response format. Please try again.");
-            return;
-          }
+        if(responseData!=null){
+          Navigator.pop(context);
         }
+        // if (responseData is String) {
+        //   try {
+        //     responseData = jsonDecode(responseData);
+        //   } catch (e) {
+        //     print("Error decoding response data: $e");
+        //     showErrorDialog(
+        //         context, "Invalid response format. Please try again.");
+        //     return;
+        //   }
+        // }
 
-        if (response.statusCode == successResponseCode) {
-          if (responseData['tokenValid'] == true) {
-            if (responseData['success'] == true) {
-              if (responseData['message'] != null) {
-                AlertUtils.showSnackBar(context,responseData['message'] , isFalse);
-                Navigator.pop(context);
-              }
-            } else {
-              showAlertDialog(
-                  context, responseData['message'] ?? "Operation failed");
-            }
-          } else {
-            showSessionExpiredDialog(context);
-          }
-        } else {
-          showErrorDialog(context,
-              "Request failed with status: ${response.statusCode}");
-        }
+        // if (response.statusCode == successResponseCode) {
+        //   if (responseData['tokenValid'] == true) {
+        //     if (responseData['success'] == true) {
+        //       if (responseData['message'] != null) {
+        //         AlertUtils.showSnackBar(context,responseData['message'] , isFalse);
+        //         Navigator.pop(context);
+        //       }
+        //     } else {
+        //       showAlertDialog(
+        //           context, responseData['message'] ?? "Operation failed");
+        //     }
+        //   } else {
+        //     showSessionExpiredDialog(context);
+        //   }
+        // } else {
+        //   showErrorDialog(context,
+        //       "Request failed with status: ${response.statusCode}");
+        // }
       }
     } catch (e) {
       print("Exception caught: $e");

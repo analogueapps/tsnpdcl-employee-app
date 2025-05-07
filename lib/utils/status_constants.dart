@@ -98,4 +98,23 @@ class StatusConstants {
         return "N/A";
     }
   }
+
+  static const String ISSUED_DUPLICATE_RECEIPT = "Issue duplicate receipt";
+  static const String PRINT_LAST_PR = "Print last pr";
+  static const String REPORTS = "Reports";
+  static const String ONLINE_COLLECTION="Online collection";
+  static String getOnlinePrListScreenTitle(String status) {
+    switch (status) {
+      case ISSUED_DUPLICATE_RECEIPT:
+        return "IssueDuplicateReceipt";
+      case PRINT_LAST_PR:
+        return "";
+      case REPORTS:
+        return "";
+      case ONLINE_COLLECTION:
+        return "";
+      default:
+        return "N/A";
+    }
+  }
 }

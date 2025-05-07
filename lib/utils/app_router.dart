@@ -77,7 +77,11 @@ import 'package:tsnpdcl_employee/view/middle_poles/view/middle_poles_screen.dart
 import 'package:tsnpdcl_employee/view/middle_poles/view/pending_list_floating_button.dart';
 import 'package:tsnpdcl_employee/view/middle_poles/view/pending_list_screen.dart';
 import 'package:tsnpdcl_employee/view/middle_poles/view/view_detailed_pending_list_screen.dart';
+import 'package:tsnpdcl_employee/view/online_pr_menu/view/issue_duplicate_receipt.dart';
+import 'package:tsnpdcl_employee/view/online_pr_menu/view/online_collection.dart';
 import 'package:tsnpdcl_employee/view/online_pr_menu/view/online_pr_menu_screen.dart';
+import 'package:tsnpdcl_employee/view/online_pr_menu/view/print_last_pr.dart';
+import 'package:tsnpdcl_employee/view/online_pr_menu/view/rerports.dart';
 import 'package:tsnpdcl_employee/view/pdms/view/create_pole_indents_screen.dart';
 import 'package:tsnpdcl_employee/view/pdms/view/pdms_screen.dart';
 import 'package:tsnpdcl_employee/view/pdms/view/view_detailed_di_tabs_screen.dart';
@@ -101,8 +105,9 @@ import 'package:tsnpdcl_employee/view/search_consumer/view/search_consumer_scree
 import 'package:tsnpdcl_employee/view/ss_maintenance/view/maintenance_due_screen.dart';
 import 'package:tsnpdcl_employee/view/ss_maintenance/view/maintenance_finished_screen.dart';
 import 'package:tsnpdcl_employee/view/ss_maintenance/view/ss_maintenance_screen.dart';
-import 'package:tsnpdcl_employee/view/tong_tester_readings/view/overloaded_dtrs_screen.dart';
-import 'package:tsnpdcl_employee/view/tong_tester_readings/view/structure_dtr_list.dart';
+import 'package:tsnpdcl_employee/view/tong_tester_readings/view/overloaded_floating_button_screen.dart';
+import 'package:tsnpdcl_employee/view/tong_tester_readings/view/overLoad_dtr_list.dart';
+import 'package:tsnpdcl_employee/view/tong_tester_readings/view/view_detailed_tong_tester_readings.dart';
 import 'package:tsnpdcl_employee/view/web_view/view/web_view_screen.dart';
 import 'package:tsnpdcl_employee/widget/month_year_selector.dart';
 import 'package:tsnpdcl_employee/widget/pinch_zoom_imageview.dart';
@@ -308,10 +313,13 @@ class AppRouter {
                 PinchZoomImageView(imageUrl: settings.arguments as String));
 
     // Tong tester readings * Swetha
-      case StructureDtrList.id:
-        return MaterialPageRoute(builder: (_) => StructureDtrList(structure: settings.arguments as Map<String, dynamic>,));
-      case OverloadedDtrsView.id:
-        return MaterialPageRoute(builder: (_) => OverloadedDtrsView());
+      case OverLoadDTRList.id:
+        return MaterialPageRoute(builder: (_) => const OverLoadDTRList());
+      case OverloadedFloatingButtonView.id:
+        return MaterialPageRoute(builder: (_) => const OverloadedFloatingButtonView());
+      case ViewDetailedTongTesterReadings.id:
+        return MaterialPageRoute(builder: (_) => const ViewDetailedTongTesterReadings());
+
 
     // RFSS Screen * Swetha
       case RfssScreen.id:
@@ -346,8 +354,11 @@ class AppRouter {
             )
         );
       case PendingListFloatingButton.id:
+        final args = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
-            builder: (_) => const PendingListFloatingButton());
+            builder: (_) =>  PendingListFloatingButton(
+              surveyID: args['surveyID'] ?? '',
+              status: args['status'] ?? '',));
 
     // SS Maintenance Screen * Swetha
       case SsMaintenanceScreen.id:
@@ -511,7 +522,17 @@ class AppRouter {
       case BsUdcList.id:
         return MaterialPageRoute(builder: (_) => const BsUdcList());
 
-    // MEESEVA * Surya
+    //ONLINE PR * BHAVANA(SAI)
+      case IssueDuplicateReceipt.id:
+        return MaterialPageRoute(builder: (_) => const IssueDuplicateReceipt());
+      case PrintLastPrView.id:
+        return MaterialPageRoute(builder: (_) => const PrintLastPrView());
+      case ReportsView.id:
+      return MaterialPageRoute(builder: (_) => const ReportsView());
+      case OnlineCollectionView.id:
+        return MaterialPageRoute(builder: (_) => const OnlineCollectionView());
+
+      // MEESEVA * Surya
       case MeeSevaAbstractScreen.id:
         return MaterialPageRoute(builder: (_)=> MeeSevaAbstractScreen(above: settings.arguments as String));
       case ServicesAppListScreen.id:

@@ -1,60 +1,46 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
+import 'package:tsnpdcl_employee/dialogs/process_dialog.dart';
+import 'package:tsnpdcl_employee/network/api_provider.dart';
+import 'package:tsnpdcl_employee/network/api_urls.dart';
+import 'package:tsnpdcl_employee/preference/shared_preference.dart';
+import 'package:tsnpdcl_employee/utils/alerts.dart';
+import 'package:tsnpdcl_employee/utils/app_constants.dart';
+import 'package:tsnpdcl_employee/utils/app_helper.dart';
+import 'package:tsnpdcl_employee/view/dtr_master/viewmodel/image_upload.dart';
 
 class PendingListFloatingButtonViewmodel extends ChangeNotifier {
   final BuildContext context;
+  final int surId;
+  final String individualStatus;
 
-  PendingListFloatingButtonViewmodel({required this.context});
+  PendingListFloatingButtonViewmodel({required this.context, required this.surId, required this.individualStatus});
 
   void initialize() {
     _handleLocationIconClick();
+    print("surveyid: $surId");
   }
 
   // Text controllers for all text fields
-  final TextEditingController feederController = TextEditingController();
-  final TextEditingController workDescriptionController = TextEditingController();
-  final TextEditingController sanctionNoController = TextEditingController();
-  final TextEditingController poleBLongitudeController = TextEditingController();
-  final TextEditingController distanceController = TextEditingController();
-  final TextEditingController villagesAffectedController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+  final TextEditingController middlePoleLatController = TextEditingController();
+  final TextEditingController middlePoleLanController = TextEditingController();
 
   String? _latitude;
   String? _longitude;
 
-  // Photo-related state
-  String? poleAPhotoPath;
-  String? poleBPhotoPath;
-
-  // Pole Type state
-  String? _selectedPoleType = "SELECT"; // Default value
-  String? get selectedPoleType => _selectedPoleType;
-
-  // Method to set pole type
-  void setPoleType(String? value) {
-    _selectedPoleType = value;
-    notifyListeners();
-  }
-
-  // Method to set photo path
-  void setPoleAPhotoPath(String? path) {
-    poleAPhotoPath = path;
-    notifyListeners();
-  }
-
-  void setPoleBPhotoPath(String? path) {
-    poleBPhotoPath = path;
-    notifyListeners();
-  }
 
   // Cleanup
   @override
   void dispose() {
-    feederController.dispose();
-    workDescriptionController.dispose();
-    sanctionNoController.dispose();
-    poleBLongitudeController.dispose();
-    distanceController.dispose();
-    villagesAffectedController.dispose();
+    middlePoleLanController.dispose();
+    middlePoleLatController.dispose();
     super.dispose();
   }
 
@@ -147,6 +133,170 @@ class PendingListFloatingButtonViewmodel extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       print("Error fetching location: $e");
+    }
+  }
+
+
+  // Photo-related state
+  String _middlePhotoPath="";
+  String get middlePhotoPath => _middlePhotoPath;
+  final ImageUploader _middlePoleImageUploader = ImageUploader();
+
+  final ImagePicker _middlePolePicker = ImagePicker();
+
+  Future<void> middlePoleCapturePhoto() async {
+    final status = await Permission.camera.request();
+    if (status.isDenied || status.isPermanentlyDenied) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(status.isPermanentlyDenied
+                ? 'Camera permission permanently denied. Enable in settings.'
+                : 'Camera permission denied'),
+            action: status.isPermanentlyDenied
+                ? SnackBarAction(label: 'Settings', onPressed: openAppSettings)
+                : null,
+          ),
+        );
+      }
+      return;
+    }
+
+    try {
+      final XFile? photo = await _middlePolePicker.pickImage(
+        source: ImageSource.camera,
+        imageQuality: 85,
+        maxWidth: 1024,
+        maxHeight: 1024,
+      );
+
+      if (photo == null) {
+        if (context.mounted) {
+          showErrorDialog(context, "No photo captured");
+        }
+        return;
+      }
+
+      // Upload photo if captured
+      ProcessDialogHelper.showProcessDialog(context, message: "Uploading images...");
+      notifyListeners();
+      final imageUrl = await _middlePoleImageUploader.uploadImage(context, File(photo.path));
+      print("view workfloating $imageUrl");
+      if (imageUrl != null) {
+        _middlePhotoPath=imageUrl;
+        if(_middlePhotoPath!=null) {
+          middlePoleLatController.text = _latitude!;
+          middlePoleLanController.text = _longitude!;
+          notifyListeners();
+        }
+        notifyListeners();
+        print("Image uploaded successfully: $imageUrl");
+        await _getCurrentLocation();
+        if (context.mounted) {
+          ProcessDialogHelper.closeDialog(context);
+        }
+      } else {
+        if (context.mounted) {
+          ProcessDialogHelper.closeDialog(context);
+          // showAlertDialog(context, _errorMessage!);
+        }
+        showErrorDialog(context, "Image upload failed");
+      }
+    } catch (e) {
+      if (context.mounted) showErrorDialog(context, "Error capturing photo");
+    }
+  }
+
+  Future<void> submitForm() async {
+    if (formKey.currentState!.validate()) {
+      formKey.currentState!.save();
+      notifyListeners();
+      _getCurrentLocation();
+      if (!validateForm()) {
+        return;
+      }else{
+        submitData();
+        print("in else block");
+      }
+    }
+  }
+  bool validateForm() {
+    if (_middlePhotoPath==null||_middlePhotoPath=="") {
+      AlertUtils.showSnackBar(
+          context, "Please capture the image",
+          isTrue);
+      return false;
+    }
+    if ((_latitude==''||_latitude==null)&&(_longitude==''||_longitude==null)) {
+      AlertUtils.showSnackBar(context, "Please wait until we capture your location", isTrue);
+      return false;
+    }
+    return true;
+  }
+
+  Map<String, dynamic> viewWorkData() {
+    return {
+      "middlePoleLat":middlePoleLatController.text,
+      "middlePoleLon": middlePoleLanController.text,
+      "middlePoleImageUrl": middlePhotoPath,
+      "_id":surId,
+    };
+  }
+
+  Future<void> submitData() async {
+    print("${jsonEncode(viewWorkData())}:JsoonEncode data");
+
+
+    final requestData = {
+      "authToken":
+      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "api": Apis.API_KEY,
+      "updateDataJson":jsonEncode(viewWorkData()),
+    };
+
+    final payload = {
+      "path": "/saveMiddlePole",
+      "apiVersion": "1.1",
+      "method": "POST",
+      "data": jsonEncode(requestData),
+    };
+
+    try {
+      var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+          .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+
+      print("load structure response: $response");
+      if (response != null) {
+        var responseData = response.data;
+        if (responseData is String) {
+          try {
+            responseData = jsonDecode(responseData);
+            if (responseData['tokenValid'] == true) {
+              if (responseData['success'] == true) {
+                if (responseData['message'] != null) {
+                  showSuccessDialog(context,responseData['message'] , () {
+                    Navigator.pop(context);
+                  });
+
+                }
+              } else {
+                showAlertDialog(
+                    context, responseData['message'] ?? "Operation failed");
+              }
+            } else {
+              showSessionExpiredDialog(context);
+            }
+          } catch (e) {
+            print("Error decoding response data: $e");
+            showErrorDialog(
+                context, "Invalid response format. Please try again.");
+            return;
+          }
+        }
+      }
+    } catch (e) {
+      print("Exception caught: $e");
+      showErrorDialog(context, "An error occurred. Please try again.");
     }
   }
 }

@@ -17,7 +17,9 @@ class ViewDetailedLcTileWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
-      child: Row(
+      child: Column(
+    children: [
+      Row(
         children: [
           const SizedBox(width: 10.0,),
           Expanded(
@@ -43,8 +45,10 @@ class ViewDetailedLcTileWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 10.0,),
-          const Divider(),
         ],
+      ),
+      const Divider(),
+    ]
       ),
     );
   }

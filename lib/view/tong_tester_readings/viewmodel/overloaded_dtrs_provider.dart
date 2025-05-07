@@ -10,7 +10,7 @@ import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/view/tong_tester_readings/model/dtr_structure_entity.dart';
 import 'package:tsnpdcl_employee/view/tong_tester_readings/model/dropdown_option.dart';
 
-class OverloadedDtrsProvider with ChangeNotifier {
+class OverloadedFloatingButtonProvider with ChangeNotifier {
   final sectionCode =
   SharedPreferenceHelper.getStringValue(LoginSdkPrefs.sectionCodePrefKey);
   final section =
@@ -39,12 +39,10 @@ class OverloadedDtrsProvider with ChangeNotifier {
   bool get isLoadingStructureDetails => _isLoadingStructureDetails;
   String? get selectedStructureId => _selectedStructureId;
 
-  final ApiProvider _apiProvider =
-  ApiProvider(baseUrl: Apis.TONG_TESTER_END_POINT_BASE_URL);
   String? selectedStructureCode;
 
-  OverloadedDtrsProvider(this.context) {
-    _fetchStructures();
+  OverloadedFloatingButtonProvider(this.context) {
+    fetchStructures();
   }
 
   Future<void> selectDateTime() async {
@@ -97,7 +95,7 @@ class OverloadedDtrsProvider with ChangeNotifier {
     return "${dateTime.day.toString().padLeft(2, '0')}/${dateTime.month.toString().padLeft(2, '0')}/${dateTime.year} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}";
   }
 
-  Future<void> _fetchStructures() async {
+  Future<void> fetchStructures() async {
     if (_isLoadingStructures) return; // Prevent duplicate calls
     _isLoadingStructures = true;
     notifyListeners();

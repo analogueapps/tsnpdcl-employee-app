@@ -162,7 +162,71 @@ class ViewDetailedPendingListScreen extends StatelessWidget {
                     tileKey: "DISTANCE B/W A & B", tileValue:data.distance),
                 ViewDetailedLcTileWidget(
                     tileKey: "REMARKS", tileValue: data.remarksBySurveyor),
-                 ViewDetailedLcTileWidget(
+
+                status=="FINISHED"? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(top: 5.0),
+                        padding: const EdgeInsets.only(
+                            top: 15.0, bottom: 15.0, left: 10),
+                        color: Colors.grey[200],
+                        width: double.infinity,
+                        child: Text(
+                          "MIDDLE POLE DETAILS".toUpperCase(),
+                          style: const TextStyle(fontWeight: FontWeight.w700),
+                        ),
+                      ),
+                      Container(
+                    height: 180,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Image.network(
+                      data.middlePoleImageUrl != null
+                          ? data.middlePoleImageUrl!
+                          : 'https://example.com/placeholder.jpg',
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Center(
+                          child: Icon(Icons.broken_image, color: Colors.grey, size: 50),
+                        );
+                      },
+                    ),
+                  ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 5.0),
+                        padding: const EdgeInsets.only(
+                            top: 15.0, bottom: 15.0, left: 10),
+                        color: Colors.grey[200],
+                        width: double.infinity,
+                        child: Text(
+                          "MIDDLE POLE PHOTO".toUpperCase(),
+                          style: const TextStyle(fontWeight: FontWeight.w700),
+                        ),
+                      ),
+                      SizedBox(height: 10,),
+                      ViewDetailedLcTileWidget(
+                          tileKey: "MIDDLE POLE LATITUDE", tileValue: data.middlePoleLat.toString()),
+                      ViewDetailedLcTileWidget(
+                          tileKey: "MIDDLE POLE LONGITUDE", tileValue: data.middlePoleLon.toString()),
+
+                      Container(
+                        margin: const EdgeInsets.only(top: 5.0),
+                        padding: const EdgeInsets.only(
+                            top: 15.0, bottom: 15.0, left: 10),
+                        color: Colors.grey[200],
+                        width: double.infinity,
+                        child: Text(
+                          "UPLOAD DETAILS".toUpperCase(),
+                          style: const TextStyle(fontWeight: FontWeight.w700),
+                        ),
+                      ),
+                ]
+                ):SizedBox(),
+                ViewDetailedLcTileWidget(
                     tileKey: "UPLOAD BY EMP ID", tileValue: data.surveyorId),
                  ViewDetailedLcTileWidget(
                     tileKey: "DATE OF UPLOAD",
@@ -182,8 +246,10 @@ class ViewDetailedPendingListScreen extends StatelessWidget {
       ),
       floatingActionButton: status=="PENDING"?FloatingActionButton(
         onPressed: () {
-          Navigation.instance.navigateTo(Routes.pendingListFloatingButton);
-          // Add your action here, e.g., navigate to an edit screen or show a dialog
+          Navigation.instance.navigateTo(Routes.pendingListFloatingButton,args: {
+            'surveyID': surveyID,
+            'status': status,
+          } );
           print("Pencil FAB pressed");
         },
         backgroundColor: CommonColors.colorPrimary, // Match your app theme

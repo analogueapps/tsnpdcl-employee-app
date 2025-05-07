@@ -8,20 +8,20 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/model/dtr_feedet_distribution_model.dart';
 import 'package:tsnpdcl_employee/widget/primary_button.dart';
 
-class OverloadedDtrsView extends StatelessWidget {
-  static const id = Routes.overloadedDtrsView;
+class OverloadedFloatingButtonView extends StatelessWidget {
+  static const id = Routes.tongTesterReadingsScreen;
 
-  const OverloadedDtrsView({super.key});
+  const OverloadedFloatingButtonView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => OverloadedDtrsProvider(context),
+      create: (_) => OverloadedFloatingButtonProvider(context),
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: CommonColors.colorPrimary,
           title: const Text(
-            "Overloaded DTRs",
+            "Tong Tester Readings Entry",
             style: const TextStyle(
               color: Colors.white,
               fontSize: 18,
@@ -30,7 +30,7 @@ class OverloadedDtrsView extends StatelessWidget {
           ),
           iconTheme: const IconThemeData(color: Colors.white),
         ),
-        body: Consumer<OverloadedDtrsProvider>(
+        body: Consumer<OverloadedFloatingButtonProvider>(
           builder: (context, provider, _) {
             // Check if we are loading either structures or structure details
             if (provider.isLoadingStructures ||
@@ -82,9 +82,9 @@ class OverloadedDtrsView extends StatelessWidget {
                         )),
                     const SizedBox(height: 20),
 
-                    const Align(
+                    Align(
                       alignment: Alignment.centerLeft,
-                      child:  Text("SELECT STRUCTURE CODE",
+                      child: const Text("SELECT STRUCTURE CODE",
                           style: TextStyle(fontSize: 16)),
                     ),
                     SizedBox(height: 5,),
@@ -356,7 +356,7 @@ class OverloadedDtrsView extends StatelessWidget {
 
 
   void _showStructuresDialog(
-      BuildContext context, OverloadedDtrsProvider provider) {
+      BuildContext context, OverloadedFloatingButtonProvider provider) {
     final TextEditingController searchController = TextEditingController();
     String searchQuery = '';
 
