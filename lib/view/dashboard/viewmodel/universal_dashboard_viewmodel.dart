@@ -647,7 +647,16 @@ class UniversalDashboardViewModel extends ChangeNotifier {
           title: title,
           items: globalListDialogItem,
           onItemSelected: (item) {
-            Navigation.instance.navigateTo(item.routeName);
+            //Navigation.instance.navigateTo(item.routeName);
+            if(item.title == "CT PT Failure Reports") {
+              Navigation.instance.navigateTo(item.routeName, args: Apis.GET_CTPT_BAR_GRAPH_DATA_URL);
+            } else if(item.title == "Middle Poles Reports") {
+              Navigation.instance.navigateTo(item.routeName, args: Apis.GET_MIDDLE_POLES_BAR_GRAPH_DATA_URL);
+            } else if(item.title == "Maintenance Reports") {
+              Navigation.instance.navigateTo(item.routeName, args: Apis.GET_MAINTENANCE_BAR_GRAPH_DATA_URL);
+            } else {
+              Navigation.instance.navigateTo(item.routeName);
+            }
           },
         ),
       );

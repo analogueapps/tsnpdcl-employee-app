@@ -181,4 +181,5 @@ class Routes {
   static const String dlistMenuScreen = "DlistMenuScreen";
   static const String rangeWiseDlistScreen = "RangeWiseDlistScreen";
   static const String clusterMapScreen = "ClusterMapScreen";
+  static const String dlistAttendScreen = "DlistAttendScreen";
 }

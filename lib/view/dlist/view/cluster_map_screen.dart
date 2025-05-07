@@ -25,25 +25,32 @@ class ClusterMapScreen extends StatelessWidget {
       child: Consumer<ClusterMapViewmodel>(
         builder: (context, viewModel, child) {
           return Scaffold(
-              appBar: AppBar(
-                backgroundColor: CommonColors.colorPrimary,
-                title: Text(
-                  "Sections".toUpperCase(),
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: toolbarTitleSize,
-                      fontWeight: FontWeight.w700),
-                ),
-                iconTheme: const IconThemeData(
-                  color: Colors.white,
-                ),
-              ),
+              // appBar: AppBar(
+              //   backgroundColor: Colors.transparent,
+              //   title: Text(
+              //     "Sections".toUpperCase(),
+              //     style: const TextStyle(
+              //         color: Colors.white,
+              //         fontSize: toolbarTitleSize,
+              //         fontWeight: FontWeight.w700),
+              //   ),
+              //   iconTheme: const IconThemeData(
+              //     color: Colors.white,
+              //   ),
+              // ),
               body: viewModel.isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : GoogleMap(
+                myLocationButtonEnabled: false,
+                zoomControlsEnabled: true,
+                myLocationEnabled: true,
+                mapToolbarEnabled: false,
+                zoomGesturesEnabled: true,
+                rotateGesturesEnabled: true,
+                minMaxZoomPreference: const MinMaxZoomPreference(6, 19),
                 initialCameraPosition: viewModel.clusterPlaces.isNotEmpty
-                    ? CameraPosition(target: viewModel.clusterPlaces.first.latLng, zoom: 12)
-                    : CameraPosition(target: LatLng(17.385044, 78.486671), zoom: 12),
+                    ? CameraPosition(target: viewModel.parseLatLngFromString(viewModel.clusterPlaces.first.latLong), zoom: 12)
+                    : const CameraPosition(target: LatLng(17.969167, 79.595918), zoom: 12),
                 markers: viewModel.markers,
                 onCameraMove: viewModel.clusterManager?.onCameraMove ?? (_) {},
                 onCameraIdle: viewModel.clusterManager?.updateMap ?? () {},
@@ -53,7 +60,7 @@ class ClusterMapScreen extends StatelessWidget {
                     await viewModel.initClusterManager(); // call this new method
                   }
                 },
-              )
+              ),
           );
         },
       ),
