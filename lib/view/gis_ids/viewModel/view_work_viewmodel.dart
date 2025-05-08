@@ -129,8 +129,6 @@ class WorkDetailsViewModel extends ChangeNotifier {
         }
 
         if (responseData is Map<String, dynamic>) {
-          const int successResponseCode = 200;
-          const bool isTrue = true;
 
           if (response.statusCode == successResponseCode) {
             if (responseData['tokenValid'] == isTrue || responseData['tokenValid'] == false) {

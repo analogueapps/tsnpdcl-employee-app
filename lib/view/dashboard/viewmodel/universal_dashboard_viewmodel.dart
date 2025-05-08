@@ -57,7 +57,7 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.cccTitle,
           imageAsset: Assets.focc,
-          routeName: routeName
+          routeName: Routes.cccDashboard
       ),
       UniversalDashboardItem(
           title: GlobalConstants.consumerRelatedTitle,
@@ -92,7 +92,7 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       UniversalDashboardItem(
           title: GlobalConstants.schedulesTitle,
           imageAsset: Assets.schedules,
-          routeName: ""
+          routeName: Routes.schedule
       ),
       UniversalDashboardItem(
           title: GlobalConstants.meesevaTitle,

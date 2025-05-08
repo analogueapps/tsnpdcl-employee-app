@@ -191,4 +191,11 @@ class Routes {
   static const String rangeWiseDlistScreen = "RangeWiseDlistScreen";
   static const String clusterMapScreen = "ClusterMapScreen";
   static const String dlistAttendScreen = "DlistAttendScreen";
+
+  //CCC * Bhavana
+  static const String cccDashboard = "CCCDashboardScreen";
+  static const cccORICB="CccOricb";
+
+  //SCHEDULES *BHAVANA
+    static const String schedule="SchedulesScreen";
 }

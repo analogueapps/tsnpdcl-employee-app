@@ -4,6 +4,8 @@ import 'package:tsnpdcl_employee/view/asset_mapping/view/asset_mapping_screen.da
 import 'package:tsnpdcl_employee/view/auth/view/corporate_login_screen.dart';
 import 'package:tsnpdcl_employee/view/auth/view/employee_id_login_screen.dart';
 import 'package:tsnpdcl_employee/view/bs_udc_inspection/view/bs_udc_list.dart';
+import 'package:tsnpdcl_employee/view/ccc/view/ccc_dashboard.dart';
+import 'package:tsnpdcl_employee/view/ccc/view/ccc_oricb.dart';
 import 'package:tsnpdcl_employee/view/check_readings/view/check_readings_screen.dart';
 import 'package:tsnpdcl_employee/view/check_readings/view/enter_service_details.dart';
 import 'package:tsnpdcl_employee/view/consumer_details/view/consumer_details_screen.dart';
@@ -101,10 +103,12 @@ import 'package:tsnpdcl_employee/view/pole_tracker/view/view_offline_feeders_scr
 import 'package:tsnpdcl_employee/view/reports/view/reports_screen.dart';
 import 'package:tsnpdcl_employee/view/rfss/view/download_structures_screen.dart';
 import 'package:tsnpdcl_employee/view/rfss/view/rfss_screen.dart';
+import 'package:tsnpdcl_employee/view/schedules/view/schedule.dart';
 import 'package:tsnpdcl_employee/view/search_consumer/view/search_consumer_screen.dart';
 import 'package:tsnpdcl_employee/view/ss_maintenance/view/maintenance_due_screen.dart';
 import 'package:tsnpdcl_employee/view/ss_maintenance/view/maintenance_finished_screen.dart';
 import 'package:tsnpdcl_employee/view/ss_maintenance/view/ss_maintenance_screen.dart';
+import 'package:tsnpdcl_employee/view/tong_tester_readings/model/overload_dtr_list_model.dart';
 import 'package:tsnpdcl_employee/view/tong_tester_readings/view/overloaded_floating_button_screen.dart';
 import 'package:tsnpdcl_employee/view/tong_tester_readings/view/overLoad_dtr_list.dart';
 import 'package:tsnpdcl_employee/view/tong_tester_readings/view/view_detailed_tong_tester_readings.dart';
@@ -318,7 +322,9 @@ class AppRouter {
       case OverloadedFloatingButtonView.id:
         return MaterialPageRoute(builder: (_) => const OverloadedFloatingButtonView());
       case ViewDetailedTongTesterReadings.id:
-        return MaterialPageRoute(builder: (_) => const ViewDetailedTongTesterReadings());
+        final args = settings.arguments as OverloadDtrListModel;
+        return MaterialPageRoute(builder: (_) =>  ViewDetailedTongTesterReadings(data: args
+        ));
 
 
     // RFSS Screen * Swetha
@@ -547,6 +553,20 @@ class AppRouter {
         return MaterialPageRoute(builder: (_)=> RangeWiseDlistScreen(data: settings.arguments as String,));
       case ClusterMapScreen.id:
         return MaterialPageRoute(builder: (_)=> ClusterMapScreen(data: settings.arguments as Map<String, dynamic>,));
+
+      //CCC Dashboard * Bhavana
+      case CCCDashboardScreen.id:
+        return MaterialPageRoute(builder: (_) => const CCCDashboardScreen());
+      case CccOricb.id:
+        final args = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(builder: (_) =>  CccOricb(
+          status: args['status'] ?? '',
+          title: args['name'] ?? '',
+        ));
+
+     //Schedules * Bhavana
+    case SchedulesScreen.id:
+    return MaterialPageRoute(builder: (_) => const SchedulesScreen());
 
       default:
         return MaterialPageRoute(

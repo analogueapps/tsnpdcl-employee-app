@@ -32,6 +32,16 @@ class OverloadedFloatingButtonProvider with ChangeNotifier {
   DateTime? selectedDateTime;
   String? selectedLocationType;
 
+  //Radio buttons
+  String? _selectedOption;
+
+  String? get selectedOption => _selectedOption;
+
+  void selectOption(String value) {
+    _selectedOption = value;
+    notifyListeners();
+  }
+
   List<DropdownOption> get structures => _structures;
   Map<String, dynamic>? get currentStructure => _currentStructure;
   bool get isLoading => _isLoading;
@@ -439,7 +449,7 @@ class OverloadedFloatingButtonProvider with ChangeNotifier {
         "path": "/savedTongTesterReading",
         "apiVersion": "1.0",
         "method": "POST",
-        "data": jsonEncode(requestData), // Stringify the inner request data
+        "data": jsonEncode(requestData),
       };
 
       print("Request payload: $payload");

@@ -86,6 +86,7 @@ class Apis{
   static const String GET_STRUCTURES_OF_SECTION = "/getStructuresOfSection";
   static const String GET_DTRS_OF_STRUCTURE = "/getDtrsOfStructure";
   static const String SAVE_TONG_TESTER_READING = "/savedTongTesterReading";
+  static const GET_TONG_TEST_READINGS="getTongTesterReadings";
 
   /// Account
   static const String LOAD_ACCOUNT = "/load/account";
@@ -111,4 +112,13 @@ class Apis{
   ///ONLINE PR * BHAVANA
   static const   ONLINE_PR_END_POINT_BASE_URL= "$SERVER_IP:5656/NPFDAS/ep/onlinePr/";
   static const ISSUE_DUPLICATE_URL = "authenticateRcDevice";
+
+  ///CCC
+  static const CCC_END_POINT_BASE_URL="$SERVER_IP:5656/NPFDAS/ep/ccc/";
+  static const GET_ABSTRACT="getAbstract";
+  static const GET_CCC_TICKETS="getCCCTickets";
+
+  ///SCHEDULES
+  static const SCHEDULES_URL="getTourDairyByMonth";
+
 }

@@ -1,127 +1,166 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
+import 'package:tsnpdcl_employee/utils/general_assets.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
+import 'package:tsnpdcl_employee/view/tong_tester_readings/viewmodel/overload_dtr_list_viewmodel.dart';
 import 'package:tsnpdcl_employee/widget/view_detailed_lc_tile_widget.dart';
 
 class OverLoadDTRList extends StatelessWidget {
   static const id = Routes.overLoadDTRList;
-  // final Map<String, dynamic> structure;
 
   const OverLoadDTRList({super.key});
  @override
   Widget build(BuildContext context) {
-    // Static values for testing
-    final apiData = {
-      'Equipment Code': '120150813',
-      'Structure Code': '12237-BALASAMUDRAM-SS-0025',
-      'Section': '402911201',
-      'yph': "Yph: 79.0",
-    };
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: CommonColors.colorPrimary,
-        title: const Text(
+        title: const Column(
+        children: [
+          Text(
           "OVER LOAD DTRs LIST",
           style: TextStyle(
               color: Colors.white,
               fontSize: titleSize,
               fontWeight: FontWeight.w700),
         ),
+          Text(
+            "Showing I(N)>20Amps",
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: titleSize,
+                fontWeight: FontWeight.w700),
+          ),
+        ]
+        ),
         iconTheme: const IconThemeData(
           color: Colors.white,
         ),
       ),
-      body: GestureDetector(
-        onTap: () {
-          // Navigation.instance.navigateTo(Routes.viewDetailedTongTesterReadings);
+      body: ChangeNotifierProvider(
+        create: (_) => OverloadDtrListViewmodel(context: context),
+   child: Consumer<OverloadDtrListViewmodel>(
+   builder: (context, viewModel, child) {
+   return  Stack(
+       children: [
+         ListView.builder(
+   itemCount: viewModel.overLoadItems.length,
+   itemBuilder: (context, index) {
+     final data = viewModel.overLoadItems[index];
+     return data == null
+         ?
+     const Center(child: Text("No data found")) :
+
+             GestureDetector(
+                 onTap: () {
+                   Navigation.instance.navigateTo(Routes.viewDetailedTongTesterReadings,args: data,);
+                   print("passing data: $data");
+                 },
+                 child:
+             Container(
+         margin: const EdgeInsets.all(10),
+         decoration: BoxDecoration(
+           color: Colors.white,
+           borderRadius: BorderRadius.circular(8),
+           // Optional: to give rounded corners
+           boxShadow: [
+             BoxShadow(
+               color: Colors.black.withOpacity(0.1),
+               blurRadius: 8,
+               offset: const Offset(
+                   0, 4),
+             ),
+           ],
+         ),
+         padding: const EdgeInsets.only(top: 10),
+         child: Column(
+           children: [
+             Row(
+               mainAxisSize: MainAxisSize.min,
+               children: [
+                 Expanded(
+                   child: Column(
+                     crossAxisAlignment: CrossAxisAlignment.start,
+                     children: [
+                        Align(
+                         alignment: Alignment.topRight,
+                         child: Text(
+                           "${data.readingDate} ${data.readingTime}",
+                           style: const TextStyle(
+                             color: CommonColors.deepBlue,
+                           ),
+                         ),
+                       ),
+                       const SizedBox(height: 10),
+                       ViewDetailedLcTileWidget(
+                           tileKey: "Equipment Code",
+                           tileValue: data.equipmentCode),
+
+                       ViewDetailedLcTileWidget(
+                           tileKey: "Structure Code",
+                           tileValue: data.dtrStructureCode),
+
+                       ViewDetailedLcTileWidget(
+                           tileKey: "Section",
+                           tileValue:data.sectionCode),
+
+                       _reusableLastRow(data.ir, data.iy, data.ib, data.iNeutral),
+                     ],
+                   ),
+                 ),
+                 // IconButton with no space between it and the text
+                 IconButton(
+                   onPressed: () {
+                     // Add your navigation logic here
+                     Navigation.instance
+                         .navigateTo(Routes.viewDetailedTongTesterReadings, args: data,);
+                     print("icon on tap: $data");
+                   },
+                   icon:
+                   const Icon(Icons.arrow_forward_ios_rounded, size: 14),
+                   padding:
+                   EdgeInsets.zero, // Ensures there is no extra padding
+                 ),
+               ],
+             ),
+           ],
+         ),
+       ),
+     );
+   }
+   ),
+         if (viewModel.isLoading)
+           Positioned.fill(
+             child: Container(
+               color: Colors.black.withOpacity(0.0), // Semi-transparent overlay
+               child: const Center(
+                 child: CircularProgressIndicator(),
+               ),
+             ),
+           ),
+     ]
+     );
+   }
+   ),
+   ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: CommonColors.colorPrimary,
+        foregroundColor: Colors.white,
+        shape: const CircleBorder(),
+        onPressed: () {
+          Navigation.instance.navigateTo(Routes.tongTesterReadingsScreen);
         },
-        child: SingleChildScrollView(
-          child: Container(
-            margin: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8),
-              // Optional: to give rounded corners
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  // Shadow color with some transparency
-                  blurRadius: 8,
-                  // The spread radius
-                  offset: const Offset(0, 4), // The position of the shadow (horizontal, vertical)
-                ),
-              ],
-            ),
-            padding: const EdgeInsets.only(top: 10),
-            child: Column(
-              children: [
-                // Content Row
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  // To remove extra space in the Row
-                  children: [
-                    Expanded(
-                      // Ensures the text takes up available space
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Align(
-                            alignment: Alignment.topRight,
-                            child: Text(
-                              "01/06/2024 23:37",
-                              style: TextStyle(
-                                color: CommonColors.deepBlue,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          ViewDetailedLcTileWidget(
-                              tileKey: "Equipment Code",
-                              tileValue: "${apiData['Equipment Code']}"),
-                          const Divider(),
-                          ViewDetailedLcTileWidget(
-                              tileKey: "Structure Code",
-                              tileValue: "${apiData['Structure Code']}"),
-                          const Divider(),
-                          ViewDetailedLcTileWidget(
-                              tileKey: "Section",
-                              tileValue: "${apiData['Section']}"),
-                          const Divider(),
-                          _reusableLastRow("Rph: 101.0", "${apiData['yph']}",
-                              "Bph: 87.0", "Bph: 87.0"),
-                        ],
-                      ),
-                    ),
-                    // IconButton with no space between it and the text
-                    IconButton(
-                      onPressed: () {
-                        // Add your navigation logic here
-                        Navigation.instance
-                            .navigateTo(Routes.viewDetailedTongTesterReadings);
-                      },
-                      icon:
-                      const Icon(Icons.arrow_forward_ios_rounded, size: 14),
-                      padding:
-                      EdgeInsets.zero, // Ensures there is no extra padding
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
+        child:  Image.asset(Assets.tongTesterReadings,height: 30,),
       ),
-    );
+   );
   }
 
   //reusable last row
   Widget _reusableLastRow(
-      String label, String value, String value2, String value3) {
+      double value1, double value2, double value3, double value4) {
     return Container(
       padding: const EdgeInsets.only(left: 10, top: 4, bottom: 6),
       child: Row(
@@ -129,7 +168,7 @@ class OverLoadDTRList extends StatelessWidget {
         children: [
           Expanded(
             child: Text(
-              label,
+              "Rph: $value1",
               style: const TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
@@ -145,7 +184,7 @@ class OverLoadDTRList extends StatelessWidget {
           ),
           Expanded(
             child: Text(
-              value,
+              "Yph: $value2",
               textAlign: TextAlign.center,
               style: const TextStyle(
                 color: CommonColors.colorSecondary,
@@ -159,7 +198,7 @@ class OverLoadDTRList extends StatelessWidget {
           ),
           Expanded(
             child: Text(
-              value2,
+              "Bph: $value3",
               textAlign: TextAlign.center,
               style: const TextStyle(
                 color: CommonColors.colorPrimary,
@@ -173,7 +212,7 @@ class OverLoadDTRList extends StatelessWidget {
           ),
           Expanded(
             child: Text(
-              value3,
+              "N: $value4",
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontWeight: FontWeight.w600,
