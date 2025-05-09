@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
+import 'package:tsnpdcl_employee/dialogs/process_dialog.dart';
 import 'package:tsnpdcl_employee/network/api_provider.dart';
 import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
@@ -11,9 +12,12 @@ import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_assets.dart';
 import 'package:tsnpdcl_employee/view/schedules/models/ss_and_line_count_model.dart';
+import 'package:tsnpdcl_employee/view/schedules/models/ss_data_model.dart';
+import 'package:tsnpdcl_employee/view/schedules/view/schedule_line_dialog.dart';
+import 'package:tsnpdcl_employee/view/schedules/view/schedule_ss_dialog.dart';
 
 class ScheduleViewModel extends ChangeNotifier {
-  ScheduleViewModel(BuildContext context) {
+  ScheduleViewModel({required this.context}) {
     final now = DateTime.now();
     _selectedMonthYear = {
       'month': _getMonthName(now.month),
@@ -21,7 +25,7 @@ class ScheduleViewModel extends ChangeNotifier {
     };
     fetchScheduledData(context, _selectedMonthYear);
   }
-
+  final BuildContext context;
   Map<String, dynamic>? _selectedMonthYear;
 
   Map<String, dynamic>? get selectedMonthYear => _selectedMonthYear;
@@ -73,8 +77,8 @@ class ScheduleViewModel extends ChangeNotifier {
   }
 
   //
-  String selectedSS = '181641'; // Currently selected value
-  final List<String> ssOptions = ['181641', '181642', '181643', '181644'];
+  String selectedSS = ''; // Currently selected value
+  final List<SsDataModel> ssOptions = [];
 
 
 List<String> _allDays=[];
@@ -156,18 +160,21 @@ List<String> get allDays=>_allDays;
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
+        return WillPopScope(
+            // onWillPop: () async {
+            //   return viewModel.isLocationGranted;
+            // },
+            onWillPop: null,
+            child:AlertDialog(
           title: Text('Choose Option'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               InkWell(
                 onTap: () {
-                  Navigator.pop(context); // Close current dialog
-                  Future.delayed(Duration.zero, () {
-                    showScheduleSSMaintencePopUp(
-                        context); // Open new one after frame
-                  });
+                  // ssInfo(context, "substation");
+                  // Navigator.pop(context); // Close current dialog
+                  showScheduleSSMaintenceDialog(context, _selectedMonthYear);
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -190,10 +197,7 @@ List<String> get allDays=>_allDays;
               ),
               InkWell(
                 onTap: () {
-                  Navigator.pop(context);
-                  Future.delayed(Duration.zero, () {
-                    showScheduleLineMaintencePopUp(context);
-                  });
+                  showScheduleLineMaintencePopUp(context,_selectedMonthYear);
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -235,609 +239,404 @@ List<String> get allDays=>_allDays;
               ),
             ],
           ),
-        );
+            ));
       },
     );
   }
 
-  void showScheduleLineMaintencePopUp(BuildContext context) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return StatefulBuilder(builder: (context, setState) {
-            return AlertDialog(
-              titlePadding: EdgeInsets.zero,
-              title: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topRight: Radius.circular(20),
-                  topLeft: Radius.circular(20),
-                ),
-                child: Container(
-                  color: CommonColors.colorPrimary,
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 20.0),
-                    child: Center(
-                        child: Text(
-                      'SCHEDULE 11KV LINE MAINTENANCE',
-                      style: TextStyle(color: Colors.white, fontSize: 12),
-                    )),
-                  ),
-                ),
-              ),
-              content: SizedBox(
-                width: double.maxFinite,
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 10.0, horizontal: 10.0),
-                              child: Text(
-                                'Select SS',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: 1,
-                            height: 30,
-                            color: Colors.grey.shade400,
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 10.0, horizontal: 10.0),
-                              child: DropdownButton<String>(
-                                value: selectedSS,
-                                isExpanded: true,
-                                underline: SizedBox(),
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                                items: ssOptions.map((value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                }).toList(),
-                                onChanged: (newValue) {
-                                  // Add any additional logic here
-                                },
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Divider(
-                        color: Colors.grey.shade400,
-                        thickness: 1,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 10.0, horizontal: 10.0),
-                              child: Text(
-                                'SS Code',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: 1,
-                            height: 30,
-                            color: Colors.grey.shade400,
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 10.0, horizontal: 10.0),
-                              child: Text(
-                                '0003-33KV SS-NAKKALAGUTTA',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.red),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                      Divider(
-                        color: Colors.grey.shade400,
-                        thickness: 1,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 10.0, horizontal: 10.0),
-                              child: Text(
-                                'SS Name',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: 1,
-                            height: 30,
-                            color: Colors.grey.shade400,
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 10.0, horizontal: 10.0),
-                              child: Text(
-                                'NAKKALAGUTTA',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.red),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                      Divider(
-                        color: Colors.grey.shade400,
-                        thickness: 1,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 10.0, horizontal: 10.0),
-                              child: Text(
-                                'Section',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: 1,
-                            height: 30,
-                            color: Colors.grey.shade400,
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 10.0, horizontal: 10.0),
-                              child: Text(
-                                'NAKKALAGUTTA',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.red),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                      Divider(
-                        color: Colors.grey.shade400,
-                        thickness: 1,
-                      ),
-                      SizedBox(
-                        height: 11,
-                      ),
-                      Text(
-                        'CHOOSE 11KV FEEDERS',
-                        style: TextStyle(color: Colors.red),
-                      ),
-                      Row(
-                        children: [
-                          Checkbox(
-                              value: isFalse, onChanged: (bool? newValue) {}),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text('CIRCLE OFFICE'),
-                        ],
-                      ),
-                      Divider(
-                        color: Colors.grey,
-                        thickness: 1,
-                      ),
-                      Row(
-                        children: [
-                          Checkbox(
-                              value: isFalse, onChanged: (bool? newValue) {}),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text('DIVISION OFFICE'),
-                        ],
-                      ),
-                      Divider(
-                        color: Colors.grey,
-                        thickness: 1,
-                      ),
-                      Row(
-                        children: [
-                          Checkbox(
-                              value: isFalse, onChanged: (bool? newValue) {}),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text('VINAYAKA NAGAR'),
-                        ],
-                      ),
-                      Divider(
-                        color: Colors.grey,
-                        thickness: 1,
-                      ),
-                      Row(
-                        children: [
-                          Checkbox(
-                              value: isFalse, onChanged: (bool? newValue) {}),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text('GOKULNAGAR'),
-                        ],
-                      ),
-                      Divider(
-                        color: Colors.grey,
-                        thickness: 1,
-                      ),
-                      Row(
-                        children: [
-                          Checkbox(
-                              value: isFalse, onChanged: (bool? newValue) {}),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text('POLICEHEADQUARTER'),
-                        ],
-                      ),
-                      Divider(
-                        color: Colors.grey,
-                        thickness: 1,
-                      ),
-                      Row(
-                        children: [
-                          Checkbox(
-                              value: isFalse, onChanged: (bool? newValue) {}),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text('BHAVANI NAGARII'),
-                        ],
-                      ),
-                      Divider(
-                        color: Colors.grey,
-                        thickness: 1,
-                      ),
-                      Row(
-                        children: [
-                          Checkbox(
-                              value: isFalse, onChanged: (bool? newValue) {}),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text('NAKKALAGUTTA'),
-                        ],
-                      ),
-                      Divider(
-                        color: Colors.grey,
-                        thickness: 1,
-                      ),
-                      SizedBox(
-                        height: 11,
-                      ),
-                      Text(
-                        'Select Schedule Date',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(
-                        height: 21,
-                      ),
-                      Row(
-                        children: [
-                          InkWell(
-                            onTap: () async {
-                              final DateTime today = DateTime.now();
-                              final DateTime maxDate = today.add(const Duration(
-                                  days: 30)); // 30 days from today
+  //Line Maintence
+  // void showScheduleLineMaintencePopUp(BuildContext context) {
+  //   showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return StatefulBuilder(builder: (context, setState) {
+  //           return AlertDialog(
+  //             titlePadding: EdgeInsets.zero,
+  //             title: ClipRRect(
+  //               borderRadius: const BorderRadius.only(
+  //                 topRight: Radius.circular(20),
+  //                 topLeft: Radius.circular(20),
+  //               ),
+  //               child: Container(
+  //                 color: CommonColors.colorPrimary,
+  //                 child: const Padding(
+  //                   padding: EdgeInsets.symmetric(vertical: 20.0),
+  //                   child: Center(
+  //                       child: Text(
+  //                     'SCHEDULE 11KV LINE MAINTENANCE',
+  //                     style: TextStyle(color: Colors.white, fontSize: 12),
+  //                   )),
+  //                 ),
+  //               ),
+  //             ),
+  //             content: SizedBox(
+  //               width: double.maxFinite,
+  //               child: SingleChildScrollView(
+  //                 child: Column(
+  //                   crossAxisAlignment: CrossAxisAlignment.start,
+  //                   children: [
+  //                     Row(
+  //                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                       children: [
+  //                         Expanded(
+  //                           flex: 2,
+  //                           child: Padding(
+  //                             padding: const EdgeInsets.symmetric(
+  //                                 vertical: 10.0, horizontal: 10.0),
+  //                             child: Text(
+  //                               'Select SS',
+  //                               style: TextStyle(fontWeight: FontWeight.bold),
+  //                             ),
+  //                           ),
+  //                         ),
+  //                         Container(
+  //                           width: 1,
+  //                           height: 30,
+  //                           color: Colors.grey.shade400,
+  //                         ),
+  //                         Expanded(
+  //                           flex: 2,
+  //                           child: Padding(
+  //                             padding: const EdgeInsets.symmetric(
+  //                                 vertical: 10.0, horizontal: 10.0),
+  //                             child: DropdownButton<String>(
+  //                               value: selectedSS,
+  //                               isExpanded: true,
+  //                               underline: SizedBox(),
+  //                               style: TextStyle(
+  //                                 fontWeight: FontWeight.bold,
+  //                                 color: Colors.black,
+  //                               ),
+  //                               items: ssOptions.map((value) {
+  //                                 return DropdownMenuItem<String>(
+  //                                   value: value.ssName,
+  //                                   child: Text(value.ssName!),
+  //                                 );
+  //                               }).toList(),
+  //                               onChanged: (newValue) {
+  //                                 // Add any additional logic here
+  //                               },
+  //                             ),
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                     Divider(
+  //                       color: Colors.grey.shade400,
+  //                       thickness: 1,
+  //                     ),
+  //                     Row(
+  //                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                       children: [
+  //                         Expanded(
+  //                           flex: 2,
+  //                           child: Padding(
+  //                             padding: const EdgeInsets.symmetric(
+  //                                 vertical: 10.0, horizontal: 10.0),
+  //                             child: Text(
+  //                               'SS Code',
+  //                               style: TextStyle(fontWeight: FontWeight.bold),
+  //                             ),
+  //                           ),
+  //                         ),
+  //                         Container(
+  //                           width: 1,
+  //                           height: 30,
+  //                           color: Colors.grey.shade400,
+  //                         ),
+  //                         Expanded(
+  //                           flex: 2,
+  //                           child: Padding(
+  //                             padding: const EdgeInsets.symmetric(
+  //                                 vertical: 10.0, horizontal: 10.0),
+  //                             child: Text(
+  //                               '0003-33KV SS-NAKKALAGUTTA',
+  //                               style: TextStyle(
+  //                                   fontWeight: FontWeight.bold,
+  //                                   color: Colors.red),
+  //                             ),
+  //                           ),
+  //                         )
+  //                       ],
+  //                     ),
+  //                     Divider(
+  //                       color: Colors.grey.shade400,
+  //                       thickness: 1,
+  //                     ),
+  //                     Row(
+  //                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                       children: [
+  //                         Expanded(
+  //                           flex: 2,
+  //                           child: Padding(
+  //                             padding: const EdgeInsets.symmetric(
+  //                                 vertical: 10.0, horizontal: 10.0),
+  //                             child: Text(
+  //                               'SS Name',
+  //                               style: TextStyle(fontWeight: FontWeight.bold),
+  //                             ),
+  //                           ),
+  //                         ),
+  //                         Container(
+  //                           width: 1,
+  //                           height: 30,
+  //                           color: Colors.grey.shade400,
+  //                         ),
+  //                         Expanded(
+  //                           flex: 2,
+  //                           child: Padding(
+  //                             padding: const EdgeInsets.symmetric(
+  //                                 vertical: 10.0, horizontal: 10.0),
+  //                             child: Text(
+  //                               'NAKKALAGUTTA',
+  //                               style: TextStyle(
+  //                                   fontWeight: FontWeight.bold,
+  //                                   color: Colors.red),
+  //                             ),
+  //                           ),
+  //                         )
+  //                       ],
+  //                     ),
+  //                     Divider(
+  //                       color: Colors.grey.shade400,
+  //                       thickness: 1,
+  //                     ),
+  //                     Row(
+  //                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                       children: [
+  //                         Expanded(
+  //                           flex: 2,
+  //                           child: Padding(
+  //                             padding: const EdgeInsets.symmetric(
+  //                                 vertical: 10.0, horizontal: 10.0),
+  //                             child: Text(
+  //                               'Section',
+  //                               style: TextStyle(
+  //                                 fontWeight: FontWeight.bold,
+  //                               ),
+  //                             ),
+  //                           ),
+  //                         ),
+  //                         Container(
+  //                           width: 1,
+  //                           height: 30,
+  //                           color: Colors.grey.shade400,
+  //                         ),
+  //                         Expanded(
+  //                           flex: 2,
+  //                           child: Padding(
+  //                             padding: const EdgeInsets.symmetric(
+  //                                 vertical: 10.0, horizontal: 10.0),
+  //                             child: Text(
+  //                               'NAKKALAGUTTA',
+  //                               style: TextStyle(
+  //                                   fontWeight: FontWeight.bold,
+  //                                   color: Colors.red),
+  //                             ),
+  //                           ),
+  //                         )
+  //                       ],
+  //                     ),
+  //                     Divider(
+  //                       color: Colors.grey.shade400,
+  //                       thickness: 1,
+  //                     ),
+  //                     SizedBox(
+  //                       height: 11,
+  //                     ),
+  //                     Text(
+  //                       'CHOOSE 11KV FEEDERS',
+  //                       style: TextStyle(color: Colors.red),
+  //                     ),
+  //                     Row(
+  //                       children: [
+  //                         Checkbox(
+  //                             value: isFalse, onChanged: (bool? newValue) {}),
+  //                         SizedBox(
+  //                           width: 10,
+  //                         ),
+  //                         Text('CIRCLE OFFICE'),
+  //                       ],
+  //                     ),
+  //                     Divider(
+  //                       color: Colors.grey,
+  //                       thickness: 1,
+  //                     ),
+  //                     Row(
+  //                       children: [
+  //                         Checkbox(
+  //                             value: isFalse, onChanged: (bool? newValue) {}),
+  //                         SizedBox(
+  //                           width: 10,
+  //                         ),
+  //                         Text('DIVISION OFFICE'),
+  //                       ],
+  //                     ),
+  //                     Divider(
+  //                       color: Colors.grey,
+  //                       thickness: 1,
+  //                     ),
+  //                     Row(
+  //                       children: [
+  //                         Checkbox(
+  //                             value: isFalse, onChanged: (bool? newValue) {}),
+  //                         SizedBox(
+  //                           width: 10,
+  //                         ),
+  //                         Text('VINAYAKA NAGAR'),
+  //                       ],
+  //                     ),
+  //                     Divider(
+  //                       color: Colors.grey,
+  //                       thickness: 1,
+  //                     ),
+  //                     Row(
+  //                       children: [
+  //                         Checkbox(
+  //                             value: isFalse, onChanged: (bool? newValue) {}),
+  //                         SizedBox(
+  //                           width: 10,
+  //                         ),
+  //                         Text('GOKULNAGAR'),
+  //                       ],
+  //                     ),
+  //                     Divider(
+  //                       color: Colors.grey,
+  //                       thickness: 1,
+  //                     ),
+  //                     Row(
+  //                       children: [
+  //                         Checkbox(
+  //                             value: isFalse, onChanged: (bool? newValue) {}),
+  //                         SizedBox(
+  //                           width: 10,
+  //                         ),
+  //                         Text('POLICEHEADQUARTER'),
+  //                       ],
+  //                     ),
+  //                     Divider(
+  //                       color: Colors.grey,
+  //                       thickness: 1,
+  //                     ),
+  //                     Row(
+  //                       children: [
+  //                         Checkbox(
+  //                             value: isFalse, onChanged: (bool? newValue) {}),
+  //                         SizedBox(
+  //                           width: 10,
+  //                         ),
+  //                         Text('BHAVANI NAGARII'),
+  //                       ],
+  //                     ),
+  //                     Divider(
+  //                       color: Colors.grey,
+  //                       thickness: 1,
+  //                     ),
+  //                     Row(
+  //                       children: [
+  //                         Checkbox(
+  //                             value: isFalse, onChanged: (bool? newValue) {}),
+  //                         SizedBox(
+  //                           width: 10,
+  //                         ),
+  //                         Text('NAKKALAGUTTA'),
+  //                       ],
+  //                     ),
+  //                     Divider(
+  //                       color: Colors.grey,
+  //                       thickness: 1,
+  //                     ),
+  //                     SizedBox(
+  //                       height: 11,
+  //                     ),
+  //                     Text(
+  //                       'Select Schedule Date',
+  //                       style: TextStyle(fontWeight: FontWeight.bold),
+  //                     ),
+  //                     SizedBox(
+  //                       height: 21,
+  //                     ),
+  //                     Row(
+  //                       children: [
+  //                         InkWell(
+  //                           onTap: () async {
+  //                             final DateTime today = DateTime.now();
+  //                             final DateTime maxDate = today.add(const Duration(
+  //                                 days: 30)); // 30 days from today
+  //
+  //                             final DateTime? picked = await showDatePicker(
+  //                               context: context,
+  //                               initialDate: DateTime.now(),
+  //                               firstDate: today,
+  //                               lastDate: maxDate,
+  //                             );
+  //
+  //                             if (picked != null && picked != selectedDate) {
+  //                               setState(() {
+  //                                 selectedDate = picked;
+  //                               });
+  //                             }
+  //                           },
+  //                           child: Row(
+  //                             children: [
+  //                               const Icon(Icons.calendar_month_outlined),
+  //                               const SizedBox(
+  //                                 width: doubleTen,
+  //                               ),
+  //                               Text(
+  //                                 selectedDate != null
+  //                                     ? DateFormat('dd/MM/yyyy')
+  //                                         .format(selectedDate!)
+  //                                     : "CHOOSE DATE",
+  //                                 style: const TextStyle(
+  //                                   color: CommonColors.colorPrimary,
+  //                                   fontSize: normalSize,
+  //                                   fontWeight: FontWeight.w700,
+  //                                 ),
+  //                               ),
+  //                             ],
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                     SizedBox(
+  //                       height: 21,
+  //                     ),
+  //                     Row(
+  //                       children: [
+  //                         Expanded(
+  //                           child: ElevatedButton(
+  //                               style: ElevatedButton.styleFrom(
+  //                                 backgroundColor: Colors.grey[100],
+  //                                 foregroundColor: Colors.black,
+  //                               ),
+  //                               onPressed: () {
+  //                                 Navigator.pop(context);
+  //                                 Navigator.pop(context);
+  //                               },
+  //                               child: Text('CANCEL')),
+  //                         ),
+  //                         SizedBox(
+  //                           width: 5,
+  //                         ),
+  //                         Expanded(
+  //                           child: ElevatedButton(
+  //                               style: ElevatedButton.styleFrom(
+  //                                 backgroundColor: Colors.green,
+  //                                 foregroundColor: Colors.black,
+  //                               ),
+  //                               onPressed: () {},
+  //                               child: Text('OK')),
+  //                         ),
+  //                       ],
+  //                     )
+  //                   ],
+  //                 ),
+  //               ),
+  //             ),
+  //           );
+  //         });
+  //       });
+  // }
 
-                              final DateTime? picked = await showDatePicker(
-                                context: context,
-                                initialDate: DateTime.now(),
-                                firstDate: today,
-                                lastDate: maxDate,
-                              );
-
-                              if (picked != null && picked != selectedDate) {
-                                setState(() {
-                                  selectedDate = picked;
-                                });
-                              }
-                            },
-                            child: Row(
-                              children: [
-                                const Icon(Icons.calendar_month_outlined),
-                                const SizedBox(
-                                  width: doubleTen,
-                                ),
-                                Text(
-                                  selectedDate != null
-                                      ? DateFormat('dd/MM/yyyy')
-                                          .format(selectedDate!)
-                                      : "CHOOSE DATE",
-                                  style: const TextStyle(
-                                    color: CommonColors.colorPrimary,
-                                    fontSize: normalSize,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 21,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.grey[100],
-                                  foregroundColor: Colors.black,
-                                ),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: Text('CANCEL')),
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Expanded(
-                            child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.green,
-                                  foregroundColor: Colors.black,
-                                ),
-                                onPressed: () {},
-                                child: Text('OK')),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            );
-          });
-        });
-  }
-
-  void showScheduleSSMaintencePopUp(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(builder: (context, setState) {
-          return AlertDialog(
-            titlePadding: EdgeInsets.zero,
-            title: ClipRRect(
-              borderRadius: const BorderRadius.only(
-                topRight: Radius.circular(20),
-                topLeft: Radius.circular(20),
-              ),
-              child: Container(
-                color: CommonColors.colorPrimary,
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 20.0),
-                  child: Center(
-                    child: Text(
-                      'SCHEDULE SS MAINTENANCE',
-                      style: TextStyle(color: Colors.white, fontSize: 12),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            contentPadding: EdgeInsets.zero,
-            content: SizedBox(
-              width: double.maxFinite,
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 10.0, vertical: 15),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      buildRow(
-                          "Select SS",
-                          DropdownButton<String>(
-                            value: selectedSS,
-                            isExpanded: true,
-                            underline: SizedBox(),
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                            items: ssOptions.map((value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                            onChanged: (newValue) {
-                              // handle change
-                            },
-                          )),
-                      Divider(color: Colors.grey.shade400, thickness: 1),
-                      buildRow(
-                          "SS Code",
-                          Text("0003-33KV SS-NAKKALAGUTTA",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.red))),
-                      Divider(color: Colors.grey.shade400, thickness: 1),
-                      buildRow(
-                          "SS Name",
-                          Text("NAKKALAGUTTA",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.red))),
-                      Divider(color: Colors.grey.shade400, thickness: 1),
-                      buildRow(
-                          "Section",
-                          Text("NAKKALAGUTTA",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.red))),
-                      Divider(color: Colors.grey.shade400, thickness: 1),
-                      SizedBox(height: 11),
-                      Text('Select Schedule Date',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                      SizedBox(height: 21),
-                      Row(
-                        children: [
-                          InkWell(
-                            onTap: () async {
-                              final DateTime today = DateTime.now();
-                              final DateTime maxDate = today.add(const Duration(
-                                  days: 30)); // 30 days from today
-
-                              final DateTime? picked = await showDatePicker(
-                                context: context,
-                                initialDate: DateTime.now(),
-                                firstDate: today,
-                                lastDate: maxDate,
-                              );
-
-                              if (picked != null && picked != selectedDate) {
-                                setState(() {
-                                  selectedDate = picked;
-                                });
-                              }
-                            },
-                            child: Row(
-                              children: [
-                                const Icon(Icons.calendar_month_outlined),
-                                const SizedBox(
-                                  width: doubleTen,
-                                ),
-                                Text(
-                                  selectedDate != null
-                                      ? DateFormat('dd/MM/yyyy')
-                                          .format(selectedDate!)
-                                      : "CHOOSE DATE",
-                                  style: const TextStyle(
-                                    color: CommonColors.colorPrimary,
-                                    fontSize: normalSize,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 21),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.grey[100],
-                                foregroundColor: Colors.black,
-                              ),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: Text('CANCEL'),
-                            ),
-                          ),
-                          SizedBox(width: 5),
-                          Expanded(
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.green,
-                                foregroundColor: Colors.black,
-                              ),
-                              onPressed: () {},
-                              child: Text('OK'),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          );
-        });
-      },
-    );
-  }
-
-  Widget buildRow(String label, Widget child) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Expanded(
-          flex: 2,
-          child: Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-            child: Text(label, style: TextStyle(fontWeight: FontWeight.bold)),
-          ),
-        ),
-        Container(width: 1, height: 30, color: Colors.grey.shade400),
-        Expanded(
-          flex: 2,
-          child: Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-            child: child,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget structure() {
-    return Column(children: [
-      Row(
-        children: [
-          Checkbox(value: isFalse, onChanged: (bool? newValue) {}),
-          SizedBox(
-            width: 10,
-          ),
-          Text('NAKKALAGUTTA'),
-        ],
-      ),
-      Divider(
-        color: Colors.grey,
-        thickness: 1,
-      ),
-    ]);
-  }
 }

@@ -120,5 +120,10 @@ class Apis{
 
   ///SCHEDULES
   static const SCHEDULES_URL="getTourDairyByMonth";
+  static const SS_URL="getSSMasterIndex";
+  static const  SCHEDULE_SS="scheduleSSMaintenance";
+  static const  LINE_FEEDERS="get11kvFeedersOf33KvSS";
+  static const SCHEDULE_LINE="schedule11KvLineMaintenance";
+  static const VIEW_SCHEDULE="getTourDairyByDate";
 
 }

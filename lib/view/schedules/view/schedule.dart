@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
+import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/view/schedules/models/ss_and_line_count_model.dart';
 import 'package:tsnpdcl_employee/view/schedules/viewmodel/schedules_viewmodel.dart';
 import 'package:tsnpdcl_employee/widget/month_year_selector.dart';
@@ -18,7 +20,7 @@ class SchedulesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  ChangeNotifierProvider(
-      create: (_)=>ScheduleViewModel(context),
+      create: (_)=>ScheduleViewModel(context: context),
       child:Consumer<ScheduleViewModel>(
           builder: (context,viewModel,child){
             return Scaffold(
@@ -153,11 +155,12 @@ class SchedulesScreen extends StatelessWidget {
                               ),
                             ),
                             onTap: () {
-                              if (scheduleData.substations != '0') {
-                                // Push ScheduledScreen for SS
-                              } else {
-                                // Push NotScheduledScreen for SS
-                              }
+                              // Navigation.instance.navigateTo(
+                              //   Routes.viewSchedule,
+                              //   args: {"dt":DateFormat('dd/MM/yyyy')
+                              //       .format(viewModel.selectedDate!) , "type": "SS"},
+                              // );
+                              print("date:${DateFormat('dd/MM/yyyy').format(viewModel.selectedDate!)} ");
                             },
                           ),
                         ),
@@ -188,12 +191,13 @@ class SchedulesScreen extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            onTap: () {
-                              if (scheduleData.lines != '0') {
-                                // Push ScheduledScreen for LINE
-                              } else {
-                                // Push NotScheduledScreen for LINE
-                              }
+                              onTap: () {
+                                Navigation.instance.navigateTo(
+                                  Routes.viewSchedule,
+                                  args: {"dt":DateFormat('dd/MM/yyyy')
+                                      .format(viewModel.selectedDate!) , "type": "LINE"},
+                                );
+
                             },
                           ),
                         ),
@@ -225,11 +229,11 @@ class SchedulesScreen extends StatelessWidget {
                               ),
                             ),
                             onTap: () {
-                              if (scheduleData.dtr != '0') {
-                                // Push ScheduledScreen for DTR
-                              } else {
-                                // Push NotScheduledScreen for DTR
-                              }
+                              Navigation.instance.navigateTo(
+                                Routes.viewSchedule,
+                                args: {"dt":DateFormat('dd/MM/yyyy')
+                                    .format(viewModel.selectedDate!) , "type": "DTR"},
+                              );
                             },
                           ),
                         ),

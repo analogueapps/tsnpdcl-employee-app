@@ -104,6 +104,7 @@ import 'package:tsnpdcl_employee/view/reports/view/reports_screen.dart';
 import 'package:tsnpdcl_employee/view/rfss/view/download_structures_screen.dart';
 import 'package:tsnpdcl_employee/view/rfss/view/rfss_screen.dart';
 import 'package:tsnpdcl_employee/view/schedules/view/schedule.dart';
+import 'package:tsnpdcl_employee/view/schedules/view/view_schedule.dart';
 import 'package:tsnpdcl_employee/view/search_consumer/view/search_consumer_screen.dart';
 import 'package:tsnpdcl_employee/view/ss_maintenance/view/maintenance_due_screen.dart';
 import 'package:tsnpdcl_employee/view/ss_maintenance/view/maintenance_finished_screen.dart';
@@ -567,6 +568,12 @@ class AppRouter {
      //Schedules * Bhavana
     case SchedulesScreen.id:
     return MaterialPageRoute(builder: (_) => const SchedulesScreen());
+      case ViewSchedule.id:
+        final args = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(builder: (_) => ViewSchedule(
+          dt: args['dt'] ?? '',
+          type: args['name'] ?? '',
+        ));
 
       default:
         return MaterialPageRoute(
