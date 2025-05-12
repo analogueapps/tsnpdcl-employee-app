@@ -199,4 +199,9 @@ class Routes {
   //SCHEDULES *BHAVANA
     static const String schedule="SchedulesScreen";
     static const String viewSchedule="ViewSchedule";
+    static const String  viewDetailSchedule="ViewDetailSchedules";
+
+    //VERIFY WRONG CONFIRMATIONS
+    static const String areaWiseAbstract="AreaWiseAbstractView";
+    static const String inspectServices="InspectServices";
 }

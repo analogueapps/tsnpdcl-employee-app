@@ -113,17 +113,23 @@ class Apis{
   static const   ONLINE_PR_END_POINT_BASE_URL= "$SERVER_IP:5656/NPFDAS/ep/onlinePr/";
   static const ISSUE_DUPLICATE_URL = "authenticateRcDevice";
 
-  ///CCC
+  ///CCC * BHAVANA
   static const CCC_END_POINT_BASE_URL="$SERVER_IP:5656/NPFDAS/ep/ccc/";
   static const GET_ABSTRACT="getAbstract";
   static const GET_CCC_TICKETS="getCCCTickets";
 
-  ///SCHEDULES
+  ///SCHEDULES *BHAVANA
   static const SCHEDULES_URL="getTourDairyByMonth";
   static const SS_URL="getSSMasterIndex";
   static const  SCHEDULE_SS="scheduleSSMaintenance";
   static const  LINE_FEEDERS="get11kvFeedersOf33KvSS";
   static const SCHEDULE_LINE="schedule11KvLineMaintenance";
   static const VIEW_SCHEDULE="getTourDairyByDate";
+  static const GET_SS_INSPECTION_BY_ID="getSSInspectionByScheduleId";
+
+  ///VERIFY WRONG CONFIRMATION * BHAVANA
+  static const VERIFY_WRONG_CONFIRM_URL="$SERVER_IP:5656/NPFDAS/ep/wrongCat/";
+  static const GET_ALL_ABSTRACT="getAllAbstract";
+  static const GET_VERIFY_ABSTRACT="getAbstract";
 
 }

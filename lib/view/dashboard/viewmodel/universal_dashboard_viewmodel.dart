@@ -18,6 +18,7 @@ import 'package:tsnpdcl_employee/view/auth/model/npdcl_user.dart';
 import 'package:tsnpdcl_employee/view/dashboard/model/drawer_section.dart';
 import 'package:tsnpdcl_employee/view/dashboard/model/global_list_dialog_item.dart';
 import 'package:tsnpdcl_employee/view/dashboard/model/universal_dashboard_item.dart';
+import 'package:tsnpdcl_employee/widget/month_year_selector.dart';
 
 class UniversalDashboardViewModel extends ChangeNotifier {
   final TextEditingController searchController = TextEditingController();
@@ -123,6 +124,11 @@ class UniversalDashboardViewModel extends ChangeNotifier {
           title: GlobalConstants.usefulLinksTitle,
           imageAsset: Assets.ebs,
           routeName: ""
+      ),
+      UniversalDashboardItem(
+          title: GlobalConstants.verifyWrongCatConfirmed,
+          imageAsset: Assets.yesOrNo,
+          routeName: routeName
       ),
     ]);
 
@@ -314,7 +320,7 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       globalListDialogItem.addAll([
         GlobalListDialogItem(
           title: GlobalConstants.verifyWrongCatConfirmed,
-          routeName: Routes.onlinePrMenuScreen,
+          routeName: "",
           imageAsset: Assets.yesOrNo,
         ),
         GlobalListDialogItem(
@@ -374,6 +380,45 @@ class UniversalDashboardViewModel extends ChangeNotifier {
                 'url': UrlConstants.dListReportUrl,
               };
               Navigation.instance.navigateTo(Routes.webViewScreen, args: argument);
+            }else if(item.title == GlobalConstants.verifyWrongCatConfirmed) {
+              List<GlobalListDialogItem> globalListDialogItem = [];
+              globalListDialogItem.addAll([
+                GlobalListDialogItem(
+                    title: "View Area Wise Abstract",
+                    routeName: Routes.areaWiseAbstract
+                ),
+                GlobalListDialogItem(
+                    title: "Inspect services",
+                    routeName: Routes.monthYearSelector
+                ),
+
+              ]);
+              showDialog(
+                context: context,
+                builder: (_) => CustomListDialog(
+                  title: title,
+                  items: globalListDialogItem,
+                  onItemSelected: (item) async {
+                    Navigator.of(context).pop(); // Close the dialog first ✅
+
+                    if (item.routeName == Routes.areaWiseAbstract) {
+                      Navigation.instance.navigateTo(Routes.areaWiseAbstract);
+                    } else if (item.routeName == Routes.monthYearSelector) {
+                      final result = await await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const MonthYearSelector(),
+                        ),
+                      );
+
+                      if (result != null && result is Map) {
+                        setSelectedMonthYear(result['month']as String, result['year'] as int, context);
+                      }
+                    }
+                  },
+                ),
+              );
+
             } else {
               Navigation.instance.navigateTo(item.routeName);
             }
@@ -665,5 +710,20 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       Navigation.instance.navigateTo(routeName);
     }
   }
+  Map<String, dynamic>?  selectedMonthYear;
+  void setSelectedMonthYear(String month, int year, BuildContext context) {
+    selectedMonthYear = {
+      'month': month,
+      'year': year,
+    };
+    if(selectedMonthYear!=null){
+      Navigation.instance.navigateTo(
+          Routes.inspectServices, args: selectedMonthYear
+      );
+    }
+    print("selectedMonthYear universal: $selectedMonthYear");
+    notifyListeners();
+  }
+
 }
 

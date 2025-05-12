@@ -12,7 +12,7 @@ import 'package:tsnpdcl_employee/widget/view_detailed_lc_tile_widget.dart';
 class ViewSchedule extends StatelessWidget {
   static const id = Routes.viewSchedule;
   const ViewSchedule({super.key, required this.dt, required this.type});
-  final DateTime dt;
+  final String dt;
   final String type;
 
   @override
@@ -20,18 +20,18 @@ class ViewSchedule extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: CommonColors.colorPrimary,
-        title: const Column(
+        title: Column(
             children: [
               Text(
-                "OVER LOAD DTRs LIST",
-                style: TextStyle(
+                type=="SS"?"SS MAINTENANCE":type=="LINE"?"LINE MAINTENANCE":"DTR MAINTENANCE",
+                style: const TextStyle(
                     color: Colors.white,
                     fontSize: titleSize,
                     fontWeight: FontWeight.w700),
               ),
-              Text(
-                "Showing I(N)>20Amps",
-                style: TextStyle(
+               Text(
+                dt,
+                style: const TextStyle(
                     color: Colors.white,
                     fontSize: titleSize,
                     fontWeight: FontWeight.w700),
@@ -58,8 +58,8 @@ class ViewSchedule extends StatelessWidget {
 
                           GestureDetector(
                             onTap: () {
-                              // Navigation.instance.navigateTo(Routes.viewDetailedTongTesterReadings,args: data,);
-                              // print("passing data: $data");
+                              Navigation.instance.navigateTo(Routes.viewDetailSchedule,args: data,);
+                              print("passing data: $data");
                             },
                             child:
                             Container(
@@ -78,7 +78,9 @@ class ViewSchedule extends StatelessWidget {
                                 ],
                               ),
                               padding: const EdgeInsets.only(top: 10),
-                              child: Column(
+                              child:Padding (
+                          padding: const EdgeInsets.all( 10),
+                          child:Column(
                                 children: [
                                   Row(
                                     mainAxisSize: MainAxisSize.min,
@@ -88,19 +90,26 @@ class ViewSchedule extends StatelessWidget {
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Align(
+                                              alignment: Alignment.topLeft,
+                                              child: Text(
+                                                "#${data.tourId.toString()}",
+                                                style: const TextStyle(
+                                                  color: CommonColors.deepBlue,
+                                                ),
+                                              ),
+                                            ),
+                                            Align(
                                               alignment: Alignment.topRight,
                                               child: Text(
-                                                "${data.tourId.toString()}${data.scheduledDate}",
+                                                data.scheduledDate,
                                                 style: const TextStyle(
                                                   color: CommonColors.deepBlue,
                                                 ),
                                               ),
                                             ),
                                             const SizedBox(height: 10),
-                                            ViewDetailedLcTileWidget(
-                                                tileKey: "",
-                                                tileValue: data.itemName),
-
+                                            Text(data.itemName),
+                                                const Divider(),
                                             ViewDetailedLcTileWidget(
                                                 tileKey: "SEC",
                                                 tileValue: data.section),
@@ -114,10 +123,8 @@ class ViewSchedule extends StatelessWidget {
                                       // IconButton with no space between it and the text
                                       IconButton(
                                         onPressed: () {
-                                          // Add your navigation logic here
-                                          // Navigation.instance
-                                          //     .navigateTo(Routes.viewDetailedTongTesterReadings, args: data,);
-                                          // print("icon on tap: $data");
+                                          Navigation.instance.navigateTo(Routes.viewDetailSchedule,args: data,);
+                                          print("passing data: $data");
                                         },
                                         icon:
                                         const Icon(Icons.arrow_forward_ios_rounded, size: 14),
@@ -128,6 +135,7 @@ class ViewSchedule extends StatelessWidget {
                                   ),
                                 ],
                               ),
+                            ),
                             ),
                           );
                         }
@@ -145,15 +153,6 @@ class ViewSchedule extends StatelessWidget {
               );
             }
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: CommonColors.colorPrimary,
-        foregroundColor: Colors.white,
-        shape: const CircleBorder(),
-        onPressed: () {
-          Navigation.instance.navigateTo(Routes.tongTesterReadingsScreen);
-        },
-        child:  Image.asset(Assets.tongTesterReadings,height: 30,),
       ),
     );
 

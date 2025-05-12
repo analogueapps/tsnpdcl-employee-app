@@ -70,11 +70,14 @@ class SchedulesScreen extends StatelessWidget {
                 itemBuilder: (context, index) {
                   // Convert index to 'day' string
                   String currentDay = (index + 1).toString().padLeft(2, '0');
+                  String monthYear = viewModel.selectedMonthYear != null
+                      ? '${viewModel.getMonthNumeric(viewModel.selectedMonthYear)}/${viewModel.selectedMonthYear?['year']}'
+                      : DateFormat('MM/yyyy').format(DateTime.now());
 
                   // Default scheduleData (if not found)
                   ScheduleData scheduleData = ScheduleData(
                     dayNumber: currentDay,
-                    dayName: viewModel.getWeekday('$currentDay/01/2025'),
+                    dayName: viewModel.getWeekday('$currentDay/$monthYear'),
                     substations: '0',
                     lines: '0',
                     dtr: '0',
@@ -155,12 +158,12 @@ class SchedulesScreen extends StatelessWidget {
                               ),
                             ),
                             onTap: () {
-                              // Navigation.instance.navigateTo(
-                              //   Routes.viewSchedule,
-                              //   args: {"dt":DateFormat('dd/MM/yyyy')
-                              //       .format(viewModel.selectedDate!) , "type": "SS"},
-                              // );
-                              print("date:${DateFormat('dd/MM/yyyy').format(viewModel.selectedDate!)} ");
+                              String dmy="$currentDay/$monthYear";
+                              Navigation.instance.navigateTo(
+                                Routes.viewSchedule,
+                                args: {"dt": dmy, "type": "SS"},
+                              );
+                              print("Done date:$currentDay/$monthYear");
                             },
                           ),
                         ),
@@ -192,12 +195,12 @@ class SchedulesScreen extends StatelessWidget {
                               ),
                             ),
                               onTap: () {
+                                String dmy="$currentDay/$monthYear";
                                 Navigation.instance.navigateTo(
                                   Routes.viewSchedule,
-                                  args: {"dt":DateFormat('dd/MM/yyyy')
-                                      .format(viewModel.selectedDate!) , "type": "LINE"},
+                                  args: {"dt":dmy , "type": "LINE"},
                                 );
-
+                                print("Done date:$currentDay/$monthYear");
                             },
                           ),
                         ),
@@ -229,11 +232,12 @@ class SchedulesScreen extends StatelessWidget {
                               ),
                             ),
                             onTap: () {
+                              String dmy="$currentDay/$monthYear";
                               Navigation.instance.navigateTo(
                                 Routes.viewSchedule,
-                                args: {"dt":DateFormat('dd/MM/yyyy')
-                                    .format(viewModel.selectedDate!) , "type": "DTR"},
+                                args: {"dt":dmy, "type": "DTR"},
                               );
+                              print("Done date:$currentDay/$monthYear");
                             },
                           ),
                         ),

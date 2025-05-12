@@ -103,7 +103,9 @@ import 'package:tsnpdcl_employee/view/pole_tracker/view/view_offline_feeders_scr
 import 'package:tsnpdcl_employee/view/reports/view/reports_screen.dart';
 import 'package:tsnpdcl_employee/view/rfss/view/download_structures_screen.dart';
 import 'package:tsnpdcl_employee/view/rfss/view/rfss_screen.dart';
+import 'package:tsnpdcl_employee/view/schedules/models/view_schedule_model.dart';
 import 'package:tsnpdcl_employee/view/schedules/view/schedule.dart';
+import 'package:tsnpdcl_employee/view/schedules/view/view_detail_schedules.dart';
 import 'package:tsnpdcl_employee/view/schedules/view/view_schedule.dart';
 import 'package:tsnpdcl_employee/view/search_consumer/view/search_consumer_screen.dart';
 import 'package:tsnpdcl_employee/view/ss_maintenance/view/maintenance_due_screen.dart';
@@ -113,6 +115,8 @@ import 'package:tsnpdcl_employee/view/tong_tester_readings/model/overload_dtr_li
 import 'package:tsnpdcl_employee/view/tong_tester_readings/view/overloaded_floating_button_screen.dart';
 import 'package:tsnpdcl_employee/view/tong_tester_readings/view/overLoad_dtr_list.dart';
 import 'package:tsnpdcl_employee/view/tong_tester_readings/view/view_detailed_tong_tester_readings.dart';
+import 'package:tsnpdcl_employee/view/verify_wrong_category/view/areaWiseAbstract.dart';
+import 'package:tsnpdcl_employee/view/verify_wrong_category/view/inspect_services.dart';
 import 'package:tsnpdcl_employee/view/web_view/view/web_view_screen.dart';
 import 'package:tsnpdcl_employee/widget/month_year_selector.dart';
 import 'package:tsnpdcl_employee/widget/pinch_zoom_imageview.dart';
@@ -572,8 +576,19 @@ class AppRouter {
         final args = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(builder: (_) => ViewSchedule(
           dt: args['dt'] ?? '',
-          type: args['name'] ?? '',
+          type: args['type'] ?? '',
         ));
+        case ViewDetailSchedules.id:
+        final args = settings.arguments as ViewScheduleModel;
+          return MaterialPageRoute(builder: (_) =>  ViewDetailSchedules(data: args
+          ));
+
+      // VERIFY WRONG CONFIRMATIONS
+      case AreaWiseAbstractView.id:
+        return MaterialPageRoute(builder: (_) => const AreaWiseAbstractView());
+      case InspectServices.id:
+        return MaterialPageRoute(builder: (_) => InspectServices(args: settings.arguments as Map<String, dynamic>));
+
 
       default:
         return MaterialPageRoute(
