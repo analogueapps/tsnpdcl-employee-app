@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 
 import 'package:device_info_plus/device_info_plus.dart';
@@ -123,6 +124,32 @@ String formatIsoDateForDtrInspectionDetails(String isoDate) {
     // Handle any parsing errors
     print("Error formatting date: $e");
     return 'N/A';
+  }
+}
+
+LatLng parseLatLngFromString(String? latLong) {
+  if (latLong == null || !latLong.contains(',')) {
+    return const LatLng(0.0, 0.0);
+  }
+
+  try {
+    final parts = latLong.split(',');
+    if (parts.length != 2) return const LatLng(0.0, 0.0);
+
+    double parseCoord(String value) {
+      value = value.trim().toUpperCase();
+      final isNegative = value.contains('S') || value.contains('W');
+      final cleaned = value.replaceAll(RegExp(r'[NSEW]'), '');
+      final num = double.parse(cleaned);
+      return isNegative ? -num : num;
+    }
+
+    final lat = parseCoord(parts[0]);
+    final lng = parseCoord(parts[1]);
+
+    return LatLng(lat, lng);
+  } catch (e) {
+    return const LatLng(0.0, 0.0);
   }
 }
 

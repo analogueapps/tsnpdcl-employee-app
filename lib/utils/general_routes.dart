@@ -191,14 +191,15 @@ class Routes {
   static const String rangeWiseDlistScreen = "RangeWiseDlistScreen";
   static const String clusterMapScreen = "ClusterMapScreen";
   static const String dlistAttendScreen = "DlistAttendScreen";
+  static const String dlistFilterScreen = "DlistFilterScreen";
 
   //CCC * Bhavana
   static const String cccDashboard = "CCCDashboardScreen";
   static const cccORICB="CccOricb";
 
   //SCHEDULES *BHAVANA
-    static const String schedule="SchedulesScreen";
-    static const String viewSchedule="ViewSchedule";
+  static const String schedule="SchedulesScreen";
+  static const String viewSchedule="ViewSchedule";
     static const String  viewDetailSchedule="ViewDetailSchedules";
 
     //VERIFY WRONG CONFIRMATIONS

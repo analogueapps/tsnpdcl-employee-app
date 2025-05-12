@@ -325,7 +325,7 @@ class ViewDetailedPoleIndentViewModel extends ChangeNotifier {
                       controller: TextEditingController(text: checkNull(poleRequestIndentEntity.requisitionNo.toString())),
                       labelText: '',
                       keyboardType: TextInputType.none,
-                      isEnable: isFalse,
+                      isReadOnly: isTrue,
                     ),
                     const SizedBox(height: doubleFifteen,),
                     const Text(
@@ -340,7 +340,7 @@ class ViewDetailedPoleIndentViewModel extends ChangeNotifier {
                       controller: TextEditingController(text: checkNull(poleRequestIndentEntity.poleType)),
                       labelText: '',
                       keyboardType: TextInputType.none,
-                      isEnable: isFalse,
+                      isReadOnly: isTrue,
                       suffixIcon: const Icon(Icons.arrow_drop_down_rounded),
                     ),
                     const Divider(),

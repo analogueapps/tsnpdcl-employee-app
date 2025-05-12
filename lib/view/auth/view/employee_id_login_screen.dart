@@ -21,7 +21,6 @@ class EmployeeIdLoginScreen extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => AuthViewmodel(context: context),
       child: Scaffold(
-        resizeToAvoidBottomInset: true,
         appBar: AppBar(
           toolbarHeight: 0, // Hide AppBar
           backgroundColor: Colors.transparent,

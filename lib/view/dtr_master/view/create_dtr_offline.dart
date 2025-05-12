@@ -201,7 +201,7 @@ class CreateDtrOffline extends StatelessWidget {
                                           FillTextFormField(
                                             controller: viewModel.sapDTRStructCodeOffline,
                                             labelText: '',
-                                            isEnable: false,
+                                            isReadOnly: true,
                                             keyboardType: TextInputType.number,
                                           ),
                                           const SizedBox(height: 20,),

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -10,6 +11,10 @@ import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
+import 'package:tsnpdcl_employee/utils/general_routes.dart';
+import 'package:tsnpdcl_employee/utils/navigation_service.dart';
+import 'package:tsnpdcl_employee/view/dlist/helper/find_service_search_dialog.dart';
+import 'package:tsnpdcl_employee/view/dlist/model/dfilter.dart';
 import 'package:tsnpdcl_employee/view/dlist/model/place_model.dart';
 import 'package:tsnpdcl_employee/view/dlist/model/range_dlist.dart';
 
@@ -25,8 +30,13 @@ class ClusterMapViewmodel extends ChangeNotifier {
   bool _isLoading = isFalse;
   bool get isLoading => _isLoading;
 
+  String _titleText = "Showing All Distributions";
+  String get titleText => _titleText;
+
   List<DlistEntityRealmList> _dlistEntityRealmList = [];
   List<DlistEntityRealmList> get dlistEntityRealmList => _dlistEntityRealmList;
+
+  DFilter? dFilter;
 
   Set<gmaps.Marker> markers = {};
   late gmaps.GoogleMapController? _mapController;
@@ -57,11 +67,11 @@ class ClusterMapViewmodel extends ChangeNotifier {
     );
 
     if (_mapController != null) {
-      clusterManager?.setMapId(_mapController!.mapId);
+      await clusterManager?.setMapId(_mapController!.mapId);
       clusterManager?.updateMap();
+      await moveToClusterBounds(); // Move camera after updateMap
     }
 
-    await moveToClusterBounds();
     notifyListeners();
   }
 
@@ -104,23 +114,9 @@ class ClusterMapViewmodel extends ChangeNotifier {
                 jsonDecode(response.data['objectJson']);
                 final List<RangeDlist> listData =
                 jsonList.map((json) => RangeDlist.fromJson(json)).toList();
-
-                _clusterPlaces = listData[0].dlistEntityRealmList!;
-                    // .map((e) => _convertToPlace(e))
-                    // .whereType<Place>() // remove nulls
-                    // .toList();
-
-                // clusterManager = gcluster.ClusterManager<Place>(
-                //   _clusterPlaces,
-                //   _updateMarkers,
-                //   markerBuilder: (gcluster.Cluster<Place> cluster) => _markerBuilder(cluster),
-                //   stopClusteringZoom: 17,
-                // );
-                if (googleMapController.isCompleted) {
-                  final controller = await googleMapController.future;
-                  setController(controller);
-                  await initClusterManager();
-                }
+                _dlistEntityRealmList = listData[0].dlistEntityRealmList!;
+                notifyListeners();
+                addRealmItems();
               }
             } else {
               showAlertDialog(context, response.data['message']);
@@ -156,11 +152,18 @@ class ClusterMapViewmodel extends ChangeNotifier {
 
     final controller = await googleMapController.future;
 
-
+    print("Moving camera to ${_clusterPlaces.map((e) => e.latLong)}");
 
     if (_clusterPlaces.length == 1) {
       await controller.animateCamera(
         gmaps.CameraUpdate.newLatLngZoom(parseLatLngFromString(_clusterPlaces.first.latLong), 16),
+      );
+      return;
+    }
+
+    if (_clusterPlaces.length > 1) {
+      await controller.animateCamera(
+        gmaps.CameraUpdate.newLatLngZoom(parseLatLngFromString(_clusterPlaces.first.latLong), 10),
       );
       return;
     }
@@ -186,6 +189,7 @@ class ClusterMapViewmodel extends ChangeNotifier {
     );
 
     await controller.animateCamera(gmaps.CameraUpdate.newLatLngBounds(bounds, 80));
+    notifyListeners();
   }
 
   LatLng parseLatLngFromString(String? latLong) {
@@ -226,15 +230,10 @@ class ClusterMapViewmodel extends ChangeNotifier {
     BitmapDescriptor markerIcon;
 
     if (isMultiple) {
-      // For clusters (multiple markers), generate cluster icon with count
-      markerIcon = await _getMarkerBitmap(125, text: cluster.count.toString());
+      final style = _formatClusterStyle(cluster.count);
+      markerIcon = await _getMarkerBitmap(125, text: style.text, bgColor: style.color);
     } else {
-      // For single marker, show location icon
       markerIcon = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
-
-      // OR use a custom asset icon like this:
-      // markerIcon = await BitmapDescriptor.fromAssetImage(
-      //     ImageConfiguration(devicePixelRatio: 2.5), 'assets/icons/location_pin.png');
     }
 
     return gmaps.Marker(
@@ -242,54 +241,65 @@ class ClusterMapViewmodel extends ChangeNotifier {
       position: cluster.location,
       infoWindow: gmaps.InfoWindow(
         title: isMultiple ? '' : '${firstItem.ctname}(${firstItem.sno})',
-        snippet: 'Arrears:${firstItem.arrears}Demands:${firstItem.curdem}Tot:${firstItem.dlamt}',
+        snippet: 'Arrears:${firstItem.arrears} Demands:${firstItem.curdem} Tot:${firstItem.dlamt}',
       ),
       onTap: () {
         if (!isMultiple) {
-          // Navigate to details like in your Java code
-          // Navigator.pushNamed(
-          //   context,
-          //   Routes.dlistAttendScreen, // Make sure this route exists
-          //   arguments: {
-          //     'place': firstItem, // You may want to pass `DlistEntityRealmList` directly
-          //   },
-          // );
+          Navigation.instance.navigateTo(Routes.dlistAttendScreen, args: jsonEncode(firstItem));
         }
       },
       icon: markerIcon,
     );
   }
 
-  Future<BitmapDescriptor> _getMarkerBitmap(int size, {String? text}) async {
-    //if (kIsWeb) size = (size / 2).floor();
+  String _formatClusterCount(int count) {
+    if (count >= 1000) {
+      return '1000+';
+    } else if (count >= 100) {
+      return '100+';
+    } else if (count >= 50) {
+      return '50+';
+    } else if (count >= 20) {
+      return '20+';
+    } else if (count >= 10) {
+      return '10+';
+    }
+    return count.toString();
+  }
 
+  Future<BitmapDescriptor> _getMarkerBitmap(int size, {required String text, required Color bgColor}) async {
     final PictureRecorder pictureRecorder = PictureRecorder();
     final Canvas canvas = Canvas(pictureRecorder);
-    final Paint paint1 = Paint()..color = Colors.orange;
-    final Paint paint2 = Paint()..color = Colors.white;
 
-    canvas.drawCircle(Offset(size / 2, size / 2), size / 2.0, paint1);
-    canvas.drawCircle(Offset(size / 2, size / 2), size / 2.2, paint2);
-    canvas.drawCircle(Offset(size / 2, size / 2), size / 2.8, paint1);
+    final Paint circlePaint = Paint()..color = bgColor;
+    final double radius = size / 2;
 
-    if (text != null) {
-      TextPainter painter = TextPainter(textDirection: TextDirection.ltr);
-      painter.text = TextSpan(
+    canvas.drawCircle(Offset(radius, radius), radius, circlePaint);
+
+    final textPainter = TextPainter(
+      text: TextSpan(
         text: text,
-        style: TextStyle(fontSize: size / 3, color: Colors.white, fontWeight: FontWeight.normal),
-      );
-      painter.layout();
-      painter.paint(
-        canvas,
-        Offset(size / 2 - painter.width / 2, size / 2 - painter.height / 2),
-      );
-    }
+        style: TextStyle(
+          fontSize: size / 4,
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.ltr,
+    );
+
+    textPainter.layout();
+    textPainter.paint(
+      canvas,
+      Offset(radius - textPainter.width / 2, radius - textPainter.height / 2),
+    );
 
     final img = await pictureRecorder.endRecording().toImage(size, size);
     final data = await img.toByteData(format: ImageByteFormat.png) as ByteData;
-
-    return BitmapDescriptor.fromBytes(data.buffer.asUint8List());
+    return BitmapDescriptor.fromBytes(data!.buffer.asUint8List());
   }
+
 
   Place? _convertToPlace(DlistEntityRealmList item) {
     try {
@@ -306,5 +316,132 @@ class ClusterMapViewmodel extends ChangeNotifier {
       return null;
     }
   }
+
+  void filterFabClicked() {
+    var argument = {
+      //"filter": jsonEncode(dFilter),
+      "data": jsonEncode(_dlistEntityRealmList)
+    };
+
+    if (dFilter != null) {
+      argument["filter"] = jsonEncode(dFilter);
+    }
+
+    Navigation.instance.navigateTo(Routes.dlistFilterScreen, args: argument,onReturn: (result) {
+      if(result != null) {
+        dFilter = DFilter.fromJson(jsonDecode(result));
+        String d = 'Showing ${dFilter!.distributionName} - ${dFilter!.distributionCode}\n'
+            'Amount Range: ${dFilter!.amountFrom} - ${dFilter!.amountTo}';
+        _titleText = d;
+        notifyListeners();
+        addRealmItems();
+      }
+    });
+  }
+
+  Future<void> addRealmItems() async {
+
+    if (dFilter != null) {
+      List<String> statusCodes = [];
+
+      if (dFilter!.bsSelected) statusCodes.add("99");
+      if (dFilter!.udcSelected) statusCodes.add("03");
+      if (dFilter!.liveSelected) statusCodes.add("01");
+
+      List<DlistEntityRealmList> filteredList = _dlistEntityRealmList.where((item) {
+        return item.ctareacd == dFilter?.distributionCode &&
+            statusCodes.contains(item.dlstat) &&
+            item.dlamt != null &&
+            item.dlamt! >= dFilter!.amountFrom &&
+            item.dlamt! <= dFilter!.amountTo;
+      }).toList();
+
+      _clusterPlaces = filteredList;
+    } else {
+      _clusterPlaces = _dlistEntityRealmList;
+    }
+
+    if (googleMapController.isCompleted) {
+      final controller = await googleMapController.future;
+      setController(controller);
+      await initClusterManager();
+    }
+    // Automatically move camera to bounds
+    Future.delayed(const Duration(milliseconds: 500), () {
+      moveToClusterBounds();
+    });
+    notifyListeners();
+  }
+
+  Future<void> findServiceClicked() async {
+    final selectedItem = await showCupertinoModalPopup(
+      context: context,
+      builder: (_) => FindServiceSearchDialog(items: _dlistEntityRealmList),
+    );
+
+    if (selectedItem != null) {
+      // Do something with selectedItem
+      //print('Selected SC No: ${selectedItem.dlscno}');
+      showCupertinoDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return CupertinoAlertDialog(
+            title: const Text("Choose Option"),
+            actions: [
+              CupertinoDialogAction(
+                child: const Text("Show Location"),
+                onPressed: () async {
+                  Navigator.pop(context); // Close dialog
+                  // _mapController!.animateCamera(
+                  //   CameraUpdate.newLatLngZoom(selectedItem.position, 28),
+                  // );
+                  final latLng = parseLatLngFromString(selectedItem.latLong);
+                  final controller = await googleMapController.future;
+
+                  controller.animateCamera(
+                    CameraUpdate.newLatLngZoom(latLng, 28),
+                  );
+                  notifyListeners();
+                },
+              ),
+              CupertinoDialogAction(
+                child: const Text("Open Entry Form"),
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigation.instance.navigateTo(Routes.dlistAttendScreen, args: jsonEncode(selectedItem));
+                },
+              ),
+              CupertinoDialogAction(
+                isDestructiveAction: true,
+                onPressed: () => Navigator.pop(context),
+                child: const Text("Cancel"),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
 }
+
+class ClusterStyle {
+  final String text;
+  final Color color;
+
+  ClusterStyle(this.text, this.color);
+}
+
+ClusterStyle _formatClusterStyle(int count) {
+  if (count >= 1000) {
+    return ClusterStyle('1000+', Colors.red.shade900);
+  } else if (count >= 200) {
+    return ClusterStyle('200+', Colors.brown.shade700);
+  } else if (count >= 100) {
+    return ClusterStyle('100+', Colors.green.shade700);
+  } else if (count >= 10) {
+    return ClusterStyle('10+', Colors.blue.shade900);
+  }
+  return ClusterStyle(count.toString(), Colors.deepPurple.shade700);
+}
+
 

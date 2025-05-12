@@ -18,6 +18,8 @@ import 'package:tsnpdcl_employee/view/ctpt_menu/view/view_issued_list.dart';
 import 'package:tsnpdcl_employee/view/ctpt_menu/view/view_replaced_list.dart';
 import 'package:tsnpdcl_employee/view/dashboard/view/universal_dashboard_screen.dart';
 import 'package:tsnpdcl_employee/view/dlist/view/cluster_map_screen.dart';
+import 'package:tsnpdcl_employee/view/dlist/view/dlist_attend_screen.dart';
+import 'package:tsnpdcl_employee/view/dlist/view/dlist_filter_screen.dart';
 import 'package:tsnpdcl_employee/view/dlist/view/dlist_menu_screen.dart';
 import 'package:tsnpdcl_employee/view/dlist/view/range_wise_dlist_screen.dart';
 import 'package:tsnpdcl_employee/view/dtr_failure/view/dtr_failure_screen.dart';
@@ -539,11 +541,11 @@ class AppRouter {
       case PrintLastPrView.id:
         return MaterialPageRoute(builder: (_) => const PrintLastPrView());
       case ReportsView.id:
-      return MaterialPageRoute(builder: (_) => const ReportsView());
+        return MaterialPageRoute(builder: (_) => const ReportsView());
       case OnlineCollectionView.id:
         return MaterialPageRoute(builder: (_) => const OnlineCollectionView());
 
-      // MEESEVA * Surya
+    // MEESEVA * Surya
       case MeeSevaAbstractScreen.id:
         return MaterialPageRoute(builder: (_)=> MeeSevaAbstractScreen(above: settings.arguments as String));
       case ServicesAppListScreen.id:
@@ -558,8 +560,13 @@ class AppRouter {
         return MaterialPageRoute(builder: (_)=> RangeWiseDlistScreen(data: settings.arguments as String,));
       case ClusterMapScreen.id:
         return MaterialPageRoute(builder: (_)=> ClusterMapScreen(data: settings.arguments as Map<String, dynamic>,));
+      case DlistAttendScreen.id:
+        return MaterialPageRoute(builder: (_)=> DlistAttendScreen(data: settings.arguments as String,));
+      case DlistFilterScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => DlistFilterScreen(data: settings.arguments as Map<String, dynamic>));
 
-      //CCC Dashboard * Bhavana
+    //CCC Dashboard * Bhavana
       case CCCDashboardScreen.id:
         return MaterialPageRoute(builder: (_) => const CCCDashboardScreen());
       case CccOricb.id:
@@ -569,9 +576,9 @@ class AppRouter {
           title: args['name'] ?? '',
         ));
 
-     //Schedules * Bhavana
-    case SchedulesScreen.id:
-    return MaterialPageRoute(builder: (_) => const SchedulesScreen());
+    //Schedules * Bhavana
+      case SchedulesScreen.id:
+        return MaterialPageRoute(builder: (_) => const SchedulesScreen());
       case ViewSchedule.id:
         final args = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(builder: (_) => ViewSchedule(

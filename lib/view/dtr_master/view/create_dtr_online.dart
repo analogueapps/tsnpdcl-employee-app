@@ -194,7 +194,7 @@ class CreateDtrOnline extends StatelessWidget {
                                         FillTextFormField(
                                           controller: viewModel.sapDTRStructCode,
                                           labelText: '',
-                                          isEnable: false,
+                                          isReadOnly: true,
                                           keyboardType: TextInputType.number,
                                         ),
 

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tsnpdcl_employee/dialogs/custom_bottom_sheet.dart';
 import 'package:tsnpdcl_employee/dialogs/custom_list_dialog.dart';
@@ -299,7 +300,7 @@ class UniversalDashboardViewModel extends ChangeNotifier {
                   routeName: Routes.poleTrackerSelectionViewSketchScreen,
                 ),
               ]);
-              showDialog(
+              showCupertinoDialog(
                 context: context,
                 builder: (_) => CustomListDialog(
                   title: item.title,
@@ -393,7 +394,7 @@ class UniversalDashboardViewModel extends ChangeNotifier {
                 ),
 
               ]);
-              showDialog(
+              showCupertinoDialog(
                 context: context,
                 builder: (_) => CustomListDialog(
                   title: title,
@@ -495,7 +496,7 @@ class UniversalDashboardViewModel extends ChangeNotifier {
                   routeName:Routes.viewPendingOfflineForms,
                 ),
               ]);
-              showDialog(
+              showCupertinoDialog(
                 context: context,
                 builder: (_) => CustomListDialog(
                   title: item.title,
@@ -579,7 +580,7 @@ class UniversalDashboardViewModel extends ChangeNotifier {
                   routeName: Routes.misMatched,
                 ),
               ]);
-              showDialog(
+              showCupertinoDialog(
                 context: context,
                 builder: (_) => CustomListDialog(
                   title: item.title,
@@ -655,7 +656,7 @@ class UniversalDashboardViewModel extends ChangeNotifier {
                     routeName: Routes.viewReportScreen
                 ),
               ]);
-              showDialog(
+              showCupertinoDialog(
                 context: context,
                 builder: (_) => CustomListDialog(
                   title: item.title,
@@ -687,7 +688,7 @@ class UniversalDashboardViewModel extends ChangeNotifier {
             routeName: Routes.reportsScreen
         ),
       ]);
-      showDialog(
+      showCupertinoDialog(
         context: context,
         builder: (_) => CustomListDialog(
           title: title,

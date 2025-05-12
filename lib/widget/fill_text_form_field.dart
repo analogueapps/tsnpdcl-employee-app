@@ -9,7 +9,7 @@ class FillTextFormField extends StatefulWidget {
   final List<TextInputFormatter>? inputFormatters;
   final String labelText;
   final bool isObscure;
-  final bool isEnable;
+  final bool isReadOnly;
   final TextInputType keyboardType;
   final Icon? prefixIcon;
   final Icon? suffixIcon;
@@ -24,7 +24,7 @@ class FillTextFormField extends StatefulWidget {
     this.inputFormatters,
     required this.labelText,
     this.isObscure = false,
-    this.isEnable = true,
+    this.isReadOnly = false,
     required this.keyboardType,
     this.prefixIcon,
     this.suffixIcon,
@@ -40,14 +40,14 @@ class FillTextFormField extends StatefulWidget {
 
 class _FillTextFormFieldState extends State<FillTextFormField> {
   late bool _isObscure;
-  late bool _isEnable;
+  late bool _isReadOnly;
 
 
   @override
   void initState() {
     super.initState();
     _isObscure = widget.isObscure;
-    _isEnable = widget.isEnable;
+    _isReadOnly = widget.isReadOnly;
   }
 
   @override
@@ -57,7 +57,7 @@ class _FillTextFormFieldState extends State<FillTextFormField> {
       controller: widget.controller,
       keyboardType: widget.keyboardType,
       obscureText: _isObscure,
-      enabled: _isEnable,
+      readOnly: _isReadOnly,
       style: const TextStyle(
         fontSize: titleSize,
         fontFamily: appFontFamily,

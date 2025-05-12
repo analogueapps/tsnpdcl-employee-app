@@ -60,7 +60,7 @@ class CustomBottomSheet extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () {
-                      //Navigator.pop(context);
+                      Navigator.pop(context);
                       onItemSelected?.call(items[index]);
                     },
                     child: Column(
