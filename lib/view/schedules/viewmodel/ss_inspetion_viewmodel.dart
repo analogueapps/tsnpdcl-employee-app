@@ -6,6 +6,7 @@ import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
 import 'package:tsnpdcl_employee/network/api_provider.dart';
 import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
+import 'package:tsnpdcl_employee/utils/alerts.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/view/schedules/models/33kv_model.dart';
@@ -331,13 +332,13 @@ class SsInspetionViewmodel extends ChangeNotifier{
   bool validateSection(List<InspectionItem> items, String sectionName,BuildContext context) {
     bool atLeastOneChecked = items.any((item) => item.isChecked);
     if (!atLeastOneChecked) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Please select $sectionName status'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-      // You could also scroll to the section here if needed
+     // ScaffoldMessenger.of(context).showSnackBar(
+     //    SnackBar(
+     //      content: Text('Please select $sectionName status'),
+     //      duration: Duration(seconds: 2),
+     //    ),
+     //  );
+     AlertUtils.showSnackBar(context, 'Please select $sectionName status', isTrue);
       return false;
     }
     return true;
@@ -353,7 +354,7 @@ class SsInspetionViewmodel extends ChangeNotifier{
         attributeType: attributeType,
         attributeName: item.name,
         attributeValue: item.isChecked ? "Y" : "N",
-        instance: "AFTER",
+        instance: "BEFORE",
         ssCode: ssCode,
       );
     }).toList();

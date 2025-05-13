@@ -38,11 +38,10 @@ class CTFailureReportViewModel extends ChangeNotifier {
   int _activeApiCalls = 0;
 
   CTFailureReportViewModel({required this.context}) {
-    // Call APIs to hit on page load
     WidgetsBinding.instance.addPostFrameCallback((_) {
       getHTServices();
-      getCtPtMakes(); // Fetch makes on page load
-      getCtPtRatios(); // Fetch CT/PT ratios on page load
+      getCtPtMakes();
+      getCtPtRatios();
     });
   }
 

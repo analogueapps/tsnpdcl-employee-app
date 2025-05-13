@@ -6,6 +6,7 @@ import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
 import 'package:tsnpdcl_employee/network/api_provider.dart';
 import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
+import 'package:tsnpdcl_employee/utils/alerts.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/view/schedules/models/33kv_model.dart';
@@ -331,12 +332,8 @@ class Kv33ViewModel extends ChangeNotifier{
   bool validateSection(List<InspectionItem> items, String sectionName,BuildContext context) {
     bool atLeastOneChecked = items.any((item) => item.isChecked);
     if (!atLeastOneChecked) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Please select $sectionName status'),
-          duration: Duration(seconds: 2),
-        ),
-      );
+
+      AlertUtils.showSnackBar(context, 'Please select $sectionName status', isTrue);
       // You could also scroll to the section here if needed
       return false;
     }
@@ -387,6 +384,8 @@ class Kv33ViewModel extends ChangeNotifier{
     allAttributes.addAll(buildAttributes("SS Earthing", ssEarthingItems, ssCode));
     allAttributes.addAll(buildAttributes("Yard Lights", yardLightingItems, ssCode));
     allAttributes.addAll(buildAttributes("Red Hots", redHotsItems, ssCode));
+    addBodyCurrentAttributes(ssCode, data['i_ng'] ?? '', data['i_bg'] ?? '');
+    allAttributes.addAll(ssMaintenanceAttributesEntityList);
 
     return SSMaintenanceEntity(
       ssCode: ssCode,
@@ -416,17 +415,22 @@ class Kv33ViewModel extends ChangeNotifier{
           response.data = jsonDecode(response.data); // Parse string to JSON
         }
         if (response.statusCode == successResponseCode) {
-          if(response.data['sessionValid']==isTrue){
+          if (response.data['sessionValid'] == isTrue) {
             if (response.data['taskSuccess'] == isTrue) {
               if (response.data['message'] != null) {
-                showSuccessDialog(context, response.data['message'], (){Navigator.pop(context);});
+                showSuccessDialog(context, response.data['message'], () {
+                  Navigator.pop(context);
+                });
               }
+              else {
+                showAlertDialog(context, response.data['message']);
+              }
+            } else {
+              showAlertDialog(context, response.data['message']);
             }
           } else {
-            showAlertDialog(context, response.data['message']);
+            showSessionExpiredDialog(context);
           }
-        } else {
-          showAlertDialog(context,response.data['message']);
         }
       }
     } catch (e) {
@@ -438,6 +442,25 @@ class Kv33ViewModel extends ChangeNotifier{
       _isLoading = false;
       notifyListeners();
     }
-  }
 
+  }
+  void addBodyCurrentAttributes(String ssCode, String iNgValue, String iBgValue) {
+    final iNg = SSMaintenanceAttributesEntity(
+      attributeType: "BODY CURRENT I(N-G)",
+      attributeValue: iNgValue,
+      ssCode: ssCode,
+      instance: "BEFORE",
+      attributeName: "NEUTRAL GROUND CURRENT",
+    );
+
+    final iBg = SSMaintenanceAttributesEntity(
+      attributeType: 'BODY CURRENT I(B-G)',
+      attributeValue: iBgValue,
+      ssCode: ssCode,
+      instance: "BEFORE",
+      attributeName: "BODY GROUND CURRENT",
+    );
+
+    ssMaintenanceAttributesEntityList.addAll([iNg, iBg]);
+  }
 }

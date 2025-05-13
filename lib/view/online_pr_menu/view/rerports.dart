@@ -70,7 +70,7 @@ class ReportsView extends StatelessWidget {
                                       ],
                                     ),
                                     onTap: () {
-                                      viewModel.PickDateFromDateTimePicker(
+                                      viewModel.pickDateFromDateTimePicker(
                                           context);
                                     },
                                   ),

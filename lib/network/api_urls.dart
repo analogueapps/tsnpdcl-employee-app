@@ -134,4 +134,6 @@ class Apis{
   static const GET_ALL_ABSTRACT="getAllAbstract";
   static const GET_VERIFY_ABSTRACT="getAbstract";
 
+  ///PTR & FEEDER LOADERS
+  static const GET_PTR_FEEDERS_SS="getPtrAndFeedersOfSs";
 }

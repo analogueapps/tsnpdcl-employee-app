@@ -43,9 +43,11 @@ class Kv33Screen extends StatelessWidget {
               backgroundColor:CommonColors.colorPrimary,
               iconTheme: const IconThemeData(color: Colors.white),
             ),
-            body: SingleChildScrollView(
+            body: viewModel.isLoading?
+                const CircularProgressIndicator():
+            SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.all(11),
+                padding: const EdgeInsets.all(11),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -57,7 +59,7 @@ class Kv33Screen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             ClipRRect(
-                              borderRadius: BorderRadius.only(
+                              borderRadius:const BorderRadius.only(
                                 topRight: Radius.circular(11),
                                 topLeft: Radius.circular(11),
                               ),
@@ -66,7 +68,7 @@ class Kv33Screen extends StatelessWidget {
                                 height: 51,
                                 child: Container(
                                   color: Colors.grey.shade300,
-                                  child: Center(
+                                  child: const Center(
                                     child: Text(
                                       '33KV SIDE',
                                       style: TextStyle(
@@ -77,8 +79,8 @@ class Kv33Screen extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Text(
+                            const SizedBox(height: 11),
+                            const Text(
                               '33KV AB SWITCH',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
@@ -106,10 +108,10 @@ class Kv33Screen extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Divider(color: Colors.grey, thickness: 1),
-                            SizedBox(height: 11),
-                            Text(
+                            const SizedBox(height: 11),
+                            const Divider(color: Colors.grey, thickness: 1),
+                            const SizedBox(height: 11),
+                            const Text(
                               '33KV BUS BAR CONNECTOR',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
@@ -139,19 +141,17 @@ class Kv33Screen extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Divider(color: Colors.grey, thickness: 1),
-                            SizedBox(height: 11),
-                            Text(
+                            const SizedBox(height: 11),
+                            const Divider(color: Colors.grey, thickness: 1),
+                            const SizedBox(height: 11),
+                            const Text(
                               '33KV BUS COUPLER',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             SizedBox(
                               height: viewModel.busCouplerItems.length * 48.0,
-                              // Approximate height per item
                               child: ListView.builder(
                                 physics: const NeverScrollableScrollPhysics(),
-                                // Disable inner scrolling
                                 itemCount: viewModel.busCouplerItems.length,
                                 itemBuilder: (context, index) {
                                   final item = viewModel.busCouplerItems[index];
@@ -172,10 +172,10 @@ class Kv33Screen extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Divider(color: Colors.grey, thickness: 1),
-                            SizedBox(height: 11),
-                            Text('33KV LA(S)', style: TextStyle(fontWeight: FontWeight.bold),),
+                            const SizedBox(height: 11),
+                            const Divider(color: Colors.grey, thickness: 1),
+                            const SizedBox(height: 11),
+                            const Text('33KV LA(S)', style: TextStyle(fontWeight: FontWeight.bold),),
                             SizedBox(
                               height: viewModel.laItems.length * 48.0,
                               // Approximate height per item
@@ -202,10 +202,10 @@ class Kv33Screen extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Divider(color: Colors.grey, thickness: 1),
-                            SizedBox(height: 11),
-                            Text('33KV VCB', style: TextStyle(fontWeight: FontWeight.bold),),
+                            const SizedBox(height: 11),
+                            const Divider(color: Colors.grey, thickness: 1),
+                            const SizedBox(height: 11),
+                            const Text('33KV VCB', style: TextStyle(fontWeight: FontWeight.bold),),
                             SizedBox(
                               height: viewModel.vcbItems.length * 48.0,
                               // Approximate height per item
@@ -232,10 +232,10 @@ class Kv33Screen extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Divider(color: Colors.grey, thickness: 1),
-                            SizedBox(height: 11),
-                            Text('33KV CT(S)', style: TextStyle(fontWeight: FontWeight.bold),),
+                            const SizedBox(height: 11),
+                            const Divider(color: Colors.grey, thickness: 1),
+                            const SizedBox(height: 11),
+                            const Text('33KV CT(S)', style: TextStyle(fontWeight: FontWeight.bold),),
                             SizedBox(
                               height: viewModel.ctsItems.length * 48.0,
                               // Approximate height per item
@@ -262,10 +262,10 @@ class Kv33Screen extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Divider(color: Colors.grey, thickness: 1),
-                            SizedBox(height: 11),
-                            Text('33KV POST TYPE INSULATOR', style: TextStyle(fontWeight: FontWeight.bold),),
+                            const SizedBox(height: 11),
+                            const Divider(color: Colors.grey, thickness: 1),
+                            const SizedBox(height: 11),
+                            const Text('33KV POST TYPE INSULATOR', style: TextStyle(fontWeight: FontWeight.bold),),
                             SizedBox(
                               height: viewModel.postTypeItems.length * 48.0,
                               // Approximate height per item
@@ -292,10 +292,10 @@ class Kv33Screen extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Divider(color: Colors.grey, thickness: 1),
-                            SizedBox(height: 11),
-                            Text('33KV HG FUSE SETS', style: TextStyle(fontWeight: FontWeight.bold),),
+                            const SizedBox(height: 11),
+                            const Divider(color: Colors.grey, thickness: 1),
+                            const SizedBox(height: 11),
+                            const Text('33KV HG FUSE SETS', style: TextStyle(fontWeight: FontWeight.bold),),
                             SizedBox(
                               height: viewModel.hgFuseItems.length * 48.0,
                               // Approximate height per item
@@ -322,10 +322,10 @@ class Kv33Screen extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Divider(color: Colors.grey, thickness: 1),
-                            SizedBox(height: 11),
-                            Text('33KV FUSE WIRE', style: TextStyle(fontWeight: FontWeight.bold),),
+                            const SizedBox(height: 11),
+                            const Divider(color: Colors.grey, thickness: 1),
+                            const SizedBox(height: 11),
+                            const Text('33KV FUSE WIRE', style: TextStyle(fontWeight: FontWeight.bold),),
                             SizedBox(
                               height: viewModel.fuseWireItems.length * 48.0,
                               // Approximate height per item
@@ -352,16 +352,14 @@ class Kv33Screen extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Divider(color: Colors.grey, thickness: 1),
-                            SizedBox(height: 11),
-                            Text('33KV PT(S)', style: TextStyle(fontWeight: FontWeight.bold),),
+                            const SizedBox(height: 11),
+                            const Divider(color: Colors.grey, thickness: 1),
+                            const SizedBox(height: 11),
+                            const Text('33KV PT(S)', style: TextStyle(fontWeight: FontWeight.bold),),
                             SizedBox(
                               height: viewModel.ptsItems.length * 48.0,
-                              // Approximate height per item
                               child: ListView.builder(
                                 physics: const NeverScrollableScrollPhysics(),
-                                // Disable inner scrolling
                                 itemCount: viewModel.ptsItems.length,
                                 itemBuilder: (context, index) {
                                   final item = viewModel.ptsItems[index];
@@ -395,7 +393,7 @@ class Kv33Screen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             ClipRRect(
-                              borderRadius: BorderRadius.only(
+                              borderRadius:const BorderRadius.only(
                                 topRight: Radius.circular(11),
                                 topLeft: Radius.circular(11),
                               ),
@@ -404,7 +402,7 @@ class Kv33Screen extends StatelessWidget {
                                 height: 51,
                                 child: Container(
                                   color: Colors.grey.shade300,
-                                  child: Center(
+                                  child: const Center(
                                     child: Text(
                                       'PTR SIDE',
                                       style: TextStyle(
@@ -415,8 +413,8 @@ class Kv33Screen extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Text('PTR', style: TextStyle(fontWeight: FontWeight.bold),),
+                            const SizedBox(height: 11),
+                            const Text('PTR', style: TextStyle(fontWeight: FontWeight.bold),),
                             SizedBox(
                               height: viewModel.ptrItems.length * 48.0,
                               // Approximate height per item
@@ -443,10 +441,10 @@ class Kv33Screen extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Divider(color: Colors.grey, thickness: 1),
-                            SizedBox(height: 11),
-                            Text('GROUP VCB(S)', style: TextStyle(fontWeight: FontWeight.bold),),
+                            const SizedBox(height: 11),
+                            const Divider(color: Colors.grey, thickness: 1),
+                            const SizedBox(height: 11),
+                            const Text('GROUP VCB(S)', style: TextStyle(fontWeight: FontWeight.bold),),
                             SizedBox(
                               height: viewModel.groupVcbItems.length * 48.0,
                               // Approximate height per item
@@ -473,10 +471,10 @@ class Kv33Screen extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Divider(color: Colors.grey, thickness: 1),
-                            SizedBox(height: 11),
-                            Text('11KV GROUP AB SWITCH', style: TextStyle(fontWeight: FontWeight.bold),),
+                            const SizedBox(height: 11),
+                            const  Divider(color: Colors.grey, thickness: 1),
+                            const SizedBox(height: 11),
+                            const Text('11KV GROUP AB SWITCH', style: TextStyle(fontWeight: FontWeight.bold),),
                             Column(
                               children: [
                                 SizedBox(
@@ -503,15 +501,15 @@ class Kv33Screen extends StatelessWidget {
                                     },
                                   ),
                                 ),
-                                Divider(color: Colors.grey, thickness: 1),
-                                SizedBox(height: 11),
-                                Align(
+                                const Divider(color: Colors.grey, thickness: 1),
+                                const SizedBox(height: 11),
+                                const Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text('BODY CURRENT', style: TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                 ),
-                                SizedBox(height: 11),
-                                Padding(
+                                const SizedBox(height: 11),
+                                const Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: TextField(
                                     decoration: InputDecoration(
@@ -520,8 +518,8 @@ class Kv33Screen extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: 11),
-                                Padding(
+                                const SizedBox(height: 11),
+                                const Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: TextField(
                                     decoration: InputDecoration(
@@ -536,7 +534,7 @@ class Kv33Screen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Card(
                       elevation: 5,
                       child: Padding(
@@ -545,7 +543,7 @@ class Kv33Screen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             ClipRRect(
-                              borderRadius: BorderRadius.only(
+                              borderRadius:const BorderRadius.only(
                                 topRight: Radius.circular(11),
                                 topLeft: Radius.circular(11),
                               ),
@@ -554,7 +552,7 @@ class Kv33Screen extends StatelessWidget {
                                 height: 51,
                                 child: Container(
                                   color: Colors.grey.shade300,
-                                  child: Center(
+                                  child:const Center(
                                     child: Text(
                                       '11KV SIDE',
                                       style: TextStyle(
@@ -565,8 +563,8 @@ class Kv33Screen extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Text('11KV BUS COUPLER', style: TextStyle(fontWeight: FontWeight.bold),),
+                            const SizedBox(height: 11),
+                            const Text('11KV BUS COUPLER', style: TextStyle(fontWeight: FontWeight.bold),),
                             SizedBox(
                               height: viewModel.KV11busCouplerItems.length * 48.0,
                               // Approximate height per item
@@ -593,10 +591,10 @@ class Kv33Screen extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Divider(color: Colors.grey, thickness: 1),
-                            SizedBox(height: 11),
-                            Text('11KV BUS BAR CONNECTORS TO FDR VCB', style: TextStyle(fontWeight: FontWeight.bold),),
+                            const SizedBox(height: 11),
+                            const Divider(color: Colors.grey, thickness: 1),
+                            const SizedBox(height: 11),
+                            const Text('11KV BUS BAR CONNECTORS TO FDR VCB', style: TextStyle(fontWeight: FontWeight.bold),),
                             SizedBox(
                               height: viewModel.busBarConnectorsItems.length * 48.0,
                               // Approximate height per item
@@ -623,10 +621,10 @@ class Kv33Screen extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Divider(color: Colors.grey, thickness: 1),
-                            SizedBox(height: 11),
-                            Text('11KV CT(S)', style: TextStyle(fontWeight: FontWeight.bold),),
+                            const SizedBox(height: 11),
+                            const Divider(color: Colors.grey, thickness: 1),
+                            const SizedBox(height: 11),
+                            const Text('11KV CT(S)', style: TextStyle(fontWeight: FontWeight.bold),),
                             SizedBox(
                               height: viewModel.KV11ctsItems.length * 48.0,
                               // Approximate height per item
@@ -928,8 +926,10 @@ class Kv33Screen extends StatelessWidget {
                         ),
                       ),
                     ),
-
-                    PrimaryButton(
+                    const SizedBox(height: 10,),
+                    SizedBox(
+                      width: double.infinity,
+                    child:PrimaryButton(
                         onPressed: () {
                           if (!viewModel.validateSection(viewModel.abSwitchItems, "33KV AB Switch",context)) return;
                           if (!viewModel.validateSection(viewModel.busBarConnectorItems, "33KV Bus Bar Connector",context)) return;
@@ -956,12 +956,12 @@ class Kv33Screen extends StatelessWidget {
                           if (!viewModel.validateSection(viewModel.yardLightingItems, "Yard Lights",context)) return;
                           if (!viewModel.validateSection(viewModel.redHotsItems, "Red Hots",context)) return;
 
-                          // If all validations pass, proceed with submission
                           viewModel.submit(context);
                         },
                         text:
                           'SUBMIT',
                         ),
+                    ),
                   ],
                 ),
               ),

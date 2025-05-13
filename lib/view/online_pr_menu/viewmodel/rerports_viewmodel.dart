@@ -23,7 +23,7 @@ class ReportsViewModel extends ChangeNotifier{
   bool _isLoading=false;
   bool get isLoading=>_isLoading;
 
-  Future<void> PickDateFromDateTimePicker(BuildContext context) async {
+  Future<void> pickDateFromDateTimePicker(BuildContext context) async {
     DateTime? selected= await showDatePicker(
         context: context,
         firstDate: DateTime(1900,01,01),

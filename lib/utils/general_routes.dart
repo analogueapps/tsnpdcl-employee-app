@@ -207,4 +207,7 @@ class Routes {
     //VERIFY WRONG CONFIRMATIONS
     static const String areaWiseAbstract="AreaWiseAbstractView";
     static const String inspectServices="InspectServices";
+
+    //PTR & FEEDERS LOADERS
+    static const String ptrFeederScreen="PtrFreederScreen";
 }

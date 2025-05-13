@@ -609,6 +609,11 @@ class UniversalDashboardViewModel extends ChangeNotifier {
           routeName: "",
           imageAsset: Assets.interruptions,
         ),
+        GlobalListDialogItem(
+          title: GlobalConstants.ptrFeederLoaders,
+          routeName: Routes.ptrFeederScreen,
+          imageAsset: Assets.tongTesterReadings,
+        ),
       ]);
       showModalBottomSheet(
         context: context,

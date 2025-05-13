@@ -59,6 +59,7 @@ class GlobalConstants {
   static const String matsTitle = "Mats";
   static const String accountTitle = "Account";
   static const String logoutTitle = "Logout";
+  static const String ptrFeederLoaders="PTR & FEEDER LOADERS";
 
   // Line clearance
   static const String lcMasterDataTitle = "Lc master data";

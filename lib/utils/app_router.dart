@@ -102,6 +102,7 @@ import 'package:tsnpdcl_employee/view/pole_tracker/view/pole_tracker_selection_s
 import 'package:tsnpdcl_employee/view/pole_tracker/view/pole_tracker_selection_view_sketch_screen.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/view/view_digital_sketch_screen.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/view/view_offline_feeders_screen.dart';
+import 'package:tsnpdcl_employee/view/ptr_feeder_loaders/view/ptr_freeder_screen.dart';
 import 'package:tsnpdcl_employee/view/reports/view/reports_screen.dart';
 import 'package:tsnpdcl_employee/view/rfss/view/download_structures_screen.dart';
 import 'package:tsnpdcl_employee/view/rfss/view/rfss_screen.dart';
@@ -602,6 +603,9 @@ class AppRouter {
       case InspectServices.id:
         return MaterialPageRoute(builder: (_) => InspectServices(args: settings.arguments as Map<String, dynamic>));
 
+      //PTR & FEEDER LOADERS
+      case PtrFeederScreen.id:
+        return MaterialPageRoute(builder: (_) => const PtrFeederScreen());
 
       default:
         return MaterialPageRoute(

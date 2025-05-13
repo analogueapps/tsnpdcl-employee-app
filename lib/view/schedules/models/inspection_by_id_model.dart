@@ -8,7 +8,7 @@ class MaintenanceItem {
   final DateTime? maintenanceDate;
   final String sectionCode;
   final String ssCode;
-  final String ssName;
+  final String? ssName;
   final String? ssVoltage;
   final String status;
   final DateTime? scheduledDate;
@@ -68,7 +68,7 @@ class SSMaintenanceAttribute {
   final String instance;
   final String attributeType;
   final String attributeName;
-  final String attributeValue;
+  final String? attributeValue;
 
   SSMaintenanceAttribute({
     required this.attributeId,
