@@ -11,8 +11,8 @@ import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/view/schedules/models/33kv_model.dart';
 import 'package:tsnpdcl_employee/view/schedules/models/view_schedule_model.dart';
 
-class Kv33ViewModel extends ChangeNotifier{
-  Kv33ViewModel({required this.context, required this.data});
+class SsInspetionViewmodel extends ChangeNotifier{
+  SsInspetionViewmodel({required this.context, required this.data});
 
   final BuildContext context;
   final Map<String, dynamic> data;
@@ -387,6 +387,9 @@ class Kv33ViewModel extends ChangeNotifier{
     allAttributes.addAll(buildAttributes("SS Earthing", ssEarthingItems, ssCode));
     allAttributes.addAll(buildAttributes("Yard Lights", yardLightingItems, ssCode));
     allAttributes.addAll(buildAttributes("Red Hots", redHotsItems, ssCode));
+    addBodyCurrentAttributes(ssCode, data['i_ng'] ?? '', data['i_bg'] ?? '');
+    allAttributes.addAll(ssMaintenanceAttributesEntityList);
+
 
     return SSMaintenanceEntity(
       ssCode: ssCode,
@@ -399,17 +402,18 @@ class Kv33ViewModel extends ChangeNotifier{
     notifyListeners();
 
     final ssCode = data['ssCode'];
+    final scheduledId=data['scheduleId'];
+    print("SS Inspection $ssCode $scheduledId");
     final ssMaintenanceEntity = buildSSMaintenanceEntity(ssCode);
-
     final payload = {
       "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployees",
       "ssCode":ssCode,
       "data": jsonEncode(ssMaintenanceEntity.toJson()),
-      "id":data['id']==null?-2:data['id']
+      "scheduleId":data['scheduleId']
     };
     try {
-      var response = await ApiProvider(baseUrl: Apis.SS_END_POINT_BASE_URL).postApiCall(context, Apis.SAVE_MAINTENANCE, payload);
+      var response = await ApiProvider(baseUrl: Apis.SS_END_POINT_BASE_URL).postApiCall(context, Apis.SAVE_INSPECTION, payload);
 
       if (response != null) {
         if (response.data is String) {
@@ -440,4 +444,23 @@ class Kv33ViewModel extends ChangeNotifier{
     }
   }
 
+  void addBodyCurrentAttributes(String ssCode, String iNgValue, String iBgValue) {
+    final iNg = SSMaintenanceAttributesEntity(
+      attributeType: "BODY CURRENT I(N-G)",
+      attributeValue: iNgValue,
+      ssCode: ssCode,
+      instance: "BEFORE",
+      attributeName: "NEUTRAL GROUND CURRENT",
+    );
+
+    final iBg = SSMaintenanceAttributesEntity(
+      attributeType: 'BODY CURRENT I(B-G)',
+      attributeValue: iBgValue,
+      ssCode: ssCode,
+      instance: "BEFORE",
+      attributeName: "BODY GROUND CURRENT",
+    );
+
+    ssMaintenanceAttributesEntityList.addAll([iNg, iBg]);
+  }
 }

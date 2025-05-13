@@ -106,7 +106,9 @@ import 'package:tsnpdcl_employee/view/reports/view/reports_screen.dart';
 import 'package:tsnpdcl_employee/view/rfss/view/download_structures_screen.dart';
 import 'package:tsnpdcl_employee/view/rfss/view/rfss_screen.dart';
 import 'package:tsnpdcl_employee/view/schedules/models/view_schedule_model.dart';
+import 'package:tsnpdcl_employee/view/schedules/view/33kv_screen.dart';
 import 'package:tsnpdcl_employee/view/schedules/view/schedule.dart';
+import 'package:tsnpdcl_employee/view/schedules/view/ss_inspection.dart';
 import 'package:tsnpdcl_employee/view/schedules/view/view_detail_schedules.dart';
 import 'package:tsnpdcl_employee/view/schedules/view/view_schedule.dart';
 import 'package:tsnpdcl_employee/view/search_consumer/view/search_consumer_screen.dart';
@@ -589,6 +591,10 @@ class AppRouter {
         final args = settings.arguments as ViewScheduleModel;
           return MaterialPageRoute(builder: (_) =>  ViewDetailSchedules(data: args
           ));
+      case Kv33Screen.id:
+        return MaterialPageRoute(builder: (_) =>  Kv33Screen(args: settings.arguments as Map<String, dynamic>));
+      case SsInspection.id:
+        return MaterialPageRoute(builder: (_) =>  SsInspection(args: settings.arguments as Map<String, dynamic>));
 
       // VERIFY WRONG CONFIRMATIONS
       case AreaWiseAbstractView.id:

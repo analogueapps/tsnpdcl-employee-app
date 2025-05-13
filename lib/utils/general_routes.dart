@@ -201,6 +201,8 @@ class Routes {
   static const String schedule="SchedulesScreen";
   static const String viewSchedule="ViewSchedule";
     static const String  viewDetailSchedule="ViewDetailSchedules";
+    static const String kv33Screen="Kv33Screen";
+    static const String ssInspect="SsInspection";
 
     //VERIFY WRONG CONFIRMATIONS
     static const String areaWiseAbstract="AreaWiseAbstractView";

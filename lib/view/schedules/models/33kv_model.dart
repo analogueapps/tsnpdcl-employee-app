@@ -58,3 +58,5 @@ class CheckboxData {
 
   CheckboxData({required this.label, required this.checked});
 }
+
+

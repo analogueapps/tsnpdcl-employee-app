@@ -3,21 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
-import 'package:tsnpdcl_employee/view/schedules/viewmodel/33kv_viewmodel.dart';
-import 'package:tsnpdcl_employee/widget/primary_button.dart';
+import 'package:tsnpdcl_employee/view/schedules/viewmodel/ss_inspetion_viewmodel.dart';
 
 
-class Kv33Screen extends StatelessWidget {
-  static const id = Routes.kv33Screen;
-  const Kv33Screen({super.key, required this.args});
+class SsInspection extends StatelessWidget {
+  static const id = Routes.ssInspect;
+  const SsInspection({super.key, required this.args});
   final Map<String, dynamic> args;
 
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => Kv33ViewModel(context:context, data:args),
-      child: Consumer<Kv33ViewModel>(
+      create: (_) => SsInspetionViewmodel(context:context, data:args),
+      child: Consumer<SsInspetionViewmodel>(
         builder: (context, viewModel, child) {
           return Scaffold(
             backgroundColor: Colors.grey.shade200,
@@ -26,7 +25,7 @@ class Kv33Screen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    '33KV SS MAINTENANCE',
+                    '33KV SS INSPECTION',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 20,
@@ -929,7 +928,12 @@ class Kv33Screen extends StatelessWidget {
                       ),
                     ),
 
-                    PrimaryButton(
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                        ),
                         onPressed: () {
                           if (!viewModel.validateSection(viewModel.abSwitchItems, "33KV AB Switch",context)) return;
                           if (!viewModel.validateSection(viewModel.busBarConnectorItems, "33KV Bus Bar Connector",context)) return;
@@ -959,9 +963,12 @@ class Kv33Screen extends StatelessWidget {
                           // If all validations pass, proceed with submission
                           viewModel.submit(context);
                         },
-                        text:
+                        child: const Text(
                           'SUBMIT',
+                          style: TextStyle(color: Colors.white, fontSize: 18),
                         ),
+                      ),
+                    ),
                   ],
                 ),
               ),

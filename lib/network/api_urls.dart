@@ -126,6 +126,8 @@ class Apis{
   static const SCHEDULE_LINE="schedule11KvLineMaintenance";
   static const VIEW_SCHEDULE="getTourDairyByDate";
   static const GET_SS_INSPECTION_BY_ID="getSSInspectionByScheduleId";
+  static const SAVE_MAINTENANCE="saveSSMaintenance";
+  static const SAVE_INSPECTION="saveSSInspection";
 
   ///VERIFY WRONG CONFIRMATION * BHAVANA
   static const VERIFY_WRONG_CONFIRM_URL="$SERVER_IP:5656/NPFDAS/ep/wrongCat/";

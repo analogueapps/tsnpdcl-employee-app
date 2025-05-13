@@ -5,7 +5,7 @@ import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/view/schedules/models/view_schedule_model.dart';
-import 'package:tsnpdcl_employee/view/schedules/view_detail_schedule_viewmodel.dart';
+import 'package:tsnpdcl_employee/view/schedules/viewmodel/view_detail_schedule_viewmodel.dart';
 import 'package:tsnpdcl_employee/widget/primary_button.dart';
 import 'package:tsnpdcl_employee/widget/view_detailed_lc_tile_widget.dart';
 
@@ -19,7 +19,7 @@ class ViewDetailSchedules extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-        create: (_) => ViewDetailScheduleViewmodel(context: context),
+        create: (_) => ViewDetailScheduleViewmodel(context: context, data: data),
         child: Consumer<ViewDetailScheduleViewmodel>(
             builder: (context, viewModel, child) {
               return Scaffold(
