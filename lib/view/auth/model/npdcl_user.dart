@@ -46,6 +46,7 @@ class NpdclUser {
     this.tokenHolder,
     this.secMasterEntity,
     this.allowEbsAndroidApp,
+    this.isSsOp,
   });
 
   NpdclUser.fromJson(dynamic json) {
@@ -91,6 +92,7 @@ class NpdclUser {
         ? SecMasterEntity.fromJson(json['secMasterEntity'])
         : null;
     allowEbsAndroidApp = json['allowEbsAndroidApp'];
+    isSsOp = json['isSsOp'];
   }
 
   String? empId;
@@ -133,6 +135,7 @@ class NpdclUser {
   String? tokenHolder;
   SecMasterEntity? secMasterEntity;
   String? allowEbsAndroidApp;
+  String? isSsOp;
 
   NpdclUser copyWith({
     String? empId,
@@ -175,6 +178,7 @@ class NpdclUser {
     String? tokenHolder,
     SecMasterEntity? secMasterEntity,
     String? allowEbsAndroidApp,
+    String? isSsOp,
   }) =>
       NpdclUser(
         empId: empId ?? this.empId,
@@ -217,6 +221,7 @@ class NpdclUser {
         tokenHolder: tokenHolder ?? this.tokenHolder,
         secMasterEntity: secMasterEntity ?? this.secMasterEntity,
         allowEbsAndroidApp: allowEbsAndroidApp ?? this.allowEbsAndroidApp,
+        isSsOp: isSsOp ?? this.isSsOp,
       );
 
   Map<String, dynamic> toJson() {
@@ -263,6 +268,7 @@ class NpdclUser {
       map['secMasterEntity'] = secMasterEntity?.toJson();
     }
     map['allowEbsAndroidApp'] = allowEbsAndroidApp;
+    map['isSsOp'] = isSsOp;
     return map;
   }
 }

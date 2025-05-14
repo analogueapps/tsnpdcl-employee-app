@@ -56,25 +56,25 @@ class _UniversalDashboardScreenState extends State<UniversalDashboardScreen> {
           return isTrue;
         }
       },
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: CommonColors.colorPrimary,
-          title: const Text(
-            GlobalConstants.dashboardName,
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: toolbarTitleSize,
-                fontWeight: FontWeight.w700),
-          ),
-          iconTheme: const IconThemeData(
-            color: Colors.white,
-          ),
-        ),
-        drawer: ChangeNotifierProvider(
-          create: (_) => UniversalDashboardViewModel(),
-          child: Consumer<UniversalDashboardViewModel>(
-            builder: (context, viewModel, child) {
-              return Drawer(
+      child: ChangeNotifierProvider(
+        create: (_) => UniversalDashboardViewModel(context: context),
+        child: Consumer<UniversalDashboardViewModel>(
+          builder: (context, viewModel, child) {
+            return Scaffold(
+              appBar: AppBar(
+                backgroundColor: CommonColors.colorPrimary,
+                title: Text(
+                  viewModel.toolbarTitle,
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: toolbarTitleSize,
+                      fontWeight: FontWeight.w700),
+                ),
+                iconTheme: const IconThemeData(
+                  color: Colors.white,
+                ),
+              ),
+              drawer: Drawer(
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.zero, // Removes the curved corners
                 ),
@@ -91,13 +91,13 @@ class _UniversalDashboardScreenState extends State<UniversalDashboardScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                              viewModel.npdclUser != null ? "EMP ID:${viewModel.npdclUser!.empId}|SEC.ID:${viewModel.npdclUser!.secMasterEntity!.sectionId}".toUpperCase() : appName.toUpperCase(),
+                            viewModel.npdclUser != null ? "EMP ID:${viewModel.npdclUser!.empId}|SEC.ID:${viewModel.npdclUser!.secMasterEntity!.sectionId}".toUpperCase() : appName.toUpperCase(),
                             style: const TextStyle(
-                              color: Colors.grey
+                                color: Colors.grey
                             ),
                           ),
                           Text(
-                              viewModel.npdclUser != null ? "Ph:${viewModel.npdclUser!.personalMobileNo}" : appName.toUpperCase(),
+                            viewModel.npdclUser != null ? "Ph:${viewModel.npdclUser!.personalMobileNo}" : appName.toUpperCase(),
                             style: const TextStyle(
                                 color: Colors.grey
                             ),
@@ -117,6 +117,14 @@ class _UniversalDashboardScreenState extends State<UniversalDashboardScreen> {
                       currentAccountPictureSize: const Size(50, 50),
                     ),
                     ListTile(
+                      leading: const Icon(Icons.person),
+                      title: const Text(GlobalConstants.accountTitle),
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigation.instance.navigateTo(Routes.accountScreen);
+                      },
+                    ),
+                    ListTile(
                       leading: const Icon(Icons.logout),
                       title: const Text(GlobalConstants.logoutTitle),
                       onTap: () {
@@ -126,15 +134,8 @@ class _UniversalDashboardScreenState extends State<UniversalDashboardScreen> {
                     ),
                   ],
                 ),
-              );
-            },
-          ),
-        ),
-        body: ChangeNotifierProvider(
-          create: (_) => UniversalDashboardViewModel(),
-          child: Consumer<UniversalDashboardViewModel>(
-            builder: (context, viewModel, child) {
-              return Column(
+              ),
+              body: Column(
                 children: [
                   Material(
                     color: Colors.white,
@@ -266,9 +267,9 @@ class _UniversalDashboardScreenState extends State<UniversalDashboardScreen> {
                         child: Text("No menu matches your search."),
                       ))
                 ],
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
       ),
     );

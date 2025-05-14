@@ -2,6 +2,8 @@ class Routes {
   // AUTH
   static const String employeeIdLoginScreen = 'employee_id_login_screen';
   static const String corporateLoginScreen = 'corporate_login_screen';
+  static const String changePasswordScreen = 'ChangePasswordScreen';
+  static const String otpVerificationScreen = 'OtpVerificationScreen';
 
   // DASHBOARD
   static const String universalDashboardScreen = 'universal_dashboard_screen';
@@ -57,6 +59,10 @@ class Routes {
   static const String viewDetailedTransportScreen = "ViewDetailedTransportScreen";
   static const String viewPoleDumpedLocationScreen = "ViewPoleDumpedLocationScreen";
   static const String viewDetailedPoleDumpedLocationScreen = "ViewDetailedPoleDumpedLocationScreen";
+  static const String viewFirmsScreen = "ViewFirmsScreen";
+  static const String createFirmScreen = "CreateFirmScreen";
+  static const String viewInspectionTicketsScreen = "ViewInspectionTicketsScreen";
+  static const String viewDetailedInspectionTicketScreen = "ViewDetailedInspectionTicketScreen";
 
   // REPORTS
   static const String reportsScreen = "ReportsScreen";
@@ -200,13 +206,13 @@ class Routes {
   //SCHEDULES *BHAVANA
   static const String schedule="SchedulesScreen";
   static const String viewSchedule="ViewSchedule";
-    static const String  viewDetailSchedule="ViewDetailSchedules";
-    static const String kv33Screen="Kv33Screen";
-    static const String ssInspect="SsInspection";
+  static const String  viewDetailSchedule="ViewDetailSchedules";
+  static const String kv33Screen="Kv33Screen";
+  static const String ssInspect="SsInspection";
 
-    //VERIFY WRONG CONFIRMATIONS
-    static const String areaWiseAbstract="AreaWiseAbstractView";
-    static const String inspectServices="InspectServices";
+  //VERIFY WRONG CONFIRMATIONS
+  static const String areaWiseAbstract="AreaWiseAbstractView";
+  static const String inspectServices="InspectServices";
 
     //PTR & FEEDERS LOADERS
     static const String ptrFeederScreen="PtrFreederScreen";

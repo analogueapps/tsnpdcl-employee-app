@@ -250,9 +250,9 @@ class SchedulesScreen extends StatelessWidget {
                 onPressed: () {
                     viewModel.showChooseOptionPopUp(context);
                 },
-                backgroundColor: Colors.pinkAccent,
+                backgroundColor: CommonColors.colorPrimary,
                 child: const Icon(Icons.add,color: Colors.white,),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
               ),
             );
           }

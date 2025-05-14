@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class ViewDetailedLcTileWidget extends StatelessWidget {
   final String tileKey;
   final String tileValue;
@@ -17,11 +16,11 @@ class ViewDetailedLcTileWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
-      child: Column(
-    children: [
-      Row(
+      child: Row(
         children: [
-          const SizedBox(width: 10.0,),
+          const SizedBox(
+            width: 10.0,
+          ),
           Expanded(
             child: Text(
               tileKey.toUpperCase(),
@@ -44,11 +43,10 @@ class ViewDetailedLcTileWidget extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(width: 10.0,),
+          const SizedBox(
+            width: 10.0,
+          ),
         ],
-      ),
-      const Divider(),
-    ]
       ),
     );
   }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:tsnpdcl_employee/view/account_screen/view/account_screen.dart';
 import 'package:tsnpdcl_employee/view/asset_mapping/view/asset_mapping_screen.dart';
+import 'package:tsnpdcl_employee/view/auth/view/change_password_screen.dart';
 import 'package:tsnpdcl_employee/view/auth/view/corporate_login_screen.dart';
 import 'package:tsnpdcl_employee/view/auth/view/employee_id_login_screen.dart';
+import 'package:tsnpdcl_employee/view/auth/view/otp_verification_screen.dart';
 import 'package:tsnpdcl_employee/view/bs_udc_inspection/view/bs_udc_list.dart';
 import 'package:tsnpdcl_employee/view/ccc/view/ccc_dashboard.dart';
 import 'package:tsnpdcl_employee/view/ccc/view/ccc_oricb.dart';
@@ -86,13 +88,17 @@ import 'package:tsnpdcl_employee/view/online_pr_menu/view/online_collection.dart
 import 'package:tsnpdcl_employee/view/online_pr_menu/view/online_pr_menu_screen.dart';
 import 'package:tsnpdcl_employee/view/online_pr_menu/view/print_last_pr.dart';
 import 'package:tsnpdcl_employee/view/online_pr_menu/view/rerports.dart';
+import 'package:tsnpdcl_employee/view/pdms/view/create_firm_screen.dart';
 import 'package:tsnpdcl_employee/view/pdms/view/create_pole_indents_screen.dart';
 import 'package:tsnpdcl_employee/view/pdms/view/pdms_screen.dart';
 import 'package:tsnpdcl_employee/view/pdms/view/view_detailed_di_tabs_screen.dart';
+import 'package:tsnpdcl_employee/view/pdms/view/view_detailed_inspection_ticket_screen.dart';
 import 'package:tsnpdcl_employee/view/pdms/view/view_detailed_pole_dumped_location_screen.dart';
 import 'package:tsnpdcl_employee/view/pdms/view/view_detailed_pole_indent_screen.dart';
 import 'package:tsnpdcl_employee/view/pdms/view/view_detailed_transport_screen.dart';
 import 'package:tsnpdcl_employee/view/pdms/view/view_dispatch_instructions_screen.dart';
+import 'package:tsnpdcl_employee/view/pdms/view/view_firms_screen.dart';
+import 'package:tsnpdcl_employee/view/pdms/view/view_inspection_tickets_screen.dart';
 import 'package:tsnpdcl_employee/view/pdms/view/view_pole_dumped_location_screen.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/view/new_proposal_screen.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/view/pole_11kv_feeder_mark_screen.dart';
@@ -149,6 +155,12 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const EmployeeIdLoginScreen());
       case CorporateLoginScreen.id:
         return MaterialPageRoute(builder: (_) => const CorporateLoginScreen());
+      case ChangePasswordScreen.id:
+        return MaterialPageRoute(builder: (_) => ChangePasswordScreen(empId: settings.arguments as String));
+      case OtpVerificationScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => OtpVerificationScreen(data: settings.arguments as Map<String, dynamic>));
+
       case UniversalDashboardScreen.id:
         return MaterialPageRoute(
             builder: (_) => const UniversalDashboardScreen());
@@ -293,6 +305,18 @@ class AppRouter {
         return MaterialPageRoute(
             builder: (_) => ViewDetailedPoleDumpedLocationScreen(
                 data: settings.arguments as String));
+      case ViewFirmsScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => const ViewFirmsScreen());
+      case CreateFirmScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => CreateFirmScreen(data: settings.arguments as String));
+      case ViewInspectionTicketsScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => const ViewInspectionTicketsScreen());
+      case ViewDetailedInspectionTicketScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => ViewDetailedInspectionTicketScreen(data: settings.arguments as String));
 
     // REPORTS
       case ReportsScreen.id:
@@ -588,16 +612,16 @@ class AppRouter {
           dt: args['dt'] ?? '',
           type: args['type'] ?? '',
         ));
-        case ViewDetailSchedules.id:
+      case ViewDetailSchedules.id:
         final args = settings.arguments as ViewScheduleModel;
-          return MaterialPageRoute(builder: (_) =>  ViewDetailSchedules(data: args
-          ));
+        return MaterialPageRoute(builder: (_) =>  ViewDetailSchedules(data: args
+        ));
       case Kv33Screen.id:
         return MaterialPageRoute(builder: (_) =>  Kv33Screen(args: settings.arguments as Map<String, dynamic>));
       case SsInspection.id:
         return MaterialPageRoute(builder: (_) =>  SsInspection(args: settings.arguments as Map<String, dynamic>));
 
-      // VERIFY WRONG CONFIRMATIONS
+    // VERIFY WRONG CONFIRMATIONS
       case AreaWiseAbstractView.id:
         return MaterialPageRoute(builder: (_) => const AreaWiseAbstractView());
       case InspectServices.id:

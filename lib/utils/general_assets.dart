@@ -4,6 +4,10 @@ import 'package:tsnpdcl_employee/utils/common_colors.dart';
 
 class Assets {
   static const String appLogo = 'assets/images/npdcl_logo.svg';
+  static const String splashLogo = 'assets/images/new_npdcl_bg.png';
+  static const String loginBgLogo = 'assets/images/wind_mill_compressed.jpg';
+  static const String copLoginBgLogo = 'assets/images/boardroom_bg.png';
+  static const String changePassBgLogo = 'assets/images/change_pass_bg.png';
 
   // universal dashboard
   static const String updateApp = 'assets/images/app.png';
@@ -54,6 +58,7 @@ class Assets {
   static const String account = 'assets/images/profile.png';
   static const String yesOrNo = 'assets/images/yes_or_no.png';
   static const String logout = 'assets/images/logout.png';
+  static const String tickets = 'assets/images/report.png';
 
   // line clearance menu
   static const String lcMasterData = 'assets/images/database_file.png';

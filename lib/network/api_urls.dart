@@ -50,6 +50,12 @@ class Apis{
   static const SAVE_FORM_13_DATA_URL = "saveForm13Data";
   static const REQUEST_DI_DOWNLOAD_LINK_URL = "requestDIDownloadLink";
   static const GET_POLE_DUMPED_LOCATION_URL = "getPoleDumpLocations";
+  static const GET_POLE_FIRMS_URL = "getPoleFirms";
+  static const CREATE_FIRM_URL = "createFirm";
+  static const UPDATE_FIRM_URL = "updateFirm";
+  static const GET_TICKETS_OF_STATUS_URL = "getTicketsOfStatus";
+  static const GET_FILTERED_TICKETS_URL = "getFilteredTickets";
+  static const GET_TICKETS_FILTER_DATA_URL = "getTicketsFilterData";
 
   /// REPORTS
   static const GET_CTPT_BAR_GRAPH_DATA_URL = "getCtPtBarGraphData";

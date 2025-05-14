@@ -61,6 +61,10 @@ class GlobalConstants {
   static const String logoutTitle = "Logout";
   static const String ptrFeederLoaders="PTR & FEEDER LOADERS";
 
+  // CGM P&MM Menu
+  static const String viewSuppliersTitle = "View suppliers";
+  static const String inspectionTicketsTitle = "Inspection tickets";
+
   // Line clearance
   static const String lcMasterDataTitle = "Lc master data";
   static const String pendingAeAde = "Pending at ae/ade";
