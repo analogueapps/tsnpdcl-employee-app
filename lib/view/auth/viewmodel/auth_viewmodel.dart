@@ -110,7 +110,7 @@ class AuthViewmodel extends ChangeNotifier {
                 print("subdivisionCode: ${ user[0].secMasterEntity!.subDivisionId }");
 
 
-                Navigation.instance.pushAndRemoveUntil(Routes.universalDashboardScreen);
+                Navigation.instance.pushAndRemoveUntil(Routes.splashScreen);
               }
             } else {
               showAlertDialog(context,response.data['message']);
@@ -188,7 +188,7 @@ class AuthViewmodel extends ChangeNotifier {
                 await SharedPreferenceHelper.setStringValue(LoginSdkPrefs.npdclUserPrefKey, jsonEncode(user));
                 await SharedPreferenceHelper.setLoginStatus(isTrue);
 
-                Navigation.instance.pushAndRemoveUntil(Routes.universalDashboardScreen);
+                Navigation.instance.pushAndRemoveUntil(Routes.splashScreen);
               }
             } else {
               showAlertDialog(context,response.data['message']);

@@ -1,46 +1,25 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
-class ProcessDialog extends StatefulWidget {
+class ProcessDialog extends StatelessWidget {
   final String? message;
 
   const ProcessDialog({super.key, this.message});
 
   @override
-  State<ProcessDialog> createState() => _ProcessDialogState();
-}
-
-class _ProcessDialogState extends State<ProcessDialog> {
-  @override
   Widget build(BuildContext context) {
-    return Dialog(
-      backgroundColor: Colors.transparent,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const CircularProgressIndicator(),
-            const SizedBox(height: 16),
-            Text(
-              widget.message ?? "Loading...",
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 16),
-            ),
-          ],
-        ),
+    return CupertinoAlertDialog(
+      content: Column(
+        children: [
+          const SizedBox(height: 16),
+          const CupertinoActivityIndicator(radius: 14),
+          const SizedBox(height: 16),
+          Text(
+            message ?? "Loading...",
+            style: const TextStyle(fontSize: 16),
+          ),
+        ],
       ),
     );
-  }
-
-  /// Close the dialog
-  void closeDialog() {
-    if (mounted) {
-      Navigator.of(context).pop();
-    }
   }
 }
 
@@ -49,10 +28,10 @@ class ProcessDialogHelper {
       BuildContext context, {
         String? message,
       }) async {
-    showDialog(
+    showCupertinoDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => ProcessDialog(message: message),
+      builder: (_) => ProcessDialog(message: message),
     );
   }
 

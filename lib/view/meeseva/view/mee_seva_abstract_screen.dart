@@ -9,21 +9,21 @@ import 'package:tsnpdcl_employee/view/meeseva/viewmodel/mee_seva_abstract_viewmo
 
 class MeeSevaAbstractScreen extends StatelessWidget {
   static const id = Routes.meeSevaAbstractScreen;
-  final String above;
+  final Map<String, dynamic> data;
 
-  const MeeSevaAbstractScreen({super.key, required this.above});
+  const MeeSevaAbstractScreen({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => MeeSevaAbstractViewmodel(context: context, days: above),
+      create: (_) => MeeSevaAbstractViewmodel(context: context, data: data),
       child: Consumer<MeeSevaAbstractViewmodel>(
         builder: (context, viewModel, child) {
           return Scaffold(
             appBar: AppBar(
               backgroundColor: CommonColors.colorPrimary,
               title: Text(
-                above != "0" ? "LM wise above $above days abstract".toUpperCase() : "Linemen wise Abstract".toUpperCase(),
+                data['above'] != "0" ? "LM wise above ${data['above']} days abstract".toUpperCase() : "Linemen wise Abstract".toUpperCase(),
                 style: const TextStyle(
                     color: Colors.white,
                     fontSize: toolbarTitleSize,
@@ -60,27 +60,41 @@ class MeeSevaAbstractScreen extends StatelessWidget {
                     int count = 0;
                     String status = '';
 
+                    // insideJsonObjects.forEach((key, value) {
+                    //   if (key != "statusCount") {
+                    //     targetKey = key;
+                    //   }
+                    // });
+                    // //print(targetKey);
+                    // // Loop through all the keys in the status object to find name and count
+                    // insideJsonObjects.forEach((statusKey, statusValue) {
+                    //   if (statusValue is Map && statusValue.containsKey('name') && statusValue.containsKey('count')) {
+                    //     // If the statusValue has both 'name' and 'count', extract them
+                    //     name = statusValue['name'];
+                    //     count = statusValue['count'];
+                    //     status = statusValue['status'];
+                    //   }
+                    // });
+
+                    List<Map<String, dynamic>> entries = [];
+
                     insideJsonObjects.forEach((key, value) {
-                      if (key != "statusCount") {
-                        targetKey = key;
-                      }
-                    });
-                    //print(targetKey);
-                    // Loop through all the keys in the status object to find name and count
-                    insideJsonObjects.forEach((statusKey, statusValue) {
-                      if (statusValue is Map && statusValue.containsKey('name') && statusValue.containsKey('count')) {
-                        // If the statusValue has both 'name' and 'count', extract them
-                        name = statusValue['name'];
-                        count = statusValue['count'];
-                        status = statusValue['status'];
+                      if (key != "statusCount" && value is Map && value.containsKey('name') && value.containsKey('count')) {
+                        entries.add({
+                          'name': value['name'],
+                          'count': value['count'],
+                          'status': value['status'],
+                          'empId': key,
+                        });
                       }
                     });
 
                     return Column(
                       children: [
+                        // Section Header
                         Container(
                           padding: const EdgeInsets.all(5.0),
-                          color: const Color(0xFFEEEEEE), // Equivalent to background="#EEEEEE"
+                          color: const Color(0xFFEEEEEE),
                           child: SizedBox(
                             height: doubleForty,
                             child: Row(
@@ -91,21 +105,16 @@ class MeeSevaAbstractScreen extends StatelessWidget {
                                   flex: 8,
                                   child: Text(
                                     viewModel.shortCuts.containsKey(item) ? viewModel.shortCuts[item]! : "NA",
-                                    style: const TextStyle(
-                                      fontSize: normalSize,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                    textAlign: TextAlign.start,
+                                    style: const TextStyle(fontSize: normalSize, fontWeight: FontWeight.w700),
                                   ),
                                 ),
                                 Expanded(
                                   flex: 2,
                                   child: Text(
-                                    viewModel.jsonObjects.containsKey(item) ?  viewModel.jsonObjects[item]['statusCount'].toString() : "0",
-                                    style: const TextStyle(
-                                      fontSize: normalSize,
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                                    viewModel.jsonObjects.containsKey(item)
+                                        ? viewModel.jsonObjects[item]['statusCount'].toString()
+                                        : "0",
+                                    style: const TextStyle(fontSize: normalSize, fontWeight: FontWeight.w500),
                                     textAlign: TextAlign.end,
                                   ),
                                 ),
@@ -113,77 +122,67 @@ class MeeSevaAbstractScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        Container(
-                          padding: const EdgeInsets.all(5.0),
-                          child: SizedBox(
-                            height: doubleThirty,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  flex: 8,
-                                  child: Text(
-                                    name,
-                                    style: const TextStyle(
-                                      fontSize: normalSize,
-                                      fontWeight: FontWeight.w700,
+                        // List of items
+                        ...entries.map((entry) {
+                          return Container(
+                            padding: const EdgeInsets.all(5.0),
+                            child: SizedBox(
+                              height: doubleThirty,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    flex: 8,
+                                    child: Text(
+                                      entry['name'],
+                                      style: const TextStyle(fontSize: normalSize, fontWeight: FontWeight.w700),
                                     ),
-                                    textAlign: TextAlign.start,
                                   ),
-                                ),
-                                Expanded(
-                                  flex: 2,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      // print(viewModel.shortCutsToActualStatusCode[status]);
+                                  Expanded(
+                                    flex: 2,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        String status = entry['status'];
+                                        String empId = entry['empId'];
+                                        String name = entry['name'];
 
-                                      if(viewModel.shortCutsToActualStatusCode[status] == null) {
-                                        return;
-                                      }
+                                        if (viewModel.shortCutsToActualStatusCode[status] == null) return;
 
-                                      if(viewModel.isLmAbstract) {
-                                        if(name == viewModel.user![0].empId) {
-                                          var argument = {
-                                            "s": viewModel.shortCutsToActualStatusCode[status],
-                                            "ncflag": "M",
-                                            "lmEmp": targetKey,
-                                            "filterLm": "filterLm",
-                                            "name": name,
-                                          };
+                                        var argument = {
+                                          "s": viewModel.shortCutsToActualStatusCode[status],
+                                          "ncflag": "M",
+                                          "lmEmp": empId,
+                                          "filterLm": "filterLm",
+                                          "name": name,
+                                        };
+
+                                        if (data['sc'] != null) {
+                                          argument['sc'] = data['sc'];
+                                        }
+
+                                        if (viewModel.isLmAbstract && name == viewModel.user![0].empId) {
+                                          Navigation.instance.navigateTo(Routes.servicesAppListScreen, args: argument);
+                                        } else if (!viewModel.isLmAbstract) {
                                           Navigation.instance.navigateTo(Routes.servicesAppListScreen, args: argument);
                                         } else {
                                           AlertUtils.showSnackBar(context, "Operation not allowed! You can only view your applications", isTrue);
                                         }
-                                      } else {
-                                        var argument = {
-                                          "s": viewModel.shortCutsToActualStatusCode[status],
-                                          "ncflag": "M",
-                                          "lmEmp": targetKey,
-                                          "filterLm": "filterLm",
-                                          "name": name
-                                        };
-                                        Navigation.instance.navigateTo(Routes.servicesAppListScreen, args: argument);
-                                      }
-                                    },
-                                    child: Text(
-                                      count.toString(),
-                                      style: const TextStyle(
-                                        fontSize: normalSize,
-                                        fontWeight: FontWeight.w500,
+                                      },
+                                      child: Text(
+                                        entry['count'].toString(),
+                                        style: const TextStyle(fontSize: normalSize, fontWeight: FontWeight.w500),
+                                        textAlign: TextAlign.end,
                                       ),
-                                      textAlign: TextAlign.end,
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        ),
-                        Divider(
-                          color: Colors.grey[200],
-                          thickness: 1.0,
-                        ),
+                          );
+                        }).toList(),
+
+                        Divider(color: Colors.grey[200], thickness: 1.0),
                       ],
                     );
                   }

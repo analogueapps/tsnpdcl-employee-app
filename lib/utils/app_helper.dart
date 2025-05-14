@@ -142,6 +142,36 @@ String formatIsoDateForTicketDetails(String isoDate) {
   }
 }
 
+String formatIsoDateForTicketDetailsOnlyDate(String isoDate) {
+  try {
+    // Parse the ISO 8601 date string
+    //DateTime parsedDate = DateTime.parse(isoDate);
+    DateTime parsedDate = DateFormat("MMM dd, yyyy hh:mm:ss a").parse(isoDate);
+
+    // Format the date to the desired format: dd/MM/yy HH:mm
+    return DateFormat("dd/MMM/yyyy").format(parsedDate);
+  } catch (e) {
+    // Handle any parsing errors
+    print("Error formatting date: $e");
+    return 'N/A';
+  }
+}
+
+String formatIsoDateForTicketDetailsOnlyTime(String isoDate) {
+  try {
+    // Parse the ISO 8601 date string
+    //DateTime parsedDate = DateTime.parse(isoDate);
+    DateTime parsedDate = DateFormat("MMM dd, yyyy hh:mm:ss a").parse(isoDate);
+
+    // Format the date to the desired format: dd/MM/yy HH:mm
+    return DateFormat("hh:mm:ss a").format(parsedDate);
+  } catch (e) {
+    // Handle any parsing errors
+    print("Error formatting date: $e");
+    return 'N/A';
+  }
+}
+
 LatLng parseLatLngFromString(String? latLong) {
   if (latLong == null || !latLong.contains(',')) {
     return const LatLng(0.0, 0.0);

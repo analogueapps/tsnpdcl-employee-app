@@ -14,8 +14,12 @@ class InspectionTicketEntity {
     this.ipAddress,
     this.qtyForInspection,
     this.purchaseOrderNo,
+    this.purchaseOrderDescription,
     this.propInspectLat,
     this.propInspectLon,
+    this.testedQuantity,
+    this.failedQuantity,
+    this.passedQuantity,
     this.ticketStatus,
     this.empId,
     this.inspectingOfficerByEmpId,
@@ -26,6 +30,11 @@ class InspectionTicketEntity {
     this.polePurchaseOrdersEntityByPurchaseOrderNo,
     this.poleManufacturingFirmEntityByFirmId,
     this.poleTestSampleEntitiesByTicketId,
+    this.ticketClosedEmpName,
+    this.ticketClosedEmpDes,
+    this.approvedQuantity,
+    this.ticketClosedEmpId,
+    this.closedDate,
   });
 
   InspectionTicketEntity.fromJson(dynamic json) {
@@ -35,8 +44,12 @@ class InspectionTicketEntity {
     ipAddress = json['ipAddress'];
     qtyForInspection = json['qtyForInspection'];
     purchaseOrderNo = json['purchaseOrderNo'];
+    purchaseOrderDescription = json['purchaseOrderDescription'];
     propInspectLat = json['propInspectLat'];
     propInspectLon = json['propInspectLon'];
+    testedQuantity = json['testedQuantity'];
+    failedQuantity = json['failedQuantity'];
+    passedQuantity = json['passedQuantity'];
     ticketStatus = json['ticketStatus'];
     empId = json['empId'];
     inspectingOfficerByEmpId = json['inspectingOfficerByEmpId'] != null
@@ -62,6 +75,11 @@ class InspectionTicketEntity {
       //   poleTestSampleEntitiesByTicketId?.add(Dynamic.fromJson(v));
       // });
     }
+    ticketClosedEmpName = json['ticketClosedEmpName'];
+    ticketClosedEmpDes = json['ticketClosedEmpDes'];
+    approvedQuantity = json['approvedQuantity'];
+    ticketClosedEmpId = json['ticketClosedEmpId'];
+    closedDate = json['closedDate'];
   }
 
   num? ticketId;
@@ -70,8 +88,12 @@ class InspectionTicketEntity {
   String? ipAddress;
   num? qtyForInspection;
   String? purchaseOrderNo;
+  String? purchaseOrderDescription;
   num? propInspectLat;
   num? propInspectLon;
+  num? testedQuantity;
+  num? failedQuantity;
+  num? passedQuantity;
   String? ticketStatus;
   String? empId;
   InspectingOfficerByEmpId? inspectingOfficerByEmpId;
@@ -83,6 +105,11 @@ class InspectionTicketEntity {
       polePurchaseOrdersEntityByPurchaseOrderNo;
   PoleManufacturingFirmEntityByFirmId? poleManufacturingFirmEntityByFirmId;
   List<dynamic>? poleTestSampleEntitiesByTicketId;
+  String? ticketClosedEmpName;
+  String? ticketClosedEmpDes;
+  num? approvedQuantity;
+  String? ticketClosedEmpId;
+  String? closedDate;
 
   InspectionTicketEntity copyWith({
     num? ticketId,
@@ -91,8 +118,12 @@ class InspectionTicketEntity {
     String? ipAddress,
     num? qtyForInspection,
     String? purchaseOrderNo,
+    String? purchaseOrderDescription,
     num? propInspectLat,
     num? propInspectLon,
+    num? testedQuantity,
+    num? failedQuantity,
+    num? passedQuantity,
     String? ticketStatus,
     String? empId,
     InspectingOfficerByEmpId? inspectingOfficerByEmpId,
@@ -104,6 +135,11 @@ class InspectionTicketEntity {
         polePurchaseOrdersEntityByPurchaseOrderNo,
     PoleManufacturingFirmEntityByFirmId? poleManufacturingFirmEntityByFirmId,
     List<dynamic>? poleTestSampleEntitiesByTicketId,
+    String? ticketClosedEmpName,
+    String? ticketClosedEmpDes,
+    num? approvedQuantity,
+    String? ticketClosedEmpId,
+    String? closedDate,
   }) =>
       InspectionTicketEntity(
         ticketId: ticketId ?? this.ticketId,
@@ -112,8 +148,12 @@ class InspectionTicketEntity {
         ipAddress: ipAddress ?? this.ipAddress,
         qtyForInspection: qtyForInspection ?? this.qtyForInspection,
         purchaseOrderNo: purchaseOrderNo ?? this.purchaseOrderNo,
+        purchaseOrderDescription: purchaseOrderDescription ?? this.purchaseOrderDescription,
         propInspectLat: propInspectLat ?? this.propInspectLat,
         propInspectLon: propInspectLon ?? this.propInspectLon,
+        testedQuantity: testedQuantity ?? this.testedQuantity,
+        failedQuantity: failedQuantity ?? this.failedQuantity,
+        passedQuantity: passedQuantity ?? this.passedQuantity,
         ticketStatus: ticketStatus ?? this.ticketStatus,
         empId: empId ?? this.empId,
         inspectingOfficerByEmpId:
@@ -130,6 +170,11 @@ class InspectionTicketEntity {
                 this.poleManufacturingFirmEntityByFirmId,
         poleTestSampleEntitiesByTicketId: poleTestSampleEntitiesByTicketId ??
             this.poleTestSampleEntitiesByTicketId,
+        ticketClosedEmpName: ticketClosedEmpName ?? this.ticketClosedEmpName,
+        ticketClosedEmpDes: ticketClosedEmpDes ?? this.ticketClosedEmpDes,
+        approvedQuantity: approvedQuantity ?? this.approvedQuantity,
+        ticketClosedEmpId: ticketClosedEmpId ?? this.ticketClosedEmpId,
+        closedDate: closedDate ?? this.closedDate,
       );
 
   Map<String, dynamic> toJson() {
@@ -140,8 +185,12 @@ class InspectionTicketEntity {
     map['ipAddress'] = ipAddress;
     map['qtyForInspection'] = qtyForInspection;
     map['purchaseOrderNo'] = purchaseOrderNo;
+    map['purchaseOrderDescription'] = purchaseOrderDescription;
     map['propInspectLat'] = propInspectLat;
     map['propInspectLon'] = propInspectLon;
+    map['testedQuantity'] = testedQuantity;
+    map['failedQuantity'] = failedQuantity;
+    map['passedQuantity'] = passedQuantity;
     map['ticketStatus'] = ticketStatus;
     map['empId'] = empId;
     if (inspectingOfficerByEmpId != null) {
@@ -163,6 +212,11 @@ class InspectionTicketEntity {
       map['poleTestSampleEntitiesByTicketId'] =
           poleTestSampleEntitiesByTicketId?.map((v) => v.toJson()).toList();
     }
+    map['ticketClosedEmpName'] = ticketClosedEmpName;
+    map['ticketClosedEmpDes'] = ticketClosedEmpDes;
+    map['approvedQuantity'] = approvedQuantity;
+    map['ticketClosedEmpId'] = ticketClosedEmpId;
+    map['closedDate'] = closedDate;
     return map;
   }
 }

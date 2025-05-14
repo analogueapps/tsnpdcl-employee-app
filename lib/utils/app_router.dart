@@ -20,6 +20,8 @@ import 'package:tsnpdcl_employee/view/ctpt_menu/view/view_detailed_ctpt_report.d
 import 'package:tsnpdcl_employee/view/ctpt_menu/view/view_failure_confirmed_list.dart';
 import 'package:tsnpdcl_employee/view/ctpt_menu/view/view_issued_list.dart';
 import 'package:tsnpdcl_employee/view/ctpt_menu/view/view_replaced_list.dart';
+import 'package:tsnpdcl_employee/view/dashboard/view/adeop_navi_screen.dart';
+import 'package:tsnpdcl_employee/view/dashboard/view/navi_dashboard_screen.dart';
 import 'package:tsnpdcl_employee/view/dashboard/view/universal_dashboard_screen.dart';
 import 'package:tsnpdcl_employee/view/dlist/view/cluster_map_screen.dart';
 import 'package:tsnpdcl_employee/view/dlist/view/dlist_attend_screen.dart';
@@ -78,6 +80,7 @@ import 'package:tsnpdcl_employee/view/measure_distance/view/measure_distance_scr
 import 'package:tsnpdcl_employee/view/meeseva/view/form_loader_screen.dart';
 import 'package:tsnpdcl_employee/view/meeseva/view/mee_seva_abstract_screen.dart';
 import 'package:tsnpdcl_employee/view/meeseva/view/meeseva_menu_screen.dart';
+import 'package:tsnpdcl_employee/view/meeseva/view/section_screen.dart';
 import 'package:tsnpdcl_employee/view/meeseva/view/services_app_list_screen.dart';
 import 'package:tsnpdcl_employee/view/middle_poles/view/middle_pole_11kv.dart';
 import 'package:tsnpdcl_employee/view/middle_poles/view/middle_pole_33kv.dart';
@@ -166,6 +169,13 @@ class AppRouter {
       case UniversalDashboardScreen.id:
         return MaterialPageRoute(
             builder: (_) => const UniversalDashboardScreen());
+      case NaviDashboardScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => const NaviDashboardScreen());
+      case AdeopNaviScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => const AdeopNaviScreen());
+
       case SearchConsumerScreen.id:
         return MaterialPageRoute(builder: (_) => const SearchConsumerScreen());
       case LineClearanceScreen.id:
@@ -205,6 +215,8 @@ class AppRouter {
                 args: settings.arguments as Map<String, dynamic>));
       case MeesevaMenuScreen.id:
         return MaterialPageRoute(builder: (_) => const MeesevaMenuScreen());
+      case SectionScreen.id:
+        return MaterialPageRoute(builder: (_) => const SectionScreen());
 
     // Ganesh pandal
       case GaneshPandalInformationScreen.id:
@@ -576,7 +588,7 @@ class AppRouter {
 
     // MEESEVA * Surya
       case MeeSevaAbstractScreen.id:
-        return MaterialPageRoute(builder: (_)=> MeeSevaAbstractScreen(above: settings.arguments as String));
+        return MaterialPageRoute(builder: (_)=> MeeSevaAbstractScreen(data: settings.arguments as Map<String, dynamic>));
       case ServicesAppListScreen.id:
         return MaterialPageRoute(builder: (_)=> ServicesAppListScreen(data: settings.arguments as Map<String, dynamic>,));
       case FormLoaderScreen.id:
@@ -634,7 +646,7 @@ class AppRouter {
       case InspectServices.id:
         return MaterialPageRoute(builder: (_) => InspectServices(args: settings.arguments as Map<String, dynamic>));
 
-      //PTR & FEEDER LOADERS
+    //PTR & FEEDER LOADERS
       case PtrFeederScreen.id:
         return MaterialPageRoute(builder: (_) => const PtrFeederScreen());
 

@@ -63,6 +63,9 @@ class ServicesAppListScreen extends StatelessWidget {
                         "regId": item.regId,
                         "status": item.status,
                       };
+                      if (data['sc'] != null) {
+                        argument['sc'] = data['sc'];
+                      }
                       Navigation.instance.navigateTo(Routes.formLoaderScreen, args: argument);
                     },
                     child: Container(

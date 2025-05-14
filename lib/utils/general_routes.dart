@@ -1,5 +1,7 @@
 class Routes {
   // AUTH
+  static const String splashScreen = 'SplashScreen';
+
   static const String employeeIdLoginScreen = 'employee_id_login_screen';
   static const String corporateLoginScreen = 'corporate_login_screen';
   static const String changePasswordScreen = 'ChangePasswordScreen';
@@ -7,6 +9,8 @@ class Routes {
 
   // DASHBOARD
   static const String universalDashboardScreen = 'universal_dashboard_screen';
+  static const String naviDashboardScreen = 'NaviDashboardScreen';
+  static const String adeopNaviScreen = 'AdeopNaviScreen';
   // INSIDE DASHBOARD MENUS
   static const String searchConsumerScreen = 'search_consumer_screen';
   static const String lineClearanceScreen = 'line_clearance_screen';
@@ -22,6 +26,7 @@ class Routes {
   static const String consumerDetailsScreen = 'consumer_details_screen';
   static const String webViewScreen = 'web_view_screen';
   static const String meesevaMenuScreen = 'meeseva_menu_screen';
+  static const String sectionScreen = 'SectionScreen';
 
   // CONSUMER
   static const String dListFormScreen = 'dlist_form_screen';

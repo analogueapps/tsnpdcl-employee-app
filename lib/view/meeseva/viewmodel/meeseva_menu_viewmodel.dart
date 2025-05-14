@@ -121,11 +121,18 @@ class MeesevaMenuViewModel extends ChangeNotifier {
         // Get the service number from the dialog result
         String serviceNumber = result[0];
 
+        var argument = {
+          "above": serviceNumber,
+        };
+
         Navigation.instance.navigateTo(
-            Routes.meeSevaAbstractScreen, args: serviceNumber);
+            Routes.meeSevaAbstractScreen, args: argument);
       }
     } else if (title == GlobalConstants.lmWiseAbstract) {
-      Navigation.instance.navigateTo(Routes.meeSevaAbstractScreen, args: "0");
+      var argument = {
+        "above": "0",
+      };
+      Navigation.instance.navigateTo(Routes.meeSevaAbstractScreen, args: argument);
     } else if (title == GlobalConstants.searchApplication) {
       final result = await showTextInputDialog(
         context: context,

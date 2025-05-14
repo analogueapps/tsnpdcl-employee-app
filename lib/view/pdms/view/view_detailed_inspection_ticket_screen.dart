@@ -61,11 +61,122 @@ class ViewDetailedInspectionTicketScreen extends StatelessWidget {
               child: Column(
                 children: [
                   const ViewDetailedLcHeadWidget(title: "Ticket Details",),
-                  ViewDetailedLcTileWidget(tileKey: "Ticket Id", tileValue: checkNull(viewModel.inspectionTicketEntity?.ticketId.toString()), valueColor: CommonColors.colorPrimary,),
+                  ViewDetailedLcTileWidget(tileKey: "Ticket Id", tileValue: checkNull(viewModel.inspectionTicketEntity.ticketId.toString()), valueColor: CommonColors.colorPrimary,),
                   const Divider(),
-                  ViewDetailedLcTileWidget(tileKey: "Ticket Date", tileValue: formatIsoDateForTicketDetails(checkNull(viewModel.inspectionTicketEntity?.ticketDate))),
+                  ViewDetailedLcTileWidget(tileKey: "Ticket Date", tileValue: formatIsoDateForTicketDetails(checkNull(viewModel.inspectionTicketEntity.ticketDate))),
                   const Divider(),
-                  ViewDetailedLcTileWidget(tileKey: "Qty For Inspection", tileValue: checkNull(viewModel.inspectionTicketEntity?.qtyForInspection.toString())),
+                  ViewDetailedLcTileWidget(tileKey: "Qty For Inspection", tileValue: checkNull(viewModel.inspectionTicketEntity.qtyForInspection.toString())),
+                  const Divider(),
+                  ViewDetailedLcTileWidget(tileKey: "P.O NO", tileValue: checkNull(viewModel.inspectionTicketEntity.purchaseOrderNo.toString())),
+                  const Divider(),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+                    child: Row(
+                      children: [
+                        const SizedBox(
+                          width: 10.0,
+                        ),
+                        Expanded(
+                          child: Text(
+                            "P.O Description".toUpperCase(),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          height: 20,
+                          width: 1,
+                          color: Colors.grey[300],
+                        ),
+                        const SizedBox(
+                          width: 10.0,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: doubleFive,),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+                    child: Row(
+                      children: [
+                        const SizedBox(
+                          width: 10.0,
+                        ),
+                        Expanded(
+                          child: Text(
+                            checkNull(viewModel.inspectionTicketEntity.polePurchaseOrdersEntityByPurchaseOrderNo?.poDescription),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w300,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          height: 20,
+                          width: 1,
+                          color: Colors.grey[300],
+                        ),
+                        const SizedBox(
+                          width: 10.0,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Divider(),
+                  ViewDetailedLcTileWidget(
+                    tileKey: "Financial Year",
+                    tileValue: checkNull(viewModel.inspectionTicketEntity.polePurchaseOrdersEntityByPurchaseOrderNo?.financialYear),
+                  ),
+                  const Divider(),
+                  ViewDetailedLcTileWidget(
+                    tileKey: "Pole Type",
+                    tileValue: checkNull(viewModel.inspectionTicketEntity.polePurchaseOrdersEntityByPurchaseOrderNo?.poleType),
+                  ),
+                  const ViewDetailedLcHeadWidget(title: "Quantity Breakup",),
+                  ViewDetailedLcTileWidget(
+                    tileKey: "P.O Qty",
+                    tileValue: checkNull(viewModel.inspectionTicketEntity.polePurchaseOrdersEntityByPurchaseOrderNo?.polesQuantity.toString()),
+                  ),
+                  const Divider(),
+                  ViewDetailedLcTileWidget(
+                    tileKey: "Balance Qty",
+                    tileValue: checkNull(viewModel.inspectionTicketEntity.polePurchaseOrdersEntityByPurchaseOrderNo?.balanceQuantity.toString()),
+                  ),
+                  const Divider(),
+                  ViewDetailedLcTileWidget(
+                    tileKey: "Ready Qty",
+                    tileValue: checkNull(viewModel.inspectionTicketEntity.polePurchaseOrdersEntityByPurchaseOrderNo?.readyQuantity.toString()),
+                  ),
+                  const Divider(),
+                  ViewDetailedLcTileWidget(
+                    tileKey: "Ticket Status",
+                    tileValue: checkNull(viewModel.inspectionTicketEntity.ticketStatus?.toString()),
+                    valueColor: Colors.red,
+                  ),
+                  const Divider(),
+                  ViewDetailedLcTileWidget(tileKey: "Scheduled Date", tileValue: formatIsoDateForTicketDetailsOnlyDate(checkNull(viewModel.inspectionTicketEntity.polePurchaseOrdersEntityByPurchaseOrderNo?.insertDate))),
+                  const Divider(),
+                  ViewDetailedLcTileWidget(tileKey: "Time Slot", tileValue: formatIsoDateForTicketDetailsOnlyTime(checkNull(viewModel.inspectionTicketEntity.polePurchaseOrdersEntityByPurchaseOrderNo?.insertDate))),
+                  const ViewDetailedLcHeadWidget(title: "Firm Details",),
+                  ViewDetailedLcTileWidget(tileKey: "Firm Name", tileValue: checkNull(viewModel.inspectionTicketEntity.polePurchaseOrdersEntityByPurchaseOrderNo?.poleManufacturingFirmEntityByFirmId?.firmName)),
+                  const Divider(),
+                  ViewDetailedLcTileWidget(tileKey: "Supplier Name", tileValue: checkNull(viewModel.inspectionTicketEntity.polePurchaseOrdersEntityByPurchaseOrderNo?.poleManufacturingFirmEntityByFirmId?.supplierName)),
+                  const Divider(),
+                  ViewDetailedLcTileWidget(tileKey: "Contact No", tileValue: checkNull(viewModel.inspectionTicketEntity.polePurchaseOrdersEntityByPurchaseOrderNo?.poleManufacturingFirmEntityByFirmId?.mobileNo)),
+                  const ViewDetailedLcHeadWidget(title: "Inspection Summary",),
+                  ViewDetailedLcTileWidget(tileKey: "Tested Quantity", tileValue: checkNull(viewModel.inspectionTicketEntity.testedQuantity.toString())),
+                  const Divider(),
+                  ViewDetailedLcTileWidget(tileKey: "Failed Quantity", tileValue: checkNull(viewModel.inspectionTicketEntity.failedQuantity.toString())),
+                  const Divider(),
+                  ViewDetailedLcTileWidget(tileKey: "Passed Quantity", tileValue: checkNull(viewModel.inspectionTicketEntity.passedQuantity.toString())),
+                  const ViewDetailedLcHeadWidget(title: "Approval Details",),
+                  ViewDetailedLcTileWidget(tileKey: "Approved Officer", tileValue: checkNull(viewModel.inspectionTicketEntity.ticketClosedEmpName.toString())),
+                  const Divider(),
+                  ViewDetailedLcTileWidget(tileKey: "Officer Designation", tileValue: checkNull(viewModel.inspectionTicketEntity.ticketClosedEmpDes.toString())),
+                  const Divider(),
+                  ViewDetailedLcTileWidget(tileKey: "Approved Quantity", tileValue: checkNull(viewModel.inspectionTicketEntity.approvedQuantity.toString())),
+                  const Divider(),
+                  ViewDetailedLcTileWidget(tileKey: "Ticket Closed Date", tileValue: checkNull(viewModel.inspectionTicketEntity.closedDate.toString())),
                   const Divider(),
                   const SizedBox(height: doubleTen,),
                 ],
@@ -77,7 +188,6 @@ class ViewDetailedInspectionTicketScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(doubleTwenty),
                 child: PrimaryButton(
                     fullWidth: isTrue,
-                    buttonColor: viewModel.buttonColor,
                     text: viewModel.buttonText.toUpperCase(),
                     onPressed: () {
                       if (viewModel.buttonAction != null) {

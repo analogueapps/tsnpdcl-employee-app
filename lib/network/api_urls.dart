@@ -56,6 +56,9 @@ class Apis{
   static const GET_TICKETS_OF_STATUS_URL = "getTicketsOfStatus";
   static const GET_FILTERED_TICKETS_URL = "getFilteredTickets";
   static const GET_TICKETS_FILTER_DATA_URL = "getTicketsFilterData";
+  static const GET_INSPECTION_OFFICERS_URL = "getInspectionOfficers";
+  static const ASSIGN_TICKET_URL = "assignTicket";
+  static const CLOSE_TICKET_URL = "closeTicket";
 
   /// REPORTS
   static const GET_CTPT_BAR_GRAPH_DATA_URL = "getCtPtBarGraphData";

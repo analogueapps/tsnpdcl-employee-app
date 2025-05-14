@@ -13,7 +13,7 @@ import 'package:tsnpdcl_employee/view/meeseva/model/days_pending_meeseva_abstrac
 class MeeSevaAbstractViewmodel extends ChangeNotifier {
   // Current View Context
   final BuildContext context;
-  final String days;
+  final Map<String, dynamic> data;
 
   bool _isLoading = isFalse;
   bool get isLoading => _isLoading;
@@ -67,7 +67,7 @@ class MeeSevaAbstractViewmodel extends ChangeNotifier {
     "REJ": "REJ"
   };
 
-  MeeSevaAbstractViewmodel({required this.context, required this.days}) {
+  MeeSevaAbstractViewmodel({required this.context, required this.data}) {
     String? prefJson = SharedPreferenceHelper.getStringValue(LoginSdkPrefs.npdclUserPrefKey);
     final List<dynamic> jsonList = jsonDecode(prefJson);
     _user = jsonList.map((json) => NpdclUser.fromJson(json)).toList();
@@ -84,7 +84,7 @@ class MeeSevaAbstractViewmodel extends ChangeNotifier {
     final requestData = {
       "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
-      "days": days,
+      "days": data['above'],
     };
 
     final payload = {
@@ -159,6 +159,10 @@ class MeeSevaAbstractViewmodel extends ChangeNotifier {
       //"days": days,
     };
 
+    if(data['sc'] != null) {
+      requestData['sc'] = data['sc'];
+    }
+
     final payload = {
       "path": "/getMeeSevaAbstract",
       "apiVersion": "1.0",
@@ -221,7 +225,7 @@ class MeeSevaAbstractViewmodel extends ChangeNotifier {
   }
 
   void getData() {
-    if(days != "0") {
+    if(data['above'] != "0") {
       loadMeesevaAbove5DaysPendingAbstract();
     } else {
       loadMeesevaAbstract();
