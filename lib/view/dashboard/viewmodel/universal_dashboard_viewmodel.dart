@@ -36,12 +36,13 @@ class UniversalDashboardViewModel extends ChangeNotifier {
   NpdclUser? get npdclUser => _npdclUser;
 
   // Toolbar title
-  String _toolbarTitle = GlobalConstants.dashboardName;
+  final String _toolbarTitle = GlobalConstants.dashboardName;
   String get toolbarTitle => _toolbarTitle;
 
   // Constructor to initialize the items
   UniversalDashboardViewModel({required this.context}) {
     _initializeData();
+    _initializeItems();
   }
 
   void _initializeData() {
@@ -50,258 +51,95 @@ class UniversalDashboardViewModel extends ChangeNotifier {
     final List<NpdclUser> user = jsonList.map((json) => NpdclUser.fromJson(json)).toList();
     _npdclUser = user[0];
     notifyListeners();
-    _initializeItems();
   }
 
-  // Add items to the dashboard
   void _initializeItems() {
-    if (npdclUser?.wing != null && npdclUser?.wing == "accounts") {
-      universalNavi();
-    } else if ((npdclUser?.wing?.isEmpty ?? true) ||
-        (npdclUser?.secMasterEntity == null && npdclUser?.empType != "om")) {
-      // startActivity(new Intent(context, OneTimeRegisterActivity.class));
-      // finish();
-      // return;
-    } else if ((npdclUser?.wing?.isEmpty ?? true) ||
-        (npdclUser?.secMasterEntity == null && npdclUser?.empType == "om")) {
-      showAlertDialog(context, "if you are O&M staff your Section Officer should add your employee id under your section first! Please ask your section officer to add your employee id.");
-    }
-
-    if ((npdclUser?.wing ?? '').toLowerCase() == 'operation') {
-      final designationCode = npdclUser?.designationCode;
-      final screenType = designationCodes[designationCode] ?? -1;
-
-      switch (screenType) {
-        case SCREEN_FOR_AE:
-
-          break;
-
-        case SCREEN_FOR_ADE_OP:
-          _toolbarTitle = "ADE OPN";
-          universalNavi(consumerRelated: true, lineRelated: true, billingRelated: true, tools: true, dtr: true, subStation: true, schedules: true, meeseva: true, pdms: true, reports: true, usefulLinks: true);
-          break;
-
-        case SCREEN_FOR_OM:
-          if ((npdclUser?.isSsOp ?? 'N').toUpperCase() == 'Y') {
-            _toolbarTitle = "ADE OPN";
-            universalNavi(meeseva: true, );
-          } else {
-
-          }
-          break;
-
-        case SCREEN_FOR_DE_OP:
-        //Navigator.pushReplacementNamed(context, Routes.deOpNaviActivity);
-          break;
-
-        case SCREEN_FOR_SE_OP:
-        //Navigator.pushReplacementNamed(context, Routes.seOpNaviActivity);
-          break;
-
-        default:
-          showCupertinoDialog(
-            context: context,
-            builder: (_) => CupertinoAlertDialog(
-              title: const Text("Access Error"),
-              content: const Text("Sorry, this application is currently not designed for your designation, you will be auto logged out."),
-              actions: [
-                CupertinoDialogAction(
-                  child: const Text("OK"),
-                  onPressed: () async {
-                    Navigator.of(context).pop();
-                    await SharedPreferenceHelper.clearData();
-                    Navigation.instance.pushAndRemoveUntil(Routes.employeeIdLoginScreen);
-
-                  },
-                ),
-                CupertinoDialogAction(
-                  child: const Text("EXIT"),
-                  onPressed: () async {
-                    Navigator.of(context).pop();
-                    await SharedPreferenceHelper.clearData();
-                    Navigation.instance.pushAndRemoveUntil(Routes.employeeIdLoginScreen);
-                  },
-                ),
-              ],
-            ),
-          );
-          break;
-      }
-    } else if ((npdclUser?.wing ?? '').toLowerCase() == "dpe") {
-
-    } else if ((npdclUser?.wing ?? '').toLowerCase() == "pmm" && npdclUser?.designationCode == 102) {
-      _toolbarTitle = GlobalConstants.dashboardName;
-      universalNavi(viewSupplier: true, inspectionTickets: true);
-    }
-
-    _filteredItems = List.from(_allItems); // Clone the list for filtered items
-    notifyListeners();
-  }
-
-  void universalNavi({
-    bool ccc = false,
-    bool consumerRelated = false,
-    bool lineRelated = false,
-    bool billingRelated = false,
-    bool tools = false,
-    bool dtr = false,
-    bool subStation = false,
-    bool schedules = false,
-    bool meeseva = false,
-    bool ltmt = false,
-    bool manageStaff = false,
-    bool pdms = false,
-    bool reports = false,
-    bool usefulLinks = false,
-    bool viewSupplier = false,
-    bool inspectionTickets = false,
-  }) {
     const String routeName = '';
 
-    if(ccc) {
-      _allItems.add(
-        UniversalDashboardItem(
-            title: GlobalConstants.cccTitle,
-            imageAsset: Assets.focc,
-            routeName: Routes.cccDashboard
-        ),
-      );
-    }
-    if(consumerRelated) {
-      _allItems.add(
-        UniversalDashboardItem(
-            title: GlobalConstants.consumerRelatedTitle,
-            imageAsset: Assets.searchConsumer,
-            routeName: routeName
-        ),
-      );
-    }
-    if(lineRelated) {
-      _allItems.add(
-        UniversalDashboardItem(
-            title: GlobalConstants.lineRelatedTitle,
-            imageAsset: Assets.lineClearance,
-            routeName: routeName
-        ),
-      );
-    }
-    if(billingRelated) {
-      _allItems.add(
-        UniversalDashboardItem(
-            title: GlobalConstants.billingRelatedTitle,
-            imageAsset: Assets.onlinePr,
-            routeName: routeName
-        ),
-      );
-    }
-    if(tools) {
-      _allItems.add(
-        UniversalDashboardItem(
-            title: GlobalConstants.toolsTitle,
-            imageAsset: Assets.ssMaintenance,
-            routeName: routeName
-        ),
-      );
-    }
-    if(dtr) {
-      _allItems.add(
-        UniversalDashboardItem(
-            title: GlobalConstants.dtrTitle,
-            imageAsset: Assets.dtrMaster,
-            routeName: routeName
-        ),
-      );
-    }
-    if(subStation) {
-      _allItems.add(
-        UniversalDashboardItem(
-            title: GlobalConstants.subStationTitle,
-            imageAsset: Assets.subStation,
-            routeName: routeName
-        ),
-      );
-    }
-    if(schedules) {
-      _allItems.add(
-        UniversalDashboardItem(
-            title: GlobalConstants.schedulesTitle,
-            imageAsset: Assets.schedules,
-            routeName: Routes.schedule
-        ),
-      );
-    }
-    if(meeseva) {
-      _allItems.add(
-        UniversalDashboardItem(
-            title: GlobalConstants.meesevaTitle,
-            imageAsset: Assets.meeseva,
-            routeName: Routes.meesevaMenuScreen
-        ),
-      );
-    }
-    if(ltmt) {
-      _allItems.add(
-        UniversalDashboardItem(
-            title: GlobalConstants.ltmtTitle,
-            imageAsset: Assets.ltmt,
-            routeName: Routes.ltmtScreen
-        ),
-      );
-    }
-    if(manageStaff) {
-      _allItems.add(
-        UniversalDashboardItem(
-            title: GlobalConstants.manageStaffTitle,
-            imageAsset: Assets.manageStaff,
-            routeName: Routes.manageStaffsScreen
-        ),
-      );
-    }
-    if(pdms) {
-      _allItems.add(
-        UniversalDashboardItem(
-            title: GlobalConstants.pdmsTitle,
-            imageAsset: Assets.pdms,
-            routeName: Routes.pdmsScreen
-        ),
-      );
-    }
-    if(reports) {
-      _allItems.add(
-        UniversalDashboardItem(
-            title: GlobalConstants.reportsTitle,
-            imageAsset: Assets.reports,
-            routeName: routeName
-        ),
-      );
-    }
-    if(usefulLinks) {
-      _allItems.add(
-        UniversalDashboardItem(
-            title: GlobalConstants.usefulLinksTitle,
-            imageAsset: Assets.ebs,
-            routeName: ""
-        ),
-      );
-    }
-    if(viewSupplier) {
-      _allItems.add(
-        UniversalDashboardItem(
-            title: GlobalConstants.viewSuppliersTitle,
-            imageAsset: Assets.pendingAeAde,
-            routeName: Routes.viewFirmsScreen
-        ),
-      );
-    }
-    if(inspectionTickets) {
-      _allItems.add(
-        UniversalDashboardItem(
-            title: GlobalConstants.inspectionTicketsTitle,
-            imageAsset: Assets.tickets,
-            routeName: Routes.viewInspectionTicketsScreen
-        ),
-      );
-    }
+    _allItems.addAll([
+      UniversalDashboardItem(
+        title: GlobalConstants.cccTitle,
+        imageAsset: Assets.focc,
+        routeName: Routes.cccDashboard,
+      ),
+      UniversalDashboardItem(
+        title: GlobalConstants.consumerRelatedTitle,
+        imageAsset: Assets.searchConsumer,
+        routeName: routeName,
+      ),
+      UniversalDashboardItem(
+        title: GlobalConstants.lineRelatedTitle,
+        imageAsset: Assets.lineClearance,
+        routeName: routeName,
+      ),
+      UniversalDashboardItem(
+        title: GlobalConstants.billingRelatedTitle,
+        imageAsset: Assets.onlinePr,
+        routeName: routeName,
+      ),
+      UniversalDashboardItem(
+        title: GlobalConstants.toolsTitle,
+        imageAsset: Assets.ssMaintenance,
+        routeName: routeName,
+      ),
+      UniversalDashboardItem(
+        title: GlobalConstants.dtrTitle,
+        imageAsset: Assets.dtrMaster,
+        routeName: routeName,
+      ),
+      UniversalDashboardItem(
+        title: GlobalConstants.subStationTitle,
+        imageAsset: Assets.subStation,
+        routeName: routeName,
+      ),
+      UniversalDashboardItem(
+        title: GlobalConstants.schedulesTitle,
+        imageAsset: Assets.schedules,
+        routeName: Routes.schedule,
+      ),
+      UniversalDashboardItem(
+        title: GlobalConstants.meesevaTitle,
+        imageAsset: Assets.meeseva,
+        routeName: Routes.meesevaMenuScreen,
+      ),
+      UniversalDashboardItem(
+        title: GlobalConstants.ltmtTitle,
+        imageAsset: Assets.ltmt,
+        routeName: Routes.ltmtScreen,
+      ),
+      UniversalDashboardItem(
+        title: GlobalConstants.manageStaffTitle,
+        imageAsset: Assets.manageStaff,
+        routeName: Routes.manageStaffsScreen,
+      ),
+      UniversalDashboardItem(
+        title: GlobalConstants.pdmsTitle,
+        imageAsset: Assets.pdms,
+        routeName: Routes.pdmsScreen,
+      ),
+      UniversalDashboardItem(
+        title: GlobalConstants.reportsTitle,
+        imageAsset: Assets.reports,
+        routeName: routeName,
+      ),
+      UniversalDashboardItem(
+        title: GlobalConstants.usefulLinksTitle,
+        imageAsset: Assets.ebs,
+        routeName: "",
+      ),
+      UniversalDashboardItem(
+        title: GlobalConstants.viewSuppliersTitle,
+        imageAsset: Assets.pendingAeAde,
+        routeName: Routes.viewFirmsScreen,
+      ),
+      UniversalDashboardItem(
+        title: GlobalConstants.inspectionTicketsTitle,
+        imageAsset: Assets.tickets,
+        routeName: Routes.viewInspectionTicketsScreen,
+      ),
+    ]);
+
+    _filteredItems = List.from(_allItems); // Clone the list for filtered items
     notifyListeners();
   }
 
@@ -900,4 +738,3 @@ class UniversalDashboardViewModel extends ChangeNotifier {
   }
 
 }
-

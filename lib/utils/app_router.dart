@@ -6,8 +6,10 @@ import 'package:tsnpdcl_employee/view/auth/view/corporate_login_screen.dart';
 import 'package:tsnpdcl_employee/view/auth/view/employee_id_login_screen.dart';
 import 'package:tsnpdcl_employee/view/auth/view/otp_verification_screen.dart';
 import 'package:tsnpdcl_employee/view/bs_udc_inspection/view/bs_udc_list.dart';
+import 'package:tsnpdcl_employee/view/ccc/model/open_model.dart';
 import 'package:tsnpdcl_employee/view/ccc/view/ccc_dashboard.dart';
 import 'package:tsnpdcl_employee/view/ccc/view/ccc_oricb.dart';
+import 'package:tsnpdcl_employee/view/ccc/view/open_detail_screen.dart';
 import 'package:tsnpdcl_employee/view/check_readings/view/check_readings_screen.dart';
 import 'package:tsnpdcl_employee/view/check_readings/view/enter_service_details.dart';
 import 'package:tsnpdcl_employee/view/consumer_details/view/consumer_details_screen.dart';
@@ -601,6 +603,11 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) =>  CccOricb(
           status: args['status'] ?? '',
           title: args['name'] ?? '',
+        ));
+
+      case CCCViewDetailed.id:
+        final args = settings.arguments as CccOpenModel;
+        return MaterialPageRoute(builder: (_) =>  CCCViewDetailed(data: args
         ));
 
     //Schedules * Bhavana

@@ -10,6 +10,7 @@ import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
+import 'package:tsnpdcl_employee/view/ccc/model/open_model.dart';
 import 'package:tsnpdcl_employee/widget/primary_button.dart';
 
 
@@ -23,6 +24,9 @@ class CccOricbViewmodel extends ChangeNotifier {
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
+
+  final List<CccOpenModel> _openList = [];
+  List<CccOpenModel> get openList => _openList;
 
   Future<bool> getCCCTicket(String status) async {
     _isLoading = isTrue;
@@ -46,10 +50,21 @@ class CccOricbViewmodel extends ChangeNotifier {
         if (response.statusCode == successResponseCode) {
           if (response.data['sessionValid'] == isTrue) {
             if (response.data['taskSuccess'] == isTrue) {
-                if(response.data['message']!=null&&response.data['rcAuthenticated']==isFalse) {
-                  responseMsg(context,response.data['message']);
-                  if (response.data['dataList'] != null) {
+                if(response.data['message']!=null&&response.data['dataList']==[]) {
+                  showSuccessDialog(context, response.data['message'], () {
+                    Navigator.pop(context);
+                  },);
+                }else if (response.data['dataList'] != null) {
+                  final dataList = response.data['dataList'];
+                  if (dataList is List && dataList.isNotEmpty) {
+                    List<CccOpenModel> fetchedList = dataList
+                        .map((item) =>
+                        CccOpenModel.fromJson(item['cccComplaint']))
+                        .toList();
 
+                    _openList.addAll(fetchedList);
+
+                    print("Fetched complaints: ${fetchedList.length}");
                   }
               }
             }
@@ -69,24 +84,24 @@ class CccOricbViewmodel extends ChangeNotifier {
     return false;
   }
 
-  void responseMsg(context, String msg) async {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title:  const SizedBox( width: double.infinity,child:const Text("Empty Folder", style: TextStyle(color:  CommonColors.colorPrimary),)),
-          content: Text(msg),
-          actions: [
-            SizedBox( width: double.infinity,
-              child:PrimaryButton(text: "OK", onPressed: () {
-                Navigator.of(context).pop();
-              },
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // void responseMsg(context, String msg) async {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title:  const SizedBox( width: double.infinity,child:const Text("Empty Folder", style: TextStyle(color:  CommonColors.colorPrimary),)),
+  //         content: Text(msg),
+  //         actions: [
+  //           SizedBox( width: double.infinity,
+  //             child:PrimaryButton(text: "OK", onPressed: () {
+  //               Navigator.of(context).pop();
+  //             },
+  //             ),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
 }

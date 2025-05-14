@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tsnpdcl_employee/utils/app_constants.dart';
 
 class ViewDetailedLcTileWidget extends StatelessWidget {
   final String tileKey;
@@ -16,7 +17,9 @@ class ViewDetailedLcTileWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
-      child: Row(
+      child: Column(
+    children: [
+      Row(
         children: [
           const SizedBox(
             width: 10.0,
@@ -48,6 +51,9 @@ class ViewDetailedLcTileWidget extends StatelessWidget {
           ),
         ],
       ),
+    const SizedBox(height: doubleTen),
+    ]
+    ),
     );
   }
 }

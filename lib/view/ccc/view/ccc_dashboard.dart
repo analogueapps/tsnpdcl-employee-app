@@ -16,7 +16,7 @@ class CCCDashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueGrey[100],
+      // backgroundColor: Colors.blueGrey[100],
         appBar: AppBar(
           backgroundColor: CommonColors.colorPrimary,
           title: const Text(

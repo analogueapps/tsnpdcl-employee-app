@@ -29,6 +29,12 @@ class InspectServices extends StatelessWidget {
                       fontWeight: FontWeight.w700,
                     ),
                   ),
+                  leading: IconButton(
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
                   backgroundColor:CommonColors.colorPrimary,
                   iconTheme: const IconThemeData(color: Colors.white),
                   actions: [

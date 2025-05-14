@@ -201,7 +201,8 @@ class Routes {
 
   //CCC * Bhavana
   static const String cccDashboard = "CCCDashboardScreen";
-  static const cccORICB="CccOricb";
+  static const String cccORICB="CccOricb";
+  static const String openDetail="CCCViewDetailed";
 
   //SCHEDULES *BHAVANA
   static const String schedule="SchedulesScreen";

@@ -22,6 +22,11 @@ class AreaWiseAbstractView extends StatelessWidget {
                   iconTheme: const IconThemeData(
                     color: Colors.white,
                   ),
+                  leading:
+                    IconButton(onPressed: (){
+                      Navigator.of(context).pop();
+                    }, icon: const Icon(Icons.arrow_back))
+
                 ),
                 body:ChangeNotifierProvider(
                     create: (_)=>AreaWiseAbstractViewModel(context:context),

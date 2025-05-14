@@ -123,6 +123,7 @@ class Apis{
   static const CCC_END_POINT_BASE_URL="$SERVER_IP:5656/NPFDAS/ep/ccc/";
   static const GET_ABSTRACT="getAbstract";
   static const GET_CCC_TICKETS="getCCCTickets";
+  static const UPDATE_TICKET="updateCCCTicket";
 
   ///SCHEDULES *BHAVANA
   static const SCHEDULES_URL="getTourDairyByMonth";
@@ -142,4 +143,5 @@ class Apis{
 
   ///PTR & FEEDER LOADERS
   static const GET_PTR_FEEDERS_SS="getPtrAndFeedersOfSs";
+  static const SAVE_PTR_FEEDERS="savePtrAndFeederLoads";
 }
