@@ -10,6 +10,8 @@ import 'package:tsnpdcl_employee/view/ccc/model/open_model.dart';
 import 'package:tsnpdcl_employee/view/ccc/view/ccc_dashboard.dart';
 import 'package:tsnpdcl_employee/view/ccc/view/ccc_oricb.dart';
 import 'package:tsnpdcl_employee/view/ccc/view/open_detail_screen.dart';
+import 'package:tsnpdcl_employee/view/check_measurement_lines/view/check_measure_screen.dart';
+import 'package:tsnpdcl_employee/view/check_measurement_lines/view/docket.dart';
 import 'package:tsnpdcl_employee/view/check_readings/view/check_readings_screen.dart';
 import 'package:tsnpdcl_employee/view/check_readings/view/enter_service_details.dart';
 import 'package:tsnpdcl_employee/view/consumer_details/view/consumer_details_screen.dart';
@@ -646,9 +648,15 @@ class AppRouter {
       case InspectServices.id:
         return MaterialPageRoute(builder: (_) => InspectServices(args: settings.arguments as Map<String, dynamic>));
 
-    //PTR & FEEDER LOADERS
+      //PTR & FEEDER LOADERS
       case PtrFeederScreen.id:
         return MaterialPageRoute(builder: (_) => const PtrFeederScreen());
+
+        //CHECK MEASUREMENT(LINES)*BHAVANA
+        case CheckMeasureScreen.id:
+        return MaterialPageRoute(builder: (_) => const CheckMeasureScreen());
+        case DocketScreen.id:
+        return MaterialPageRoute(builder: (_) =>  DocketScreen(ssc: settings.arguments as String));
 
       default:
         return MaterialPageRoute(

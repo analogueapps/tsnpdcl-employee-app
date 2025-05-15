@@ -472,7 +472,7 @@ class AdeopNaviViewmodel extends ChangeNotifier {
         ),
         GlobalListDialogItem(
           title: GlobalConstants.checkMeasurementTitle,
-          routeName: Routes.poleTrackerSelectionViewSketchScreen,
+          routeName: Routes.checkMeasureScreen,
           imageAsset: Assets.checkMeasurement,
         ),
       ]);

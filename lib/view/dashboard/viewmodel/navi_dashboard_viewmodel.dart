@@ -472,7 +472,7 @@ class NaviDashboardViewmodel extends ChangeNotifier {
         ),
         GlobalListDialogItem(
           title: GlobalConstants.checkMeasurementTitle,
-          routeName: Routes.measureDistanceScreen,
+          routeName: Routes.checkMeasureScreen,
           imageAsset: Assets.checkMeasurement,
         ),
       ]);

@@ -127,6 +127,7 @@ class Apis{
   static const GET_ABSTRACT="getAbstract";
   static const GET_CCC_TICKETS="getCCCTickets";
   static const UPDATE_TICKET="updateCCCTicket";
+  static const CALL_CONSUMER="connectWithConsumer";
 
   ///SCHEDULES *BHAVANA
   static const SCHEDULES_URL="getTourDairyByMonth";

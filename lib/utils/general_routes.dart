@@ -222,4 +222,8 @@ class Routes {
 
     //PTR & FEEDERS LOADERS
     static const String ptrFeederScreen="PtrFreederScreen";
+
+    //CHECK MEASUREMENT(LINES)*BHAVANA
+    static const String checkMeasureScreen="CheckMeasureScreen";
+    static const String docketScreen="DocketScreen";
 }
