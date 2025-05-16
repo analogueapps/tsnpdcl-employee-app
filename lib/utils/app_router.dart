@@ -10,8 +10,12 @@ import 'package:tsnpdcl_employee/view/ccc/model/open_model.dart';
 import 'package:tsnpdcl_employee/view/ccc/view/ccc_dashboard.dart';
 import 'package:tsnpdcl_employee/view/ccc/view/ccc_oricb.dart';
 import 'package:tsnpdcl_employee/view/ccc/view/open_detail_screen.dart';
+import 'package:tsnpdcl_employee/view/check_measurement_lines/view/check_measure_11kv.dart';
+import 'package:tsnpdcl_employee/view/check_measurement_lines/view/check_measure_33KV.dart';
 import 'package:tsnpdcl_employee/view/check_measurement_lines/view/check_measure_screen.dart';
 import 'package:tsnpdcl_employee/view/check_measurement_lines/view/docket.dart';
+import 'package:tsnpdcl_employee/view/check_measurement_lines/view/pole_11KV_feeder.dart';
+import 'package:tsnpdcl_employee/view/check_measurement_lines/view/pole_33KV_feeder.dart';
 import 'package:tsnpdcl_employee/view/check_readings/view/check_readings_screen.dart';
 import 'package:tsnpdcl_employee/view/check_readings/view/enter_service_details.dart';
 import 'package:tsnpdcl_employee/view/consumer_details/view/consumer_details_screen.dart';
@@ -366,7 +370,7 @@ class AppRouter {
             builder: (_) =>
                 PinchZoomImageView(imageUrl: settings.arguments as String));
 
-    // Tong tester readings * Swetha
+    // Tong tester readings * Bhavana
       case OverLoadDTRList.id:
         return MaterialPageRoute(builder: (_) => const OverLoadDTRList());
       case OverloadedFloatingButtonView.id:
@@ -377,7 +381,7 @@ class AppRouter {
         ));
 
 
-    // RFSS Screen * Swetha
+    // RFSS Screen * Bhavana
       case RfssScreen.id:
         return MaterialPageRoute(builder: (_) => const RfssScreen());
     //Bhavana
@@ -392,7 +396,7 @@ class AppRouter {
 
 
 
-    // Middle Poles Screen * Swetha
+    // Middle Poles Screen * Swetha API * BHAVANA
       case MiddlePolesScreen.id:
         return MaterialPageRoute(builder: (_) => const MiddlePolesScreen());
       case MiddlePoles33kv.id:
@@ -416,7 +420,7 @@ class AppRouter {
               surveyID: args['surveyID'] ?? '',
               status: args['status'] ?? '',));
 
-    // SS Maintenance Screen * Swetha
+    // SS Maintenance Screen * Swetha API*BHavana
       case SsMaintenanceScreen.id:
         return MaterialPageRoute(builder: (_) => const SsMaintenanceScreen());
       case MaintenanceDueScreen.id:
@@ -473,7 +477,7 @@ class AppRouter {
             builder: (_) =>
             const ViewReportScreen()); //data: settings.arguments as Map<String, dynamic>,
 
-    ///LTMT * Bhavana
+    //LTMT * Bhavana
       case LtmtMenu.id:
         return MaterialPageRoute(builder: (_) => const LtmtMenu());
       case MetersStock.id:
@@ -522,7 +526,7 @@ class AppRouter {
 
 
 
-    //CT PT FAILURE
+    //CT PT FAILURE API * Bhavana
       case CTFailureReportScreen.id:
         return MaterialPageRoute(builder: (_) => const CTFailureReportScreen());
       case FailureReportedList.id:
@@ -642,13 +646,13 @@ class AppRouter {
       case SsInspection.id:
         return MaterialPageRoute(builder: (_) =>  SsInspection(args: settings.arguments as Map<String, dynamic>));
 
-    // VERIFY WRONG CONFIRMATIONS
+    // VERIFY WRONG CONFIRMATIONS * Bhavana
       case AreaWiseAbstractView.id:
         return MaterialPageRoute(builder: (_) => const AreaWiseAbstractView());
       case InspectServices.id:
         return MaterialPageRoute(builder: (_) => InspectServices(args: settings.arguments as Map<String, dynamic>));
 
-      //PTR & FEEDER LOADERS
+      //PTR & FEEDER LOADERS * Bhavana
       case PtrFeederScreen.id:
         return MaterialPageRoute(builder: (_) => const PtrFeederScreen());
 
@@ -657,6 +661,14 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const CheckMeasureScreen());
         case DocketScreen.id:
         return MaterialPageRoute(builder: (_) =>  DocketScreen(ssc: settings.arguments as String));
+        case Pole11kvFeeder.id:
+        return MaterialPageRoute(builder: (_) =>  Pole11kvFeeder(args: settings.arguments as Map<String, dynamic>));
+        case Pole33kvFeeder.id:
+        return MaterialPageRoute(builder: (_) =>  Pole33kvFeeder(args: settings.arguments as Map<String, dynamic>));
+        case CheckMeasure11kv.id:
+        return MaterialPageRoute(builder: (_) =>  CheckMeasure11kv(args: settings.arguments as Map<String, dynamic>));
+        case CheckMeasure33kv.id:
+        return MaterialPageRoute(builder: (_) =>  CheckMeasure33kv(args: settings.arguments as Map<String, dynamic>));
 
       default:
         return MaterialPageRoute(

@@ -8,12 +8,15 @@ import 'package:tsnpdcl_employee/dialogs/process_dialog.dart';
 import 'package:tsnpdcl_employee/network/api_provider.dart';
 import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
+import 'package:tsnpdcl_employee/utils/alerts.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
+import 'package:tsnpdcl_employee/view/check_measurement_lines/model/docket_model.dart';
+import 'package:tsnpdcl_employee/view/check_measurement_lines/model/new_checkMeasure_model.dart';
+import 'package:tsnpdcl_employee/view/check_measurement_lines/view/docket.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/model/spinner_list.dart';
-import 'package:tsnpdcl_employee/view/pole_tracker/model/new_sketch_prop_entity.dart';
 
 class CheckMeasureViewModel extends ChangeNotifier {
   CheckMeasureViewModel({required this.context});
@@ -23,6 +26,10 @@ class CheckMeasureViewModel extends ChangeNotifier {
   bool _isLoading = isFalse;
 
   bool get isLoading => _isLoading;
+
+  final formKey = GlobalKey<FormState>();
+
+  DocketEntity? _selectedEntity;
 
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController estimateController = TextEditingController();
@@ -112,8 +119,6 @@ class CheckMeasureViewModel extends ChangeNotifier {
     listFeederSelect = null;
     listFeederSelectBottom = null;
     selectedPurposeCheckboxId = null;
-    // selectedProposalCheckboxId = null;
-    // newSketchPropEntity = null;
     descriptionController.clear();
     estimateController.clear();
     notifyListeners();
@@ -127,8 +132,6 @@ class CheckMeasureViewModel extends ChangeNotifier {
     listFeederSelect = null;
     listFeederSelectBottom = null;
     selectedPurposeCheckboxId = null;
-    // selectedProposalCheckboxId = null;
-    // newSketchPropEntity = null;
     descriptionController.clear();
     estimateController.clear();
     notifyListeners();
@@ -145,17 +148,11 @@ class CheckMeasureViewModel extends ChangeNotifier {
     notifyListeners(); // Notify the view about the change
   }
 
-  void selectPurposeCheckbox(String id) {
+  void selectPurposeCheckbox(String id) async{
     if (listSubStationSelect == null) {
       showAlertDialog(context, "Please select the Substation first.!");
       return;
     }
-    // listFeederItem.clear();
-    // listFeederSelect = null;
-    // listFeederSelectBottom = null;
-
-    // selectedProposalCheckboxId = null;
-    // newSketchPropEntity = null;
     descriptionController.clear();
     estimateController.clear();
     if (selectedPurposeCheckboxId == id) {
@@ -163,20 +160,33 @@ class CheckMeasureViewModel extends ChangeNotifier {
     } else {
       selectedPurposeCheckboxId = id;
       if(selectedPurposeCheckboxId=="ECMD"){
-        Navigation.instance.navigateTo(Routes.docketScreen, args: listSubStationSelect);
-      }
+          Navigation.instance.navigateTo(Routes.docketScreen, args: listSubStationSelect, onReturn: (result) {
+          if (result != null ) {
+            print("result from docket: ${result.worklDesc}");
+            if (result != null && result is DocketEntity) {
+                  descriptionController.text = result.worklDesc ?? '';
+                  estimateController.text = result.estimateNo ?? '';
+                  _selectedEntity =  result;
+              } else {
 
+                  // _checkboxExistingProposal = false;
+                  descriptionController.clear();
+                  estimateController.clear();
+                  _selectedEntity = null;
+
+              }
+          }
+        }
+        );
+      }
     }
-    print("selectedCheckboxId: $selectedPurposeCheckboxId");
-    notifyListeners(); // Notify the view about the change
+    notifyListeners();
   }
 
 
   void onListFeederItemSelect(String? value) {
     listFeederSelect = value;
     listFeederSelectBottom = listFeederSelect;
-    // selectedProposalCheckboxId = null;
-    // newSketchPropEntity = null;
     descriptionController.clear();
     estimateController.clear();
     notifyListeners();
@@ -346,35 +356,73 @@ class CheckMeasureViewModel extends ChangeNotifier {
   }
 
   //PROCEED
-// void proceed(){
-//   if (!validateForm2()) {
-//     return false;
-//   }
-//   else{
-//     print("in else block");
-//     await makeCall(tickId, agentMobile, userMobile);
-//     return true;
-//   }
-// }
+  Future<bool> proceed()async{
+    if (!validateForm2()) {
+      return false;
+    }
+    else {
+      if (selectedPurposeCheckboxId == "NCMD") {
+        // createNewCheckMeasureSession();
+        var argument = {
+          'd': "json.encode(newData[0])",
+          'p': true,
+          'ssc': listSubStationSelect,
+          'ssn': listSubStationItem.firstWhere((item) => item.optionCode == listSubStationSelect).optionName,
+          'fc': listFeederSelect,
+          'fn': listFeederItem.firstWhere((item) => item.optionCode == listFeederSelect).optionName,
+        };
+        selectedCheckboxId=="11 KV Line"?
+        Navigation.instance.navigateTo(Routes.pole11kvScreen, args: argument)
+            : Navigation.instance.navigateTo(Routes.pole33kvScreen, args: argument);
 
-  // bool validateForm2() {
-  //   if (registeredNumber.text == "" || registeredNumber.text.isEmpty) {
-  //     AlertUtils.showSnackBar(context, "Please enter your mobile number", isTrue);
-  //     return  false;
-  //   }else if(registeredNumber.text.length<10){
-  //     AlertUtils.showSnackBar(context, "Please enter valid mobile number", isTrue);
-  //     return  false;
-  //   }
-  //   return true;
-  // }
+      } else if(selectedPurposeCheckboxId == "ECMD"){
+        if(descriptionController.text.isNotEmpty&& descriptionController.text!=null||descriptionController.text!=""){
+         String? desc=_selectedEntity?.worklDesc;
+          var argument = {
+            'd':desc,
+            'p': true,
+            'ssc': listSubStationSelect,
+            'ssn': listSubStationItem.firstWhere((item) => item.optionCode == listSubStationSelect).optionName,
+            'fc': listFeederSelect,
+            'fn': listFeederItem.firstWhere((item) => item.optionCode == listFeederSelect).optionName,
+          };
+         selectedCheckboxId=="11 KV Line"?
+         Navigation.instance.navigateTo(Routes.check11kvScreen, args: argument)
+             : Navigation.instance.navigateTo(Routes.check33kvScreen, args: argument);
+         resetDialogValues();
 
-  void proceed(){
-    if(selectedPurposeCheckboxId=="NCMD"){
-      createNewCheckMeasureSession();
-    }else{
-      print("check box is existing");
+        }
+        print("check box is existing");
+      }else{
+        print("navigate to NewProposalActivity");
+      }
+      return true;
     }
   }
+
+  bool validateForm2() {
+    if (selectedCheckboxId == "" || selectedCheckboxId==null) {
+      AlertUtils.showSnackBar(context, "Please choose line voltage", isTrue);
+      return  false;
+    }else if(listFeederSelect==""||listFeederSelect==null){
+      AlertUtils.showSnackBar(context, "Please select Substation", isTrue);
+      return  false;
+    }else if(listSubStationSelect==""||listSubStationSelect==null){
+      AlertUtils.showSnackBar(context, "Please select Substation", isTrue);
+      return  false;
+    }else if(selectedPurposeCheckboxId==""||selectedPurposeCheckboxId==null){
+      AlertUtils.showSnackBar(context, "Please select Substation", isTrue);
+      return  false;
+    }else if(selectedPurposeCheckboxId=="NCMD"&&(descriptionController.text==""||descriptionController.text.isEmpty)){
+      AlertUtils.showSnackBar(context, "Please enter description", isTrue);
+      return  false;
+    }else if(selectedPurposeCheckboxId=="NCMD"&&(estimateController.text==""||estimateController.text.isEmpty)){
+      AlertUtils.showSnackBar(context, "Please select Estimate number", isTrue);
+      return  false;
+    }
+    return true;
+  }
+
   Future<bool> createNewCheckMeasureSession( ) async {
     _isLoading = isTrue;
     notifyListeners();
@@ -407,12 +455,27 @@ class CheckMeasureViewModel extends ChangeNotifier {
         if (response.statusCode == successResponseCode) {
           if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
-              if(response.data['message']!=null) {
-                showSuccessDialog(context, response.data['message'], (){
-                  Navigator.pop(context);
-                });
-                resetDialogValues();
-              }
+                if(response.data['objectJson'] != null) {
+                  final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
+                  final List<NewCheckMeasureModel> newData = jsonList.map((json) => NewCheckMeasureModel.fromJson(json)).toList();
+                  if(newData.isNotEmpty) {
+                    print("selectedCheckboxId $selectedCheckboxId");
+                    var argument = {
+                      'd': json.encode(newData[0]),
+                      'p': true,
+                      'ssc': listSubStationSelect,
+                      'ssn': listSubStationItem.firstWhere((item) => item.optionCode == listSubStationSelect).optionName,
+                      'fc': listFeederSelect,
+                      'fn': listFeederItem.firstWhere((item) => item.optionCode == listFeederSelect).optionName,
+                    };
+                    selectedCheckboxId=="11 KV Line"?
+                    Navigation.instance.navigateTo(Routes.pole11kvScreen, args: argument)
+                    : Navigation.instance.navigateTo(Routes.pole33kvScreen, args: argument);
+                    resetDialogValues();
+                  }else{
+                    showAlertDialog(context, "Unable to process your request!");
+                  }
+                }
             }else{
               showErrorDialog(context, response.data['message']);
             }
@@ -430,6 +493,11 @@ class CheckMeasureViewModel extends ChangeNotifier {
       notifyListeners();
     }
     return false;
+
+    //if(response.data['message']!=null) {
+    //                 // showSuccessDialog(context, response.data['message'], (){
+    //                 //   Navigator.pop(context);
+    //                 // });
   }
 
 
@@ -439,6 +507,8 @@ class CheckMeasureViewModel extends ChangeNotifier {
 
   void resetDialogValues() {
     selectedCheckboxId = "";
+    listSubStationSelectBottom="";
+    listFeederSelectBottom="";
     estimateController.text = "";
     listFeederSelect = "";
     selectedPurposeCheckboxId="";

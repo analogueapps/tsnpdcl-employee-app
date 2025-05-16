@@ -36,7 +36,9 @@ class CheckMeasureScreen extends StatelessWidget {
                 builder: (context, viewModel, child) {
                   return SingleChildScrollView(
                       padding: const EdgeInsets.all(doubleTen),
-                      child: Column(
+                      child :Form(
+                    key: viewModel.formKey,
+                    child:Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Text(
@@ -242,6 +244,7 @@ class CheckMeasureScreen extends StatelessWidget {
                             }),),
                             const SizedBox(height: 20,),
                           ]
+                      ),
                       ),
                   );
                 }

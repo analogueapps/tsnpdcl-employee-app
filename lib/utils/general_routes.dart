@@ -226,4 +226,9 @@ class Routes {
     //CHECK MEASUREMENT(LINES)*BHAVANA
     static const String checkMeasureScreen="CheckMeasureScreen";
     static const String docketScreen="DocketScreen";
+    static const String pole11kvScreen="Pole11kvFeeder";
+    static const String pole33kvScreen="Pole33kvFeeder";
+    static const String check33kvScreen="CheckMeasure11kv";
+    static const String check11kvScreen="CheckMeasure33kv";
+
 }

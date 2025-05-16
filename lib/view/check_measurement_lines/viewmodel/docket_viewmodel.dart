@@ -3,17 +3,12 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
-import 'package:tsnpdcl_employee/dialogs/process_dialog.dart';
 import 'package:tsnpdcl_employee/network/api_provider.dart';
 import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
-import 'package:tsnpdcl_employee/utils/general_routes.dart';
-import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/view/check_measurement_lines/model/docket_model.dart';
-import 'package:tsnpdcl_employee/view/line_clearance/model/spinner_list.dart';
-import 'package:tsnpdcl_employee/view/pole_tracker/model/new_sketch_prop_entity.dart';
 
 class DocketViewmodel extends ChangeNotifier {
   DocketViewmodel({required this.context, required this.sectionID}){
@@ -76,20 +71,24 @@ class DocketViewmodel extends ChangeNotifier {
                 } else {
                   jsonList = [];
                 }
-                final List<DocketEntity> objectJson = jsonList.map((json) => DocketEntity.fromJson(json)).toList();
+                final List<DocketEntity> objectJson = jsonList.map((json) =>
+                    DocketEntity.fromJson(json)).toList();
                 docketList.addAll(objectJson);
                 print("data added in docketList");
                 notifyListeners();
+              } else {
+                showAlertDialog(context, "Unable to process your request!");
               }
             } else {
-              showAlertDialog(context, "response.data['message']");
+              showAlertDialog(context,
+                  "There are no existing Proposals under the selected Substation");
             }
           } else {
             showSessionExpiredDialog(context);
           }
-        } else {
-          showAlertDialog(context," response.data['message']");
         }
+      }else{
+        showAlertDialog(context, "Error connecting to the server, Please try after sometime");
       }
     } catch (e) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -102,6 +101,11 @@ class DocketViewmodel extends ChangeNotifier {
     }
 
     notifyListeners();
+  }
+
+  void onItemSelected(DocketEntity selectedEntity) {
+    print("selectedEntity, $selectedEntity");
+    Navigator.pop(context, selectedEntity);
   }
 
 }

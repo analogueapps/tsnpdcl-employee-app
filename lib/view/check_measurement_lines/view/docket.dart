@@ -76,7 +76,8 @@ class DocketScreen extends StatelessWidget {
                       child:ElevatedButton(
                     style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.green),),
                   onPressed: () {
-                    Navigation.instance.navigateTo(Routes.checkMeasureScreen );
+                      viewModel.onItemSelected(item);
+                    // Navigation.instance.navigateTo(Routes.checkMeasureScreen );
                   },
                   child: const
                      Text("Select", style: TextStyle(color: Colors.white),),
