@@ -14,6 +14,8 @@ import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/view/check_measurement_lines/model/polefeeder_model.dart';
 
+import '../../dtr_master/model/circle_model.dart';
+
 class Pole11kvViewmodel extends ChangeNotifier {
   Pole11kvViewmodel({required this.context, required this.args}){
     getCurrentLocation();
@@ -21,6 +23,7 @@ class Pole11kvViewmodel extends ChangeNotifier {
   }
 
   // Current View Context
+  final formKey = GlobalKey<FormState>();
   final BuildContext context;
   final Map<String, dynamic> args;
 
@@ -31,6 +34,7 @@ class Pole11kvViewmodel extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   final TextEditingController poleNumber= TextEditingController();
+  final TextEditingController dtrStructure= TextEditingController();
 
   bool _followSwitch = true;
 
@@ -86,36 +90,145 @@ class Pole11kvViewmodel extends ChangeNotifier {
   }
 
   //Tapping from previous pole
-  String? _selectedPreviousPole;
-  String? get selectedPreviousPole => _selectedPreviousPole;
-  void setSelectedPreviousPole(String title) {
-    _selectedPreviousPole = title;
-    print("$_selectedPreviousPole: Previous pole selected");
-    notifyListeners();
+  String? _selectedTappingPole;
+  String? get selectedTappingPole => _selectedTappingPole;
+  void setSelectedTappingPole(String title) {
+    if(_selectedPole==""){
+      showAlertDialog(context, "Please choose Source Pole Num or check Source pole not mapped or origin Pole");
+    }else {
+      _selectedTappingPole = title;
+      print("$_selectedTappingPole: Previous pole selected");
+      notifyListeners();
+    }
   }
 
-  //Pole type
-  List<String> selectedPoleTypes = [];
+  //Any Crossings:
+  List<String> selectedCrossings = [];
 
-  void toggleSelectedPoleType(String value) {
-    if (selectedPoleTypes.contains(value)) {
-      selectedPoleTypes.remove(value);
+  void setSelectedCrossings(String title) {
+    if (selectedCrossings.contains(title)) {
+      selectedCrossings.remove(title);
     } else {
-      if (selectedPoleTypes.length < 2) {
-        selectedPoleTypes.add(value);
-      }
+      selectedCrossings.add(title);
     }
     notifyListeners();
   }
 
-  List<String> poleHeightData=["8.0 Mtr. Pole", "11 Mtr. Pole","13 Mtr(Tower)","19 Mtr(Tower)","9.1 Mtr. Pole","10 Mtrs(Tower)","16 Mtr(Tower)" ];
-  String? _selectedPoleHeight;
-  String? get selectedPoleHeight => _selectedPoleHeight;
-  void setSelectedPoleHeight(String title) {
-    _selectedPoleHeight = title;
-    print("$_selectedPoleHeight: Previous pole selected");
+
+  //Pole type
+  List<String> selectedFirstGroup = [];
+  List<String> selectedSecondGroup = [];
+
+  void toggleFirstGroup(String val) {
+    if (selectedSecondGroup.length == 2) {
+      selectedSecondGroup.removeLast(); // Remove latest from Column 2
+    }
+
+    if (selectedFirstGroup.contains(val)) {
+      selectedFirstGroup.remove(val); // Uncheck
+    } else {
+      selectedFirstGroup = [val]; // Replace
+    }
+
     notifyListeners();
   }
+
+  void toggleSecondGroup(String val) {
+    bool wasCol1Selected = selectedFirstGroup.isNotEmpty;
+
+    if (selectedSecondGroup.contains(val)) {
+      selectedSecondGroup.remove(val); // Toggle off
+    } else {
+      if (wasCol1Selected) {
+        // Remove col1 selection first
+        selectedFirstGroup.clear();
+      }
+
+      // After clearing col1, limit becomes 2
+      final limit = 2;
+
+      if (selectedSecondGroup.length < limit) {
+        selectedSecondGroup.add(val); // Add normally
+      } else {
+        // At limit, remove the oldest one
+        selectedSecondGroup.removeAt(0);
+        selectedSecondGroup.add(val);
+      }
+    }
+
+    notifyListeners();
+  }
+
+  bool get isSecondGroupEnabled => true;
+
+  //pole height
+  List<String> poleHeightData = [
+    "8.0 Mtr. Pole",
+    "11 Mtr. Pole",
+    "13 Mtr(Tower)",
+    "19 Mtr(Tower)",
+    "9.1 Mtr. Pole",
+    "10 Mtrs(Tower)",
+    "16 Mtr(Tower)"
+  ];
+
+  String? _selectedPoleHeight;
+  String? get selectedPoleHeight => _selectedPoleHeight;
+
+  void setSelectedPoleHeight(String height) {
+    if (_selectedPoleHeight == height) {
+      _selectedPoleHeight = null; // Unselect if tapped again
+    } else {
+      _selectedPoleHeight = height;
+    }
+    print("Selected height: $_selectedPoleHeight");
+    notifyListeners();
+  }
+
+  //Circuits
+  String? _selectedCircuits;
+  String? get selectedCircuits => _selectedCircuits;
+  void setSelectedCircuits(String title) {
+      _selectedCircuits= title;
+      print("$_selectedCircuits: Circuits selected");
+      notifyListeners();
+  }
+
+  //Formation
+  String? _selectedFormation;
+  String? get selectedFormation=> _selectedFormation;
+  void setSelectedFormation(String title) {
+    _selectedFormation= title;
+    print("$_selectedFormation: Formation selected");
+    notifyListeners();
+  }
+  //Type of point
+  String? _selectedTypePoint;
+  String? get selectedTypePoint => _selectedTypePoint;
+  void setSelectedTypePoint(String title) {
+    _selectedTypePoint= title;
+    print("$_selectedTypePoint: TypePoint selected");
+    notifyListeners();
+  }
+
+  //Connected Load
+  String? _selectedConnected;
+  String? get selectedConnected => _selectedConnected;
+  void setSelectedConnected(String title) {
+    _selectedConnected= title;
+    print("$_selectedConnected: Connected  selected");
+    notifyListeners();
+  }
+
+//Conductor Size
+  String? _selectedConductor ;
+  String? get selectedConductor  => _selectedConductor ;
+  void setSelectedConductor (String title) {
+    _selectedConductor = title;
+    print("$_selectedConductor : Conductor   selected");
+    notifyListeners();
+  }
+
 
   List<PoleFeederEntity> poleFeederList = [];
   String? poleFeederSelected;
@@ -168,9 +281,11 @@ class Pole11kvViewmodel extends ChangeNotifier {
                 final List<PoleFeederEntity> listData = jsonList.map((json) =>
                     PoleFeederEntity.fromJson(json)).toList();
                 poleFeederList.addAll(listData);
+              }else {
+                showAlertDialog(context, "No Data Found");
               }
             } else {
-              showAlertDialog(context, response.data['message']);
+              showAlertDialog(context, "There is no existing Proposal under the selected substation");
             }
           } else {
             showSessionExpiredDialog(context);
@@ -180,13 +295,172 @@ class Pole11kvViewmodel extends ChangeNotifier {
         }
       }
     } catch (e) {
-      showErrorDialog(context, e.toString());
+      showErrorDialog(context,"An error occurred. Please try again."  );
       rethrow;
     }
 
     notifyListeners();
   }
 
+  String? _selectedCapacity;
+  String? get selectedCapacity => _selectedCapacity;
+
+  final List<SubstationModel> _capacity = [SubstationModel(optionCode: "0", optionName: "SELECT"),
+    SubstationModel(optionCode: "1", optionName: "1x10(L)"),
+    SubstationModel(optionCode: "1", optionName: "1x10KVA(AGL)"),
+    SubstationModel(optionCode: "3", optionName: "1x63+2x15KVA"),
+    SubstationModel(optionCode: "1", optionName: "1x100"),
+    SubstationModel(optionCode: "1", optionName: "1x75"),
+    SubstationModel(optionCode: "1", optionName: "1x50"),
+    SubstationModel(optionCode: "2", optionName: "1x100+1x15(L)"),
+    SubstationModel(optionCode: "2", optionName: "1x100+1x160"),
+    SubstationModel(optionCode: "1", optionName: "1x15 (Agl)"),
+    SubstationModel(optionCode: "1", optionName: "1x15(L)"),
+    SubstationModel(optionCode: "1", optionName: "1x16"),
+    SubstationModel(optionCode: "2", optionName: "1x16+1x15(L)"),
+    SubstationModel(optionCode: "1", optionName: "1x160"),
+    SubstationModel(optionCode: "1", optionName: "1x200"),
+    SubstationModel(optionCode: "1", optionName: "1x25"),
+    SubstationModel(optionCode: "1", optionName: "1x40"),
+    SubstationModel(optionCode: "1", optionName: "1x25L"),
+    SubstationModel(optionCode: "2", optionName: "1x25+1x15(L)"),
+    SubstationModel(optionCode: "1", optionName: "1x250"),
+    SubstationModel(optionCode: "1", optionName: "1x300"),
+    SubstationModel(optionCode: "1", optionName: "1x315"),
+    SubstationModel(optionCode: "1", optionName: "1x400"),
+    SubstationModel(optionCode: "1", optionName: "1x500"),
+    SubstationModel(optionCode: "1", optionName: "1x63"),
+    SubstationModel(optionCode: "2", optionName: "1x63+1x15(L)"),
+    SubstationModel(optionCode: "1", optionName: "1x630"),
+    SubstationModel(optionCode: "1", optionName: "1x650"),
+    SubstationModel(optionCode: "1", optionName: "1x750"),
+    SubstationModel(optionCode: "1", optionName: "1x800"),
+    SubstationModel(optionCode: "1", optionName: "1x1000"),
+    SubstationModel(optionCode: "1", optionName: "1x1600"),
+    SubstationModel(optionCode: "1", optionName: "1x2000"),
+    SubstationModel(optionCode: "1", optionName: "1x2500"),
+    SubstationModel(optionCode: "2", optionName: "2x100"),
+    SubstationModel(optionCode: "2", optionName: "2x150"),
+    SubstationModel(optionCode: "2", optionName: "2x16"),
+    SubstationModel(optionCode: "2", optionName: "2x25"),
+    SubstationModel(optionCode: "2", optionName: "2x15"),
+    SubstationModel(optionCode: "2", optionName: "2x250"),
+    SubstationModel(optionCode: "2", optionName: "2x63"),
+    SubstationModel(optionCode: "3", optionName: "3x10(A)"),
+    SubstationModel(optionCode: "3", optionName: "3x16"),
+    SubstationModel(optionCode: "3", optionName: "3x25"),
+    SubstationModel(optionCode: "3", optionName: "3x15"),
+    SubstationModel(optionCode: "2", optionName: "1x16+1x63"),
+  ];
+
+  List<SubstationModel> get capacity => _capacity;
+
+  int? _selectedCapacityIndex;
+
+  int? get selectedCapacityIndex => _selectedCapacityIndex;
+
+  void onListCapacitySelected(int? index) {
+    _selectedCapacityIndex = index;
+    _selectedCapacity = index != null ? _capacity[index].optionCode : null;
+    print("$_selectedCapacity: selected Capacity ");
+  }
+
+//Save pole button
+  Future<void> submitForm() async {
+    if (formKey.currentState!.validate()) {
+      formKey.currentState!.save();
+      notifyListeners();
+
+      if (!validateForm()) {
+        return;
+      }else{
+        // confirmServiceData(circleId, ero, sc, usc);
+        print("in else block");
+      }
+    }
+  }
+
+  bool validateForm() {
+    if (selectedPole == "" || selectedPole == null) {
+      AlertUtils.showSnackBar(
+          context, "Please select the source pole to the current pole", isTrue);
+      return false;
+    } else if (poleNumber.text == "" && poleNumber.text=="") {
+      AlertUtils.showSnackBar(
+          context, "Please enter Pole Number",
+          isTrue);
+      return false;
+    } else if ( selectedTappingPole== ""||selectedTappingPole==null) {
+      AlertUtils.showSnackBar(
+          context, "Please select tapping type from previous pole to current pole",
+          isTrue);
+      return false;
+    }
+   else if (selectedFirstGroup== []&& selectedSecondGroup==[]) {
+      AlertUtils.showSnackBar(
+          context, "Please select the  Pole Type",
+          isTrue);
+      return false;
+    }else if (_selectedPoleHeight== "" && _selectedPoleHeight==null) {
+      AlertUtils.showSnackBar(
+          context, "Please select the Pole Height",
+          isTrue);
+      return false;
+    }else if (selectedCircuits== "" && selectedCircuits==null) {
+      AlertUtils.showSnackBar(
+          context, "Please select the no.of circuits on the current pole",
+          isTrue);
+      return false;
+    }else if (selectedFormation== "" && selectedFormation==null) {
+      AlertUtils.showSnackBar(
+          context, "Please select the formation type on pole",
+          isTrue);
+      return false;
+    }else if (selectedTypePoint== "" && selectedTypePoint==null) {
+      AlertUtils.showSnackBar(
+          context, "Please select the type of point (Cut Point/End Point/Pin Point)",
+          isTrue);
+      return false;
+    }else if (selectedCrossings== "" && selectedCrossings==null) {
+      AlertUtils.showSnackBar(
+          context, "Please select any crossing",
+          isTrue);
+      return false;
+    }else if (selectedConnected== "" && selectedConnected==null) {
+      AlertUtils.showSnackBar(
+          context, "Please select the any load connected on the current pole",
+          isTrue);
+      return false;
+    }//DTR
+   else if (dtrStructure.text== "" && dtrStructure.text==null) {
+      AlertUtils.showSnackBar(
+          context, "Please enter the DTR Structure code ",
+          isTrue);
+      return false;
+    }else if (selectedCapacity== "" && selectedCapacity==null) {
+      AlertUtils.showSnackBar(
+          context, "Please select the DTR capacity",
+          isTrue);
+      return false;
+    }else if (_selectedConductor == "" && _selectedConductor ==null) {
+      AlertUtils.showSnackBar(
+          context, "Please select the conductor size from previous pole to this pole",
+          isTrue);
+      return false;
+    }else if ((latitude== ""&&longitude=="") || (latitude== null&&longitude==null)) { //location
+      AlertUtils.showSnackBar(
+          context, "Please wait until we capture your location",
+          isTrue);
+      return false;
+    }
+    return true;
+  }
+
+  //For
+//Accuracy: 18.9 <-this should be less than 15
+// lat:17.4445931
+//   log: 78.3844044
+//please wait until we reach ,minimum gps accuracy i.e.,15 mts
 
 
 }
