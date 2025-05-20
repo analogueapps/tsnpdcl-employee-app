@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
@@ -18,7 +20,7 @@ import '../../dtr_master/model/circle_model.dart';
 
 class Pole11kvViewmodel extends ChangeNotifier {
   Pole11kvViewmodel({required this.context, required this.args}){
-    getCurrentLocation();
+    startListening();
     getPolesOnFeeder();
   }
 
@@ -26,9 +28,12 @@ class Pole11kvViewmodel extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
   final BuildContext context;
   final Map<String, dynamic> args;
+   double MINIMUM_GPS_ACCURACY_REQUIRED = 15.0;
+  String maxId = "0L";
 
-  String? latitude="";
-  String? longitude="";
+  double? latitude;
+  double? longitude;
+  double? totalAccuracy;
 
   bool _isLoading = isFalse;
   bool get isLoading => _isLoading;
@@ -45,40 +50,50 @@ class Pole11kvViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-  String locationAccuracy="";
+  String locationDistance="";
 
-  Future<void> getCurrentLocation() async {
-    try {
-      LocationPermission permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-          AlertUtils.showSnackBar(context, "Location permission denied", isTrue);
-          return;
-        }
-      }
 
-      if (permission == LocationPermission.deniedForever) {
-        AlertUtils.showSnackBar(
-            context, "Location permissions are permanently denied", isTrue);
-        return;
-      }
+  StreamSubscription<Position>? _positionStream;
+  void startListening() async {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    LocationPermission permission = await Geolocator.checkPermission();
 
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
+    if (!serviceEnabled || permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
 
-      latitude = position.latitude.toString();
-      longitude = position.longitude.toString();
-
-      print("Geo Current location: $latitude , $longitude");
+    _positionStream = Geolocator.getPositionStream(
+      locationSettings: LocationSettings(accuracy: LocationAccuracy.high),
+    ).listen((Position position) {
+      latitude = position.latitude;
+      longitude = position.longitude;
+      totalAccuracy = position.accuracy; // <-- This is in meters
 
       notifyListeners();
-    } catch (e) {
-      print("Error fetching location: $e");
-      AlertUtils.showSnackBar(context, "Error fetching location", isTrue);
-    }
+    });
   }
+
+  void stopListening() {
+    _positionStream?.cancel();
+  }
+
+  double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+    const double earthRadius = 6371000; // meters
+    double dLat = _degToRad(lat2 - lat1);
+    double dLon = _degToRad(lon2 - lon1);
+
+    double a = sin(dLat / 2) * sin(dLat / 2) +
+        cos(_degToRad(lat1)) *
+            cos(_degToRad(lat2)) *
+            sin(dLon / 2) *
+            sin(dLon / 2);
+    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    double distance = earthRadius * c;
+
+    return distance;
+  }
+
+  double _degToRad(double deg) => deg * pi / 180;
 
 
   String? _selectedPole;
@@ -97,7 +112,7 @@ class Pole11kvViewmodel extends ChangeNotifier {
       showAlertDialog(context, "Please choose Source Pole Num or check Source pole not mapped or origin Pole");
     }else {
       _selectedTappingPole = title;
-      print("$_selectedTappingPole: Previous pole selected");
+      print("$_selectedTappingPole:  tap selected");
       notifyListeners();
     }
   }
@@ -118,6 +133,7 @@ class Pole11kvViewmodel extends ChangeNotifier {
   //Pole type
   List<String> selectedFirstGroup = [];
   List<String> selectedSecondGroup = [];
+  List<String> get selectedPoleType => [...selectedFirstGroup, ...selectedSecondGroup];
 
   void toggleFirstGroup(String val) {
     if (selectedSecondGroup.length == 2) {
@@ -230,13 +246,24 @@ class Pole11kvViewmodel extends ChangeNotifier {
   }
 
 
+
   List<PoleFeederEntity> poleFeederList = [];
   String? poleFeederSelected;
+  String? poleFeederID;
+  String? poleLat;
+  String? poleLon;
+  PoleFeederEntity? selectedPoleFeeder;
 
-  void onListPoleFeederChange(String? value) {
-    poleFeederSelected = value;
+  void onListPoleFeederChange(PoleFeederEntity? value) {
+    selectedPoleFeeder = value;
     if (value != null) {
-      print("feeder data: $poleFeederSelected");
+      poleFeederSelected=value.poleNum??"";
+      poleFeederID=value.id.toString()??"";
+      poleLat=value.lat.toString()??"";
+      poleLon=value.lon.toString()??"";
+
+      print("POle Num: $poleFeederSelected");
+      print("Pole ID: $poleFeederID");
     }
     notifyListeners();
   }
@@ -374,18 +401,129 @@ class Pole11kvViewmodel extends ChangeNotifier {
       if (!validateForm()) {
         return;
       }else{
-        // confirmServiceData(circleId, ero, sc, usc);
-        print("in else block");
+        if(totalAccuracy!>15.0){
+         showAlertDialog(context, "Please wait until we reach minimum GPS accuracy i.e 15.0 mts");
+        }else{
+          startListening();
+          save11KVPole();
+          print("in else block");
+        }
       }
     }
   }
 
+
+  Future<void> save11KVPole()async{
+    _isLoading = isTrue;
+    notifyListeners();
+
+    if(args["p"]==false){
+
+  }
+
+    final requestData = {
+      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "api": Apis.API_KEY, 
+      "loadLatestDataOnly": true,
+      "maxId": maxId,
+      "fc": args["fc"],
+      "ssc":args["ssc"],
+      "fv": "11KV",
+      "ssv": "33/11KV",
+      "not":false,
+      "origin": selectedPole=="Origin Pole"?"Origin Pole":"",
+      "tap": selectedTappingPole=="Straight Tapping"?"s":selectedTappingPole=="Left Tapping"?"l":"r",
+      "pt": selectedPoleType,
+      "ph":selectedPoleHeight,
+      "nockt": selectedCircuits,
+      "formation":selectedFormation,
+      "typeOfPoint": selectedTypePoint,
+      "pid":"",// should send data when  p is true
+      "polenum": poleNumber.text.trim(),
+      "series": "",
+      if (selectedPole == "" || selectedPole == null) ...{
+        "sid": poleFeederID,
+        "slat": poleLat,
+        "slon": poleLon,
+      },
+      "cross": selectedCrossings,
+      "connLoad": selectedConnected=="No Load"?"N":"DTR",
+    if (selectedConnected=="DTR") ...{
+
+      "structCode": dtrStructure.text,
+      "cap": selectedCapacity,
+      "cs": selectedConductor,
+      "lat": latitude,
+      "lon": longitude,
+    }
+
+    };
+
+    final payload = {
+      "path": "/save11KvDigitalFeederPoleForExistingFeeder",
+      "apiVersion": "1.0.1",
+      "method": "POST",
+      "data": jsonEncode(requestData),
+    };
+
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+
+
+    try {
+      if (response != null) {
+        if (response.data is String) {
+          response.data = jsonDecode(response.data);
+        }
+        if (response.statusCode == successResponseCode) {
+          if (response.data['tokenValid'] == isTrue) {
+            if (response.data['success'] == isTrue) {
+              if (response.data['objectJson'] != null) {
+                List<dynamic> jsonList;
+                if (response.data['objectJson'] is String) {
+                  jsonList = jsonDecode(response.data['objectJson']);
+                } else if (response.data['objectJson'] is List) {
+                  jsonList = response.data['objectJson'];
+                } else {
+                  jsonList = [];
+                }
+                // final List<DocketEntity> objectJson = jsonList.map((json) =>
+                //     DocketEntity.fromJson(json)).toList();
+                // docketList.addAll(objectJson);
+                print("data added in docketList");
+                notifyListeners();
+              } else {
+                showAlertDialog(context, "Unable to process your request!");
+              }
+            } else {
+              showAlertDialog(context,
+                  "There are no existing Proposals under the selected Substation");
+            }
+          } else {
+            showSessionExpiredDialog(context);
+          }
+        }
+      }else{
+        showAlertDialog(context, "Error connecting to the server, Please try after sometime");
+      }
+    } catch (e) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showErrorDialog(context, "An error occurred. Please try again.");
+      });
+      rethrow;
+    }finally{
+      _isLoading=false;
+      notifyListeners();
+    }
+
+    notifyListeners();
+  }
   bool validateForm() {
-    if (selectedPole == "" || selectedPole == null) {
+    if ((selectedPole == "" || selectedPole == null)&&poleFeederSelected=="") {
       AlertUtils.showSnackBar(
           context, "Please select the source pole to the current pole", isTrue);
       return false;
-    } else if (poleNumber.text == "" && poleNumber.text=="") {
+    } else if (poleNumber.text == "" && selectedPole=="") {
       AlertUtils.showSnackBar(
           context, "Please enter Pole Number",
           isTrue);
@@ -396,58 +534,59 @@ class Pole11kvViewmodel extends ChangeNotifier {
           isTrue);
       return false;
     }
-   else if (selectedFirstGroup== []&& selectedSecondGroup==[]) {
+   else if (selectedFirstGroup.isEmpty&& selectedSecondGroup.isEmpty) {
       AlertUtils.showSnackBar(
           context, "Please select the  Pole Type",
           isTrue);
       return false;
-    }else if (_selectedPoleHeight== "" && _selectedPoleHeight==null) {
+    }else if (_selectedPoleHeight== "" || _selectedPoleHeight==null) {
       AlertUtils.showSnackBar(
           context, "Please select the Pole Height",
           isTrue);
       return false;
-    }else if (selectedCircuits== "" && selectedCircuits==null) {
+    }else if (selectedCircuits== "" || selectedCircuits==null) {
       AlertUtils.showSnackBar(
           context, "Please select the no.of circuits on the current pole",
           isTrue);
       return false;
-    }else if (selectedFormation== "" && selectedFormation==null) {
+    }else if (selectedFormation== "" || selectedFormation==null) {
       AlertUtils.showSnackBar(
           context, "Please select the formation type on pole",
           isTrue);
       return false;
-    }else if (selectedTypePoint== "" && selectedTypePoint==null) {
+    }else if (selectedTypePoint== "" || selectedTypePoint==null) {
       AlertUtils.showSnackBar(
           context, "Please select the type of point (Cut Point/End Point/Pin Point)",
           isTrue);
       return false;
-    }else if (selectedCrossings== "" && selectedCrossings==null) {
+    }else if (selectedCrossings.isEmpty||selectedCrossings==null) {
       AlertUtils.showSnackBar(
           context, "Please select any crossing",
           isTrue);
       return false;
-    }else if (selectedConnected== "" && selectedConnected==null) {
+    }else if (selectedConnected== ""|| selectedConnected==null) {
       AlertUtils.showSnackBar(
           context, "Please select the any load connected on the current pole",
           isTrue);
       return false;
     }//DTR
-   else if (dtrStructure.text== "" && dtrStructure.text==null) {
+   else if (selectedConnected=="DTR"&&(dtrStructure.text== "" || dtrStructure.text==null)) {
       AlertUtils.showSnackBar(
           context, "Please enter the DTR Structure code ",
           isTrue);
       return false;
-    }else if (selectedCapacity== "" && selectedCapacity==null) {
+    }else if (selectedConnected=="DTR"&&(selectedCapacity== "" || selectedCapacity==null)) {
       AlertUtils.showSnackBar(
           context, "Please select the DTR capacity",
           isTrue);
       return false;
-    }else if (_selectedConductor == "" && _selectedConductor ==null) {
+    }else if (_selectedConductor == ""|| _selectedConductor ==null) {
       AlertUtils.showSnackBar(
           context, "Please select the conductor size from previous pole to this pole",
           isTrue);
       return false;
-    }else if ((latitude== ""&&longitude=="") || (latitude== null&&longitude==null)) { //location
+    }
+   else if ((latitude== ""&&longitude=="") || (latitude== null&&longitude==null)) { //location
       AlertUtils.showSnackBar(
           context, "Please wait until we capture your location",
           isTrue);

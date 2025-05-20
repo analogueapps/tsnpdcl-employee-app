@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
+import 'package:tsnpdcl_employee/view/check_measurement_lines/model/polefeeder_model.dart';
 import 'package:tsnpdcl_employee/view/check_measurement_lines/viewmodel/pole_11kv_viewmodel.dart';
 import 'package:tsnpdcl_employee/widget/fill_text_form_field.dart';
 import 'package:tsnpdcl_employee/widget/primary_button.dart';
@@ -96,17 +97,19 @@ class Pole11kvFeeder extends StatelessWidget {
                           ),
 
                           Visibility(
-                            visible: viewModel.selectedPole == "",
-                            child: Column(children: [
+                            visible: viewModel.selectedPole == null,
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
                               const Text('Previous Pole Num.'),
-                              DropdownButton<String>(
+                              DropdownButton<PoleFeederEntity>(
                                 isExpanded: true,
                                 hint: const Text("Select an option"),
-                                value: viewModel.poleFeederSelected,
+                                value: viewModel.selectedPoleFeeder,
                                 items: viewModel.poleFeederList
-                                    .map((item) => DropdownMenuItem<String>(
-                                          value: item.poleNum,
-                                          child: Text(item.poleNum!),
+                                    .map((item) => DropdownMenuItem<PoleFeederEntity>(
+                                          value: item,
+                                          child: Text(item.poleNum??""),
                                         ))
                                     .toList(),
                                 onChanged: (value) {
@@ -145,23 +148,18 @@ class Pole11kvFeeder extends StatelessWidget {
                             height: 10,
                           ),
                           const Text("Pole Number"),
-                          SizedBox(
-                            height: 120,
-                            child: TextFormField(
-                              maxLines: null,
-                              minLines: 5,
+                          TextFormField(
+                              // maxLines: null,
+                              // minLines: 5,
                               controller: viewModel.poleNumber,
                               keyboardType: TextInputType.multiline,
                               decoration: const InputDecoration(
-                                hintText: "Type here...",
+                                // hintText: "Type here...",
                                 border: OutlineInputBorder(),
                                 alignLabelWithHint: true,
                               ),
                             ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
+                         const SizedBox(height: doubleTen,),
                           const Text("Pole Type"),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -487,6 +485,11 @@ class Pole11kvFeeder extends StatelessWidget {
                             ],
                           ),
                           //
+                          Visibility(
+                            visible: viewModel.selectedConnected=="DTR",
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
                           const Text("Enter DTR Structure"),
                           TextFormField(
                               maxLines: 1,
@@ -510,6 +513,9 @@ class Pole11kvFeeder extends StatelessWidget {
                             onChanged: viewModel.onListCapacitySelected,
                             ),
                           const SizedBox(height: 10,),
+                          ]
+                          ),
+                          ),
                           const Text("Conductor Size"),
                           Row(
                             children: [
@@ -538,12 +544,22 @@ class Pole11kvFeeder extends StatelessWidget {
                           ),
 
                           const Text("You are at Location coordinates"),
-                      const Text(
-                            "Location Accuracy :0 mts / 0 mts",
+                       Text("Location Accuracy: ${viewModel.totalAccuracy?.toStringAsFixed(1) ?? "--"} mts / 15.0 mts", style:  TextStyle(
+                       color: (viewModel.totalAccuracy ?? 100) < 15.0
+                           ? Colors.green
+                           : Colors.pinkAccent,
+                    ),),
+                          Text(
+                            "Lat: ${viewModel.latitude?.toStringAsFixed(5) ?? "--"}\n"
+                                "Lon: ${viewModel.longitude?.toStringAsFixed(5) ?? "--"}\n",
+
+                            style: const TextStyle(
+                              color: CommonColors.colorPrimary,
+                            ),
                           ),
-                          Text("Lat: ${viewModel.latitude}"),
-                          Text("Lon: ${viewModel.longitude}"),
-                          viewModel.selectedPole==""? const Text("Please selct source to get distance"): Text("Distance from Previous pole to your locations is %s mtrs {distance calculate here }"),
+
+                          // viewModel.selectedPole==""?Text("Distance from source pole: ${viewModel.distance.toStringAsFixed(2)} meters"): Text(""),
+                          viewModel.selectedPole==""||viewModel.selectedPole==null? const Text("Please select source to get distance", style: TextStyle(color:Colors.red)):const Text(""),
                           const SizedBox(height: 10,),
                            SizedBox(width: double.infinity,
                           child:PrimaryButton(text: "Save Pole", onPressed: (){viewModel.submitForm();}),
@@ -571,9 +587,7 @@ class Pole11kvFeeder extends StatelessWidget {
     );
   }
 }
-// Text(
-//   "Location Accuracy : ${location.accuracy.toStringAsFixed(1)} mts / $MINIMUM_GPS_ACCURACY_REQUIRED mts",
-// ),
+
 Widget checkbox(BuildContext context, String title, String? selected,
     void Function(String) selectedFunction, bool enabled) {
   return Consumer<Pole11kvViewmodel>(
@@ -595,7 +609,7 @@ Widget checkbox(BuildContext context, String title, String? selected,
             title,
             style: TextStyle(fontSize: 12, color: enabled ? null : Colors.grey),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
         ],
