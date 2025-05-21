@@ -14,6 +14,7 @@ import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
+import 'package:tsnpdcl_employee/view/check_measurement_lines/model/docket_model.dart';
 import 'package:tsnpdcl_employee/view/check_measurement_lines/model/polefeeder_model.dart';
 
 import '../../dtr_master/model/circle_model.dart';
@@ -22,6 +23,10 @@ class Pole11kvViewmodel extends ChangeNotifier {
   Pole11kvViewmodel({required this.context, required this.args}){
     startListening();
     getPolesOnFeeder();
+    // if(args['p']==true){
+    //   pid=docketEntity!.id;
+    //   print("Docket pid: $pid");
+    // }
   }
 
   // Current View Context
@@ -29,7 +34,8 @@ class Pole11kvViewmodel extends ChangeNotifier {
   final BuildContext context;
   final Map<String, dynamic> args;
    double MINIMUM_GPS_ACCURACY_REQUIRED = 15.0;
-  String maxId = "0L";
+  int maxId = 9752778; //0L
+  int? pid=752;
 
   double? latitude;
   double? longitude;
@@ -41,16 +47,21 @@ class Pole11kvViewmodel extends ChangeNotifier {
   final TextEditingController poleNumber= TextEditingController();
   final TextEditingController dtrStructure= TextEditingController();
 
+  bool serverCheck=false;
+  bool deviceCheck= false;
+  String? series, poleNum;
+  DocketEntity? docketEntity;
+
   bool _followSwitch = true;
 
   bool get followSwitch => _followSwitch;
+  bool distanceDisplay= false;
+  double? distanceBtnPoles;
 
   set followMe(bool value) {
     _followSwitch = value;
     notifyListeners();
   }
-
-  String locationDistance="";
 
 
   StreamSubscription<Position>? _positionStream;
@@ -70,6 +81,18 @@ class Pole11kvViewmodel extends ChangeNotifier {
       totalAccuracy = position.accuracy; // <-- This is in meters
 
       notifyListeners();
+      
+      if(_selectedPole==""||_selectedPole==null){
+        if(poleID!=null){
+          distanceDisplay=isTrue;
+          distanceBtnPoles= calculateDistance(latitude!, longitude!, poleLat as double, poleLon as double);
+          notifyListeners();
+        }else{
+          distanceDisplay=false;
+          notifyListeners();
+        }
+        
+      }
     });
   }
 
@@ -100,19 +123,31 @@ class Pole11kvViewmodel extends ChangeNotifier {
   String? get selectedPole => _selectedPole;
   void setSelectedPole(String title) {
     _selectedPole = title;
+    if(_selectedPole=="Origin Pole"){
+      series=null;
+      poleNum=args["fn"].substring(0, 3) + "001";
+      poleNumber.text="0000";
+    }
     print("$_selectedPole: filter selected");
     notifyListeners();
   }
 
   //Tapping from previous pole
-  String? _selectedTappingPole;
+  String? _selectedTappingPole="Straight Tapping";
   String? get selectedTappingPole => _selectedTappingPole;
   void setSelectedTappingPole(String title) {
-    if(_selectedPole==""){
+    _selectedTappingPole = title;
+    print("$_selectedTappingPole:  tap selected");
+    if(selectedPole==""|| _selectedPole==null&&selectedTappingPole!=null){
       showAlertDialog(context, "Please choose Source Pole Num or check Source pole not mapped or origin Pole");
     }else {
-      _selectedTappingPole = title;
-      print("$_selectedTappingPole:  tap selected");
+      if(selectedPole!="Origin Pole"){
+        generatePoleNum(serverCheck);
+      }else{
+        AlertUtils.showSnackBar(
+            context, "${args['fn']}001",
+            isFalse);
+      }
       notifyListeners();
     }
   }
@@ -121,16 +156,32 @@ class Pole11kvViewmodel extends ChangeNotifier {
   List<String> selectedCrossings = [];
 
   void setSelectedCrossings(String title) {
-    if (selectedCrossings.contains(title)) {
-      selectedCrossings.remove(title);
+    if (title == "None") {
+      selectedCrossings = ["None"];
     } else {
-      selectedCrossings.add(title);
+      selectedCrossings.remove("None");
+
+      if (selectedCrossings.contains(title)) {
+        selectedCrossings.remove(title);
+      } else {
+        selectedCrossings.add(title);
+      }
     }
     notifyListeners();
   }
 
 
+  String buildCrossingString() {
+    if (selectedCrossings.contains("None")) {
+      return "None";
+    }
+
+    return selectedCrossings.join('|');
+  }
+
+
   //Pole type
+  // If i select both tower and Joist their response is "pt":"Tower"
   List<String> selectedFirstGroup = [];
   List<String> selectedSecondGroup = [];
   List<String> get selectedPoleType => [...selectedFirstGroup, ...selectedSecondGroup];
@@ -249,7 +300,7 @@ class Pole11kvViewmodel extends ChangeNotifier {
 
   List<PoleFeederEntity> poleFeederList = [];
   String? poleFeederSelected;
-  String? poleFeederID;
+  String? poleID;
   String? poleLat;
   String? poleLon;
   PoleFeederEntity? selectedPoleFeeder;
@@ -258,12 +309,13 @@ class Pole11kvViewmodel extends ChangeNotifier {
     selectedPoleFeeder = value;
     if (value != null) {
       poleFeederSelected=value.poleNum??"";
-      poleFeederID=value.id.toString()??"";
+      poleID=value.id.toString()??"";
       poleLat=value.lat.toString()??"";
       poleLon=value.lon.toString()??"";
 
+
       print("POle Num: $poleFeederSelected");
-      print("Pole ID: $poleFeederID");
+      print("Pole ID: $poleID");
     }
     notifyListeners();
   }
@@ -327,6 +379,93 @@ class Pole11kvViewmodel extends ChangeNotifier {
     }
 
     notifyListeners();
+  }
+
+  List<PoleFeederEntity> generatedPoleList = [];
+  String? generatedPoleSelected;
+
+  Future<void> generatePoleNum(bool isServer) async {
+    generatedPoleList.clear();
+    generatedPoleSelected = null;
+    notifyListeners();
+
+    _isLoading = isTrue;
+
+    if(isServer) {
+      print("generatePoleNum if");
+
+      final requestData = {
+        "authToken": SharedPreferenceHelper.getStringValue(
+            LoginSdkPrefs.tokenPrefKey),
+        "api": Apis.API_KEY,
+        "ssc": args["ssc"],
+        "fc": args["fc"],
+        "not": false,
+        "tap": selectedTappingPole == "Straight Tapping"
+            ? "s"
+            : selectedTappingPole == "Left Tapping" ? "l" : "r",
+        "sid": poleID,
+      };
+
+      final payload = {
+        "path": "/getNewPoleNum",
+        "apiVersion": "1.0.1",
+        "method": "POST",
+        "data": jsonEncode(requestData),
+      };
+
+      var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(
+          context, Apis.NPDCL_EMP_URL, payload);
+      _isLoading = isFalse;
+
+      try {
+        if (response != null) {
+          if (response.data is String) {
+            response.data = jsonDecode(response.data); // Parse string to JSON
+          }
+          if (response.statusCode == successResponseCode) {
+            if (response.data['tokenValid'] == isTrue) {
+              if (response.data['success'] == isTrue) {
+                if (response.data['objectJson'] != null) {
+                  // final List<dynamic> jsonList = jsonDecode(
+                  //     response.data['objectJson']);
+                  // final List<PoleFeederEntity> listData = jsonList.map((json) =>
+                  //     PoleFeederEntity.fromJson(json)).toList();
+                  // poleFeederList.addAll(listData);
+                } else {
+                  showAlertDialog(context, "No Data Found");
+                }
+              } else {
+                showAlertDialog(context,
+                    "There is no existing Proposal under the selected substation");
+              }
+            } else {
+              showSessionExpiredDialog(context);
+            }
+          } else {
+            showAlertDialog(context, response.data['message']);
+          }
+        }
+      } catch (e) {
+        showErrorDialog(context, "An error occurred. Please try again.");
+        rethrow;
+      }
+    }else{
+      _isLoading = isFalse;
+      print("generatePoleNum else");
+      series=args["fn"].substring(0, args["fn"].length < 3 ? args["fn"].length : 3);
+      poleNum = (poleFeederList.length + 1).toString();
+      notifyListeners();
+      AlertUtils.showSnackBar(
+          context, "Generated with on device logic",
+          isFalse);
+    }
+
+    notifyListeners();
+  }
+
+  void setPoleNum() {
+    poleNumber.text = (series != null ? "$series-$poleNum" : poleNum)!;
   }
 
   String? _selectedCapacity;
@@ -417,46 +556,43 @@ class Pole11kvViewmodel extends ChangeNotifier {
     _isLoading = isTrue;
     notifyListeners();
 
-    if(args["p"]==false){
-
-  }
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
-      "api": Apis.API_KEY, 
       "loadLatestDataOnly": true,
-      "maxId": maxId,
+      "maxId": maxId,// from map
+      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "api": Apis.API_KEY,
       "fc": args["fc"],
       "ssc":args["ssc"],
       "fv": "11KV",
-      "ssv": "33/11KV",
+      "ssv":  "33\\/11KV",
       "not":false,
-      "origin": selectedPole=="Origin Pole"?"Origin Pole":"",
+      "origin": selectedPole=="Origin Pole"?true:false,
       "tap": selectedTappingPole=="Straight Tapping"?"s":selectedTappingPole=="Left Tapping"?"l":"r",
-      "pt": selectedPoleType,
+      "pt": selectedFirstGroup[0], // if i select two or three only one is selected "pt":"Rail Pole"
       "ph":selectedPoleHeight,
       "nockt": selectedCircuits,
       "formation":selectedFormation,
       "typeOfPoint": selectedTypePoint,
-      "pid":"",// should send data when  p is true
-      "polenum": poleNumber.text.trim(),
-      "series": "",
-      if (selectedPole == "" || selectedPole == null) ...{
-        "sid": poleFeederID,
+      "pid":pid, //"pid":752
+      "polenum": poleNumber.text.trim(), //"polenum":"0000"
+      if(selectedPole!="Origin Pole")...{
+        "series": series, //"series":"ARE"
+      },
+      if (selectedPole == "" || selectedPole == null) ...{ //"sid":139359,"slat":"18.0280611","slon":"79.6085881"
+        "sid": poleID,
         "slat": poleLat,
         "slon": poleLon,
       },
-      "cross": selectedCrossings,
+      "cross": buildCrossingString(), //"cross":"|Building Crossing|LT Line|33KV Line|11KV Line"
       "connLoad": selectedConnected=="No Load"?"N":"DTR",
-    if (selectedConnected=="DTR") ...{
-
+    if (selectedConnected=="DTR") ...{//"structCode":"test","cap":"1x10(L)",
       "structCode": dtrStructure.text,
       "cap": selectedCapacity,
+    },
       "cs": selectedConductor,
-      "lat": latitude,
-      "lon": longitude,
-    }
-
+      "lat": "$latitude",
+      "lon": "$longitude",
     };
 
     final payload = {
@@ -465,6 +601,8 @@ class Pole11kvViewmodel extends ChangeNotifier {
       "method": "POST",
       "data": jsonEncode(requestData),
     };
+
+    print("payload: ${jsonEncode(payload)}");
 
     var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
         .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
@@ -478,23 +616,26 @@ class Pole11kvViewmodel extends ChangeNotifier {
         if (response.statusCode == successResponseCode) {
           if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
-              if (response.data['objectJson'] != null) {
-                List<dynamic> jsonList;
-                if (response.data['objectJson'] is String) {
-                  jsonList = jsonDecode(response.data['objectJson']);
-                } else if (response.data['objectJson'] is List) {
-                  jsonList = response.data['objectJson'];
+                if (response.data['objectJson'] != null) {
+                  if(response.data["message"] == isTrue) {
+                    showSuccessDialog(context, response.data["message"],  () {
+                      Navigator.pop(context);
+                    },);
+                  }
+                  List<dynamic> jsonList;
+                  if (response.data['objectJson'] is String) {
+                    jsonList = jsonDecode(response.data['objectJson']);
+                  } else if (response.data['objectJson'] is List) {
+                    jsonList = response.data['objectJson'];
+                  } else {
+                    jsonList = [];
+                  }
+                  print("data added in docketList");
+                  notifyListeners();
                 } else {
-                  jsonList = [];
+                  showAlertDialog(context, "Unable to process your request!");
                 }
-                // final List<DocketEntity> objectJson = jsonList.map((json) =>
-                //     DocketEntity.fromJson(json)).toList();
-                // docketList.addAll(objectJson);
-                print("data added in docketList");
-                notifyListeners();
-              } else {
-                showAlertDialog(context, "Unable to process your request!");
-              }
+
             } else {
               showAlertDialog(context,
                   "There are no existing Proposals under the selected Substation");
@@ -595,11 +736,14 @@ class Pole11kvViewmodel extends ChangeNotifier {
     return true;
   }
 
-  //For
-//Accuracy: 18.9 <-this should be less than 15
-// lat:17.4445931
-//   log: 78.3844044
-//please wait until we reach ,minimum gps accuracy i.e.,15 mts
+
+  void resetForm(){
+    _selectedPole="";
+    poleNumber.clear();
+    _selectedTappingPole=null;
+    notifyListeners();
+
+  }
 
 
 }

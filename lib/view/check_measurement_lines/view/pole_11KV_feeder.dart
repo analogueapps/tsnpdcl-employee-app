@@ -557,6 +557,7 @@ class Pole11kvFeeder extends StatelessWidget {
                               color: CommonColors.colorPrimary,
                             ),
                           ),
+                          viewModel.distanceDisplay==isTrue&&viewModel.selectedPole==null?Text("Distance from Previous pole to your locations is ${viewModel.distanceBtnPoles} %s mtrs"): Text("Please select source pole to get distance."),
 
                           // viewModel.selectedPole==""?Text("Distance from source pole: ${viewModel.distance.toStringAsFixed(2)} meters"): Text(""),
                           viewModel.selectedPole==""||viewModel.selectedPole==null? const Text("Please select source to get distance", style: TextStyle(color:Colors.red)):const Text(""),
