@@ -6,7 +6,6 @@ import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/view/check_measurement_lines/model/polefeeder_model.dart';
 import 'package:tsnpdcl_employee/view/check_measurement_lines/viewmodel/pole_11kv_viewmodel.dart';
-import 'package:tsnpdcl_employee/widget/fill_text_form_field.dart';
 import 'package:tsnpdcl_employee/widget/primary_button.dart';
 import 'package:tsnpdcl_employee/widget/view_detailed_lc_tile_widget.dart';
 
@@ -107,10 +106,15 @@ class Pole11kvFeeder extends StatelessWidget {
                                 hint: const Text("Select an option"),
                                 value: viewModel.selectedPoleFeeder,
                                 items: viewModel.poleFeederList
-                                    .map((item) => DropdownMenuItem<PoleFeederEntity>(
-                                          value: item,
-                                          child: Text(item.poleNum??""),
-                                        ))
+                                    .map((item) {
+                                  final displayText = item.tempSeries != null && item.tempSeries!.isNotEmpty
+                                      ? '${item.tempSeries}-${item.poleNum}'
+                                      : item.poleNum ?? '';
+                                  return DropdownMenuItem<PoleFeederEntity>(
+                                    value: item,
+                                    child: Text(displayText),
+                                  );
+                                })
                                     .toList(),
                                 onChanged: (value) {
                                   viewModel.onListPoleFeederChange(value);
@@ -557,13 +561,10 @@ class Pole11kvFeeder extends StatelessWidget {
                               color: CommonColors.colorPrimary,
                             ),
                           ),
-                          viewModel.distanceDisplay==isTrue&&viewModel.selectedPole==null?Text("Distance from Previous pole to your locations is ${viewModel.distanceBtnPoles} %s mtrs"): Text("Please select source pole to get distance."),
-
-                          // viewModel.selectedPole==""?Text("Distance from source pole: ${viewModel.distance.toStringAsFixed(2)} meters"): Text(""),
-                          viewModel.selectedPole==""||viewModel.selectedPole==null? const Text("Please select source to get distance", style: TextStyle(color:Colors.red)):const Text(""),
+                          viewModel.distanceDisplay==isTrue&&viewModel.selectedPole==null?Text("Distance from Previous pole to your locations is ${viewModel.distanceBtnPoles} %s mtrs"): const Text("Please select source pole to get distance.",  style: TextStyle(color:Colors.red),),
                           const SizedBox(height: 10,),
                            SizedBox(width: double.infinity,
-                          child:PrimaryButton(text: "Save Pole", onPressed: (){viewModel.submitForm();}),
+                          child:PrimaryButton(text: "Save Pole", onPressed: viewModel.submitForm),
                            ),
                         ],
                       ),

@@ -1,14 +1,14 @@
 class DocketEntity {
   final int id;
   final String estimateNo;
-  final String circleId;
-  final String circle;
-  final String divisionCode;
-  final String division;
-  final String subdivision;
-  final String subdivisionId;
-  final String section;
-  final String sectionId;
+  final String? circleId;
+  final String? circle;
+  final String? divisionCode;
+  final String? division;
+  final String? subdivision;
+  final String? subdivisionId;
+  final String? section;
+  final String? sectionId;
   final String? worklDesc;
   final String isDone;
   final String createdBy;
