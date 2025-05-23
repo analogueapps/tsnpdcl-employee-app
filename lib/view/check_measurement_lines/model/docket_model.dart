@@ -13,12 +13,14 @@ class DocketEntity {
   final String isDone;
   final String createdBy;
   final String insertDate;
+  final String? doneMarkedBy;
   final String voltage;
   final String ssCode;
   final String ssName;
   final String fdrCode;
   final String fdrName;
   final String typeOfProposal;
+  final String? remarks;
 
   DocketEntity({
     required this.id,
@@ -41,6 +43,8 @@ class DocketEntity {
     required this.fdrCode,
     required this.fdrName,
     required this.typeOfProposal,
+    required this.doneMarkedBy,
+    required this.remarks,
   });
 
   factory DocketEntity.fromJson(Map<String, dynamic> json) {
@@ -64,6 +68,8 @@ class DocketEntity {
       ssName: json['ssName'],
       fdrCode: json['fdrCode'],
       fdrName: json['fdrName'],
+      doneMarkedBy: json['doneMarkedBy'],
+      remarks: json['remarks'],
       typeOfProposal: json['typeOfProposal'],
     );
   }
@@ -89,6 +95,8 @@ class DocketEntity {
       'ssName': ssName,
       'fdrCode': fdrCode,
       'fdrName': fdrName,
+      'remarks':remarks,
+      'doneMarkedBy':doneMarkedBy,
       'typeOfProposal': typeOfProposal,
     };
   }

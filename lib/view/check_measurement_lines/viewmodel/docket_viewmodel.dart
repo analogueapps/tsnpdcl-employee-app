@@ -80,8 +80,9 @@ class DocketViewmodel extends ChangeNotifier {
                 showAlertDialog(context, "Unable to process your request!");
               }
             } else {
-              showAlertDialog(context,
+              showAlertDialogPopScreen(context,
                   "There are no existing Proposals under the selected Substation");
+              // Navigator.pop(context, null);
             }
           } else {
             showSessionExpiredDialog(context);

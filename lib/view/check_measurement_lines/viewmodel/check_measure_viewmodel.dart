@@ -161,20 +161,21 @@ class CheckMeasureViewModel extends ChangeNotifier {
       selectedPurposeCheckboxId = id;
       if(selectedPurposeCheckboxId=="ECMD"){
           Navigation.instance.navigateTo(Routes.docketScreen, args: listSubStationSelect, onReturn: (result) {
+            print("docket result: $result");
           if (result != null ) {
             print("result from docket: ${result.worklDesc}");
             if (result != null && result is DocketEntity) {
                   descriptionController.text = result.worklDesc ?? '';
                   estimateController.text = result.estimateNo ?? '';
                   _selectedEntity =  result;
-              } else {
-
-                  // _checkboxExistingProposal = false;
-                  descriptionController.clear();
-                  estimateController.clear();
-                  _selectedEntity = null;
-
               }
+          }else {
+            selectedPurposeCheckboxId=null;
+            descriptionController.clear();
+            estimateController.clear();
+            _selectedEntity = null;
+            notifyListeners();
+
           }
         }
         );
@@ -362,29 +363,18 @@ class CheckMeasureViewModel extends ChangeNotifier {
     }
     else {
       if (selectedPurposeCheckboxId == "NCMD") {
-        // createNewCheckMeasureSession();
-        var argument = {
-          'd': "json.encode(newData[0])",
-          'p': true,
-          'ssc': listSubStationSelect,
-          'ssn': listSubStationItem.firstWhere((item) => item.optionCode == listSubStationSelect).optionName,
-          'fc': listFeederSelect,
-          'fn': listFeederItem.firstWhere((item) => item.optionCode == listFeederSelect).optionName,
-        };
-        selectedCheckboxId=="11 KV Line"?
-        Navigation.instance.navigateTo(Routes.pole11kvScreen, args: argument)
-            : Navigation.instance.navigateTo(Routes.pole33kvScreen, args: argument);
-
+        createNewCheckMeasureSession();
       } else if(selectedPurposeCheckboxId == "ECMD"){
         if(descriptionController.text.isNotEmpty&& descriptionController.text!=null||descriptionController.text!=""){
          String? desc=_selectedEntity?.worklDesc;
           var argument = {
-            'd':desc,
+            'd': json.encode(_selectedEntity),
             'p': true,
             'ssc': listSubStationSelect,
             'ssn': listSubStationItem.firstWhere((item) => item.optionCode == listSubStationSelect).optionName,
             'fc': listFeederSelect,
             'fn': listFeederItem.firstWhere((item) => item.optionCode == listFeederSelect).optionName,
+            'cid':desc,
           };
          selectedCheckboxId=="11 KV Line"?
          Navigation.instance.navigateTo(Routes.check11kvScreen, args: argument)

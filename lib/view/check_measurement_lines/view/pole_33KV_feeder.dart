@@ -552,7 +552,7 @@ class Pole33kvFeeder extends StatelessWidget {
                             viewModel.distanceDisplay==isTrue&&viewModel.selectedPole==null?Text("Distance from Previous pole to your locations is ${viewModel.distanceBtnPoles} %s mtrs"): const Text("Please select source  pole to get distance.", style: TextStyle(color:Colors.red),),
                             const SizedBox(height: 10,),
                             SizedBox(width: double.infinity,
-                              child:PrimaryButton(text: "Save Pole", onPressed: (){}),
+                              child:PrimaryButton(text: "Save Pole", onPressed: viewModel.submit33KVForm),
                             ),
 
                           ],

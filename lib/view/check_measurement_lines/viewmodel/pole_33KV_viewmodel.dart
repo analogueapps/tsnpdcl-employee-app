@@ -20,13 +20,13 @@ class Pole33kvViewmodel extends ChangeNotifier {
   Pole33kvViewmodel({required this.context, required this.args}) {
     startListening();
     getPolesOnFeeder();
-    // final String? jsonString = args['d'];
-    // print("argument d data: ${args['d']}");
-    //
-    // if (args['p'] == isTrue) {
-    //   docketEntity = DocketEntity.fromJson(jsonDecode(jsonString!));
-    //   print("docketEntity ${docketEntity!.id}");
-    // }
+    final String? jsonString = args['d'];
+    print("argument d data: ${args['d']}");
+
+    if (args['p'] == isTrue) {
+      docketEntity = DocketEntity.fromJson(jsonDecode(jsonString!));
+      print("docketEntity ${docketEntity!.id}");
+    }
   }
 
   @override
@@ -93,7 +93,11 @@ class Pole33kvViewmodel extends ChangeNotifier {
         if (poleID != null) {
           distanceDisplay = isTrue;
           distanceBtnPoles = calculateDistance(
-              latitude!, longitude!, poleLat as double, poleLon as double);
+              latitude!, longitude!,
+              double.parse(poleLat!),
+              double.parse(poleLon!)
+          );
+          print("distanceBtnPoles: $distanceBtnPoles");
           notifyListeners();
         } else {
           distanceDisplay = false;
@@ -150,7 +154,7 @@ class Pole33kvViewmodel extends ChangeNotifier {
     _selectedTappingPole = title;
     print("$_selectedTappingPole:  tap selected");
     if (selectedPole == "" ||
-        _selectedPole == null && selectedTappingPole != null) {
+        _selectedPole == null||_selectedPole=='Source Pole Not Mapped' && selectedTappingPole != null) {
       showAlertDialog(context,
           "Please choose Source Pole Num or check Source pole not mapped or origin Pole");
     } else {
@@ -327,7 +331,7 @@ class Pole33kvViewmodel extends ChangeNotifier {
       poleID = value.id.toString() ?? "";
       poleLat = value.lat.toString() ?? "";
       poleLon = value.lon.toString() ?? "";
-      AlertUtils.showSnackBar(context, selectedPoleFeeder as String, isFalse);
+      AlertUtils.showSnackBar(context, poleFeederSelected! , isFalse);
 
       print("POle Num: $poleFeederSelected");
       print("Pole ID: $poleID");
@@ -493,68 +497,309 @@ class Pole33kvViewmodel extends ChangeNotifier {
     poleNumber.text = (series != null ? "$series-$poleNum" : poleNum)!;
   }
 
-  String? _selectedCapacity;
-
-  String? get selectedCapacity => _selectedCapacity;
-
-  final List<SubstationModel> _capacity = [
-    SubstationModel(optionCode: "0", optionName: "SELECT"),
-    SubstationModel(optionCode: "1", optionName: "1x10(L)"),
-    SubstationModel(optionCode: "1", optionName: "1x10KVA(AGL)"),
-    SubstationModel(optionCode: "3", optionName: "1x63+2x15KVA"),
-    SubstationModel(optionCode: "1", optionName: "1x100"),
-    SubstationModel(optionCode: "1", optionName: "1x75"),
-    SubstationModel(optionCode: "1", optionName: "1x50"),
-    SubstationModel(optionCode: "2", optionName: "1x100+1x15(L)"),
-    SubstationModel(optionCode: "2", optionName: "1x100+1x160"),
-    SubstationModel(optionCode: "1", optionName: "1x15 (Agl)"),
-    SubstationModel(optionCode: "1", optionName: "1x15(L)"),
-    SubstationModel(optionCode: "1", optionName: "1x16"),
-    SubstationModel(optionCode: "2", optionName: "1x16+1x15(L)"),
-    SubstationModel(optionCode: "1", optionName: "1x160"),
-    SubstationModel(optionCode: "1", optionName: "1x200"),
-    SubstationModel(optionCode: "1", optionName: "1x25"),
-    SubstationModel(optionCode: "1", optionName: "1x40"),
-    SubstationModel(optionCode: "1", optionName: "1x25L"),
-    SubstationModel(optionCode: "2", optionName: "1x25+1x15(L)"),
-    SubstationModel(optionCode: "1", optionName: "1x250"),
-    SubstationModel(optionCode: "1", optionName: "1x300"),
-    SubstationModel(optionCode: "1", optionName: "1x315"),
-    SubstationModel(optionCode: "1", optionName: "1x400"),
-    SubstationModel(optionCode: "1", optionName: "1x500"),
-    SubstationModel(optionCode: "1", optionName: "1x63"),
-    SubstationModel(optionCode: "2", optionName: "1x63+1x15(L)"),
-    SubstationModel(optionCode: "1", optionName: "1x630"),
-    SubstationModel(optionCode: "1", optionName: "1x650"),
-    SubstationModel(optionCode: "1", optionName: "1x750"),
-    SubstationModel(optionCode: "1", optionName: "1x800"),
-    SubstationModel(optionCode: "1", optionName: "1x1000"),
-    SubstationModel(optionCode: "1", optionName: "1x1600"),
-    SubstationModel(optionCode: "1", optionName: "1x2000"),
-    SubstationModel(optionCode: "1", optionName: "1x2500"),
-    SubstationModel(optionCode: "2", optionName: "2x100"),
-    SubstationModel(optionCode: "2", optionName: "2x150"),
-    SubstationModel(optionCode: "2", optionName: "2x16"),
-    SubstationModel(optionCode: "2", optionName: "2x25"),
-    SubstationModel(optionCode: "2", optionName: "2x15"),
-    SubstationModel(optionCode: "2", optionName: "2x250"),
-    SubstationModel(optionCode: "2", optionName: "2x63"),
-    SubstationModel(optionCode: "3", optionName: "3x10(A)"),
-    SubstationModel(optionCode: "3", optionName: "3x16"),
-    SubstationModel(optionCode: "3", optionName: "3x25"),
-    SubstationModel(optionCode: "3", optionName: "3x15"),
-    SubstationModel(optionCode: "2", optionName: "1x16+1x63"),
+  //NOT USED
+  bool isHTServiceChecked = false;
+  List<String> circles = [
+    "KHAMMAM", "HANAMKONDA", "KARIMNAGAR", "NIZAMABAD",
+    "ADILABAD", "KOTHAGUDEM", "WARANGAL", "JANGAON",
+    "BHUPALPALLY", "MAHABUBABAD", "JAGITYAL", "PEDDAPALLY",
+    "KAMAREDDY", "NIRMAL", "ASIFABAD", "MANCHERIAL"
   ];
 
-  List<SubstationModel> get capacity => _capacity;
-
-  int? _selectedCapacityIndex;
-
-  int? get selectedCapacityIndex => _selectedCapacityIndex;
-
-  void onListCapacitySelected(int? index) {
-    _selectedCapacityIndex = index;
-    _selectedCapacity = index != null ? _capacity[index].optionCode : null;
-    print("$_selectedCapacity: selected Capacity ");
+  void showCircleDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Choose Circle'),
+          content: Container(
+            width: double.maxFinite,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: circles.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(circles[index]),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    loadHTServices((index + 1).toString());
+                  },
+                );
+              },
+            ),
+          ),
+        );
+      },
+    );
   }
+
+  Future<void> loadHTServices(String cicleCode) async {
+
+    _isLoading = isTrue;
+
+    final requestData = {
+      "authToken":
+      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "api": Apis.API_KEY,
+      "cc": "",
+    };
+
+    final payload = {
+      "path": "/getHTServicesOfCircle",
+      "apiVersion": "1.0.1",
+      "method": "POST",
+      "data": jsonEncode(requestData),
+    };
+
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    _isLoading = isFalse;
+
+    try {
+      if (response != null) {
+        if (response.data is String) {
+          response.data = jsonDecode(response.data); // Parse string to JSON
+        }
+        if (response.statusCode == successResponseCode) {
+          if (response.data['tokenValid'] == isTrue) {
+            if (response.data['success'] == isTrue) {
+              if (response.data['objectJson'] != null) {
+                /////////////////////<- Didn't implemented in TSNPDCL CODE->//////////////////////////
+              } else {
+                showAlertDialog(context, "No  HT Services found!");
+              }
+            } else {
+              showAlertDialog(context,
+                  "There is no existing Proposal under the selected substation");
+            }
+          } else {
+            showSessionExpiredDialog(context);
+          }
+        } else {
+          showAlertDialog(context, response.data['message']);
+        }
+      }
+    } catch (e) {
+      showErrorDialog(context, "An error occurred. Please try again.");
+      rethrow;
+    }
+
+    notifyListeners();
+  }
+
+  Future<void> submit33KVForm() async {
+    if (formKey.currentState!.validate()) {
+      formKey.currentState!.save();
+      notifyListeners();
+
+      if (!validateForm()) {
+        return;
+      } else if (totalAccuracy! > 15.0) {
+        showAlertDialog(context,
+            "Please wait until we reach minimum GPS accuracy i.e 15.0 mts");
+      } else {
+        save33KVPole();
+        print("in else block");
+      }
+    }
+  }
+  Future<void> save33KVPole() async {
+    _isLoading = isTrue;
+    notifyListeners();
+
+    final requestData = {
+      "loadLatestDataOnly": true,
+      "maxId": maxId, // from map
+      "authToken":
+      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "api": Apis.API_KEY,
+      "fc": args["fc"],
+      "ssc": args["ssc"],
+      "fv": "11KV",
+      "ssv": "220\\/132KV\\/33KV",
+      "not": selectedPole == "Source Pole Not Mapped" ? true : false,
+      "origin": selectedPole == "Origin Pole" ? true : false,
+      "tap": selectedTappingPole == "Straight Tapping"
+          ? "s"
+          : selectedTappingPole == "Left Tapping"
+          ? "l"
+          : "r",
+      "pt": selectedSecondGroup.isNotEmpty
+          ? selectedSecondGroup[0]
+          : (selectedFirstGroup.isNotEmpty ? selectedFirstGroup[0] : null),
+      "ph": selectedPoleHeight,
+      "nockt": selectedCircuits,
+      "formation": selectedFormation,
+      "typeOfPoint": selectedTypePoint,
+      "pid": docketEntity!.id,
+      "polenum": poleNumber.text.isEmpty ? "0000" : poleNumber.text.trim(),
+      if (selectedPole != "Origin Pole") ...{
+        "series": series,
+      },
+      if (selectedPole == "" || selectedPole == null) ...{
+        "sid": poleID,
+        "slat": poleLat,
+        "slon": poleLon,
+      },
+      "cross": buildCrossingString(),
+      "connLoad": selectedConnected == "No Load" ? "N" : "NEW SS",
+      "sscap":selectedConnected=="Sub Station"?subStationCapacity.text.trim():null,
+      "cs": selectedConductor,
+      "ss":"NA",
+      "lat": "$latitude",
+      "lon": "$longitude",
+    };
+
+    final payload = {
+      "path": "/saveDigitalFeederPoleForExistingFeeder",
+      "apiVersion": "1.0.1",
+      "method": "POST",
+      "data": jsonEncode(requestData),
+    };
+
+    print("payload: ${jsonEncode(payload)}");
+
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+
+    try {
+      if (response != null) {
+        if (response.data is String) {
+          response.data = jsonDecode(response.data);
+        }
+        if (response.statusCode == successResponseCode) {
+          if (response.data['tokenValid'] == isTrue) {
+            if (response.data['success'] == isTrue) {
+              if (response.data['objectJson'] != null) {
+                if (response.data["message"] != null) {
+                  showSuccessDialog(
+                    context,
+                    response.data["message"],
+                        () {
+                      Navigator.pop(context);
+                      resetForm();
+                    },
+                  );
+                }
+                List<dynamic> jsonList;
+                if (response.data['objectJson'] is String) {
+                  jsonList = jsonDecode(response.data['objectJson']);
+                } else if (response.data['objectJson'] is List) {
+                  jsonList = response.data['objectJson'];
+                } else {
+                  jsonList = [];
+                }
+                print("data added in docketList");
+                notifyListeners();
+              } else {
+                showAlertDialog(context, "Unable to process your request!");
+              }
+            } else {
+              showAlertDialog(context,
+                  "There are no existing Proposals under the selected Substation");
+            }
+          } else {
+            showSessionExpiredDialog(context);
+          }
+        }
+      } else {
+        showAlertDialog(context,
+            "Error connecting to the server, Please try after sometime");
+      }
+    } catch (e) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showErrorDialog(context, "An error occurred. Please try again.");
+      });
+      rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+
+    notifyListeners();
+  }
+
+  bool validateForm() {
+    if ((selectedPole == "" || selectedPole == null) &&
+        selectedPoleFeeder==null) {
+      AlertUtils.showSnackBar(
+          context, "Please select the source pole to the current pole", isTrue);
+      return false;
+    } else if (poleNumber.text == "" && selectedPole == "") {
+      AlertUtils.showSnackBar(context, "Please enter Pole Number", isTrue);
+      return false;
+    } else if (selectedTappingPole == "" || selectedTappingPole == null) {
+      AlertUtils.showSnackBar(
+          context,
+          "Please select tapping type from previous pole to current pole",
+          isTrue);
+      return false;
+    } else if (selectedFirstGroup.isEmpty && selectedSecondGroup.isEmpty) {
+      AlertUtils.showSnackBar(context, "Please select the  Pole Type", isTrue);
+      return false;
+    } else if (_selectedPoleHeight == "" || _selectedPoleHeight == null) {
+      AlertUtils.showSnackBar(context, "Please select the Pole Height", isTrue);
+      return false;
+    } else if (selectedCircuits == "" || selectedCircuits == null) {
+      AlertUtils.showSnackBar(context,
+          "Please select the no.of circuits on the current pole", isTrue);
+      return false;
+    } else if (selectedFormation == "" || selectedFormation == null) {
+      AlertUtils.showSnackBar(
+          context, "Please select the formation type on pole", isTrue);
+      return false;
+    } else if (selectedTypePoint == "" || selectedTypePoint == null) {
+      AlertUtils.showSnackBar(
+          context,
+          "Please select the type of point (Cut Point/End Point/Pin Point)",
+          isTrue);
+      return false;
+    } else if (selectedCrossings.isEmpty || selectedCrossings == null) {
+      AlertUtils.showSnackBar(context, "Please select any crossing", isTrue);
+      return false;
+    } else if (selectedConnected == "" || selectedConnected == null) {
+      AlertUtils.showSnackBar(context,
+          "Please select the any load connected on the current pole", isTrue);
+      return false;
+    } //DTR
+    else if (selectedConnected == "Sub Station" &&
+        (subStationCapacity.text == "" || subStationCapacity.text == null)) {
+      AlertUtils.showSnackBar(
+          context, "Please enter the SubStation Capacity ", isTrue);
+      return false;
+    } else if (_selectedConductor == "" || _selectedConductor == null) {
+      AlertUtils.showSnackBar(
+          context,
+          "Please select the conductor size from previous pole to this pole",
+          isTrue);
+      return false;
+    } else if ((latitude == "" && longitude == "") ||
+        (latitude == null && longitude == null)) {
+      //location
+      AlertUtils.showSnackBar(
+          context, "Please wait until we capture your location. Please make sure you have turned on your location", isTrue);
+      return false;
+    }
+    return true;
+  }
+
+  void resetForm() {
+    _selectedPole = "";
+    poleNumber.clear();
+    _selectedTappingPole = null;
+    selectedFirstGroup.clear();
+    selectedSecondGroup.clear();
+    _selectedPoleHeight="";
+    _selectedCircuits="";
+    _selectedFormation="";
+    _selectedTypePoint="";
+    selectedCrossings.clear();
+    _selectedConnected="";
+    subStationCapacity.clear();
+    _selectedConductor="";
+    longitude=null;
+    latitude=null;
+    notifyListeners();
+  }
+
 }

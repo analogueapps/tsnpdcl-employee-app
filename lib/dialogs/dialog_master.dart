@@ -54,6 +54,41 @@ Future<void> showAlertDialog(BuildContext context, String message) async {
     Navigation.instance.canPop();
   }
 }
+void showAlertDialogPopScreen(BuildContext context, String message) async{
+  // showDialog(
+  //   context: context,
+  //   barrierDismissible: false, // user must tap button
+  //   builder: (BuildContext context) {
+  //     return AlertDialog(
+  //       title: const Text("Alert"),
+  //       content: Text(message),
+  //       actions: <Widget>[
+  //         TextButton(
+  //           child: Text("OK"),
+  //           onPressed: () {
+  //             Navigator.of(context).pop(); // Close the dialog
+  //             Navigator.of(context).pop(null); // Pop the screen
+  //           },
+  //         ),
+  //       ],
+  //     );
+  //   },
+  // );
+
+  final result = await showOkAlertDialog(
+      context: context,
+      title: "Alert",
+      message: message,
+      okLabel: "OK",
+      barrierDismissible: false
+  );
+
+  if (result == OkCancelResult.ok) {
+    Navigation.instance.canPop();
+    Navigator.pop(context, null);
+  }
+}
+
 
 Future<void> showErrorDialog(BuildContext context, String message) async {
   final result = await showOkAlertDialog(
