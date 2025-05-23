@@ -12,6 +12,7 @@ import 'package:tsnpdcl_employee/network/api_provider.dart';
 import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
+import 'package:tsnpdcl_employee/view/check_measurement_lines/model/check_measure_11kv_model.dart';
 import 'package:tsnpdcl_employee/view/check_measurement_lines/model/docket_model.dart';
 import 'package:tsnpdcl_employee/view/check_measurement_lines/model/polefeeder_model.dart';
 import '../../dtr_master/model/circle_model.dart';
@@ -280,6 +281,53 @@ class Check11kvViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
+  //Pole Details
+  List<String> poleDetailsName = [
+    "V Cross Arm ",
+    "Horiz. Cross Arm",
+    "Channet Cross Arm",
+    "Side Arm",
+  ];
+  String? _selectedPoleDetailsName;
+  String? get selectedPoleDetailsName => _selectedPoleDetailsName;
+
+  void setSelectedPoleDetailName(String qty) {
+    if (_selectedPoleDetailsName == qty) {
+      _selectedPoleDetailsName = null; // Unselect if tapped again
+    } else {
+      _selectedPoleDetailsName = qty;
+    }
+    print("selectedPoleDetailsName: $_selectedPoleDetailsName");
+    notifyListeners();
+  }
+
+
+
+  List<int> poleQty=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
+  final List<PoleItem> _poleItems = [
+    PoleItem(title: "V Cross Arm"),
+    PoleItem(title: "Horiz. Cross Arm"),
+    PoleItem(title: "Channet Cross Arm"),
+    PoleItem(title: "Side Arm"),
+  ];
+
+  List<PoleItem> get poleItems => _poleItems;
+
+
+  void toggleSelection(int index) {
+    _poleItems[index].isSelected = !_poleItems[index].isSelected;
+    if (!_poleItems[index].isSelected) {
+      _poleItems[index].selectedQty = null;
+    }
+    notifyListeners();
+  }
+
+  void updateQty(int index, int? value) {
+    _poleItems[index].selectedQty = value;
+    notifyListeners();
+  }
+
+
   //Connected Load
   String? _selectedConnected;
 
@@ -481,6 +529,61 @@ class Check11kvViewmodel extends ChangeNotifier {
   void setPoleNum() {
     poleNumber.text = (series != null ? "$series-$poleNum" : poleNum)!;
   }
+
+  String? _selectedCapacity;
+
+  String? get selectedCapacity => _selectedCapacity;
+
+  final List<SubstationModel> _capacity = [
+    SubstationModel(optionCode: "0", optionName: "SELECT"),
+    SubstationModel(optionCode: "1", optionName: "1x10(L)"),
+    SubstationModel(optionCode: "1", optionName: "1x10KVA(AGL)"),
+    SubstationModel(optionCode: "3", optionName: "1x63+2x15KVA"),
+    SubstationModel(optionCode: "1", optionName: "1x100"),
+    SubstationModel(optionCode: "1", optionName: "1x75"),
+    SubstationModel(optionCode: "1", optionName: "1x50"),
+    SubstationModel(optionCode: "2", optionName: "1x100+1x15(L)"),
+    SubstationModel(optionCode: "2", optionName: "1x100+1x160"),
+    SubstationModel(optionCode: "1", optionName: "1x15 (Agl)"),
+    SubstationModel(optionCode: "1", optionName: "1x15(L)"),
+    SubstationModel(optionCode: "1", optionName: "1x16"),
+    SubstationModel(optionCode: "2", optionName: "1x16+1x15(L)"),
+    SubstationModel(optionCode: "1", optionName: "1x160"),
+    SubstationModel(optionCode: "1", optionName: "1x200"),
+    SubstationModel(optionCode: "1", optionName: "1x25"),
+    SubstationModel(optionCode: "1", optionName: "1x40"),
+    SubstationModel(optionCode: "1", optionName: "1x25L"),
+    SubstationModel(optionCode: "2", optionName: "1x25+1x15(L)"),
+    SubstationModel(optionCode: "1", optionName: "1x250"),
+    SubstationModel(optionCode: "1", optionName: "1x300"),
+    SubstationModel(optionCode: "1", optionName: "1x315"),
+    SubstationModel(optionCode: "1", optionName: "1x400"),
+    SubstationModel(optionCode: "1", optionName: "1x500"),
+    SubstationModel(optionCode: "1", optionName: "1x63"),
+    SubstationModel(optionCode: "2", optionName: "1x63+1x15(L)"),
+    SubstationModel(optionCode: "1", optionName: "1x630"),
+    SubstationModel(optionCode: "1", optionName: "1x650"),
+    SubstationModel(optionCode: "1", optionName: "1x750"),
+    SubstationModel(optionCode: "1", optionName: "1x800"),
+    SubstationModel(optionCode: "1", optionName: "1x1000"),
+    SubstationModel(optionCode: "1", optionName: "1x1600"),
+    SubstationModel(optionCode: "1", optionName: "1x2000"),
+    SubstationModel(optionCode: "1", optionName: "1x2500"),
+    SubstationModel(optionCode: "2", optionName: "2x100"),
+    SubstationModel(optionCode: "2", optionName: "2x150"),
+    SubstationModel(optionCode: "2", optionName: "2x16"),
+    SubstationModel(optionCode: "2", optionName: "2x25"),
+    SubstationModel(optionCode: "2", optionName: "2x15"),
+    SubstationModel(optionCode: "2", optionName: "2x250"),
+    SubstationModel(optionCode: "2", optionName: "2x63"),
+    SubstationModel(optionCode: "3", optionName: "3x10(A)"),
+    SubstationModel(optionCode: "3", optionName: "3x16"),
+    SubstationModel(optionCode: "3", optionName: "3x25"),
+    SubstationModel(optionCode: "3", optionName: "3x15"),
+    SubstationModel(optionCode: "2", optionName: "1x16+1x63"),
+  ];
+
+  List<SubstationModel> get capacity => _capacity;
 
   //NOT USED
   bool isHTServiceChecked = false;
@@ -749,12 +852,12 @@ class Check11kvViewmodel extends ChangeNotifier {
           "Please select the any load connected on the current pole", isTrue);
       return false;
     } //DTR
-    else if (selectedConnected == "Sub Station" &&
-        (subStationCapacity.text == "" || subStationCapacity.text == null)) {
-      AlertUtils.showSnackBar(
-          context, "Please enter the SubStation Capacity ", isTrue);
-      return false;
-    } else if (_selectedConductor == "" || _selectedConductor == null) {
+      else if (selectedConnected == "DTR" &&
+          (selectedCapacity == "" || selectedCapacity == null)) {
+        AlertUtils.showSnackBar(
+            context, "Please select the DTR capacity", isTrue);
+        return false;
+      } else if (_selectedConductor == "" || _selectedConductor == null) {
       AlertUtils.showSnackBar(
           context,
           "Please select the conductor size from previous pole to this pole",

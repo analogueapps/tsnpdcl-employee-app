@@ -1,6 +1,6 @@
 class DocketEntity {
   final int id;
-  final String estimateNo;
+  final String? estimateNo;
   final String? circleId;
   final String? circle;
   final String? divisionCode;

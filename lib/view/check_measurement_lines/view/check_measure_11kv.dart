@@ -148,7 +148,7 @@ class CheckMeasure11kv extends StatelessWidget {
                                       checkbox(
                                         context,
                                         "Spun Pole",
-                                        viewModel.selectedFirstGroup.contains("RS joist") ? "RS joist" : null,
+                                        viewModel.selectedFirstGroup.contains("Spun Pole") ? "Spun Pole" : null,
                                             (val) => viewModel.toggleFirstGroup(val),
                                       ),
                                       checkbox(
@@ -170,15 +170,15 @@ class CheckMeasure11kv extends StatelessWidget {
                                         context,
                                         "Tower(M+3)",
                                         viewModel.selectedFirstGroup
-                                            .contains("Tower")
-                                            ? "Tower"
+                                            .contains("Tower(M+3)")
+                                            ? "Tower(M+3)"
                                             : null,
                                             (val) => viewModel.toggleFirstGroup(val),
                                       ),
                                       checkbox(
                                         context,
                                         "Tower(M+9)",
-                                        viewModel.selectedFirstGroup.contains("RS joist") ? "RS joist" : null,
+                                        viewModel.selectedFirstGroup.contains("Tower(M+9)") ? "Tower(M+9)" : null,
                                             (val) => viewModel.toggleFirstGroup(val),
                                       ),
 
@@ -193,7 +193,7 @@ class CheckMeasure11kv extends StatelessWidget {
                                       checkbox(
                                         context,
                                         "Tubular",
-                                        viewModel.selectedFirstGroup.contains("RS joist") ? "RS joist" : null,
+                                        viewModel.selectedFirstGroup.contains("Tubular") ? "Tubular" : null,
                                             (val) => viewModel.toggleFirstGroup(val),
                                       ),
                                       checkbox(
@@ -217,13 +217,13 @@ class CheckMeasure11kv extends StatelessWidget {
                                       checkbox(
                                         context,
                                         "Tower(M+6)",
-                                        viewModel.selectedFirstGroup.contains("RS joist") ? "RS joist" : null,
+                                        viewModel.selectedFirstGroup.contains("Tower(M+6)") ? "Tower(M+6)" : null,
                                             (val) => viewModel.toggleFirstGroup(val),
                                       ),
                                       checkbox(
                                         context,
                                         "Tower(M+12)",
-                                        viewModel.selectedFirstGroup.contains("RS joist") ? "RS joist" : null,
+                                        viewModel.selectedFirstGroup.contains("Tower(M+12)") ? "Tower(M+12)" : null,
                                             (val) => viewModel.toggleFirstGroup(val),
                                       ),
                                     ],
@@ -326,8 +326,25 @@ class CheckMeasure11kv extends StatelessWidget {
                               ],
                             ),
                             // // Pole Details here [v cross Arm, Horiz. Cross Arm, Channel Cross Arm, Side Arm]
+                        Column(
+                          children: viewModel.poleItems.asMap().entries.map((entry) {
+                            final index = entry.key;
+                            final item = entry.value;
+                            return checkAndDrop(
+                              context,
+                              item.title,
+                              item.isSelected,
+                                  () => viewModel.toggleSelection(index),
+                              item.selectedQty,
+                              viewModel.poleQty,
+                                  (val) => viewModel.updateQty(index, val),
+                            );
+                          }).toList(),
+                        ),
                             // // Insulators[Pin Insulators, Disc, Shackles,
                             // // Support Type[Stud Pole, Stay Set]
+                            const Text("Pole Details"),
+
                             const Text("Any Crossing?"),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -638,6 +655,45 @@ class CheckMeasure11kv extends StatelessWidget {
       value: selectedList.contains(label),
       onChanged: isEnabled ? onChanged : null,
       controlAffinity: ListTileControlAffinity.leading,
+    );
+  }
+
+  Widget checkAndDrop(
+      BuildContext context,
+      String title,
+      bool isSelected,
+      VoidCallback onCheckboxToggle,
+      int? dropValue,
+      List<int> items,
+      ValueChanged<int?> onQtySelected,
+      ) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Expanded(
+          child: CheckboxListTile(
+            contentPadding: EdgeInsets.zero,
+            controlAffinity: ListTileControlAffinity.leading,
+            title: Text(title, style: const TextStyle(fontSize: 12)),
+            value: isSelected,
+            onChanged: (_) => onCheckboxToggle(),
+          ),
+        ),
+        SizedBox(width: 10,),
+        Expanded(child:
+        DropdownButton<int>(
+          hint: const Text("Select"),
+          value: dropValue,
+          items: items.map<DropdownMenuItem<int>>((entry) {
+            return DropdownMenuItem<int>(
+              value: entry,
+              child: Text(entry.toString()), // Convert int to String for display
+            );
+          }).toList(),
+          onChanged: isSelected ? onQtySelected : null,
+        ),
+        ),
+      ],
     );
   }
 }
