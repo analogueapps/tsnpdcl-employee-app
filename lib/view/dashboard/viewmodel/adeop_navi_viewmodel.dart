@@ -634,34 +634,34 @@ class AdeopNaviViewmodel extends ChangeNotifier {
             if(item.title == GlobalConstants.interruptionsTitle) {
               List<GlobalListDialogItem> globalListDialogItem = [];
               globalListDialogItem.addAll([
-                GlobalListDialogItem(
-                  title: "33KV Breakdown Entry",
-                  routeName: Routes.breakdown33kvScreen,
-                ),
-                GlobalListDialogItem(
-                  title: "View 33KV Breakdowns",
-                  routeName: Routes.view33kvBreakdownScreen,
-                ),
-                GlobalListDialogItem(
-                  title: "11KV Breakdown Entry",
-                  routeName: Routes.breakdown11kvScreen,
-                ),
-                GlobalListDialogItem(
-                  title: "View 11KV Breakdowns",
-                  routeName: Routes.view11kvBreakdownScreen,
-                ),
-                GlobalListDialogItem(
-                  title: "Interruptions Entry",
-                  routeName: Routes.interruptionsEntryScreen,
-                ),
-                GlobalListDialogItem(
-                  title: "SAIDI SAIFI CALCULATOR",
-                  routeName: Routes.saidiSaifiCalculatorScreen,
-                ),
-                GlobalListDialogItem(
-                    title: "VIEW SAIDI SAIFI",
-                    routeName: Routes.viewSaidiSaifiScreen
-                ),
+                // GlobalListDialogItem(
+                //   title: "33KV Breakdown Entry",
+                //   routeName: Routes.breakdown33kvScreen,
+                // ),
+                // GlobalListDialogItem(
+                //   title: "View 33KV Breakdowns",
+                //   routeName: Routes.view33kvBreakdownScreen,
+                // ),
+                // GlobalListDialogItem(
+                //   title: "11KV Breakdown Entry",
+                //   routeName: Routes.breakdown11kvScreen,
+                // ),
+                // GlobalListDialogItem(
+                //   title: "View 11KV Breakdowns",
+                //   routeName: Routes.view11kvBreakdownScreen,
+                // ),
+                // GlobalListDialogItem(
+                //   title: "Interruptions Entry",
+                //   routeName: Routes.interruptionsEntryScreen,
+                // ),
+                // GlobalListDialogItem(
+                //   title: "SAIDI SAIFI CALCULATOR",
+                //   routeName: Routes.saidiSaifiCalculatorScreen,
+                // ),
+                // GlobalListDialogItem(
+                //     title: "VIEW SAIDI SAIFI",
+                //     routeName: Routes.viewSaidiSaifiScreen
+                // ),
                 GlobalListDialogItem(
                     title: "View Report",
                     routeName: Routes.viewReportScreen

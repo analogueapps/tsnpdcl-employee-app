@@ -41,8 +41,8 @@ class _SplashScreenState extends State<SplashScreen>
 
   Future<void> onModelReady() async {
     if(SharedPreferenceHelper.getLoginStatus()) {
-      //Navigation.instance.pushAndRemoveUntil(Routes.universalDashboardScreen);
-      goToMainScreen();
+      Navigation.instance.pushAndRemoveUntil(Routes.universalDashboardScreen);
+      //goToMainScreen();
     } else {
       Navigation.instance.pushAndRemoveUntil(Routes.employeeIdLoginScreen);
     }

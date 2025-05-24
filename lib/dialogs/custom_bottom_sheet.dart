@@ -37,7 +37,7 @@ class CustomBottomSheet extends StatelessWidget {
                 ),
               ),
               Text(
-                title,
+                title.toUpperCase(),
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: 18,

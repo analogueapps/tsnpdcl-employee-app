@@ -97,6 +97,8 @@ class GlobalConstants {
 
   // Pdms menu
   static const String createPoleIndent = "Create pole indent";
+  static const String viewPurchaseOrders = "View Purchase Orders";
+  static const String viewPoleIndent = "View pole indent";
   static const String dis = "D.i's";
   static const String pendingVerification = "Pending verification";
   static const String verified = "Verified";
