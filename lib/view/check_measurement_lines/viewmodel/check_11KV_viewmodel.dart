@@ -54,6 +54,10 @@ class Check11kvViewmodel extends ChangeNotifier {
 
   final TextEditingController poleNumber = TextEditingController();
   final TextEditingController subStationCapacity = TextEditingController();
+  final TextEditingController particularsOfCrossing = TextEditingController();
+  final TextEditingController structureCode = TextEditingController();
+  final TextEditingController equipmentCode = TextEditingController();
+  final TextEditingController dtrSlNo = TextEditingController();
 
   bool serverCheck = false;
   bool deviceCheck = false;
@@ -304,6 +308,17 @@ class Check11kvViewmodel extends ChangeNotifier {
 
 
   List<int> poleQty=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
+
+  String? selectedPoleQty;
+
+  void updatePoleQtyForItem(String? newValue, int index) {
+    if (newValue != null) {
+      _poleItems[index].selectedQty = int.tryParse(newValue);
+      print("_poleItems[index].selectedQty: ${_poleItems[index].selectedQty}");
+      notifyListeners();
+    }
+  }
+
   final List<PoleItem> _poleItems = [
     PoleItem(title: "V Cross Arm"),
     PoleItem(title: "Horiz. Cross Arm"),
@@ -312,21 +327,66 @@ class Check11kvViewmodel extends ChangeNotifier {
   ];
 
   List<PoleItem> get poleItems => _poleItems;
-
-
   void toggleSelection(int index) {
     _poleItems[index].isSelected = !_poleItems[index].isSelected;
     if (!_poleItems[index].isSelected) {
       _poleItems[index].selectedQty = null;
     }
+    print("poleItems: ${poleItems.toString()}");
     notifyListeners();
+    //poleItems: [PoleItem(title: V Cross Arm, isSelected: false, selectedQty: null), PoleItem(title: Horiz. Cross Arm, isSelected: false, selectedQty: null), PoleItem(title: Channet Cross Arm, isSelected: true, selectedQty: 11), PoleItem(title: Side Arm, isSelected: false, selectedQty: null)]
   }
 
-  void updateQty(int index, int? value) {
-    _poleItems[index].selectedQty = value;
+  //Insulators:
+  final List<PoleItem> _poleInsulators = [
+    PoleItem(title: "Pin Insulators"),
+    PoleItem(title: "Disc"),
+    PoleItem(title: "Shackles"),
+  ];
+
+  List<PoleItem> get poleInsulators => _poleInsulators;
+  void toggleInsulators(int index) {
+    _poleInsulators[index].isSelected = !_poleInsulators[index].isSelected;
+    if (!_poleInsulators[index].isSelected) {
+      _poleInsulators[index].selectedQty = null;
+    }
+    print("poleInsulators: ${poleInsulators.toString()}");
     notifyListeners();
+    //poleItems: [PoleItem(title: V Cross Arm, isSelected: false, selectedQty: null), PoleItem(title: Horiz. Cross Arm, isSelected: false, selectedQty: null), PoleItem(title: Channet Cross Arm, isSelected: true, selectedQty: 11), PoleItem(title: Side Arm, isSelected: false, selectedQty: null)]
   }
 
+  void updatePoleInsulators(String? newValue, int index) {
+    if (newValue != null) {
+      _poleInsulators[index].selectedQty = int.tryParse(newValue);
+      print("PoleInsulators[index].selectedQty: ${_poleInsulators[index].selectedQty}");
+      notifyListeners();
+    }
+  }
+
+  //Support Type
+  final List<PoleItem> _poleSupport = [
+    PoleItem(title: "Stud Pole"),
+    PoleItem(title: "Stay set"),
+  ];
+
+  List<PoleItem> get poleSupport => _poleSupport;
+  void toggleSupport(int index) {
+    _poleSupport[index].isSelected = !_poleSupport[index].isSelected;
+    if (!_poleSupport[index].isSelected) {
+      _poleSupport[index].selectedQty = null;
+    }
+    print("poleSupport: ${poleSupport.toString()}");
+    notifyListeners();
+    //poleItems: [PoleItem(title: V Cross Arm, isSelected: false, selectedQty: null), PoleItem(title: Horiz. Cross Arm, isSelected: false, selectedQty: null), PoleItem(title: Channet Cross Arm, isSelected: true, selectedQty: 11), PoleItem(title: Side Arm, isSelected: false, selectedQty: null)]
+  }
+
+  void updatePoleSupport(String? newValue, int index) {
+    if (newValue != null) {
+      _poleSupport[index].selectedQty = int.tryParse(newValue);
+      print("poleSupport[index].selectedQty: ${_poleSupport[index].selectedQty}");
+      notifyListeners();
+    }
+  }
 
   //Connected Load
   String? _selectedConnected;
@@ -337,6 +397,19 @@ class Check11kvViewmodel extends ChangeNotifier {
     _selectedConnected = title;
     print("$_selectedConnected: Connected  selected");
     notifyListeners();
+  }
+
+  //Support Material
+  List<int> supportQty=[0,1,2,3,4,];
+  String? smSelected;
+
+  void updateSupportQty(String? newValue, String?  title) {
+    if (newValue != null) {
+      smSelected=newValue;
+
+      print("smSelected: $smSelected");
+      notifyListeners();
+    }
   }
 
 //Conductor Size

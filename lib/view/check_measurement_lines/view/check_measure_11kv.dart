@@ -6,6 +6,7 @@ import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/view/check_measurement_lines/model/polefeeder_model.dart';
 import 'package:tsnpdcl_employee/view/check_measurement_lines/viewmodel/check_11KV_viewmodel.dart';
+import 'package:tsnpdcl_employee/widget/fill_text_form_field.dart';
 import 'package:tsnpdcl_employee/widget/primary_button.dart';
 import 'package:tsnpdcl_employee/widget/view_detailed_lc_tile_widget.dart';
 
@@ -70,6 +71,7 @@ class CheckMeasure11kv extends StatelessWidget {
                               tileValue: " ${args["ssc"]}",
                               valueColor: Colors.green,
                             ),
+                            const Divider(color: Colors.grey,thickness: 0.2,),
                             ViewDetailedLcTileWidget(
                               tileKey: "Feeder",
                               tileValue: " ${args["fc"]}",
@@ -128,6 +130,7 @@ class CheckMeasure11kv extends StatelessWidget {
                               height: 10,
                             ),
                             const Text(" Generated Pole Num"),
+                            const Divider(color: Colors.grey,thickness: 0.2,),
                             // TextFormField(
                             //   controller: viewModel.poleNumber,
                             //   keyboardType: TextInputType.multiline,
@@ -231,6 +234,7 @@ class CheckMeasure11kv extends StatelessWidget {
                                 ),
                               ],
                             ),
+                            const Divider(color: Colors.grey,thickness: 0.2,),
                             const Text("Pole Height"),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -247,6 +251,7 @@ class CheckMeasure11kv extends StatelessWidget {
                                 );
                               }).toList(),
                             ),
+                            const Divider(color: Colors.grey,thickness: 0.2,),
                             const Text("No.of Circuits on pole"),
                             Column(
                               children: [
@@ -276,6 +281,7 @@ class CheckMeasure11kv extends StatelessWidget {
                                 ),
                               ],
                             ),
+                            const Divider(color: Colors.grey,thickness: 0.2,),
                             // // //
                             const Text("Formation"),
                             Column(
@@ -301,6 +307,7 @@ class CheckMeasure11kv extends StatelessWidget {
                                 ),
                               ],
                             ),
+                            const Divider(color: Colors.grey,thickness: 0.2,),
                             // // //
                             const Text("Type of point"),
                             Column(
@@ -325,7 +332,14 @@ class CheckMeasure11kv extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            // // Pole Details here [v cross Arm, Horiz. Cross Arm, Channel Cross Arm, Side Arm]
+                            const Center(child:Text("Pole Details"),),
+                        const Divider(color: Colors.grey,thickness: 0.2,),
+                        const Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                          Text("Cross Arm", style: TextStyle(color: Colors.grey, fontSize: doubleTwelve),),
+                          Text("QTY", style: TextStyle(color: Colors.grey, fontSize: doubleTwelve),)
+                        ],),
                         Column(
                           children: viewModel.poleItems.asMap().entries.map((entry) {
                             final index = entry.key;
@@ -335,16 +349,54 @@ class CheckMeasure11kv extends StatelessWidget {
                               item.title,
                               item.isSelected,
                                   () => viewModel.toggleSelection(index),
-                              item.selectedQty,
-                              viewModel.poleQty,
-                                  (val) => viewModel.updateQty(index, val),
+                              item.selectedQty?.toString(),
+                                  (newValue) => viewModel.updatePoleQtyForItem(newValue, index),
                             );
                           }).toList(),
                         ),
-                            // // Insulators[Pin Insulators, Disc, Shackles,
-                            // // Support Type[Stud Pole, Stay Set]
-                            const Text("Pole Details"),
-
+                            const Divider(color: Colors.grey,thickness: 0.2,),
+                            const Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Insulators", style: TextStyle(color: Colors.grey, fontSize: doubleTwelve),),
+                                Text("QTY", style: TextStyle(color: Colors.grey, fontSize: doubleTwelve),)
+                              ],),
+                            Column(
+                              children: viewModel.poleInsulators.asMap().entries.map((entry) {
+                                final index = entry.key;
+                                final item = entry.value;
+                                return checkAndDrop(
+                                  context,
+                                  item.title,
+                                  item.isSelected,
+                                      () => viewModel.toggleInsulators(index),
+                                  item.selectedQty?.toString(),
+                                      (newValue) => viewModel.updatePoleInsulators(newValue, index),
+                                );
+                              }).toList(),
+                            ),
+                            const Divider(color: Colors.grey,thickness: 0.2,),
+                            const Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Support Type", style: TextStyle(color: Colors.grey, fontSize: doubleTwelve),),
+                                Text("QTY", style: TextStyle(color: Colors.grey, fontSize: doubleTwelve),)
+                              ],),
+                            Column(
+                              children: viewModel.poleSupport.asMap().entries.map((entry) {
+                                final index = entry.key;
+                                final item = entry.value;
+                                return checkAndDrop(
+                                  context,
+                                  item.title,
+                                  item.isSelected,
+                                      () => viewModel.toggleSupport(index),
+                                  item.selectedQty?.toString(),
+                                      (newValue) => viewModel.updatePoleSupport(newValue, index),
+                                );
+                              }).toList(),
+                            ),
+                            const Divider(color: Colors.grey,thickness: 0.2,),
                             const Text("Any Crossing?"),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -496,7 +548,11 @@ class CheckMeasure11kv extends StatelessWidget {
                                 ),
                               ],
                             ),
+                           const SizedBox(height: 10,),
                             //Particulars of crossing(Optional)
+                            FillTextFormField(controller: viewModel.particularsOfCrossing, labelText: "Particulars of crossing(Optional)", keyboardType: TextInputType.text),
+                            const SizedBox(height: 10,),
+                            const Divider(color: Colors.grey,thickness: 0.2,),
                             const Text("Connected Load"),
                             Row(
                               children: [
@@ -514,40 +570,153 @@ class CheckMeasure11kv extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            // //Structure Details[Structure Code, Equipment Code]
-                            // Column(
-                            //   mainAxisAlignment: MainAxisAlignment.start,
-                            //   children: [
-                            //     const Text("Substation Code"),
-                            //     const SizedBox(width: 50,),
-                            //     SizedBox( width: 150,
-                            //       child:TextFormField(
-                            //         maxLines: 1,
-                            //         controller: viewModel.subStationCapacity,
-                            //         keyboardType: TextInputType.text,
-                            //         decoration: const InputDecoration(
-                            //           hintText:"2X5MVA",
-                            //           border: OutlineInputBorder(),
-                            //           alignLabelWithHint: true,
-                            //         ),
-                            //       ),
-                            //     ),
-                            //   ],
-                            // ),
+                            const Divider(color: Colors.grey,thickness: 0.2,),
+                            //Structure Details[Structure Code, Equipment Code]
+                            const Center(child:Text("Structure Details"),),
+                            FillTextFormField(
+                              labelText: "Structure Code",
+                              controller: viewModel.particularsOfCrossing,
+                              keyboardType: TextInputType.text,
+                            ),
+                           const SizedBox(height: 10,),
+                            FillTextFormField(
+                              labelText: "Equipment Code",
+                              controller: viewModel.equipmentCode,
+                              keyboardType: TextInputType.text,
+                            ),
+                            const SizedBox(height: doubleFifty,
+                            child:Center(child:Text("DTR Details"),),
+                            ),
+                            //DTR(Details): DTR Phase, DTR Capacity
+                            // DTR Make
+                            // DTR Sl.No
+                            // Year Of Manufacture
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const Text("DTR Phase", style: TextStyle(fontSize: 12),),
+                                        DropdownButton<PoleFeederEntity>(
+                                          isExpanded: true,
+                                          hint: const Text("DTR Phase"),
+                                          value: viewModel.selectedPoleFeeder,
+                                          items: viewModel.poleFeederList
+                                              .map((item) {
+                                            final displayText = item.tempSeries != null && item.tempSeries!.isNotEmpty
+                                                ? '${item.tempSeries}-${item.poleNum}'
+                                                : item.poleNum ?? '';
+                                            return DropdownMenuItem<PoleFeederEntity>(
+                                              value: item,
+                                              child: Text(displayText),
+                                            );
+                                          })
+                                              .toList(),
+                                          onChanged: (value) {
+                                            viewModel.onListPoleFeederChange(value);
+                                          },
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                               const SizedBox(width: 10,),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const Text("DTR Capacity", style: TextStyle(fontSize: 12),),
+                                      DropdownButton<PoleFeederEntity>(
+                                          isExpanded: true,
+                                          hint: const Text("Select"),
+                                          value: viewModel.selectedPoleFeeder,
+                                          items: viewModel.poleFeederList
+                                              .map((item) {
+                                            final displayText = item.tempSeries != null && item.tempSeries!.isNotEmpty
+                                                ? '${item.tempSeries}-${item.poleNum}'
+                                                : item.poleNum ?? '';
+                                            return DropdownMenuItem<PoleFeederEntity>(
+                                              value: item,
+                                              child: Text(displayText),
+                                            );
+                                          })
+                                              .toList(),
+                                          onChanged: (value) {
+                                            viewModel.onListPoleFeederChange(value);
+                                          },
+                                        ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                            const SizedBox(height: doubleTwenty,),
+                            Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text('DTR Make', style: TextStyle(fontSize: 12),),
+                                  DropdownButton<PoleFeederEntity>(
+                                    isExpanded: true,
+                                    hint: const Text("Select an option"),
+                                    value: viewModel.selectedPoleFeeder,
+                                    items: viewModel.poleFeederList
+                                        .map((item) {
+                                      final displayText = item.tempSeries != null && item.tempSeries!.isNotEmpty
+                                          ? '${item.tempSeries}-${item.poleNum}'
+                                          : item.poleNum ?? '';
+                                      return DropdownMenuItem<PoleFeederEntity>(
+                                        value: item,
+                                        child: Text(displayText),
+                                      );
+                                    })
+                                        .toList(),
+                                    onChanged: (value) {
+                                      viewModel.onListPoleFeederChange(value);
+                                    },
+                                  ),
+                                ]),
+                               const SizedBox(height: doubleTwenty,),
+                                FillTextFormField(controller: viewModel.dtrSlNo, labelText: "DTR Sl.No", keyboardType: TextInputType.text),
+                            const SizedBox(height: doubleTwenty,),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text("Year Of Manufacturing", style: TextStyle(fontSize: 12),),
+                                DropdownButton<PoleFeederEntity>(
+                                  isExpanded: true,
+                                  hint: const Text("Select"),
+                                  value: viewModel.selectedPoleFeeder,
+                                  items: viewModel.poleFeederList
+                                      .map((item) {
+                                    final displayText = item.tempSeries != null && item.tempSeries!.isNotEmpty
+                                        ? '${item.tempSeries}-${item.poleNum}'
+                                        : item.poleNum ?? '';
+                                    return DropdownMenuItem<PoleFeederEntity>(
+                                      value: item,
+                                      child: Text(displayText),
+                                    );
+                                  })
+                                      .toList(),
+                                  onChanged: (value) {
+                                    viewModel.onListPoleFeederChange(value);
+                                  },
+                                ),
+                              ],
+                            ),
+                            // const SizedBox(height: doubleTwenty,),
+                            const SizedBox(height: doubleThirty, child: Text("Support Material"),),
+                            // textDropDown("Tlting Type AB Switch",viewModel.smSelected,viewModel.supportQty, )
 
-                            // //DTR(Details): DTR Phase, DTR Capacity
-                            //DTR Make
-                            //DTR Sl.No
-                            //Year Of Manufacture
 
 
-                            // //Support Material
-                            //Tilting Type AB Switch
-                            //Horizontal Type AB Swith
-                            //HG Fuse Set
-                            //LT Distribution box
-                            //Plint Type
-                            //Earthing Type, No.of earth pits
+
+                            //Support Material
+                            // Tilting Type AB Switch
+                            // Horizontal Type AB Swith
+                            // HG Fuse Set
+                            // LT Distribution box
+                            // Plint Type
+                            // Earthing Type, No.of earth pits
                             const Text("Conductor Size"),
                             Row(
                               children: [
@@ -663,36 +832,70 @@ class CheckMeasure11kv extends StatelessWidget {
       String title,
       bool isSelected,
       VoidCallback onCheckboxToggle,
-      int? dropValue,
-      List<int> items,
-      ValueChanged<int?> onQtySelected,
+      String? dropValue,
+      ValueChanged<String?> onDropdownChanged,
       ) {
+    return Consumer<Check11kvViewmodel>(
+      builder: (context, viewModel, child) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Expanded(
+              child: CheckboxListTile(
+                contentPadding: EdgeInsets.zero,
+                controlAffinity: ListTileControlAffinity.leading,
+                title: Text(title, style: const TextStyle(fontSize: 12)),
+                value: isSelected,
+                onChanged: (_) => onCheckboxToggle(),
+              ),
+            ),
+            SizedBox(width: 10),
+            Expanded(
+              child: DropdownButtonFormField<String>(
+                value: dropValue,
+                hint: Text("Select"),
+                isExpanded: true,
+                items: viewModel.poleQty.map((int value) {
+                  final stringValue = value.toString();
+                  return DropdownMenuItem<String>(
+                    value: stringValue,
+                    child: Text(stringValue),
+                  );
+                }).toList(),
+                onChanged: onDropdownChanged,
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget textDropDown(
+    String title,
+    String? selectedValue,
+    List<int> smQty,
+    ValueChanged<String?> onDropdownChanged,
+  ) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
+        Text(title),
         Expanded(
-          child: CheckboxListTile(
-            contentPadding: EdgeInsets.zero,
-            controlAffinity: ListTileControlAffinity.leading,
-            title: Text(title, style: const TextStyle(fontSize: 12)),
-            value: isSelected,
-            onChanged: (_) => onCheckboxToggle(),
+          child: DropdownButtonFormField<String>(
+            value: selectedValue,
+            hint: Text("Select"),
+            isExpanded: true,
+            items: smQty.map((int value) {
+              final stringValue = value.toString();
+              return DropdownMenuItem<String>(
+                value: stringValue,
+                child: Text(stringValue),
+              );
+            }).toList(),
+            onChanged: onDropdownChanged,
           ),
-        ),
-        SizedBox(width: 10,),
-        Expanded(child:
-        DropdownButton<int>(
-          hint: const Text("Select"),
-          value: dropValue,
-          items: items.map<DropdownMenuItem<int>>((entry) {
-            return DropdownMenuItem<int>(
-              value: entry,
-              child: Text(entry.toString()), // Convert int to String for display
-            );
-          }).toList(),
-          onChanged: isSelected ? onQtySelected : null,
-        ),
-        ),
+        )
       ],
     );
   }
