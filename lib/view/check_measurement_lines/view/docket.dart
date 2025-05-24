@@ -66,10 +66,6 @@ class DocketScreen extends StatelessWidget {
                   ),
                   ),
                   const SizedBox(height: 8),
-                  Text(" ${item.ssName}"),
-                    Align(
-                      alignment: Alignment.centerRight,child:Text(" ${item.insertDate}", style: const TextStyle(fontSize: 12),),
-                    ),
                   const SizedBox(height: 10),
                     Align(
                       alignment: Alignment.centerRight,

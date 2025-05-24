@@ -28,6 +28,11 @@ class Check11kvViewmodel extends ChangeNotifier {
       docketEntity = DocketEntity.fromJson(jsonDecode(jsonString!));
       print("docketEntity ${docketEntity!.id}");
     }
+    yearList = List.generate(
+      currentYear - 1976 + 1, // Number of elements
+          (index) => (currentYear - index).toString(),
+    );
+    selectedYear = yearList[0];
   }
 
   @override
@@ -399,15 +404,32 @@ class Check11kvViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
+  //Year of Manufacturing
+  final int currentYear = DateTime.now().year;
+  List<String> yearList = [];
+  String? selectedYear;
+
+  void onListYearSelected(String? value) {
+    selectedYear = value;
+    notifyListeners();
+  }
+
+
+
   //Support Material
   List<int> supportQty=[0,1,2,3,4,];
-  String? smSelected;
+  Map<String, String?> smSelectedMap = {};
 
-  void updateSupportQty(String? newValue, String?  title) {
+  List<String> dropdownTitles = [
+    "Tilting Type AB Switch",
+    "Horizontal Type AB Switch",
+    "HG Fuse Set",
+  ];
+
+  void updateSupportQty(String? newValue, String title) {
     if (newValue != null) {
-      smSelected=newValue;
-
-      print("smSelected: $smSelected");
+      smSelectedMap[title] = newValue;
+      print("Updated $title to $newValue");
       notifyListeners();
     }
   }

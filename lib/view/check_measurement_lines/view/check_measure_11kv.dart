@@ -682,33 +682,32 @@ class CheckMeasure11kv extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text("Year Of Manufacturing", style: TextStyle(fontSize: 12),),
-                                DropdownButton<PoleFeederEntity>(
+                                DropdownButton<String>(
                                   isExpanded: true,
                                   hint: const Text("Select"),
-                                  value: viewModel.selectedPoleFeeder,
-                                  items: viewModel.poleFeederList
-                                      .map((item) {
-                                    final displayText = item.tempSeries != null && item.tempSeries!.isNotEmpty
-                                        ? '${item.tempSeries}-${item.poleNum}'
-                                        : item.poleNum ?? '';
-                                    return DropdownMenuItem<PoleFeederEntity>(
-                                      value: item,
-                                      child: Text(displayText),
+                                  value: viewModel.selectedYear,
+                                  items: viewModel.yearList.map((year) {
+                                    return DropdownMenuItem<String>(
+                                      value: year,
+                                      child: Text(year),
                                     );
-                                  })
-                                      .toList(),
-                                  onChanged: (value) {
-                                    viewModel.onListPoleFeederChange(value);
-                                  },
+                                  }).toList(),
+                                  onChanged:(value) => viewModel.onListYearSelected(value),
                                 ),
                               ],
                             ),
                             // const SizedBox(height: doubleTwenty,),
                             const SizedBox(height: doubleThirty, child: Text("Support Material"),),
-                            // textDropDown("Tlting Type AB Switch",viewModel.smSelected,viewModel.supportQty, )
-
-
-
+                          Column(
+                            children: viewModel.dropdownTitles.map((title) {
+                              return textDropDown(
+                                title,
+                                viewModel.smSelectedMap[title],
+                                viewModel.supportQty,
+                                    (newValue) => viewModel.updateSupportQty(newValue, title),
+                              );
+                            }).toList(),
+                          ),
 
                             //Support Material
                             // Tilting Type AB Switch
@@ -880,7 +879,7 @@ class CheckMeasure11kv extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(title),
+        Expanded(child: Text(title)),
         Expanded(
           child: DropdownButtonFormField<String>(
             value: selectedValue,
