@@ -21,7 +21,7 @@ class CheckMeasure11kv extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: CommonColors.colorPrimary,
         title: Text(
-          "Check 11kv".toUpperCase(),
+          "Check Measurement".toUpperCase(),
           style: const TextStyle(
               color: Colors.white,
               fontSize: toolbarTitleSize,
@@ -83,25 +83,25 @@ class CheckMeasure11kv extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     const Text('Previous Pole Num.'),
-                                    DropdownButton<PoleFeederEntity>(
-                                      isExpanded: true,
-                                      hint: const Text("Select an option"),
-                                      value: viewModel.selectedPoleFeeder,
-                                      items: viewModel.poleFeederList
-                                          .map((item) {
-                                        final displayText = item.tempSeries != null && item.tempSeries!.isNotEmpty
-                                            ? '${item.tempSeries}-${item.poleNum}'
-                                            : item.poleNum ?? '';
-                                        return DropdownMenuItem<PoleFeederEntity>(
-                                          value: item,
-                                          child: Text(displayText),
-                                        );
-                                      })
-                                          .toList(),
-                                      onChanged: (value) {
-                                        viewModel.onListPoleFeederChange(value);
-                                      },
-                                    ),
+                          GestureDetector(
+                            onTap: () {
+                              viewModel.selectMapOrList();
+                            },
+                            child: InputDecorator(
+                              decoration: InputDecoration(
+                                // labelText: 'Select an option',
+                                border: OutlineInputBorder(),
+                              ),
+                              child: Text(
+                                viewModel.selectedPoleFeeder != null
+                                    ? (viewModel.selectedPoleFeeder!.tempSeries != null &&
+                                    viewModel.selectedPoleFeeder!.tempSeries!.isNotEmpty
+                                    ? '${viewModel.selectedPoleFeeder!.tempSeries}-${viewModel.selectedPoleFeeder!.poleNum}'
+                                    : viewModel.selectedPoleFeeder!.poleNum ?? '')
+                                    : 'Tap to select',
+                              ),
+                            ),
+                          ),
                                   ]),
                             const SizedBox(
                               height: 10,
@@ -571,7 +571,9 @@ class CheckMeasure11kv extends StatelessWidget {
                               ],
                             ),
                             const Divider(color: Colors.grey,thickness: 0.2,),
-                            //Structure Details[Structure Code, Equipment Code]
+                            Visibility(
+                              visible: viewModel.selectedConnected=="DTR" || viewModel.selectedConnected==null,
+                              child: Column(children: [
                             const Center(child:Text("Structure Details"),),
                             FillTextFormField(
                               labelText: "Structure Code",
@@ -598,53 +600,42 @@ class CheckMeasure11kv extends StatelessWidget {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       const Text("DTR Phase", style: TextStyle(fontSize: 12),),
-                                        DropdownButton<PoleFeederEntity>(
-                                          isExpanded: true,
-                                          hint: const Text("DTR Phase"),
-                                          value: viewModel.selectedPoleFeeder,
-                                          items: viewModel.poleFeederList
-                                              .map((item) {
-                                            final displayText = item.tempSeries != null && item.tempSeries!.isNotEmpty
-                                                ? '${item.tempSeries}-${item.poleNum}'
-                                                : item.poleNum ?? '';
-                                            return DropdownMenuItem<PoleFeederEntity>(
-                                              value: item,
-                                              child: Text(displayText),
-                                            );
-                                          })
-                                              .toList(),
-                                          onChanged: (value) {
-                                            viewModel.onListPoleFeederChange(value);
-                                          },
-                                        ),
+                                      DropdownButton<String>(
+                                        isExpanded:true,
+                                        value: viewModel.selectedDtrPhase,
+                                        hint: Text("Select"),
+                                        items: viewModel.dtrPhase.map((String value) {
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(value),
+                                          );
+                                        }).toList(),
+                                        onChanged: (newValue)=>viewModel.onListDtrPhaseSelected(newValue),
+                                      ),
                                     ],
                                   ),
                                 ),
+                               ///Something wrong is happening here for both capacity and make after selecting the value is changing after sometime i click again it is updating
                                const SizedBox(width: 10,),
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       const Text("DTR Capacity", style: TextStyle(fontSize: 12),),
-                                      DropdownButton<PoleFeederEntity>(
-                                          isExpanded: true,
-                                          hint: const Text("Select"),
-                                          value: viewModel.selectedPoleFeeder,
-                                          items: viewModel.poleFeederList
-                                              .map((item) {
-                                            final displayText = item.tempSeries != null && item.tempSeries!.isNotEmpty
-                                                ? '${item.tempSeries}-${item.poleNum}'
-                                                : item.poleNum ?? '';
-                                            return DropdownMenuItem<PoleFeederEntity>(
-                                              value: item,
-                                              child: Text(displayText),
-                                            );
-                                          })
-                                              .toList(),
-                                          onChanged: (value) {
-                                            viewModel.onListPoleFeederChange(value);
-                                          },
-                                        ),
+                                      DropdownButton<int>(
+                                        isExpanded: true,
+                                        hint: const Text("Select an option"),
+                                        value: viewModel.selectedCapacityIndex,
+                                        items:viewModel.capacity.asMap().entries.map<DropdownMenuItem<int>>((entry) {
+                                          final index = entry.key;
+                                          final item = entry.value;
+                                          return DropdownMenuItem<int>(
+                                            value: index,
+                                            child: Text(item.optionName),
+                                          );
+                                        }).toList(),
+                                        onChanged: viewModel.onListCapacitySelected,
+                                      )
                                     ],
                                   ),
                                 )
@@ -655,23 +646,20 @@ class CheckMeasure11kv extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const Text('DTR Make', style: TextStyle(fontSize: 12),),
-                                  DropdownButton<PoleFeederEntity>(
+                                  DropdownButton<int>(
                                     isExpanded: true,
                                     hint: const Text("Select an option"),
-                                    value: viewModel.selectedPoleFeeder,
-                                    items: viewModel.poleFeederList
-                                        .map((item) {
-                                      final displayText = item.tempSeries != null && item.tempSeries!.isNotEmpty
-                                          ? '${item.tempSeries}-${item.poleNum}'
-                                          : item.poleNum ?? '';
-                                      return DropdownMenuItem<PoleFeederEntity>(
-                                        value: item,
-                                        child: Text(displayText),
+                                    value: viewModel.selectedMakeIndex,
+                                    items:viewModel.make.asMap().entries.map<DropdownMenuItem<int>>((entry) {
+                                      final index = entry.key;
+                                      final item = entry.value;
+                                      return DropdownMenuItem<int>(
+                                        value: index,
+                                        child: Text(item.optionName),
                                       );
-                                    })
-                                        .toList(),
+                                    }).toList(),
                                     onChanged: (value) {
-                                      viewModel.onListPoleFeederChange(value);
+                                      viewModel.onListMakeSelected(value);
                                     },
                                   ),
                                 ]),
@@ -697,7 +685,7 @@ class CheckMeasure11kv extends StatelessWidget {
                               ],
                             ),
                             // const SizedBox(height: doubleTwenty,),
-                            const SizedBox(height: doubleThirty, child: Text("Support Material"),),
+                            const SizedBox(height: doubleForty, child: Center(child: Text("Support Material")),),
                           Column(
                             children: viewModel.dropdownTitles.map((title) {
                               return textDropDown(
@@ -707,15 +695,84 @@ class CheckMeasure11kv extends StatelessWidget {
                                     (newValue) => viewModel.updateSupportQty(newValue, title),
                               );
                             }).toList(),
-                          ),
 
-                            //Support Material
-                            // Tilting Type AB Switch
-                            // Horizontal Type AB Swith
-                            // HG Fuse Set
-                            // LT Distribution box
-                            // Plint Type
-                            // Earthing Type, No.of earth pits
+                          ),
+                            textDropDown(
+                              "LT Distribution box",
+                              viewModel.selectedLTDistribution,
+                              viewModel.lTDistributionBox,
+                                  (newValue) => viewModel.onListLTSelected(newValue),
+                            ),
+                            Row(children: [
+                              const Expanded(child: const Text("Plint Type")),
+                            Expanded(
+                              child: DropdownButtonFormField<String>(
+                                value: viewModel.selectedpLintType,
+                                hint: Text("Select"),
+                                isExpanded: true,
+                                items: viewModel.pLintType.map((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                                onChanged: (newValue)=>viewModel.onListPLintSelected(newValue),
+                              ),
+                            ),
+                            ]
+                            ),
+                            const SizedBox(height:doubleTwenty),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child:Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                 const  Text("Earthing Type"),
+                               DropdownButtonFormField<String>(
+                                  value: viewModel.selectedEarthingType,
+                                  hint: Text("Select"),
+                                  isExpanded: true,
+                                  items: viewModel.earthingType.map((String value) {
+                                    final stringValue = value.toString();
+                                    return DropdownMenuItem<String>(
+                                      value: stringValue,
+                                      child: Text(stringValue),
+                                    );
+                                  }).toList(),
+                                  onChanged: (newValue)=>viewModel.onListEarthingType(newValue),
+                                ),
+                                ]
+                                ),
+                                ),
+                                const SizedBox(width:10) ,
+                                Expanded(child:
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                  const  Text("No Of Earth Pits"),
+                                DropdownButtonFormField<String>(
+                                  value: viewModel.selectedEarthPits,
+                                  hint: Text("Select"),
+                                  isExpanded: true,
+                                  items: viewModel.noOfEarthPits.map((int value) {
+                                    final stringValue = value.toString();
+                                    return DropdownMenuItem<String>(
+                                      value: stringValue,
+                                      child: Text(stringValue),
+                                    );
+                                  }).toList(),
+                                  onChanged:  (newValue) => viewModel.onListEarthPits(newValue),
+                                )
+                                  ]
+                                ),
+                                ),
+                              ],
+                            ),
+                            ]
+                        ),
+                        ),
+                            const SizedBox(height: doubleTen),
                             const Text("Conductor Size"),
                             Row(
                               children: [
@@ -757,7 +814,7 @@ class CheckMeasure11kv extends StatelessWidget {
                             // viewModel.distanceDisplay==isTrue&&viewModel.selectedPole==null?Text("Distance from Previous pole to your locations is ${viewModel.distanceBtnPoles} %s mtrs"): const Text("Please select source  pole to get distance.", style: TextStyle(color:Colors.red),),
                             const SizedBox(height: 10,),
                             SizedBox(width: double.infinity,
-                              child:PrimaryButton(text: "Save Pole", onPressed: viewModel.submit33KVForm),
+                              child:PrimaryButton(text: "Save Pole", onPressed: viewModel.submitCheck11KVForm),
                             ),
 
                           ],
@@ -876,7 +933,8 @@ class CheckMeasure11kv extends StatelessWidget {
     List<int> smQty,
     ValueChanged<String?> onDropdownChanged,
   ) {
-    return Row(
+    return Column(children: [
+      Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(child: Text(title)),
@@ -896,6 +954,9 @@ class CheckMeasure11kv extends StatelessWidget {
           ),
         )
       ],
+    ),
+    const SizedBox(height:doubleTwenty)
+    ]
     );
   }
 }
