@@ -1402,7 +1402,6 @@ class Check11kvViewmodel extends ChangeNotifier {
       return false;
     } else if ((latitude == "" && longitude == "") ||
         (latitude == null && longitude == null)) {
-      //location
       AlertUtils.showSnackBar(
           context, "Please wait until we capture your location. Please make sure you have turned on your location", isTrue);
       return false;
