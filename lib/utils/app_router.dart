@@ -11,6 +11,7 @@ import 'package:tsnpdcl_employee/view/ccc/view/ccc_dashboard.dart';
 import 'package:tsnpdcl_employee/view/ccc/view/ccc_oricb.dart';
 import 'package:tsnpdcl_employee/view/ccc/view/open_detail_screen.dart';
 import 'package:tsnpdcl_employee/view/check_measurement_lines/view/check_measure_11kv.dart';
+import 'package:tsnpdcl_employee/view/check_measurement_lines/view/check_measure_11kv_edit.dart';
 import 'package:tsnpdcl_employee/view/check_measurement_lines/view/check_measure_33KV.dart';
 import 'package:tsnpdcl_employee/view/check_measurement_lines/view/check_measure_screen.dart';
 import 'package:tsnpdcl_employee/view/check_measurement_lines/view/docket.dart';
@@ -669,6 +670,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) =>  CheckMeasure11kv(args: settings.arguments as Map<String, dynamic>));
         case CheckMeasure33kv.id:
         return MaterialPageRoute(builder: (_) =>  CheckMeasure33kv(args: settings.arguments as Map<String, dynamic>));
+      case CheckMeasure11kvEdit.id:
+        return MaterialPageRoute(builder: (_) =>  CheckMeasure11kvEdit(args: settings.arguments as Map<String, dynamic>));
 
       default:
         return MaterialPageRoute(

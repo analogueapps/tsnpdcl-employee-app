@@ -216,11 +216,11 @@ class Routes {
   static const String kv33Screen="Kv33Screen";
   static const String ssInspect="SsInspection";
 
-  //VERIFY WRONG CONFIRMATIONS
+  //VERIFY WRONG CONFIRMATIONS * BHAVANA
   static const String areaWiseAbstract="AreaWiseAbstractView";
   static const String inspectServices="InspectServices";
 
-    //PTR & FEEDERS LOADERS
+    //PTR & FEEDERS LOADERS * BHAVANA
     static const String ptrFeederScreen="PtrFreederScreen";
 
     //CHECK MEASUREMENT(LINES)*BHAVANA
@@ -230,5 +230,7 @@ class Routes {
     static const String pole33kvScreen="Pole33kvFeeder";
     static const String check33kvScreen="CheckMeasure11kv";
     static const String check11kvScreen="CheckMeasure33kv";
+    static const String check11kvScreenEdit="CheckMeasure11kvEdit";
+
 
 }

@@ -78,6 +78,10 @@ class Assets {
   static const String towerPole = 'assets/images/tower_pole.png';
   static const String dtr = 'assets/images/dtr.png';
 
+  //Check Measurement 11KV
+  static const String check11KvLeft='assets/images/check_11kv_left_tap.png';
+  static const String check11KvRight='assets/images/check_11kv_right_tap.png';
+
   static OutlineInputBorder squareInputBorder(){ //return type is OutlineInputBorder
     return const OutlineInputBorder( //Outline border type for TextFiled
         borderRadius: BorderRadius.all(Radius.circular(5)),

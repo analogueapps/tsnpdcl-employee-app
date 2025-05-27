@@ -12,6 +12,7 @@ import 'package:tsnpdcl_employee/network/api_provider.dart';
 import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
+import 'package:tsnpdcl_employee/utils/general_assets.dart';
 import 'package:tsnpdcl_employee/view/check_measurement_lines/model/check_measure_11kv_model.dart';
 import 'package:tsnpdcl_employee/view/check_measurement_lines/model/docket_model.dart';
 import 'package:tsnpdcl_employee/view/check_measurement_lines/model/polefeeder_model.dart';
@@ -52,6 +53,11 @@ class Check11kvViewmodel extends ChangeNotifier {
   double? latitude;
   double? longitude;
   double? totalAccuracy;
+
+  String get feederName => args['fn'];
+  String get feederCode => args['fc'];
+  String get ssc=> args['ssc'];
+  String get ssn => args['ssn'];
 
   bool _isLoading = isFalse;
 
@@ -98,22 +104,21 @@ class Check11kvViewmodel extends ChangeNotifier {
       totalAccuracy = position.accuracy; // <-- This is in meters
 
       notifyListeners();
-
-      // if (_selectedPole == "" || _selectedPole == null) {
-      //   if (poleID != null) {
-      //     distanceDisplay = isTrue;
-      //     distanceBtnPoles = calculateDistance(
-      //         latitude!, longitude!,
-      //         double.parse(poleLat!),
-      //         double.parse(poleLon!)
-      //     );
-      //     print("distanceBtnPoles: $distanceBtnPoles");
-      //     notifyListeners();
-      //   } else {
-      //     distanceDisplay = false;
-      //     notifyListeners();
-      //   }
-      // }
+      if (_selectedPole == "" || _selectedPole == null) {
+        if (poleID != null) {
+          distanceDisplay = isTrue;
+          distanceBtnPoles = calculateDistance(
+              latitude!, longitude!,
+              double.parse(poleLat!),
+              double.parse(poleLon!)
+          );
+          print("distanceBtnPoles: $distanceBtnPoles");
+          notifyListeners();
+        } else {
+          distanceDisplay = false;
+          notifyListeners();
+        }
+      }
     });
   }
 
@@ -163,18 +168,64 @@ class Check11kvViewmodel extends ChangeNotifier {
   void setSelectedTappingPole(String title) {
     _selectedTappingPole = title;
     notifyListeners();
-    print("$_selectedTappingPole:  tap selected");
-    if (selectedPole == "" ||
-        _selectedPole == null||_selectedPole=='Source Pole Not Mapped' && selectedTappingPole != null) {
-      showAlertDialog(context,
-          "Please choose Source Pole Num or check Source pole not mapped or origin Pole");
-    } else {
-      if (selectedPole != "Origin Pole") {
-        generatePoleNum(serverCheck);
-      } else {
-        AlertUtils.showSnackBar(context, "${args['fn']}001", isFalse);
+    if(_selectedTappingPole=="Straight Tapping"||_selectedTappingPole=="Left Tapping"){
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content:SizedBox(height: 300, child: Column(children: [
+              const Text(
+              "Please be sure your field condition resemble to below show scenario for selecting",
+            ),
+              const SizedBox(height: 10,),
+              Image.asset(Assets.check11KvLeft),
+            ]
+            ),
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text("OK")),
+            ],
+          );
+        },
+      );
+
+    }else if(_selectedTappingPole=="Right Tapping"){
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: SizedBox(height: 300, child:
+          Column(children: [
+              const Text(
+                "Please be sure your field condition resemble to below show scenario for selecting",
+              ),
+              SizedBox(height: 10,),
+              Image.asset(Assets.check11KvRight),
+            ]
+            ),
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text("OK")),
+            ],
+          );
+        },
+      );
+    }else {
+      print("$_selectedTappingPole:  tap selected");
+      if (selectedPole == "" ||
+          _selectedPole == null || _selectedPole == 'Source Pole Not Mapped' &&
+          selectedTappingPole != null) {
+        showAlertDialog(context,
+            "Please choose Source Pole Num or check Source pole not mapped or origin Pole");
       }
-      notifyListeners();
     }
   }
 
@@ -346,7 +397,7 @@ class Check11kvViewmodel extends ChangeNotifier {
   final List<PoleItem> _poleItems = [
     PoleItem(title: "V Cross Arm"),
     PoleItem(title: "Horiz. Cross Arm"),
-    PoleItem(title: "Channet Cross Arm"),
+    PoleItem(title: "Channel Cross Arm"),
     PoleItem(title: "Side Arm"),
   ];
 
@@ -462,6 +513,7 @@ class Check11kvViewmodel extends ChangeNotifier {
   String? _selectedCapacity;
 
   String? get selectedCapacity => _selectedCapacity;
+  String? selectedCapacityName;
 
   final List<SubstationModel> _capacity = [
   SubstationModel(optionCode: "0", optionName: "SELECT"),
@@ -506,7 +558,9 @@ class Check11kvViewmodel extends ChangeNotifier {
 
   void onListCapacitySelected(int? index) {
     _selectedCapacityIndex = index;
+
     _selectedCapacity = index != null ? _capacity[index].optionCode : null;
+    selectedCapacityName= index != null ? _capacity[index].optionName : null;
     notifyListeners();
     print("$_selectedCapacity: selected Capacity ");
   }
@@ -778,7 +832,7 @@ class Check11kvViewmodel extends ChangeNotifier {
   }
 
   //Plint Type
-  List<String> pLintType=["Plinth",];
+  List<String> pLintType=["Plinth","Pillar","Pole mounted"];
   String? selectedpLintType;
 
   void onListPLintSelected(String? value) {
@@ -931,8 +985,10 @@ class Check11kvViewmodel extends ChangeNotifier {
       poleID = value.id.toString();
       poleLat = value.lat.toString();
       poleLon = value.lon.toString();
+      series=poleFeederSelected?.substring(0, 3);
       AlertUtils.showSnackBar(context, poleFeederSelected!, isFalse);
       print("POle Num: $poleFeederSelected");
+      print("Series: $series");
       print("Pole ID: $poleID");
     }
     notifyListeners(); // Needed to refresh UI
@@ -1077,19 +1133,7 @@ class Check11kvViewmodel extends ChangeNotifier {
         showErrorDialog(context, "An error occurred. Please try again.");
         rethrow;
       }
-    } else {
-      _isLoading = isFalse;
-      print("generatePoleNum else");
-      series = args["fn"]
-          .substring(0, args["fn"].length < 3 ? args["fn"].length : 3);
-      poleNum = (poleFeederList.length + 1).toString();
-      print("generate series: $series");
-      notifyListeners();
-      AlertUtils.showSnackBar(
-          context, "Generated with on device logic", isFalse);
     }
-
-    notifyListeners();
   }
 
   void setPoleNum() {
@@ -1134,7 +1178,7 @@ class Check11kvViewmodel extends ChangeNotifier {
     );
   }
 
-  Future<void> loadHTServices(String cicleCode) async {
+  Future<void> loadHTServices(String circleCode) async {
 
     _isLoading = isTrue;
 
@@ -1215,7 +1259,7 @@ class Check11kvViewmodel extends ChangeNotifier {
       "fc": args["fc"],
       "ssc": args["ssc"],
       "fv": "11KV",
-      "ssv": "33KV\\/11KV",
+      "ssv": "33/11KV",
       "not": selectedPole == "Source Pole Not Mapped" ? true : false,
       "origin": selectedPole == "Origin Pole" ? true : false,
       "tap": selectedTappingPole == "Straight Tapping"
@@ -1231,17 +1275,17 @@ class Check11kvViewmodel extends ChangeNotifier {
       "formation": selectedFormation,
       "typeOfPoint": selectedTypePoint,
       "pid": docketEntity!.id,
-      "polenum": poleNumber.text.isEmpty ? "0000" : poleNumber.text.trim(),
+      "polenum": poleNumber.text.isEmpty ? " " : poleNumber.text.trim(),
       "series": series,
-      if (selectedPole == "" || selectedPole == null) ...{
+      if (selectedPole != "Source Pole Not Mapped" && selectedPole != "Origin Pole") ...{
         "sid": poleID,
         "slat": poleLat,
         "slon": poleLon,
       },
-      "vx":selectedPoleQuantities["V Cross Arm"] ?? "",
-      "hx":selectedPoleQuantities["Horiz. Cross Arm"] ?? "",
-      "sx":selectedPoleQuantities["Channet Cross Arm"] ?? "",
-      "cx":selectedPoleQuantities["Side Arm"] ?? "",
+      "vx":selectedPoleQuantities["V Cross Arm"] ,
+      "hx":selectedPoleQuantities["Horiz. Cross Arm"] ,
+      "sx":selectedPoleQuantities["Channel Cross Arm"] ,
+      "cx":selectedPoleQuantities["Side Arm"] ,
       //Insulators
       "pin":selectedInsulators["Pin Insulators"],
       "disc":selectedInsulators["Disc"],
@@ -1252,7 +1296,7 @@ class Check11kvViewmodel extends ChangeNotifier {
       "cid":docketEntity!.id,
       if (selectedConnected == "DTR") ...{
         "dtrph": selectedDtrPhase,//dtrStructure.text
-        "dtrcap": selectedCapacity,
+        "dtrcap": selectedCapacityName,
         "dtrSl":dtrSlNo.text.trim(),
         "ymfg":selectedYear,
         "tab":smSelectedMap["Tilting Type AB Switch"]??"",
@@ -1265,16 +1309,17 @@ class Check11kvViewmodel extends ChangeNotifier {
 
       },
       "cross": buildCrossingString(),
-      "connLoad": selectedConnected == "No Load" ? "N" : "NEW SS",
+      "connLoad": selectedConnected == "No Load" ? "N" : "DTR",
       if (selectedConnected == "DTR") ...{
         "structCode": structureCode.text.trim(),
-        "cap": selectedCapacity,
+        "cap": selectedCapacityName,
       },
       "cs": selectedConductor,
       "lat": "$latitude",
       "lon": "$longitude",
     };
 
+    print("requestData: $requestData");
     final payload = {
       "path": "/save11KvDigitalFeederPoleForExistingFeeder",
       "apiVersion": "1.0.1",
@@ -1289,6 +1334,7 @@ class Check11kvViewmodel extends ChangeNotifier {
 
     try {
       if (response != null) {
+        Navigator.pop(context);
         if (response.data is String) {
           response.data = jsonDecode(response.data);
         }
@@ -1299,12 +1345,13 @@ class Check11kvViewmodel extends ChangeNotifier {
                 if (response.data["message"] != null) {
                   showSuccessDialog(
                     context,
-                    response.data["message"],
+                    response.data["message"], //Missing mandatory params
                         () {
                       Navigator.pop(context);
                       resetForm();
                     },
                   );
+                  resetForm();
                 }
                 List<dynamic> jsonList;
                 if (response.data['objectJson'] is String) {
@@ -1321,10 +1368,10 @@ class Check11kvViewmodel extends ChangeNotifier {
               }
             } else {
               showAlertDialog(context,
-                  "There are no existing Proposals under the selected Substation");
+                  response.data['message']);
             }
           } else {
-            showSessionExpiredDialog(context);
+            // showSessionExpiredDialog(context);
           }
         }
       } else {
@@ -1345,15 +1392,17 @@ class Check11kvViewmodel extends ChangeNotifier {
   }
 
   bool validateForm() {
-    // if ((selectedPole == "" || selectedPole == null) &&
-    //     selectedPoleFeeder==null) {
-    //   AlertUtils.showSnackBar(
-    //       context, "Please select the source pole to the current pole", isTrue);
-    //   return false;
-    // } else
-
-      if (poleNumber.text == "") {
-      AlertUtils.showSnackBar(context, "Please enter Pole Number", isTrue);
+    final selectedItems = poleItems.where((item) => item.isSelected).toList();
+    final hasInvalidQty = selectedItems.any(
+          (item) => item.selectedQty == null || item.selectedQty.toString().trim().isEmpty,
+    );
+    if ((selectedPole == "" || selectedPole == null) &&
+        selectedPoleFeeder==null) {
+      AlertUtils.showSnackBar(
+          context, "Please select the source pole to the current pole", isTrue);
+      return false;
+    } else if (poleFeederSelected==null||poleFeederSelected=="") {
+      AlertUtils.showSnackBar(context, "Please select previous pole number", isTrue);
       return false;
     } else if (selectedTappingPole == "" || selectedTappingPole == null) {
       AlertUtils.showSnackBar(
@@ -1381,7 +1430,13 @@ class Check11kvViewmodel extends ChangeNotifier {
           "Please select the type of point (Cut Point/End Point/Pin Point)",
           isTrue);
       return false;
-    } else if (selectedCrossings.isEmpty || selectedCrossings == null) {
+    }else  if (selectedItems.isEmpty) {
+        AlertUtils.showSnackBar(context, "Please select at least one cross arm type.", true);
+        return false;
+      } else if (hasInvalidQty) {
+        AlertUtils.showSnackBar(context, "Please enter quantity for all selected cross arms.", true);
+        return false;
+      }else if (selectedCrossings.isEmpty || selectedCrossings == null) {
       AlertUtils.showSnackBar(context, "Please select any crossing", isTrue);
       return false;
     } else if (selectedConnected == "" || selectedConnected == null) {
@@ -1393,6 +1448,76 @@ class Check11kvViewmodel extends ChangeNotifier {
           (selectedCapacity == "" || selectedCapacity == null)) {
         AlertUtils.showSnackBar(
             context, "Please select the DTR capacity", isTrue);
+        return false;
+      }else if (selectedConnected == "DTR" &&
+          (_selectedMakeIndex == "" || _selectedMakeIndex == null)) {
+        AlertUtils.showSnackBar(
+            context, "Please select the DTR Make", isTrue);
+        return false;
+      }else if (selectedConnected == "DTR" &&
+          (structureCode.text.isEmpty|| structureCode.text == "")) {
+        AlertUtils.showSnackBar(
+            context, "Please enter Structure Code", isTrue);
+        return false;
+      }else if (selectedConnected == "DTR" &&
+          (equipmentCode.text.isEmpty || equipmentCode.text == null)) {
+        AlertUtils.showSnackBar(
+            context, "Please enter Equipment Code", isTrue);
+        return false;
+      }else if (selectedConnected == "DTR" &&
+          (selectedDtrPhase == "" || selectedDtrPhase == null)) {
+        AlertUtils.showSnackBar(
+            context, "Please select the DTR Phase", isTrue);
+        return false;
+      }else if (selectedConnected == "DTR" &&
+          (dtrSlNo.text.isEmpty || dtrSlNo.text == null)) {
+        AlertUtils.showSnackBar(
+            context, "Please select the DTR Sl.NO", isTrue);
+        return false;
+      }else if (selectedConnected == "DTR" &&
+          (selectedYear == "" || selectedYear == null)) {
+        AlertUtils.showSnackBar(
+            context, "Please select the DTR capacity", isTrue);
+        return false;
+      }else if (selectedConnected == "DTR" &&
+          (smSelectedMap["Tilting Type AB Switch"] == "" || smSelectedMap["Tilting Type AB Switch"] == null)) {
+        AlertUtils.showSnackBar(
+            context, "Please select Tilting Type AB Switch", isTrue);
+        return false;
+      }else if (selectedConnected == "DTR" &&
+          (smSelectedMap["Horizontal Type AB Switch"] == "" || smSelectedMap["Horizontal Type AB Switch"] == null)) {
+        AlertUtils.showSnackBar(
+            context, "Please select the DTR Horizontal Type AB Switch", isTrue);
+        return false;
+      }else if (selectedConnected == "DTR" &&
+          (smSelectedMap["HG Fuse Set"] == "" || smSelectedMap["HG Fuse Set"] == null)) {
+        AlertUtils.showSnackBar(
+            context, "Please select the DTR HG Fuse Set", isTrue);
+        return false;
+      }else if (selectedConnected == "DTR" &&
+          (selectedpLintType == "" || selectedpLintType == null)) {
+        AlertUtils.showSnackBar(
+            context, "Please select the Plint Type", isTrue);
+        return false;
+      }else if (selectedConnected == "DTR" &&
+          (selectedEarthingType == "" ||selectedEarthingType == null)) {
+        AlertUtils.showSnackBar(
+            context, "Please select the DTR Earthing Type", isTrue);
+        return false;
+      }else if (selectedConnected == "DTR" &&
+          (selectedEarthPits == "" || selectedEarthPits == null)) {
+        AlertUtils.showSnackBar(
+            context, "Please select the DTR No of Earth Pits", isTrue);
+        return false;
+      }else if (selectedConnected == "DTR" &&
+          (selectedLTDistribution == "" || selectedLTDistribution == null)) {
+        AlertUtils.showSnackBar(
+            context, "Please select the LT Distribution box", isTrue);
+        return false;
+      }else if (selectedConnected == "DTR" &&
+          (smSelectedMap["Horizontal Type AB Switch"] == "" || smSelectedMap["Horizontal Type AB Switch"] == null)) {
+        AlertUtils.showSnackBar(
+            context, "Please select the DTR Horizontal Type AB Switch", isTrue);
         return false;
       } else if (_selectedConductor == "" || _selectedConductor == null) {
       AlertUtils.showSnackBar(

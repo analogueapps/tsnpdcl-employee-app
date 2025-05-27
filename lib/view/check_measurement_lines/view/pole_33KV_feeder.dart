@@ -157,7 +157,7 @@ class Pole33kvFeeder extends StatelessWidget {
                               // maxLines: null,
                               // minLines: 5,
                               controller: viewModel.poleNumber,
-                              keyboardType: TextInputType.multiline,
+                              keyboardType: TextInputType.text,
                               decoration: const InputDecoration(
                                 // hintText: "Type here...",
                                 border: OutlineInputBorder(),

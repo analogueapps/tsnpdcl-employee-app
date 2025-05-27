@@ -4,11 +4,14 @@ import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
+import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/view/check_measurement_lines/model/polefeeder_model.dart';
 import 'package:tsnpdcl_employee/view/check_measurement_lines/viewmodel/check_11KV_viewmodel.dart';
 import 'package:tsnpdcl_employee/widget/fill_text_form_field.dart';
 import 'package:tsnpdcl_employee/widget/primary_button.dart';
 import 'package:tsnpdcl_employee/widget/view_detailed_lc_tile_widget.dart';
+
+import 'check_measure_11kv_edit.dart';
 
 class CheckMeasure11kv extends StatelessWidget {
   const CheckMeasure11kv({super.key, required this.args});
@@ -17,7 +20,11 @@ class CheckMeasure11kv extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return  ChangeNotifierProvider(
+      create: (_) => Check11kvViewmodel(context: context, args: args),
+      child: Consumer<Check11kvViewmodel>(
+        builder: (context, viewModel, child) {
+          return Scaffold(
       appBar: AppBar(
         backgroundColor: CommonColors.colorPrimary,
         title: Text(
@@ -31,12 +38,24 @@ class CheckMeasure11kv extends StatelessWidget {
         iconTheme: const IconThemeData(
           color: Colors.white,
         ),
+        actions:  [
+          TextButton(onPressed: (){
+            var argument = {
+              'ssc': viewModel.ssc,
+              'ssn':viewModel.ssn,
+              'fc': viewModel.feederCode,
+              'fn': viewModel.feederName,
+            };
+            Navigation.instance.navigateTo(Routes.check11kvScreenEdit, args: argument);
+          },
+              child: Text("EDIT",style: const TextStyle(
+              color: Colors.white,
+              fontSize: btnTextSize,
+              fontWeight: FontWeight.w700
+          ),)),
+        ],
       ),
-      body: ChangeNotifierProvider(
-        create: (_) => Check11kvViewmodel(context: context, args: args),
-        child: Consumer<Check11kvViewmodel>(
-          builder: (context, viewModel, child) {
-            return Form(key:viewModel.formKey,
+      body: Form(key:viewModel.formKey,
               child:   Stack(children: [
                 Column(
                   children: [
@@ -88,7 +107,7 @@ class CheckMeasure11kv extends StatelessWidget {
                               viewModel.selectMapOrList();
                             },
                             child: InputDecorator(
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 // labelText: 'Select an option',
                                 border: OutlineInputBorder(),
                               ),
@@ -527,7 +546,7 @@ class CheckMeasure11kv extends StatelessWidget {
                                             viewModel.selectedCrossings,
                                                 (bool? checked) {
                                               viewModel.setSelectedCrossings(
-                                                  "Transmission(220KV");
+                                                  "Transmission(220KV)");
                                             },
                                             true,
                                           ),
@@ -577,7 +596,7 @@ class CheckMeasure11kv extends StatelessWidget {
                             const Center(child:Text("Structure Details"),),
                             FillTextFormField(
                               labelText: "Structure Code",
-                              controller: viewModel.particularsOfCrossing,
+                              controller: viewModel.structureCode,
                               keyboardType: TextInputType.text,
                             ),
                            const SizedBox(height: 10,),
@@ -833,11 +852,11 @@ class CheckMeasure11kv extends StatelessWidget {
                     ),
                   ),
               ]),
+                    )
             );
           },
-        ),
-      ),
-    );
+      )
+        );
   }
   Widget checkbox(BuildContext context, String title, String? selected,
       void Function(String) selectedFunction, ) {
