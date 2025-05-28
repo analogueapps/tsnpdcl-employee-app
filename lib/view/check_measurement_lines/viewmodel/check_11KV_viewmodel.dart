@@ -1541,6 +1541,8 @@ class Check11kvViewmodel extends ChangeNotifier {
     selectedSecondGroup.clear();
     _selectedPoleHeight="";
     _selectedCircuits="";
+
+
     _selectedFormation="";
     _selectedTypePoint="";
     selectedCrossings.clear();

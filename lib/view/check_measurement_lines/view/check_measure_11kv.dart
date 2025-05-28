@@ -634,7 +634,7 @@ class CheckMeasure11kv extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                               ///Something wrong is happening here for both capacity and make after selecting the value is changing after sometime i click again it is updating
+                               ///Something wrong is happening here for both capacity and make after selecting the value the value is not changing after sometime i click again it is updating
                                const SizedBox(width: 10,),
                                 Expanded(
                                   child: Column(
