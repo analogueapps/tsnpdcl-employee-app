@@ -1,5 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:tsnpdcl_employee/view/rfss/model/dtrStructureEntity.dart';
 
 class StructureDatabaseHelper {
   static final StructureDatabaseHelper instance = StructureDatabaseHelper._init();
@@ -26,31 +27,63 @@ class StructureDatabaseHelper {
 
   Future _createDB(Database db, int version) async {
     await db.execute('''
-      CREATE TABLE structure_codes (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        structureCode TEXT NOT NULL UNIQUE
-      )
-    ''');
+    CREATE TABLE dtr_structures (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      structureCode TEXT NOT NULL UNIQUE,
+      distributionCode TEXT,
+      distributionName TEXT,
+      feederName TEXT,
+      feederCode TEXT,
+      capacity TEXT,
+      landMark TEXT,
+      lat TEXT,
+      lon TEXT,
+      sectionCode TEXT,
+      createdBy TEXT,
+      createdDate TEXT,
+      searchString TEXT,
+      ssNo TEXT,
+      ssCode TEXT,
+      structureType TEXT,
+      plinthType TEXT,
+      abSwitch TEXT,
+      hgFuseSet TEXT,
+      ltFuseSet TEXT,
+      ltFuseType TEXT,
+      loadPattern TEXT,
+      failureCount INTEGER
+    )
+  ''');
   }
 
-  Future<void> insertStructureCode(String structureCode) async {
+
+  Future<void> insertStructure(DTRStructureEntity structure) async {
     final db = await database;
     await db.insert(
-      'structure_codes',
-      {'structureCode': structureCode},
-      conflictAlgorithm: ConflictAlgorithm.ignore,
+      'dtr_structures',
+      structure.toJson(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
 
-  Future<List<String>> getAllStructureCodes() async {
+
+  Future<List<DTRStructureEntity>> getAllStructures() async {
     final db = await database;
-    final result = await db.query('structure_codes');
-    return result.map((e) => e['structureCode'] as String).toList();
+    final result = await db.query('dtr_structures');
+    return result.map((e) => DTRStructureEntity.fromJson(e)).toList();
+  }
+
+  Future<List<String>> getAllStructureCodes() async {
+    final structures = await getAllStructures();
+    return structures
+        .map((e) => e.structureCode)
+        .whereType<String>() // This filters out any nulls safely
+        .toList();
   }
 
   Future<void> deleteAllData() async {
     final db = await database;
-    await db.delete('structure_codes');
+    await db.delete('dtr_structures');
   }
 
   Future<void> close() async {

@@ -365,7 +365,7 @@ class CheckMeasureViewModel extends ChangeNotifier {
       if (selectedPurposeCheckboxId == "NCMD") {
         createNewCheckMeasureSession();
       } else if(selectedPurposeCheckboxId == "ECMD"){
-        if(descriptionController.text.isNotEmpty&& descriptionController.text!=null||descriptionController.text!=""){
+        if(descriptionController.text.isNotEmpty&& descriptionController.text!=null||descriptionController.text==""){
          String? desc=_selectedEntity?.worklDesc;
           var argument = {
             'd': json.encode(_selectedEntity),

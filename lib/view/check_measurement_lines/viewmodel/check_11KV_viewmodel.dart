@@ -1315,8 +1315,8 @@ class Check11kvViewmodel extends ChangeNotifier {
         "cap": selectedCapacityName,
       },
       "cs": selectedConductor,
-      "lat": "$latitude",
-      "lon": "$longitude",
+      "lat": latitude.toString(),
+      "lon": longitude.toString(),
     };
 
     print("requestData: $requestData");

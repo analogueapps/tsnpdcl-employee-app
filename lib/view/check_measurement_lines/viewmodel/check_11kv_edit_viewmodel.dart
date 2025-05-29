@@ -14,8 +14,11 @@ import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/alerts.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
+import 'package:tsnpdcl_employee/view/check_measurement_lines/model/docket_model.dart';
 import 'package:tsnpdcl_employee/view/check_measurement_lines/model/polefeeder_model.dart';
 import 'package:tsnpdcl_employee/view/rfss/database/mapping_agl_db/agl_databases/structure_code_db.dart';
+
+import '../model/structure_capacity_model.dart';
 
 class Check11kvEditViewmodel extends ChangeNotifier {
   Check11kvEditViewmodel({required this.context, required this.args}) {
@@ -25,6 +28,7 @@ class Check11kvEditViewmodel extends ChangeNotifier {
   final BuildContext context;
   final Map<String, dynamic> args;
   final formKey = GlobalKey<FormState>();
+  bool serverCheck = false;
 
   @override
   void dispose() {
@@ -39,6 +43,8 @@ class Check11kvEditViewmodel extends ChangeNotifier {
   final TextEditingController poleNumber = TextEditingController();
   final TextEditingController particularsOfCrossing = TextEditingController();
   final TextEditingController remarks = TextEditingController();
+  String? series, poleNum;
+  DocketEntity? docketEntity;
 
   double? latitude;
   double? longitude;
@@ -112,7 +118,8 @@ class Check11kvEditViewmodel extends ChangeNotifier {
           actions: [
             TextButton(
                 onPressed: () {
-
+                Navigator.pop(context);
+                deletePoleDialog();
                 },
                 child: const Text("DELETE")),
             TextButton(
@@ -128,6 +135,33 @@ class Check11kvEditViewmodel extends ChangeNotifier {
             ),
             TextButton(
               onPressed: (){ Navigator.pop(context);},
+              child: const Text("CANCEL"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void deletePoleDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Delete Pole?"),
+          content:  const Text(
+            "Delete 0000 pole? \n You can revert this action!",
+          ),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  // should implement deletePole();  api here
+                },
+                child: const Text("DELETE")),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
               child: const Text("CANCEL"),
             ),
           ],
@@ -277,6 +311,119 @@ class Check11kvEditViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
+  String? _selectedPole;
+
+  String? get selectedPole => _selectedPole;
+
+  void setSelectedPole(String title) {
+    _selectedPole = title;
+    if (_selectedPole == "Origin Pole") {
+      series = null;
+      poleNum = args["fn"].substring(0, 3) + "001";
+      print("PoleNum: $poleNum");
+    }
+    print("$_selectedPole: filter selected");
+    notifyListeners();
+  }
+
+  List<PoleFeederEntity> generatedPoleList = [];
+  String? generatedPoleSelected;
+
+  Future<void> generatePoleNum(bool isServer) async {
+    generatedPoleList.clear();
+    generatedPoleSelected = null;
+    notifyListeners();
+
+    _isLoading = isTrue;
+
+    if (isServer) {
+      print("generatePoleNum if");
+
+      final requestData = {
+        "authToken":
+        SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+        "api": Apis.API_KEY,
+        "ssc": args["ssc"],
+        "fc": args["fc"],
+        "not": false,
+        "tap": selectedTappingPole == "Straight Tapping"
+            ? "s"
+            : selectedTappingPole == "Left Tapping"
+            ? "l"
+            : "r",
+        "sid": poleID,
+      };
+
+      final payload = {
+        "path": "/getNewPoleNum",
+        "apiVersion": "1.0.1",
+        "method": "POST",
+        "data": jsonEncode(requestData),
+      };
+
+      var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+          .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+      _isLoading = isFalse;
+
+      try {
+        if (response != null) {
+          if (response.data is String) {
+            response.data = jsonDecode(response.data); // Parse string to JSON
+          }
+          if (response.statusCode == successResponseCode) {
+            if (response.data['tokenValid'] == isTrue) {
+              if (response.data['success'] == isTrue) {
+                if (response.data['objectJson'] != null) {
+                  final objectJson = response.data['objectJson'];
+
+                  List<dynamic> list = jsonDecode(objectJson);
+
+                  if (list.isNotEmpty && list.length >= 2) {
+                    series = list[0];
+                    poleNum = list[1];
+
+                    setPoleNum();
+                  }
+                } else {
+                  showAlertDialog(context, "No Data Found");
+                }
+              } else {
+                showAlertDialog(context,
+                    "There is no existing Proposal under the selected substation");
+              }
+            } else {
+              showSessionExpiredDialog(context);
+            }
+          } else {
+            showAlertDialog(context, response.data['message']);
+          }
+        }
+      } catch (e) {
+        showErrorDialog(context, "An error occurred. Please try again.");
+        rethrow;
+      }
+    } else {
+      _isLoading = isFalse;
+      print("generatePoleNum else");
+      series = args["fn"]
+          .substring(0, args["fn"].length < 3 ? args["fn"].length : 3);
+      poleNum = (poleFeederList.length + 1).toString();
+      print("generate series: $series");
+      notifyListeners();
+      AlertUtils.showSnackBar(
+          context, "Generated with on device logic", isFalse);
+    }
+
+    notifyListeners();
+  }
+
+  void setPoleNum() {
+    if(selectedTappingPole=="Is Extension Pole?"){
+      poleNumber.text = (series != null ? "$series-$poleNum (EP)" : "$poleNum(EP)" )!;
+    }
+    poleNumber.text = (series != null ? "$series-$poleNum" : poleNum)!;
+  }
+
 
   //Tapping from previous pole
   String? _selectedTappingPole;
@@ -287,7 +434,9 @@ class Check11kvEditViewmodel extends ChangeNotifier {
     _selectedTappingPole = title;
     notifyListeners();
     print("$_selectedTappingPole:  tap selected");
-
+if(_selectedTappingPole!=null && _selectedTappingPole!.isNotEmpty){
+  generatePoleNum(serverCheck);
+}
   }
 
   //Is Extension Pole
@@ -454,15 +603,34 @@ String? isExtensionSelected;
   }
 
   //select structure code
-  List<String> structureCodes = [];
-  String? selectedCode;
+  List<Option> structureCodes = [];
+  Option? selectedCode;
+  String? selectedCapacity;
 
 
 
   Future<void> loadStructureCodes() async {
-    final codes = await StructureDatabaseHelper.instance.getAllStructureCodes();
-      structureCodes = codes;
+    final structures = await StructureDatabaseHelper.instance.getAllStructures();
+    structureCodes = structures
+        .where((e) => e.structureCode != null && e.capacity != null)
+        .map((e) => Option(
+      code: e.structureCode!,
+      capacity: e.capacity!,
+    ))
+        .toList();
+    print("Done loading data from DB Structure");
+
   }
+
+  void setSelectedDtr(Option title) {
+    selectedCode = title;
+    print("${selectedCode?.code}: selectedCode");
+    print("${selectedCode?.capacity}: selectedCode capacity");
+    notifyListeners();
+  }
+
+
+
 
   String? _selectedConductor;
 
@@ -630,17 +798,20 @@ String? isExtensionSelected;
   Future<void> saveCheck11KVPole() async {
     _isLoading = isTrue;
     notifyListeners();
+    // PoleFeederEntity d= selectedDigitalPole;
 
     final requestData = {
+      "loadLatestDataOnly": true,
+      "maxId": "",//from map
       "authToken":
       SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "fc": args["fc"],
       "ssc": args["ssc"],
       "fv": "11KV",
-      "ssv": "33/11KV",
-      // "not": selectedPole == "Source Pole Not Mapped" ? true : false,
-      // "origin": selectedPole == "Origin Pole" ? true : false,
+      "ssv": "33\\/11KV",
+      "not": false,
+      "origin": selectedPole == "Origin Pole" ? true : false,
       "tap": selectedTappingPole == "Straight Tapping"
           ? "s"
           : selectedTappingPole == "Left Tapping"
@@ -653,23 +824,24 @@ String? isExtensionSelected;
       "nockt": selectedCircuits,
       "formation": selectedFormation,
       "typeOfPoint": selectedTypePoint,
-      // "pid": docketEntity!.id,
-      "polenum": poleNumber.text.isEmpty ? " " : poleNumber.text.trim(),
-      // "series": series,
-      // if (selectedPole != "Source Pole Not Mapped" && selectedPole != "Origin Pole") ...{
-      //   "sid": poleID,
-      //   "slat": poleLat,
-      //   "slon": poleLon,
-      // },
-      // "cid":docketEntity!.id,
-      if (selectedConnected == "DTR") ...{
+      "polenum": poleNumber.text.isEmpty ? "0000" : poleNumber.text.trim(),
+        "series": series,//null
 
+      if (selectedPole == "" || selectedPole == null) ...{
+        "sid": poleID,
+        "slat": poleLat,
+        "slon": poleLon,
       },
       "cross": buildCrossingString(),
       "connLoad": selectedConnected == "No Load" ? "N" : "DTR",
+      if (selectedConnected == "DTR") ...{
+        "structCode": selectedCode?.code,
+        "cap": selectedCode?.capacity,
+      },
       "cs": selectedConductor,
-      "lat": "$latitude",
-      "lon": "$longitude",
+      "lat": poleLat,//d.getLat()
+      "lon": poleLon,
+      "digitalID":"", //d.getId()
     };
 
     print("requestData: $requestData");
@@ -704,16 +876,6 @@ String? isExtensionSelected;
                     },
                   );
                 }
-                List<dynamic> jsonList;
-                if (response.data['objectJson'] is String) {
-                  jsonList = jsonDecode(response.data['objectJson']);
-                } else if (response.data['objectJson'] is List) {
-                  jsonList = response.data['objectJson'];
-                } else {
-                  jsonList = [];
-                }
-                print("data added in docketList");
-                notifyListeners();
               } else {
                 showAlertDialog(context, "Unable to process your request!");
               }
@@ -722,26 +884,21 @@ String? isExtensionSelected;
                   response.data['message']);
             }
           } else {
-            // showSessionExpiredDialog(context);
+            showSessionExpiredDialog(context);
           }
+        } else {
+          showAlertDialog(context,
+              "Error connecting to the server, Please try after sometime");
         }
-      } else {
-        showAlertDialog(context,
-            "Error connecting to the server, Please try after sometime");
       }
     } catch (e) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
         showErrorDialog(context, "An error occurred. Please try again.");
-      });
-      rethrow;
-    } finally {
       _isLoading = false;
       notifyListeners();
     }
 
     notifyListeners();
   }
-
 
   bool validateForm() {
     if (poleFeederSelected==null||poleFeederSelected=="") {

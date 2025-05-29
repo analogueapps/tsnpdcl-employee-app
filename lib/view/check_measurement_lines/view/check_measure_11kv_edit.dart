@@ -10,6 +10,8 @@ import 'package:tsnpdcl_employee/view/check_measurement_lines/viewmodel/check_11
 import 'package:tsnpdcl_employee/widget/fill_text_form_field.dart';
 import 'package:tsnpdcl_employee/widget/primary_button.dart';
 import 'package:tsnpdcl_employee/widget/view_detailed_lc_tile_widget.dart';
+
+import '../model/structure_capacity_model.dart';
 class CheckMeasure11kvEdit extends StatelessWidget {
   const CheckMeasure11kvEdit({super.key, required this.args});
 
@@ -64,9 +66,9 @@ class CheckMeasure11kvEdit extends StatelessWidget {
               child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ViewDetailedLcTileWidget(
+                const ViewDetailedLcTileWidget(
                   tileKey: "SubStation",
-                  tileValue: " ${args["ssc"]}",
+                  tileValue: "0000",
                   valueColor: Colors.red,
                 ),
                 SizedBox(height: doubleTen,),
@@ -494,19 +496,22 @@ class CheckMeasure11kvEdit extends StatelessWidget {
                   ],
                 ),
               const SizedBox(height: doubleTen,),
+              Visibility(
+                visible:viewModel.selectedConnected=="DTR" ,
+                child: Column(children: [
               Text("Select structure code".toUpperCase()),
-              DropdownButton<String>(
+              DropdownButton<Option>(
               value: viewModel.selectedCode,
               hint: Text('Select Structure Code'),
               isExpanded: true,
-              items: viewModel.structureCodes.map((code) {
-              return DropdownMenuItem(
-              value: code,
-              child: Text(code),
-              );
+              items: viewModel.structureCodes.map((option) {
+                return DropdownMenuItem<Option>(
+                  value: option,
+                  child: Text(option.code),
+                );
               }).toList(),
               onChanged: (value) {
-              viewModel.selectedCode = value;
+              viewModel.setSelectedDtr (value!);
               },
               ),
                const Text("Didn't find the Structure code?", style: TextStyle(color:Colors.red, fontWeight: FontWeight.bold),),
@@ -516,6 +521,9 @@ class CheckMeasure11kvEdit extends StatelessWidget {
                 );
                   }, text: 'ADD DTR',),),
                 ),
+                ]
+              ),
+              ),
 
                 const SizedBox(height: doubleTen),
                 const Text("Conductor Size"),

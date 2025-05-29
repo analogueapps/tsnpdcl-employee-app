@@ -8,8 +8,10 @@ import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
+import 'package:tsnpdcl_employee/view/dtr_master/model/dtr_feedet_distribution_model.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/model/spinner_list.dart';
 import 'package:tsnpdcl_employee/view/rfss/database/mapping_agl_db/agl_databases/structure_code_db.dart';
+import 'package:tsnpdcl_employee/view/rfss/model/dtrStructureEntity.dart';
 
 
 class DownloadStructureViewModel extends ChangeNotifier {
@@ -291,14 +293,15 @@ class DownloadStructureViewModel extends ChangeNotifier {
                   // Parse the message field which contains the list of structures
                   final List<dynamic> structures = jsonDecode(response.data['message']);
                   final dbHelper = StructureDatabaseHelper.instance;
+                  print("Structure insertions starting...");
 
-                  // Save each structureCode to the database
-                  print("Structure codes insertion starting ");
-                  for (var structure in structures) {
-                    final structureCode = structure['structureCode'] as String;
-                    await dbHelper.insertStructureCode(structureCode);
-                    print("Structure codes insertion done ");
+                  for (var json in structures) {
+                    final structure = DTRStructureEntity.fromJson(json);
+                    await dbHelper.insertStructure(structure);
                   }
+
+
+                  print("Structure insertions done.");
                   downloadAnother();
                 }
               } else {
@@ -312,7 +315,9 @@ class DownloadStructureViewModel extends ChangeNotifier {
           }
         }
       } catch (e) {
-        showErrorDialog(context, "An error occurred. Please try again.");
+        // showErrorDialog(context, "An error occurred. Please try again.");
+        showErrorDialog(context, "$e");
+        print("Stacktrace: $e");
         rethrow;
       }
       notifyListeners();

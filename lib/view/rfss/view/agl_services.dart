@@ -8,6 +8,7 @@ import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
+import 'package:tsnpdcl_employee/view/rfss/model/dtrStructureEntity.dart';
 import 'package:tsnpdcl_employee/view/rfss/viewmodel/agl_viewmodel.dart';
 import 'package:tsnpdcl_employee/widget/fill_text_form_field.dart';
 import 'package:tsnpdcl_employee/widget/primary_button.dart';
@@ -93,16 +94,19 @@ class AglServices extends StatelessWidget {
                   const Text("Select Structure Code"),
                   DropdownButton<String>(
                     isExpanded: true,
-                    hint: const Text(""),
+                    hint: const Text("Select Structure"),
                     value: viewModel.selectedStructure,
                     items: viewModel.struct.map((item) {
                       return DropdownMenuItem<String>(
-                        value: item,
-                        child: Text(item),
+                        value: item, // This must be a String
+                        child: Text(item ?? ""),
                       );
                     }).toList(),
-                    onChanged: (value) => viewModel.onListStructureSelected(value),
-                  ),
+                    onChanged: (value) {
+                      viewModel.onListStructureSelected(value);
+                    },
+                  )
+,
                   Text(viewModel.selectedStructure??"", style: const TextStyle(color: Colors.green),),
                   const SizedBox(height: 10,),
                   Align(

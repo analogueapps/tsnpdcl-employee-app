@@ -13,8 +13,10 @@ import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/model/circle_model.dart';
+import 'package:tsnpdcl_employee/view/dtr_master/model/dtr_feedet_distribution_model.dart';
 import 'package:tsnpdcl_employee/view/rfss/database/mapping_agl_db/agl_databases/saveMapped_db.dart';
 import 'package:tsnpdcl_employee/view/rfss/database/mapping_agl_db/agl_databases/structure_code_db.dart';
+import 'package:tsnpdcl_employee/view/rfss/model/dtrStructureEntity.dart';
 import 'package:tsnpdcl_employee/view/rfss/model/save_agl_data_model.dart';
 import 'package:tsnpdcl_employee/view/rfss/model/save_mapped_model.dart';
 
@@ -374,9 +376,11 @@ class AglViewModel extends ChangeNotifier {
 
   String? _selectedStructure;
 
-  String? get selectedStructure => _selectedStructure;
+  String? get selectedStructure=> _selectedStructure;
 
-  List _structure = [];
+
+
+  List<String> _structure = [];
 
   List get struct => _structure;
 
@@ -419,18 +423,15 @@ class AglViewModel extends ChangeNotifier {
                     response.data['message']);
                 final dbHelper = StructureDatabaseHelper.instance;
                 for (var structure in structures) {
-                  final structureCode = structure['structureCode'] as String;
-                  await dbHelper.insertStructureCode(structureCode);
+                  final structureCode = DTRStructureEntity.fromJson(structure);
+                  await dbHelper.insertStructure(structureCode);
                   if (!_structure.contains(structureCode)) {
-                    _structure.add(structureCode);
+                    _structure.add(structureCode.structureCode);
                     print(
                         "Added successfully in both db and list in agl_viewmodel");
                   }
                 }
 
-                if (_structure.isNotEmpty) {
-                  _selectedStructure = _structure.first;
-                }
               }
             } else {
               showAlertDialog(context, response.data['message']);

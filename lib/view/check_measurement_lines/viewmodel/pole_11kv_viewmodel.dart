@@ -583,8 +583,7 @@ class Pole11kvViewmodel extends ChangeNotifier {
 
     final requestData = {
       "loadLatestDataOnly": true,
-      "maxId": maxId,
-      // from map
+      "maxId": maxId, //from map
       "authToken":
           SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
