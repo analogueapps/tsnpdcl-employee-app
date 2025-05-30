@@ -838,7 +838,7 @@ String? isExtensionSelected;
         "structCode": selectedCode?.code,
         "cap": selectedCode?.capacity,
       },
-      "cs": selectedConductor,
+      "cs": abCableSelected==""?selectedConductor:abCableSelected, //check this(bhav)
       "lat": poleLat,//d.getLat()
       "lon": poleLon,
       "digitalID":"", //d.getId()
@@ -937,13 +937,18 @@ String? isExtensionSelected;
       AlertUtils.showSnackBar(context,
           "Please select the any load connected on the current pole", isTrue);
       return false;
+    }else if (selectedConnected == "DTR" &&( selectedCode == null||selectedCode=="")) {
+      AlertUtils.showSnackBar(context,
+          "Please select structure code", isTrue);
+      return false;
     } else if (_selectedConductor == "" || _selectedConductor == null) {
       AlertUtils.showSnackBar(
           context,
           "Please select the conductor size from previous pole to this pole",
           isTrue);
       return false;
-    } else if ((latitude == "" && longitude == "") ||
+    }
+    else if ((latitude == "" && longitude == "") ||
         (latitude == null && longitude == null)) {
       AlertUtils.showSnackBar(
           context, "Please wait until we capture your location. Please make sure you have turned on your location", isTrue);

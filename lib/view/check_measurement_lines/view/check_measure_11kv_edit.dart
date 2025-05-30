@@ -498,7 +498,9 @@ class CheckMeasure11kvEdit extends StatelessWidget {
               const SizedBox(height: doubleTen,),
               Visibility(
                 visible:viewModel.selectedConnected=="DTR" ,
-                child: Column(children: [
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
               Text("Select structure code".toUpperCase()),
               DropdownButton<Option>(
               value: viewModel.selectedCode,

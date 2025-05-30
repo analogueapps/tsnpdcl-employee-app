@@ -33,7 +33,6 @@ class Check33kvViewmodel extends ChangeNotifier {
     }
   }
 
-
   @override
   void dispose() {
     _positionStream?.cancel();
@@ -122,11 +121,8 @@ class Check33kvViewmodel extends ChangeNotifier {
       if (_selectedPole == "" || _selectedPole == null) {
         if (poleID != null) {
           distanceDisplay = isTrue;
-          distanceBtnPoles = calculateDistance(
-              latitude!, longitude!,
-              double.parse(poleLat!),
-              double.parse(poleLon!)
-          );
+          distanceBtnPoles = calculateDistance(latitude!, longitude!,
+              double.parse(poleLat!), double.parse(poleLon!));
           print("distanceBtnPoles: $distanceBtnPoles");
           notifyListeners();
         } else {
@@ -161,7 +157,9 @@ class Check33kvViewmodel extends ChangeNotifier {
 
   //Pole Selection
   String? _selectedPole;
+
   String? get selectedPole => _selectedPole;
+
   void setSelectedPole(String title) {
     _selectedPole = title;
     if (_selectedPole == "Origin Pole") {
@@ -175,74 +173,92 @@ class Check33kvViewmodel extends ChangeNotifier {
 
   //Tapping from previous pole
   String? _selectedTappingPole;
+
   String? get selectedTappingPole => _selectedTappingPole;
+
   void setSelectedTappingPole(String title) {
     _selectedTappingPole = title;
     notifyListeners();
-    if(_selectedTappingPole=="Left Tapping"){
+    if (_selectedTappingPole == "Left Tapping") {
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            content:SizedBox(height: 300, child: Column(children: [
-              const Text(
-                "Please be sure your field condition resemble to below show scenario for selecting",
-              ),
-              const SizedBox(height: 10,),
-              Image.asset(Assets.check11KvLeft),
-            ]
-            ),
+            content: SizedBox(
+              height: 300,
+              child: Column(children: [
+                const Text(
+                  "Please be sure your field condition resemble to below show scenario for selecting",
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Image.asset(Assets.check11KvLeft),
+              ]),
             ),
             actions: [
               TextButton(
                   onPressed: () {
                     Navigator.pop(context);
-                    if (selectedPole == "" || _selectedPole == null || _selectedPole == 'Source Pole Not Mapped' &&
-                        selectedTappingPole != null) {
-                      showAlertDialog(context, "Please choose Source Pole Num or check Source pole not mapped or origin Pole");
-                    }                  },
+                    if (selectedPole == "" ||
+                        _selectedPole == null ||
+                        _selectedPole == 'Source Pole Not Mapped' &&
+                            selectedTappingPole != null) {
+                      showAlertDialog(context,
+                          "Please choose Source Pole Num or check Source pole not mapped or origin Pole");
+                    }
+                  },
                   child: Text("OK")),
             ],
           );
         },
       );
-
-    }else if(_selectedTappingPole=="Right Tapping"){
+    } else if (_selectedTappingPole == "Right Tapping") {
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            content: SizedBox(height: 300, child:
-            Column(children: [
-              const Text(
-                "Please be sure your field condition resemble to below show scenario for selecting",
-              ),
-              SizedBox(height: 10,),
-              Image.asset(Assets.check11KvRight),
-            ]
-            ),
+            content: SizedBox(
+              height: 300,
+              child: Column(children: [
+                const Text(
+                  "Please be sure your field condition resemble to below show scenario for selecting",
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Image.asset(Assets.check11KvRight),
+              ]),
             ),
             actions: [
               TextButton(
                   onPressed: () {
                     Navigator.pop(context);
-                    if (selectedPole == "" || _selectedPole == null || _selectedPole == 'Source Pole Not Mapped' &&
-                        selectedTappingPole != null) {
-                      showAlertDialog(context, "Please choose Source Pole Num or check Source pole not mapped or origin Pole");
-                    }                  },
+                    if (selectedPole == "" ||
+                        _selectedPole == null ||
+                        _selectedPole == 'Source Pole Not Mapped' &&
+                            selectedTappingPole != null) {
+                      showAlertDialog(context,
+                          "Please choose Source Pole Num or check Source pole not mapped or origin Pole");
+                    }
+                  },
                   child: Text("OK")),
             ],
           );
         },
       );
-    }else {
+    } else {
       print("$_selectedTappingPole:  tap selected");
-      if (selectedPole == "" || _selectedPole == null || _selectedPole == 'Source Pole Not Mapped' &&
-          selectedTappingPole != null) {
-        showAlertDialog(context, "Please choose Source Pole Num or check Source pole not mapped or origin Pole");
+      if (selectedPole == "" ||
+          _selectedPole == null ||
+          _selectedPole == 'Source Pole Not Mapped' &&
+              selectedTappingPole != null) {
+        showAlertDialog(context,
+            "Please choose Source Pole Num or check Source pole not mapped or origin Pole");
       }
     }
   }
+
   //Any Crossings:
   List<String> selectedCrossings = [];
 
@@ -379,6 +395,7 @@ class Check33kvViewmodel extends ChangeNotifier {
     "Side Arm",
   ];
   String? _selectedPoleDetailsName;
+
   String? get selectedPoleDetailsName => _selectedPoleDetailsName;
 
   void setSelectedPoleDetailName(String qty) {
@@ -391,9 +408,29 @@ class Check33kvViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-
-
-  List<int> poleQty=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
+  List<int> poleQty = [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ];
 
   String? selectedPoleQty;
 
@@ -413,6 +450,7 @@ class Check33kvViewmodel extends ChangeNotifier {
   ];
 
   List<PoleItem> get poleItems => _poleItems;
+
   void toggleSelection(int index) {
     _poleItems[index].isSelected = !_poleItems[index].isSelected;
     if (!_poleItems[index].isSelected) {
@@ -442,6 +480,7 @@ class Check33kvViewmodel extends ChangeNotifier {
   ];
 
   List<PoleItem> get poleInsulators => _poleInsulators;
+
   void toggleInsulators(int index) {
     _poleInsulators[index].isSelected = !_poleInsulators[index].isSelected;
     if (!_poleInsulators[index].isSelected) {
@@ -467,7 +506,8 @@ class Check33kvViewmodel extends ChangeNotifier {
   void updatePoleInsulators(String? newValue, int index) {
     if (newValue != null) {
       _poleInsulators[index].selectedQty = int.tryParse(newValue);
-      print("PoleInsulators[index].selectedQty: ${_poleInsulators[index].selectedQty}");
+      print(
+          "PoleInsulators[index].selectedQty: ${_poleInsulators[index].selectedQty}");
       notifyListeners();
     }
   }
@@ -479,6 +519,7 @@ class Check33kvViewmodel extends ChangeNotifier {
   ];
 
   List<PoleItem> get poleSupport => _poleSupport;
+
   void toggleSupport(int index) {
     _poleSupport[index].isSelected = !_poleSupport[index].isSelected;
     if (!_poleSupport[index].isSelected) {
@@ -486,13 +527,13 @@ class Check33kvViewmodel extends ChangeNotifier {
     }
     print("poleSupport: ${poleSupport.toString()}");
     notifyListeners();
-    //poleItems: [PoleItem(title: V Cross Arm, isSelected: false, selectedQty: null), PoleItem(title: Horiz. Cross Arm, isSelected: false, selectedQty: null), PoleItem(title: Channet Cross Arm, isSelected: true, selectedQty: 11), PoleItem(title: Side Arm, isSelected: false, selectedQty: null)]
   }
 
   void updatePoleSupport(String? newValue, int index) {
     if (newValue != null) {
       _poleSupport[index].selectedQty = int.tryParse(newValue);
-      print("poleSupport[index].selectedQty: ${_poleSupport[index].selectedQty}");
+      print(
+          "poleSupport[index].selectedQty: ${_poleSupport[index].selectedQty}");
       notifyListeners();
     }
   }
@@ -517,9 +558,8 @@ class Check33kvViewmodel extends ChangeNotifier {
   void setSelectedConnected(String title) {
     _selectedConnected = title;
     print("$_selectedConnected: Connected  selected");
-    if(_selectedConnected == "HT Services"){
+    if (_selectedConnected == "HT Services") {
       showCircleDialog(() {
-        // This forces the dropdown to rebuild after loading
         Future.delayed(Duration(milliseconds: 300), () {
           notifyListeners();
         });
@@ -529,12 +569,18 @@ class Check33kvViewmodel extends ChangeNotifier {
   }
 
   //Support Material
-  List<int> supportQty=[0,1,2,3,4,];
+  List<int> supportQty = [
+    0,
+    1,
+    2,
+    3,
+    4,
+  ];
   String? smSelected;
 
-  void updateSupportQty(String? newValue, String?  title) {
+  void updateSupportQty(String? newValue, String? title) {
     if (newValue != null) {
-      smSelected=newValue;
+      smSelected = newValue;
 
       print("smSelected: $smSelected");
       notifyListeners();
@@ -566,7 +612,7 @@ class Check33kvViewmodel extends ChangeNotifier {
       poleID = value.id.toString() ?? "";
       poleLat = value.lat.toString() ?? "";
       poleLon = value.lon.toString() ?? "";
-      AlertUtils.showSnackBar(context, poleFeederSelected! , isFalse);
+      AlertUtils.showSnackBar(context, poleFeederSelected!, isFalse);
 
       print("POle Num: $poleFeederSelected");
       print("Pole ID: $poleID");
@@ -583,7 +629,7 @@ class Check33kvViewmodel extends ChangeNotifier {
 
     final requestData = {
       "authToken":
-      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "ssc": args["ssc"],
       "fc": args["fc"],
@@ -610,7 +656,7 @@ class Check33kvViewmodel extends ChangeNotifier {
             if (response.data['success'] == isTrue) {
               if (response.data['objectJson'] != null) {
                 final List<dynamic> jsonList =
-                jsonDecode(response.data['objectJson']);
+                    jsonDecode(response.data['objectJson']);
                 final List<PoleFeederEntity> listData = jsonList
                     .map((json) => PoleFeederEntity.fromJson(json))
                     .toList();
@@ -652,7 +698,7 @@ class Check33kvViewmodel extends ChangeNotifier {
 
       final requestData = {
         "authToken":
-        SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+            SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
         "api": Apis.API_KEY,
         "ssc": args["ssc"],
         "fc": args["fc"],
@@ -660,8 +706,8 @@ class Check33kvViewmodel extends ChangeNotifier {
         "tap": selectedTappingPole == "Straight Tapping"
             ? "s"
             : selectedTappingPole == "Left Tapping"
-            ? "l"
-            : "r",
+                ? "l"
+                : "r",
         "sid": poleID,
       };
 
@@ -790,14 +836,28 @@ class Check33kvViewmodel extends ChangeNotifier {
   //NOT USED
   bool isHTServiceChecked = false;
   List<String> circles = [
-    "KHAMMAM", "HANAMKONDA", "KARIMNAGAR", "NIZAMABAD",
-    "ADILABAD", "KOTHAGUDEM", "WARANGAL", "JANGAON",
-    "BHUPALPALLY", "MAHABUBABAD", "JAGITYAL", "PEDDAPALLY",
-    "KAMAREDDY", "NIRMAL", "ASIFABAD", "MANCHERIAL"
+    "KHAMMAM",
+    "HANAMKONDA",
+    "KARIMNAGAR",
+    "NIZAMABAD",
+    "ADILABAD",
+    "KOTHAGUDEM",
+    "WARANGAL",
+    "JANGAON",
+    "BHUPALPALLY",
+    "MAHABUBABAD",
+    "JAGITYAL",
+    "PEDDAPALLY",
+    "KAMAREDDY",
+    "NIRMAL",
+    "ASIFABAD",
+    "MANCHERIAL"
   ];
 
   bool _hasTappedDropdownOnce = false;
+
   bool get hasTappedDropdownOnce => _hasTappedDropdownOnce;
+
   void markDropdownTapped() {
     _hasTappedDropdownOnce = true;
     notifyListeners();
@@ -819,10 +879,10 @@ class Check33kvViewmodel extends ChangeNotifier {
                   title: Text(circles[index]),
                   onTap: () {
                     Navigator.of(context).pop();
-                    ccValue=index+1;
+                    ccValue = index + 1;
                     notifyListeners();
                     print('CC value assigned : ${ccValue}');
-                    loadHTServices(ccValue.toString() ).then((_){
+                    loadHTServices(ccValue.toString()).then((_) {
                       onCircleSelected();
                     });
                   },
@@ -835,11 +895,9 @@ class Check33kvViewmodel extends ChangeNotifier {
     );
   }
 
-
-
   int? ccValue;
-  List<SpinnerList> htServiceList=[];
-  List<String?> htServiceNames=[];
+  List<SpinnerList> htServiceList = [];
+  List<String?> htServiceNames = [];
   String? selectedHtServiceName;
   String? selectedArea;
 
@@ -851,12 +909,13 @@ class Check33kvViewmodel extends ChangeNotifier {
 
   List<SpinnerList?> substationList = [];
   SpinnerList? selectedSubstation;
+
   Future<void> getSubStationList() async {
-    _isLoading=isTrue;
+    _isLoading = isTrue;
 
     final requestData = {
       "authToken":
-      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "ssc": args['ssc'],
     };
@@ -884,7 +943,9 @@ class Check33kvViewmodel extends ChangeNotifier {
                 final objectJson = response.data['objectJson'];
                 List<dynamic> ssRawList = jsonDecode(objectJson);
                 if (ssRawList.isNotEmpty && ssRawList.length >= 2) {
-                  substationList=ssRawList.map((json)=>SpinnerList.fromJson(json)).toList();
+                  substationList = ssRawList
+                      .map((json) => SpinnerList.fromJson(json))
+                      .toList();
                   print('HT Service List Length: ${htServiceList.length}');
                   notifyListeners();
                 }
@@ -906,23 +967,20 @@ class Check33kvViewmodel extends ChangeNotifier {
       showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
     }
-
   }
 
-
-  void onSubstationChange(SpinnerList? selected){
-    selectedSubstation=selected;
+  void onSubstationChange(SpinnerList? selected) {
+    selectedSubstation = selected;
     notifyListeners();
   }
 
   Future<void> loadHTServices(String circleCode) async {
-
-    _isLoading=isTrue;
+    _isLoading = isTrue;
     notifyListeners();
 
     final requestData = {
       "authToken":
-      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "cc": circleCode,
     };
@@ -950,8 +1008,12 @@ class Check33kvViewmodel extends ChangeNotifier {
                 final objectJson = response.data['objectJson'];
                 List<dynamic> serviceRawList = jsonDecode(objectJson);
                 if (serviceRawList.isNotEmpty && serviceRawList.length >= 2) {
-                  htServiceList=serviceRawList.map((json)=>SpinnerList.fromJson(json)).toList();
-                  htServiceNames = htServiceList.map((service) => service.optionName).toList();
+                  htServiceList = serviceRawList
+                      .map((json) => SpinnerList.fromJson(json))
+                      .toList();
+                  htServiceNames = htServiceList
+                      .map((service) => service.optionName)
+                      .toList();
                   notifyListeners();
                 }
               } else {
@@ -994,12 +1056,14 @@ class Check33kvViewmodel extends ChangeNotifier {
       }
     }
   }
+
   Future<void> save33KVPole() async {
     _isLoading = isTrue;
     notifyListeners();
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "fc": args["fc"],
       "ssc": args["ssc"],
@@ -1010,8 +1074,8 @@ class Check33kvViewmodel extends ChangeNotifier {
       "tap": selectedTappingPole == "Straight Tapping"
           ? "s"
           : selectedTappingPole == "Left Tapping"
-          ? "l"
-          : "r",
+              ? "l"
+              : "r",
       "pt": selectedSecondGroup.isNotEmpty
           ? selectedSecondGroup[0]
           : (selectedFirstGroup.isNotEmpty ? selectedFirstGroup[0] : null),
@@ -1021,32 +1085,37 @@ class Check33kvViewmodel extends ChangeNotifier {
       "typeOfPoint": selectedTypePoint,
       // "pid": docketEntity!.id,
       "polenum": poleNumber.text.isEmpty ? "0000" : poleNumber.text.trim(),
-      "crossingText":"",
+      "crossingText": "",
       if (selectedPole != "Origin Pole") ...{
         "series": series,
       },
-      "cid":docketEntity!.id,
-      if (selectedPole == "Source Pole Not Mapped" || selectedPole != "Origin Pole") ...{
+      "cid": docketEntity!.id,
+      if (selectedPole == "Source Pole Not Mapped" ||
+          selectedPole != "Origin Pole") ...{
         "sid": poleID,
         "slat": poleLat,
         "slon": poleLon,
       },
       "cross": '${buildCrossingString()}',
       "connLoad": selectedConnected == "No Load" ? "N" : "NEW SS",
-      "ht":"${htServiceNames.indexOf(selectedHtServiceName)}"?? "",
-      "ss":"${substationList.indexOf(selectedSubstation)}"??"",
-      "cs":selectedConductor,
+      "ht": selectedHtServiceName != null
+          ? "${htServiceNames.indexOf(selectedHtServiceName)}"
+          : "",
+      "ss": selectedSubstation != null
+          ? "${substationList.indexOf(selectedSubstation)}"
+          : "",
+      "cs": selectedConductor,
       "lat": latitude.toString(),
       "lon": longitude.toString(),
-      "vx":selectedPoleQuantities["V Cross Arm"] ,
-      "hx":selectedPoleQuantities["Horiz. Cross Arm"] ,
-      "sx":selectedPoleQuantities["Channel Cross Arm"] ,
-      "cx":selectedPoleQuantities["Side Arm"] ,
-      "pin":selectedInsulators["Pin Insulators"],
-      "disc":selectedInsulators["Disc"],
-      "sha":selectedInsulators["Shackles"],
-      "stud":selectedSupportType["Stud Pole"],
-      "stay":selectedSupportType["Stay set"],
+      "vx": selectedPoleQuantities["V Cross Arm"],
+      "hx": selectedPoleQuantities["Horiz. Cross Arm"],
+      "sx": selectedPoleQuantities["Channel Cross Arm"],
+      "cx": selectedPoleQuantities["Side Arm"],
+      "pin": selectedInsulators["Pin Insulators"],
+      "disc": selectedInsulators["Disc"],
+      "sha": selectedInsulators["Shackles"],
+      "stud": selectedSupportType["Stud Pole"],
+      "stay": selectedSupportType["Stay set"],
     };
 
     final payload = {
@@ -1074,7 +1143,7 @@ class Check33kvViewmodel extends ChangeNotifier {
                   showSuccessDialog(
                     context,
                     response.data["message"],
-                        () {
+                    () {
                       Navigator.pop(context);
                       resetForm();
                     },
@@ -1094,8 +1163,7 @@ class Check33kvViewmodel extends ChangeNotifier {
                 showAlertDialog(context, "Unable to process your request!");
               }
             } else {
-              showAlertDialog(context,
-                  "There are no existing Proposals under the selected Substation");
+              showAlertDialog(context, response.data['message']);
             }
           } else {
             showSessionExpiredDialog(context);
@@ -1114,22 +1182,23 @@ class Check33kvViewmodel extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
-
-    notifyListeners();
   }
 
   bool validateForm() {
     final selectedItems = poleItems.where((item) => item.isSelected).toList();
     final hasInvalidQty = selectedItems.any(
-          (item) => item.selectedQty == null || item.selectedQty.toString().trim().isEmpty,
+      (item) =>
+          item.selectedQty == null ||
+          item.selectedQty.toString().trim().isEmpty,
     );
     if ((selectedPole == "" || selectedPole == null) &&
-        selectedPoleFeeder==null) {
+        selectedPoleFeeder == null) {
       AlertUtils.showSnackBar(
           context, "Please select the source pole to the current pole", isTrue);
       return false;
-    } else if (poleFeederSelected==null||poleFeederSelected=="") {
-      AlertUtils.showSnackBar(context, "Please select previous pole number", isTrue);
+    } else if (poleFeederSelected == null || poleFeederSelected == "") {
+      AlertUtils.showSnackBar(
+          context, "Please select previous pole number", isTrue);
       return false;
     } else if (selectedTappingPole == "" || selectedTappingPole == null) {
       AlertUtils.showSnackBar(
@@ -1157,28 +1226,32 @@ class Check33kvViewmodel extends ChangeNotifier {
           "Please select the type of point (Cut Point/End Point/Pin Point)",
           isTrue);
       return false;
-    }else  if (selectedItems.isEmpty) {
-      AlertUtils.showSnackBar(context, "Please select at least one cross arm type.", true);
+    } else if (selectedItems.isEmpty) {
+      AlertUtils.showSnackBar(
+          context, "Please select at least one cross arm type.", true);
       return false;
     } else if (hasInvalidQty) {
-      AlertUtils.showSnackBar(context, "Please enter quantity for all selected cross arms.", true);
+      AlertUtils.showSnackBar(
+          context, "Please enter quantity for all selected cross arms.", true);
       return false;
-    }else if (selectedCrossings.isEmpty || selectedCrossings == null) {
+    } else if (selectedCrossings.isEmpty || selectedCrossings == null) {
       AlertUtils.showSnackBar(context, "Please select any crossing", isTrue);
       return false;
     } else if (selectedConnected == "" || selectedConnected == null) {
       AlertUtils.showSnackBar(context,
           "Please select the any connected load on the current pole", isTrue);
       return false;
-    }else if(selectedConnected=="HT Services" && selectedHtServiceName==null){
-      AlertUtils.showSnackBar(
-          context, "Please select the HT Service connected on this pole", isTrue);
+    } else if (selectedConnected == "HT Services" &&
+        selectedHtServiceName == null) {
+      AlertUtils.showSnackBar(context,
+          "Please select the HT Service connected on this pole", isTrue);
       return false;
-    }else if(selectedConnected== "Sub Station" && selectedSubstation==null){
+    } else if (selectedConnected == "Sub Station" &&
+        selectedSubstation == null) {
       AlertUtils.showSnackBar(
           context, "Please select the connected 33/11 KV Substation", isTrue);
       return false;
-    }else if (_selectedConductor == "" || _selectedConductor == null) {
+    } else if (_selectedConductor == "" || _selectedConductor == null) {
       AlertUtils.showSnackBar(
           context,
           "Please select the conductor size from previous pole to this pole",
@@ -1187,7 +1260,9 @@ class Check33kvViewmodel extends ChangeNotifier {
     } else if ((latitude == "" && longitude == "") ||
         (latitude == null && longitude == null)) {
       AlertUtils.showSnackBar(
-          context, "Please wait until we capture your location. Please make sure you have turned on your location", isTrue);
+          context,
+          "Please wait until we capture your location. Please make sure you have turned on your location",
+          isTrue);
       startListening();
       return false;
     }
@@ -1199,42 +1274,43 @@ class Check33kvViewmodel extends ChangeNotifier {
     _selectedTappingPole = null;
     selectedFirstGroup.clear();
     selectedSecondGroup.clear();
-    _selectedPoleHeight="";
-    _selectedCircuits="";
-    _selectedFormation="";
-    _selectedTypePoint="";
+    _selectedPoleHeight = "";
+    _selectedCircuits = "";
+    _selectedFormation = "";
+    _selectedTypePoint = "";
     selectedCrossings.clear();
-    _selectedConnected="";
+    _selectedConnected = "";
     subStationCapacity.clear();
-    _selectedConductor="";
-    longitude=null;
-    latitude=null;
+    _selectedConductor = "";
+    longitude = null;
+    latitude = null;
     notifyListeners();
   }
 
-  void showDialogueCopyPoleNum(){
+  void showDialogueCopyPoleNum() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          content:const SizedBox(height: 40, child: Column(children: [
-            Text("Copy this pole mum to previous pole number box?",),
-          ]
-          ),
+          content: const SizedBox(
+            height: 40,
+            child: Column(children: [
+              Text(
+                "Copy this pole mum to previous pole number box?",
+              ),
+            ]),
           ),
           actions: [
             TextButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text("Cancle")
-            ),
+                child: Text("Cancle")),
             TextButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text("Copy")
-            ),
+                child: Text("Copy")),
           ],
         );
       },
@@ -1261,9 +1337,9 @@ class Check33kvViewmodel extends ChangeNotifier {
                 Navigator.pop(context); // close the dialog
                 showPoleFeederDropdown(); // show dropdown in a new dialog
               },
-              child: Text("SELECT FROM LIST"),
+              child: const Text("SELECT FROM LIST"),
             ),
-            TextButton(
+            const TextButton(
               onPressed: null,
               child: Text("SELECT ON MAP"),
             ),
@@ -1286,9 +1362,11 @@ class Check33kvViewmodel extends ChangeNotifier {
               setState(() {
                 searchQuery = query;
                 filteredList = poleFeederList.where((item) {
-                  final displayText = (item.tempSeries != null && item.tempSeries!.isNotEmpty
-                      ? '${item.tempSeries}-${item.poleNum}'
-                      : item.poleNum ?? '').toLowerCase();
+                  final displayText =
+                      (item.tempSeries != null && item.tempSeries!.isNotEmpty
+                              ? '${item.tempSeries}-${item.poleNum}'
+                              : item.poleNum ?? '')
+                          .toLowerCase();
                   return displayText.contains(query.toLowerCase());
                 }).toList();
               });
@@ -1314,7 +1392,8 @@ class Check33kvViewmodel extends ChangeNotifier {
                       itemCount: filteredList.length,
                       itemBuilder: (context, index) {
                         final item = filteredList[index];
-                        final displayText = item.tempSeries != null && item.tempSeries!.isNotEmpty
+                        final displayText = item.tempSeries != null &&
+                                item.tempSeries!.isNotEmpty
                             ? '${item.tempSeries}-${item.poleNum}'
                             : item.poleNum ?? '';
 
@@ -1338,5 +1417,4 @@ class Check33kvViewmodel extends ChangeNotifier {
       },
     );
   }
-
 }

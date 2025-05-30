@@ -92,11 +92,8 @@ class Pole33kvViewmodel extends ChangeNotifier {
       if (_selectedPole == "" || _selectedPole == null) {
         if (poleID != null) {
           distanceDisplay = isTrue;
-          distanceBtnPoles = calculateDistance(
-              latitude!, longitude!,
-              double.parse(poleLat!),
-              double.parse(poleLon!)
-          );
+          distanceBtnPoles = calculateDistance(latitude!, longitude!,
+              double.parse(poleLat!), double.parse(poleLon!));
           print("distanceBtnPoles: $distanceBtnPoles");
           notifyListeners();
         } else {
@@ -154,7 +151,9 @@ class Pole33kvViewmodel extends ChangeNotifier {
     _selectedTappingPole = title;
     print("$_selectedTappingPole:  tap selected");
     if (selectedPole == "" ||
-        _selectedPole == null||_selectedPole=='Source Pole Not Mapped' && selectedTappingPole != null) {
+        _selectedPole == null ||
+        _selectedPole == 'Source Pole Not Mapped' &&
+            selectedTappingPole != null) {
       showAlertDialog(context,
           "Please choose Source Pole Num or check Source pole not mapped or origin Pole");
     } else {
@@ -331,7 +330,7 @@ class Pole33kvViewmodel extends ChangeNotifier {
       poleID = value.id.toString() ?? "";
       poleLat = value.lat.toString() ?? "";
       poleLon = value.lon.toString() ?? "";
-      AlertUtils.showSnackBar(context, poleFeederSelected! , isFalse);
+      AlertUtils.showSnackBar(context, poleFeederSelected!, isFalse);
 
       print("POle Num: $poleFeederSelected");
       print("Pole ID: $poleID");
@@ -348,7 +347,7 @@ class Pole33kvViewmodel extends ChangeNotifier {
 
     final requestData = {
       "authToken":
-      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "ssc": args["ssc"],
       "fc": args["fc"],
@@ -375,7 +374,7 @@ class Pole33kvViewmodel extends ChangeNotifier {
             if (response.data['success'] == isTrue) {
               if (response.data['objectJson'] != null) {
                 final List<dynamic> jsonList =
-                jsonDecode(response.data['objectJson']);
+                    jsonDecode(response.data['objectJson']);
                 final List<PoleFeederEntity> listData = jsonList
                     .map((json) => PoleFeederEntity.fromJson(json))
                     .toList();
@@ -417,7 +416,7 @@ class Pole33kvViewmodel extends ChangeNotifier {
 
       final requestData = {
         "authToken":
-        SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+            SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
         "api": Apis.API_KEY,
         "ssc": args["ssc"],
         "fc": args["fc"],
@@ -425,8 +424,8 @@ class Pole33kvViewmodel extends ChangeNotifier {
         "tap": selectedTappingPole == "Straight Tapping"
             ? "s"
             : selectedTappingPole == "Left Tapping"
-            ? "l"
-            : "r",
+                ? "l"
+                : "r",
         "sid": poleID,
       };
 
@@ -500,10 +499,22 @@ class Pole33kvViewmodel extends ChangeNotifier {
   //NOT USED
   bool isHTServiceChecked = false;
   List<String> circles = [
-    "KHAMMAM", "HANAMKONDA", "KARIMNAGAR", "NIZAMABAD",
-    "ADILABAD", "KOTHAGUDEM", "WARANGAL", "JANGAON",
-    "BHUPALPALLY", "MAHABUBABAD", "JAGITYAL", "PEDDAPALLY",
-    "KAMAREDDY", "NIRMAL", "ASIFABAD", "MANCHERIAL"
+    "KHAMMAM",
+    "HANAMKONDA",
+    "KARIMNAGAR",
+    "NIZAMABAD",
+    "ADILABAD",
+    "KOTHAGUDEM",
+    "WARANGAL",
+    "JANGAON",
+    "BHUPALPALLY",
+    "MAHABUBABAD",
+    "JAGITYAL",
+    "PEDDAPALLY",
+    "KAMAREDDY",
+    "NIRMAL",
+    "ASIFABAD",
+    "MANCHERIAL"
   ];
 
   void showCircleDialog() {
@@ -534,12 +545,11 @@ class Pole33kvViewmodel extends ChangeNotifier {
   }
 
   Future<void> loadHTServices(String cicleCode) async {
-
     _isLoading = isTrue;
 
     final requestData = {
       "authToken":
-      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "cc": "",
     };
@@ -558,7 +568,7 @@ class Pole33kvViewmodel extends ChangeNotifier {
     try {
       if (response != null) {
         if (response.data is String) {
-          response.data = jsonDecode(response.data); // Parse string to JSON
+          response.data = jsonDecode(response.data);
         }
         if (response.statusCode == successResponseCode) {
           if (response.data['tokenValid'] == isTrue) {
@@ -603,6 +613,7 @@ class Pole33kvViewmodel extends ChangeNotifier {
       }
     }
   }
+
   Future<void> save33KVPole() async {
     _isLoading = isTrue;
     notifyListeners();
@@ -611,7 +622,7 @@ class Pole33kvViewmodel extends ChangeNotifier {
       "loadLatestDataOnly": true,
       "maxId": maxId, // from map
       "authToken":
-      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "fc": args["fc"],
       "ssc": args["ssc"],
@@ -622,8 +633,8 @@ class Pole33kvViewmodel extends ChangeNotifier {
       "tap": selectedTappingPole == "Straight Tapping"
           ? "s"
           : selectedTappingPole == "Left Tapping"
-          ? "l"
-          : "r",
+              ? "l"
+              : "r",
       "pt": selectedSecondGroup.isNotEmpty
           ? selectedSecondGroup[0]
           : (selectedFirstGroup.isNotEmpty ? selectedFirstGroup[0] : null),
@@ -643,9 +654,11 @@ class Pole33kvViewmodel extends ChangeNotifier {
       },
       "cross": buildCrossingString(),
       "connLoad": selectedConnected == "No Load" ? "N" : "NEW SS",
-      "sscap":selectedConnected=="Sub Station"?subStationCapacity.text.trim():null,
+      "sscap": selectedConnected == "Sub Station"
+          ? subStationCapacity.text.trim()
+          : null,
       "cs": selectedConductor,
-      "ss":"NA",
+      "ss": "NA",
       "lat": "$latitude",
       "lon": "$longitude",
     };
@@ -675,7 +688,7 @@ class Pole33kvViewmodel extends ChangeNotifier {
                   showSuccessDialog(
                     context,
                     response.data["message"],
-                        () {
+                    () {
                       Navigator.pop(context);
                       resetForm();
                     },
@@ -721,7 +734,7 @@ class Pole33kvViewmodel extends ChangeNotifier {
 
   bool validateForm() {
     if ((selectedPole == "" || selectedPole == null) &&
-        selectedPoleFeeder==null) {
+        selectedPoleFeeder == null) {
       AlertUtils.showSnackBar(
           context, "Please select the source pole to the current pole", isTrue);
       return false;
@@ -777,7 +790,9 @@ class Pole33kvViewmodel extends ChangeNotifier {
         (latitude == null && longitude == null)) {
       //location
       AlertUtils.showSnackBar(
-          context, "Please wait until we capture your location. Please make sure you have turned on your location", isTrue);
+          context,
+          "Please wait until we capture your location. Please make sure you have turned on your location",
+          isTrue);
       return false;
     }
     return true;
@@ -789,17 +804,16 @@ class Pole33kvViewmodel extends ChangeNotifier {
     _selectedTappingPole = null;
     selectedFirstGroup.clear();
     selectedSecondGroup.clear();
-    _selectedPoleHeight="";
-    _selectedCircuits="";
-    _selectedFormation="";
-    _selectedTypePoint="";
+    _selectedPoleHeight = "";
+    _selectedCircuits = "";
+    _selectedFormation = "";
+    _selectedTypePoint = "";
     selectedCrossings.clear();
-    _selectedConnected="";
+    _selectedConnected = "";
     subStationCapacity.clear();
-    _selectedConductor="";
-    longitude=null;
-    latitude=null;
+    _selectedConductor = "";
+    longitude = null;
+    latitude = null;
     notifyListeners();
   }
-
 }

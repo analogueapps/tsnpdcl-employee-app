@@ -11,9 +11,9 @@ import 'package:tsnpdcl_employee/widget/view_detailed_lc_tile_widget.dart';
 
 class Pole33kvFeeder extends StatelessWidget {
   const Pole33kvFeeder({super.key, required this.args});
+
   static const id = Routes.pole33kvScreen;
   final Map<String, dynamic> args;
-
 
   @override
   Widget build(BuildContext context) {
@@ -25,19 +25,19 @@ class Pole33kvFeeder extends StatelessWidget {
           style: const TextStyle(
               color: Colors.white,
               fontSize: toolbarTitleSize,
-              fontWeight: FontWeight.w700
-          ),
+              fontWeight: FontWeight.w700),
         ),
         iconTheme: const IconThemeData(
           color: Colors.white,
         ),
       ),
-      body:ChangeNotifierProvider(
+      body: ChangeNotifierProvider(
         create: (_) => Pole33kvViewmodel(context: context, args: args),
         child: Consumer<Pole33kvViewmodel>(
           builder: (context, viewModel, child) {
-            return Form(key:viewModel.formKey,
-              child:   Stack(children: [
+            return Form(
+              key: viewModel.formKey,
+              child: Stack(children: [
                 Column(
                   children: [
                     // Fixed map
@@ -106,17 +106,19 @@ class Pole33kvFeeder extends StatelessWidget {
                                       isExpanded: true,
                                       hint: const Text("Select an option"),
                                       value: viewModel.selectedPoleFeeder,
-                                      items: viewModel.poleFeederList
-                                          .map((item) {
-                                        final displayText = item.tempSeries != null && item.tempSeries!.isNotEmpty
+                                      items:
+                                          viewModel.poleFeederList.map((item) {
+                                        final displayText = item.tempSeries !=
+                                                    null &&
+                                                item.tempSeries!.isNotEmpty
                                             ? '${item.tempSeries}-${item.poleNum}'
                                             : item.poleNum ?? '';
-                                        return DropdownMenuItem<PoleFeederEntity>(
+                                        return DropdownMenuItem<
+                                            PoleFeederEntity>(
                                           value: item,
                                           child: Text(displayText),
                                         );
-                                      })
-                                          .toList(),
+                                      }).toList(),
                                       onChanged: (value) {
                                         viewModel.onListPoleFeederChange(value);
                                       },
@@ -154,50 +156,56 @@ class Pole33kvFeeder extends StatelessWidget {
                             ),
                             const Text("Pole Number"),
                             TextFormField(
-                              // maxLines: null,
-                              // minLines: 5,
                               controller: viewModel.poleNumber,
                               keyboardType: TextInputType.text,
                               decoration: const InputDecoration(
-                                // hintText: "Type here...",
                                 border: OutlineInputBorder(),
                                 alignLabelWithHint: true,
                               ),
                             ),
-                            const SizedBox(height: doubleTen,),
+                            const SizedBox(
+                              height: doubleTen,
+                            ),
                             const Text("Pole Type"),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       checkbox(
                                         context,
                                         "RS joist",
-                                        viewModel.selectedFirstGroup.contains("RS joist") ? "RS joist" : null,
-                                            (val) => viewModel.toggleFirstGroup(val),
+                                        viewModel.selectedFirstGroup
+                                                .contains("RS joist")
+                                            ? "RS joist"
+                                            : null,
+                                        (val) =>
+                                            viewModel.toggleFirstGroup(val),
                                         true,
                                       ),
                                       checkbox(
                                         context,
                                         "PSSC Pole",
                                         viewModel.selectedFirstGroup
-                                            .contains("PSSC Pole")
+                                                .contains("PSSC Pole")
                                             ? "PSSC Pole"
                                             : null,
-                                            (val) => viewModel.toggleFirstGroup(val),
+                                        (val) =>
+                                            viewModel.toggleFirstGroup(val),
                                         isTrue,
                                       ),
                                       checkbox(
                                         context,
                                         "Tower",
                                         viewModel.selectedFirstGroup
-                                            .contains("Tower")
+                                                .contains("Tower")
                                             ? "Tower"
                                             : null,
-                                            (val) => viewModel.toggleFirstGroup(val),
+                                        (val) =>
+                                            viewModel.toggleFirstGroup(val),
                                         isTrue,
                                       ),
                                     ],
@@ -206,26 +214,29 @@ class Pole33kvFeeder extends StatelessWidget {
                                 const SizedBox(width: 20),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       checkbox(
                                         context,
                                         "Joist",
                                         viewModel.selectedSecondGroup
-                                            .contains("Joist")
+                                                .contains("Joist")
                                             ? "Joist"
                                             : null,
-                                            (val) => viewModel.toggleSecondGroup(val),
+                                        (val) =>
+                                            viewModel.toggleSecondGroup(val),
                                         viewModel.isSecondGroupEnabled,
                                       ),
                                       checkbox(
                                         context,
                                         "Rail Pole",
                                         viewModel.selectedSecondGroup
-                                            .contains("Rail Pole")
+                                                .contains("Rail Pole")
                                             ? "Rail Pole"
                                             : null,
-                                            (val) => viewModel.toggleSecondGroup(val),
+                                        (val) =>
+                                            viewModel.toggleSecondGroup(val),
                                         viewModel.isSecondGroupEnabled,
                                       ),
                                     ],
@@ -239,7 +250,7 @@ class Pole33kvFeeder extends StatelessWidget {
                               children: viewModel.poleHeightData.map((height) {
                                 return CheckboxListTile(
                                   controlAffinity:
-                                  ListTileControlAffinity.leading,
+                                      ListTileControlAffinity.leading,
                                   contentPadding: EdgeInsets.zero,
                                   title: Text(height,
                                       style: const TextStyle(fontSize: 12)),
@@ -257,29 +268,25 @@ class Pole33kvFeeder extends StatelessWidget {
                                     "1 Circuit",
                                     viewModel.selectedCircuits,
                                     viewModel.setSelectedCircuits,
-                                    isTrue
-                                ),
+                                    isTrue),
                                 checkbox(
                                     context,
                                     "2 Circuits",
                                     viewModel.selectedCircuits,
                                     viewModel.setSelectedCircuits,
-                                    isTrue
-                                ),
+                                    isTrue),
                                 checkbox(
                                     context,
                                     "3 Circuits",
                                     viewModel.selectedCircuits,
                                     viewModel.setSelectedCircuits,
-                                    isTrue
-                                ),
+                                    isTrue),
                                 checkbox(
                                     context,
                                     "4 Circuits",
                                     viewModel.selectedCircuits,
                                     viewModel.setSelectedCircuits,
-                                    isTrue
-                                ),
+                                    isTrue),
                               ],
                             ),
                             // // //
@@ -292,22 +299,19 @@ class Pole33kvFeeder extends StatelessWidget {
                                     "Horizontal",
                                     viewModel.selectedFormation,
                                     viewModel.setSelectedFormation,
-                                    isTrue
-                                ),
+                                    isTrue),
                                 checkbox(
                                     context,
                                     "Triangular",
                                     viewModel.selectedFormation,
                                     viewModel.setSelectedFormation,
-                                    isTrue
-                                ),
+                                    isTrue),
                                 checkbox(
                                     context,
                                     "Vertical",
                                     viewModel.selectedFormation,
                                     viewModel.setSelectedFormation,
-                                    isTrue
-                                ),
+                                    isTrue),
                               ],
                             ),
                             // // //
@@ -319,22 +323,19 @@ class Pole33kvFeeder extends StatelessWidget {
                                     "Cut Point",
                                     viewModel.selectedTypePoint,
                                     viewModel.setSelectedTypePoint,
-                                    isTrue
-                                ),
+                                    isTrue),
                                 checkbox(
                                     context,
                                     "Pin Point",
                                     viewModel.selectedTypePoint,
                                     viewModel.setSelectedTypePoint,
-                                    isTrue
-                                ),
+                                    isTrue),
                                 checkbox(
                                     context,
                                     "End Point",
                                     viewModel.selectedTypePoint,
                                     viewModel.setSelectedTypePoint,
-                                    isTrue
-                                ),
+                                    isTrue),
                               ],
                             ),
                             // //
@@ -342,7 +343,6 @@ class Pole33kvFeeder extends StatelessWidget {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                // Row for "None", "33KV Line", "11KV Line"
                                 Row(
                                   children: [
                                     Expanded(
@@ -350,8 +350,9 @@ class Pole33kvFeeder extends StatelessWidget {
                                         context,
                                         "None",
                                         viewModel.selectedCrossings,
-                                            (bool? checked) {
-                                          viewModel.setSelectedCrossings("None");
+                                        (bool? checked) {
+                                          viewModel
+                                              .setSelectedCrossings("None");
                                         },
                                         true,
                                       ),
@@ -361,9 +362,9 @@ class Pole33kvFeeder extends StatelessWidget {
                                         context,
                                         "33KV Line",
                                         viewModel.selectedCrossings,
-                                            (bool? checked) {
-                                          viewModel
-                                              .setSelectedCrossings("33KV Line");
+                                        (bool? checked) {
+                                          viewModel.setSelectedCrossings(
+                                              "33KV Line");
                                         },
                                         true,
                                       ),
@@ -373,9 +374,9 @@ class Pole33kvFeeder extends StatelessWidget {
                                         context,
                                         "11KV Line",
                                         viewModel.selectedCrossings,
-                                            (bool? checked) {
-                                          viewModel
-                                              .setSelectedCrossings("11KV Line");
+                                        (bool? checked) {
+                                          viewModel.setSelectedCrossings(
+                                              "11KV Line");
                                         },
                                         true,
                                       ),
@@ -385,20 +386,19 @@ class Pole33kvFeeder extends StatelessWidget {
 
                                 const SizedBox(height: 10), // Spacing
 
-                                // Row for remaining checkboxes in 2 columns
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                         children: [
                                           multipleCheckbox(
                                             context,
                                             "LT Line",
                                             viewModel.selectedCrossings,
-                                                (bool? checked) {
+                                            (bool? checked) {
                                               viewModel.setSelectedCrossings(
                                                   "LT Line");
                                             },
@@ -408,7 +408,7 @@ class Pole33kvFeeder extends StatelessWidget {
                                             context,
                                             "Railway crossing",
                                             viewModel.selectedCrossings,
-                                                (bool? checked) {
+                                            (bool? checked) {
                                               viewModel.setSelectedCrossings(
                                                   "Railway crossing");
                                             },
@@ -418,7 +418,7 @@ class Pole33kvFeeder extends StatelessWidget {
                                             context,
                                             "Transmission Lines",
                                             viewModel.selectedCrossings,
-                                                (bool? checked) {
+                                            (bool? checked) {
                                               viewModel.setSelectedCrossings(
                                                   "Transmission Lines");
                                             },
@@ -430,13 +430,13 @@ class Pole33kvFeeder extends StatelessWidget {
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                         children: [
                                           multipleCheckbox(
                                             context,
                                             "Road Crossing",
                                             viewModel.selectedCrossings,
-                                                (bool? checked) {
+                                            (bool? checked) {
                                               viewModel.setSelectedCrossings(
                                                   "Road Crossing");
                                             },
@@ -446,7 +446,7 @@ class Pole33kvFeeder extends StatelessWidget {
                                             context,
                                             "Building Crossing",
                                             viewModel.selectedCrossings,
-                                                (bool? checked) {
+                                            (bool? checked) {
                                               viewModel.setSelectedCrossings(
                                                   "Building Crossing");
                                             },
@@ -456,7 +456,7 @@ class Pole33kvFeeder extends StatelessWidget {
                                             context,
                                             "Other Common Lines",
                                             viewModel.selectedCrossings,
-                                                (bool? checked) {
+                                            (bool? checked) {
                                               viewModel.setSelectedCrossings(
                                                   "Other Common Lines");
                                             },
@@ -490,23 +490,26 @@ class Pole33kvFeeder extends StatelessWidget {
                               ],
                             ),
                             Row(
-                             mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                              const Text("Substation Capacity"),
-                          const SizedBox(width: 50,),
-                          SizedBox( width: 150,
-                          child:TextFormField(
-                                      maxLines: 1,
-                                      controller: viewModel.subStationCapacity,
-                                      keyboardType: TextInputType.text,
-                            decoration: const InputDecoration(
-                              hintText:"2X5MVA",
-                              border: OutlineInputBorder(),
-                              alignLabelWithHint: true,
-                            ),
-                      ),
-                          ),
-                            ],
+                                const Text("Substation Capacity"),
+                                const SizedBox(
+                                  width: 50,
+                                ),
+                                SizedBox(
+                                  width: 150,
+                                  child: TextFormField(
+                                    maxLines: 1,
+                                    controller: viewModel.subStationCapacity,
+                                    keyboardType: TextInputType.text,
+                                    decoration: const InputDecoration(
+                                      hintText: "2X5MVA",
+                                      border: OutlineInputBorder(),
+                                      alignLabelWithHint: true,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                             const Text("Conductor Size"),
                             Row(
@@ -514,47 +517,60 @@ class Pole33kvFeeder extends StatelessWidget {
                                 checkbox(
                                   context,
                                   "100 sq.mm",
-                                  viewModel.selectedConductor ,
-                                  viewModel.setSelectedConductor ,
+                                  viewModel.selectedConductor,
+                                  viewModel.setSelectedConductor,
                                   true,
                                 ),
                                 checkbox(
                                   context,
                                   "55 sq.mm",
-                                  viewModel.selectedConductor ,
-                                  viewModel.setSelectedConductor ,
+                                  viewModel.selectedConductor,
+                                  viewModel.setSelectedConductor,
                                   true,
                                 ),
                                 checkbox(
                                   context,
                                   "34 sq.mm",
-                                  viewModel.selectedConductor ,
-                                  viewModel.setSelectedConductor ,
+                                  viewModel.selectedConductor,
+                                  viewModel.setSelectedConductor,
                                   true,
                                 ),
                               ],
                             ),
 
                             const Text("You are at Location coordinates"),
-                            Text("Location Accuracy: ${viewModel.totalAccuracy?.toStringAsFixed(1) ?? "--"} mts / 15.0 mts", style:  TextStyle(
-                              color: (viewModel.totalAccuracy ?? 100) < 15.0
-                                  ? Colors.green
-                                  : Colors.pinkAccent,
-                            ),),
+                            Text(
+                              "Location Accuracy: ${viewModel.totalAccuracy?.toStringAsFixed(1) ?? "--"} mts / 15.0 mts",
+                              style: TextStyle(
+                                color: (viewModel.totalAccuracy ?? 100) < 15.0
+                                    ? Colors.green
+                                    : Colors.pinkAccent,
+                              ),
+                            ),
                             Text(
                               "Lat: ${viewModel.latitude?.toStringAsFixed(5) ?? "--"}\n"
-                                  "Lon: ${viewModel.longitude?.toStringAsFixed(5) ?? "--"}\n",
-
+                              "Lon: ${viewModel.longitude?.toStringAsFixed(5) ?? "--"}\n",
                               style: const TextStyle(
                                 color: CommonColors.colorPrimary,
                               ),
                             ),
-                            viewModel.distanceDisplay==isTrue&&viewModel.selectedPole==null?Text("Distance from Previous pole to your locations is ${viewModel.distanceBtnPoles} %s mtrs"): const Text("Please select source  pole to get distance.", style: TextStyle(color:Colors.red),),
-                            const SizedBox(height: 10,),
-                            SizedBox(width: double.infinity,
-                              child:PrimaryButton(text: "Save Pole", onPressed: viewModel.submit33KVForm),
+                            viewModel.distanceDisplay == isTrue &&
+                                    viewModel.selectedPole == null
+                                ? Text(
+                                    "Distance from Previous pole to your locations is ${viewModel.distanceBtnPoles} %s mtrs")
+                                : const Text(
+                                    "Please select source  pole to get distance.",
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                            const SizedBox(
+                              height: 10,
                             ),
-
+                            SizedBox(
+                              width: double.infinity,
+                              child: PrimaryButton(
+                                  text: "Save Pole",
+                                  onPressed: viewModel.submit33KVForm),
+                            ),
                           ],
                         ),
                       ),
@@ -590,10 +606,10 @@ Widget checkbox(BuildContext context, String title, String? selected,
             value: selected == title,
             onChanged: enabled
                 ? (bool? newValue) {
-              if (newValue == true) {
-                selectedFunction(title);
-              }
-            }
+                    if (newValue == true) {
+                      selectedFunction(title);
+                    }
+                  }
                 : null,
           ),
           Text(
@@ -610,12 +626,12 @@ Widget checkbox(BuildContext context, String title, String? selected,
 }
 
 Widget multipleCheckbox(
-    BuildContext context,
-    String label,
-    List<String> selectedList,
-    void Function(bool?) onChanged,
-    bool isEnabled,
-    ) {
+  BuildContext context,
+  String label,
+  List<String> selectedList,
+  void Function(bool?) onChanged,
+  bool isEnabled,
+) {
   return CheckboxListTile(
     title: Text(
       label,

@@ -150,7 +150,9 @@ class Pole11kvViewmodel extends ChangeNotifier {
     _selectedTappingPole = title;
     print("$_selectedTappingPole:  tap selected");
     if (selectedPole == "" ||
-        _selectedPole == null||_selectedPole=='Source Pole Not Mapped' && selectedTappingPole != null) {
+        _selectedPole == null ||
+        _selectedPole == 'Source Pole Not Mapped' &&
+            selectedTappingPole != null) {
       showAlertDialog(context,
           "Please choose Source Pole Num or check Source pole not mapped or origin Pole");
     } else {
@@ -770,16 +772,16 @@ class Pole11kvViewmodel extends ChangeNotifier {
     _selectedTappingPole = null;
     selectedFirstGroup.clear();
     selectedSecondGroup.clear();
-    _selectedPoleHeight="";
-    _selectedCircuits="";
-    _selectedFormation="";
-    _selectedTypePoint="";
+    _selectedPoleHeight = "";
+    _selectedCircuits = "";
+    _selectedFormation = "";
+    _selectedTypePoint = "";
     selectedCrossings.clear();
-    _selectedConnected="";
-    _selectedCapacity="";
-    _selectedConductor="";
-    longitude=null;
-    latitude=null;
+    _selectedConnected = "";
+    _selectedCapacity = "";
+    _selectedConductor = "";
+    longitude = null;
+    latitude = null;
     notifyListeners();
   }
 }

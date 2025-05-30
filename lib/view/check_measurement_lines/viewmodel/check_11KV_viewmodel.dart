@@ -31,7 +31,7 @@ class Check11kvViewmodel extends ChangeNotifier {
     }
     yearList = List.generate(
       currentYear - 1976 + 1, // Number of elements
-          (index) => (currentYear - index).toString(),
+      (index) => (currentYear - index).toString(),
     );
     selectedYear = yearList[0];
   }
@@ -55,8 +55,11 @@ class Check11kvViewmodel extends ChangeNotifier {
   double? totalAccuracy;
 
   String get feederName => args['fn'];
+
   String get feederCode => args['fc'];
-  String get ssc=> args['ssc'];
+
+  String get ssc => args['ssc'];
+
   String get ssn => args['ssn'];
 
   bool _isLoading = isFalse;
@@ -107,11 +110,8 @@ class Check11kvViewmodel extends ChangeNotifier {
       if (_selectedPole == "" || _selectedPole == null) {
         if (poleID != null) {
           distanceDisplay = isTrue;
-          distanceBtnPoles = calculateDistance(
-              latitude!, longitude!,
-              double.parse(poleLat!),
-              double.parse(poleLon!)
-          );
+          distanceBtnPoles = calculateDistance(latitude!, longitude!,
+              double.parse(poleLat!), double.parse(poleLon!));
           print("distanceBtnPoles: $distanceBtnPoles");
           notifyListeners();
         } else {
@@ -168,61 +168,71 @@ class Check11kvViewmodel extends ChangeNotifier {
   void setSelectedTappingPole(String title) {
     _selectedTappingPole = title;
     notifyListeners();
-    if(_selectedTappingPole=="Straight Tapping"||_selectedTappingPole=="Left Tapping"){
+    if (_selectedTappingPole == "Straight Tapping" ||
+        _selectedTappingPole == "Left Tapping") {
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            content:SizedBox(height: 300, child: Column(children: [
-              const Text(
-              "Please be sure your field condition resemble to below show scenario for selecting",
-            ),
-              const SizedBox(height: 10,),
-              Image.asset(Assets.check11KvLeft),
-            ]
-            ),
+            content: SizedBox(
+              height: 300,
+              child: Column(children: [
+                const Text(
+                  "Please be sure your field condition resemble to below show scenario for selecting",
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Image.asset(Assets.check11KvLeft),
+              ]),
             ),
             actions: [
               TextButton(
                   onPressed: () {
                     Navigator.pop(context);
+                    showAlertDialog(context,
+                        "Please choose Source Pole Num or check Source pole not mapped or origin Pole");
                   },
                   child: Text("OK")),
             ],
           );
         },
       );
-
-    }else if(_selectedTappingPole=="Right Tapping"){
+    } else if (_selectedTappingPole == "Right Tapping") {
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            content: SizedBox(height: 300, child:
-          Column(children: [
-              const Text(
-                "Please be sure your field condition resemble to below show scenario for selecting",
-              ),
-              SizedBox(height: 10,),
-              Image.asset(Assets.check11KvRight),
-            ]
-            ),
+            content: SizedBox(
+              height: 300,
+              child: Column(children: [
+                const Text(
+                  "Please be sure your field condition resemble to below show scenario for selecting",
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Image.asset(Assets.check11KvRight),
+              ]),
             ),
             actions: [
               TextButton(
                   onPressed: () {
                     Navigator.pop(context);
+                    showAlertDialog(context,
+                        "Please choose Source Pole Num or check Source pole not mapped or origin Pole");
                   },
                   child: Text("OK")),
             ],
           );
         },
       );
-    }else {
+    } else {
       print("$_selectedTappingPole:  tap selected");
       if (selectedPole == "" ||
-          _selectedPole == null || _selectedPole == 'Source Pole Not Mapped' &&
-          selectedTappingPole != null) {
+          _selectedPole == null ||
+          _selectedPole == 'Source Pole Not Mapped' &&
+              selectedTappingPole != null) {
         showAlertDialog(context,
             "Please choose Source Pole Num or check Source pole not mapped or origin Pole");
       }
@@ -380,9 +390,29 @@ class Check11kvViewmodel extends ChangeNotifier {
   //   notifyListeners();
   // }
 
-
-
-  List<int> poleQty=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
+  List<int> poleQty = [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ];
 
   String? selectedPoleQty;
 
@@ -402,6 +432,7 @@ class Check11kvViewmodel extends ChangeNotifier {
   ];
 
   List<PoleItem> get poleItems => _poleItems;
+
   void toggleSelection(int index) {
     _poleItems[index].isSelected = !_poleItems[index].isSelected;
     if (!_poleItems[index].isSelected) {
@@ -424,7 +455,6 @@ class Check11kvViewmodel extends ChangeNotifier {
     return result;
   }
 
-
   //Insulators:
   final List<PoleItem> _poleInsulators = [
     PoleItem(title: "Pin Insulators"),
@@ -433,6 +463,7 @@ class Check11kvViewmodel extends ChangeNotifier {
   ];
 
   List<PoleItem> get poleInsulators => _poleInsulators;
+
   void toggleInsulators(int index) {
     _poleInsulators[index].isSelected = !_poleInsulators[index].isSelected;
     if (!_poleInsulators[index].isSelected) {
@@ -445,7 +476,8 @@ class Check11kvViewmodel extends ChangeNotifier {
   void updatePoleInsulators(String? newValue, int index) {
     if (newValue != null) {
       _poleInsulators[index].selectedQty = int.tryParse(newValue);
-      print("PoleInsulators[index].selectedQty: ${_poleInsulators[index].selectedQty}");
+      print(
+          "PoleInsulators[index].selectedQty: ${_poleInsulators[index].selectedQty}");
       notifyListeners();
     }
   }
@@ -469,6 +501,7 @@ class Check11kvViewmodel extends ChangeNotifier {
   ];
 
   List<PoleItem> get poleSupport => _poleSupport;
+
   void toggleSupport(int index) {
     _poleSupport[index].isSelected = !_poleSupport[index].isSelected;
     if (!_poleSupport[index].isSelected) {
@@ -482,7 +515,8 @@ class Check11kvViewmodel extends ChangeNotifier {
   void updatePoleSupport(String? newValue, int index) {
     if (newValue != null) {
       _poleSupport[index].selectedQty = int.tryParse(newValue);
-      print("poleSupport[index].selectedQty: ${_poleSupport[index].selectedQty}");
+      print(
+          "poleSupport[index].selectedQty: ${_poleSupport[index].selectedQty}");
       notifyListeners();
     }
   }
@@ -500,7 +534,7 @@ class Check11kvViewmodel extends ChangeNotifier {
   }
 
   //DTR Phase
-  List<String> dtrPhase=["1Q","3Q"];
+  List<String> dtrPhase = ["1Q", "3Q"];
   String? selectedDtrPhase;
 
   void onListDtrPhaseSelected(String? value) {
@@ -516,39 +550,39 @@ class Check11kvViewmodel extends ChangeNotifier {
   String? selectedCapacityName;
 
   final List<SubstationModel> _capacity = [
-  SubstationModel(optionCode: "0", optionName: "SELECT"),
-  SubstationModel(optionCode: "1", optionName: "1x10(L)"),
-  SubstationModel(optionCode: "1", optionName: "1x100"),
-  SubstationModel(optionCode: "2", optionName: "1x100+1x15(L)"),
-  SubstationModel(optionCode: "1", optionName: "1x15 (Agl)"),
-  SubstationModel(optionCode: "1", optionName: "1x15(L)"),
-  SubstationModel(optionCode: "1", optionName: "1x16"),
-  SubstationModel(optionCode: "2", optionName: "1x16+1x15(L)"),
-  SubstationModel(optionCode: "1", optionName: "1x160"),
-  SubstationModel(optionCode: "1", optionName: "1x200"),
-  SubstationModel(optionCode: "1", optionName: "1x25"),
-  SubstationModel(optionCode: "1", optionName: "1x25(L)"),
-  SubstationModel(optionCode: "2", optionName: "1x25+1x15(L)"),
-  SubstationModel(optionCode: "1", optionName: "1x250"),
-  SubstationModel(optionCode: "1", optionName: "1x300"),
-  SubstationModel(optionCode: "1", optionName: "1x315"),
-  SubstationModel(optionCode: "1", optionName: "1x400"),
-  SubstationModel(optionCode: "1", optionName: "1x500"),
-  SubstationModel(optionCode: "1", optionName: "1x63"),
-  SubstationModel(optionCode: "2", optionName: "1x63+1x15(L)"),
-  SubstationModel(optionCode: "1", optionName: "1x630"),
-  SubstationModel(optionCode: "1", optionName: "1x650"),
-  SubstationModel(optionCode: "1", optionName: "1x750"),
-  SubstationModel(optionCode: "2", optionName: "2x100"),
-  SubstationModel(optionCode: "2", optionName: "2x150"),
-  SubstationModel(optionCode: "2", optionName: "2x16"),
-  SubstationModel(optionCode: "2", optionName: "2x25"),
-  SubstationModel(optionCode: "2", optionName: "2x250"),
-  SubstationModel(optionCode: "2", optionName: "2x63"),
-  SubstationModel(optionCode: "3", optionName: "3x10(A)"),
-  SubstationModel(optionCode: "3", optionName: "3x16"),
-  SubstationModel(optionCode: "3", optionName: "3x15"),
-  SubstationModel(optionCode: "3", optionName: "3x25"),
+    SubstationModel(optionCode: "0", optionName: "SELECT"),
+    SubstationModel(optionCode: "1", optionName: "1x10(L)"),
+    SubstationModel(optionCode: "1", optionName: "1x100"),
+    SubstationModel(optionCode: "2", optionName: "1x100+1x15(L)"),
+    SubstationModel(optionCode: "1", optionName: "1x15 (Agl)"),
+    SubstationModel(optionCode: "1", optionName: "1x15(L)"),
+    SubstationModel(optionCode: "1", optionName: "1x16"),
+    SubstationModel(optionCode: "2", optionName: "1x16+1x15(L)"),
+    SubstationModel(optionCode: "1", optionName: "1x160"),
+    SubstationModel(optionCode: "1", optionName: "1x200"),
+    SubstationModel(optionCode: "1", optionName: "1x25"),
+    SubstationModel(optionCode: "1", optionName: "1x25(L)"),
+    SubstationModel(optionCode: "2", optionName: "1x25+1x15(L)"),
+    SubstationModel(optionCode: "1", optionName: "1x250"),
+    SubstationModel(optionCode: "1", optionName: "1x300"),
+    SubstationModel(optionCode: "1", optionName: "1x315"),
+    SubstationModel(optionCode: "1", optionName: "1x400"),
+    SubstationModel(optionCode: "1", optionName: "1x500"),
+    SubstationModel(optionCode: "1", optionName: "1x63"),
+    SubstationModel(optionCode: "2", optionName: "1x63+1x15(L)"),
+    SubstationModel(optionCode: "1", optionName: "1x630"),
+    SubstationModel(optionCode: "1", optionName: "1x650"),
+    SubstationModel(optionCode: "1", optionName: "1x750"),
+    SubstationModel(optionCode: "2", optionName: "2x100"),
+    SubstationModel(optionCode: "2", optionName: "2x150"),
+    SubstationModel(optionCode: "2", optionName: "2x16"),
+    SubstationModel(optionCode: "2", optionName: "2x25"),
+    SubstationModel(optionCode: "2", optionName: "2x250"),
+    SubstationModel(optionCode: "2", optionName: "2x63"),
+    SubstationModel(optionCode: "3", optionName: "3x10(A)"),
+    SubstationModel(optionCode: "3", optionName: "3x16"),
+    SubstationModel(optionCode: "3", optionName: "3x15"),
+    SubstationModel(optionCode: "3", optionName: "3x25"),
   ];
 
   List<SubstationModel> get capacity => _capacity;
@@ -560,12 +594,12 @@ class Check11kvViewmodel extends ChangeNotifier {
     _selectedCapacityIndex = index;
 
     _selectedCapacity = index != null ? _capacity[index].optionCode : null;
-    selectedCapacityName= index != null ? _capacity[index].optionName : null;
+    selectedCapacityName = index != null ? _capacity[index].optionName : null;
     notifyListeners();
     print("$_selectedCapacity: selected Capacity ");
   }
 
-  final List<SubstationModel> structureCapacity=[
+  final List<SubstationModel> structureCapacity = [
     SubstationModel(optionCode: "0", optionName: "SELECT"),
     SubstationModel(optionCode: "1", optionName: "1x10(L)"),
     SubstationModel(optionCode: "1", optionName: "1x100"),
@@ -611,7 +645,8 @@ class Check11kvViewmodel extends ChangeNotifier {
     SubstationModel(optionCode: "4000085", optionName: "ARK"),
     SubstationModel(optionCode: "4000089", optionName: "ASTER"),
     SubstationModel(optionCode: "4000088", optionName: "BALAJI"),
-    SubstationModel(optionCode: "4000001", optionName: "BHAVANI TRANSFORMERS PVT LTD"),
+    SubstationModel(
+        optionCode: "4000001", optionName: "BHAVANI TRANSFORMERS PVT LTD"),
     SubstationModel(optionCode: "4000125", optionName: "BHEL"),
     SubstationModel(optionCode: "4000070", optionName: "BHOPAL"),
     SubstationModel(optionCode: "4000061", optionName: "Bhopal Transformers"),
@@ -622,14 +657,17 @@ class Check11kvViewmodel extends ChangeNotifier {
     SubstationModel(optionCode: "4000004", optionName: "CHAITANYA"),
     SubstationModel(optionCode: "4000126", optionName: "Cromton Greaves"),
     SubstationModel(optionCode: "4000005", optionName: "DASANI"),
-    SubstationModel(optionCode: "4000056", optionName: "DELL(Divyanjali Electricals)"),
+    SubstationModel(
+        optionCode: "4000056", optionName: "DELL(Divyanjali Electricals)"),
     SubstationModel(optionCode: "4000006", optionName: "EAST INDIA"),
     SubstationModel(optionCode: "4000007", optionName: "ECE"),
-    SubstationModel(optionCode: "4000008", optionName: "EKACHAKRA ELECTRICAL WORKS"),
+    SubstationModel(
+        optionCode: "4000008", optionName: "EKACHAKRA ELECTRICAL WORKS"),
     SubstationModel(optionCode: "4000067", optionName: "ELECTRA"),
     SubstationModel(optionCode: "4000080", optionName: "ELTRA"),
     SubstationModel(optionCode: "4000068", optionName: "EPE"),
-    SubstationModel(optionCode: "4000063", optionName: "ETE(Electronic Transf&Eq Co.)"),
+    SubstationModel(
+        optionCode: "4000063", optionName: "ETE(Electronic Transf&Eq Co.)"),
     SubstationModel(optionCode: "4000009", optionName: "GANAPATHI"),
     SubstationModel(optionCode: "4000078", optionName: "GANGA"),
     SubstationModel(optionCode: "4000127", optionName: "GE"),
@@ -643,51 +681,65 @@ class Check11kvViewmodel extends ChangeNotifier {
     SubstationModel(optionCode: "4000066", optionName: "IDT"),
     SubstationModel(optionCode: "4000071", optionName: "IMP"),
     SubstationModel(optionCode: "4000129", optionName: "Indo Tech"),
-    SubstationModel(optionCode: "4000015", optionName: "JAGANMATHA TRANSFORMERS"),
+    SubstationModel(
+        optionCode: "4000015", optionName: "JAGANMATHA TRANSFORMERS"),
     SubstationModel(optionCode: "4000016", optionName: "JVK TRANSFORMERS"),
     SubstationModel(optionCode: "4000017", optionName: "KANYAKA PARAMESHWARI"),
     SubstationModel(optionCode: "4000073", optionName: "KAVIKA"),
-    SubstationModel(optionCode: "4000055", optionName: "KEC(Kirloskar Elec. Comp Ltd.)"),
+    SubstationModel(
+        optionCode: "4000055", optionName: "KEC(Kirloskar Elec. Comp Ltd.)"),
     SubstationModel(optionCode: "4000075", optionName: "KILLOSKER"),
     SubstationModel(optionCode: "4000077", optionName: "KIVIKA"),
     SubstationModel(optionCode: "4000093", optionName: "KSR"),
-    SubstationModel(optionCode: "4000051", optionName: "KTE(Koteshwara Rao Transf.)"),
+    SubstationModel(
+        optionCode: "4000051", optionName: "KTE(Koteshwara Rao Transf.)"),
     SubstationModel(optionCode: "4000130", optionName: "KunDa"),
-    SubstationModel(optionCode: "4000018", optionName: "MADHU REFINERY PVT LTD"),
+    SubstationModel(
+        optionCode: "4000018", optionName: "MADHU REFINERY PVT LTD"),
     SubstationModel(optionCode: "4000090", optionName: "MAITHREYA"),
     SubstationModel(optionCode: "4000019", optionName: "MANU TRANSFORMERS"),
     SubstationModel(optionCode: "4000069", optionName: "ME"),
     SubstationModel(optionCode: "4000086", optionName: "MEDHA"),
     SubstationModel(optionCode: "4000092", optionName: "MITRA"),
     SubstationModel(optionCode: "4000020", optionName: "MSR"),
-    SubstationModel(optionCode: "4000058", optionName: "NEI(National Elec Industries)"),
+    SubstationModel(
+        optionCode: "4000058", optionName: "NEI(National Elec Industries)"),
     SubstationModel(optionCode: "4000081", optionName: "NIDHEE"),
     SubstationModel(optionCode: "4000082", optionName: "PACTIL"),
     SubstationModel(optionCode: "4000138", optionName: "PADMAJA Transformers"),
     SubstationModel(optionCode: "4000084", optionName: "PARAMOUNT"),
-    SubstationModel(optionCode: "4000054", optionName: "PEI(Prompt Elec. Industries)"),
+    SubstationModel(
+        optionCode: "4000054", optionName: "PEI(Prompt Elec. Industries)"),
     SubstationModel(optionCode: "4000021", optionName: "PERFECT TRANSFORMERS"),
-    SubstationModel(optionCode: "4000124", optionName: "POWERTECH TRANSFORMERS"),
+    SubstationModel(
+        optionCode: "4000124", optionName: "POWERTECH TRANSFORMERS"),
     SubstationModel(optionCode: "4000022", optionName: "PRUDHVI"),
     SubstationModel(optionCode: "4000023", optionName: "RADHIKA"),
-    SubstationModel(optionCode: "4000024", optionName: "RAMAKRISHNA TRANSFORMERS"),
+    SubstationModel(
+        optionCode: "4000024", optionName: "RAMAKRISHNA TRANSFORMERS"),
     SubstationModel(optionCode: "4000025", optionName: "RAYALASEEMA"),
-    SubstationModel(optionCode: "4000057", optionName: "RI(Raghavendra Industries)"),
+    SubstationModel(
+        optionCode: "4000057", optionName: "RI(Raghavendra Industries)"),
     SubstationModel(optionCode: "4000026", optionName: "RISHU"),
     SubstationModel(optionCode: "4000027", optionName: "ROHINI"),
     SubstationModel(optionCode: "4000028", optionName: "SAIBABA ELECTRICALS"),
     SubstationModel(optionCode: "4000072", optionName: "SDE"),
-    SubstationModel(optionCode: "4000046", optionName: "SDT(Star Delta Transf.)"),
+    SubstationModel(
+        optionCode: "4000046", optionName: "SDT(Star Delta Transf.)"),
     SubstationModel(optionCode: "4000029", optionName: "SERVOMAX"),
-    SubstationModel(optionCode: "4000050", optionName: "SFS(Saibaba Flame Proof Serv)"),
+    SubstationModel(
+        optionCode: "4000050", optionName: "SFS(Saibaba Flame Proof Serv)"),
     SubstationModel(optionCode: "4000048", optionName: "Shantha Veera"),
-    SubstationModel(optionCode: "4000030", optionName: "SHIRDI SAI ELECTRICALS"),
+    SubstationModel(
+        optionCode: "4000030", optionName: "SHIRDI SAI ELECTRICALS"),
     SubstationModel(optionCode: "4000094", optionName: "SHYAM"),
     SubstationModel(optionCode: "4000031", optionName: "SILICON TRANSFORMERS"),
     SubstationModel(optionCode: "4000131", optionName: "SNR"),
     SubstationModel(optionCode: "4000079", optionName: "SPEC"),
-    SubstationModel(optionCode: "4000097", optionName: "SRI JAGADAMBA TRANSFORMERS"),
-    SubstationModel(optionCode: "4000032", optionName: "SRI LAKSHMI VENKATESWARA ELEC"),
+    SubstationModel(
+        optionCode: "4000097", optionName: "SRI JAGADAMBA TRANSFORMERS"),
+    SubstationModel(
+        optionCode: "4000032", optionName: "SRI LAKSHMI VENKATESWARA ELEC"),
     SubstationModel(optionCode: "4000033", optionName: "SRI RAMA"),
     SubstationModel(optionCode: "4000034", optionName: "SRI SAI ELECTRICALS"),
     SubstationModel(optionCode: "4000083", optionName: "SRILATHA"),
@@ -697,11 +749,13 @@ class Check11kvViewmodel extends ChangeNotifier {
     SubstationModel(optionCode: "4000036", optionName: "TECHNO ELECTRICALS"),
     SubstationModel(optionCode: "4000060", optionName: "Tesla Transformers"),
     SubstationModel(optionCode: "4000095", optionName: "TOSHIBA"),
-    SubstationModel(optionCode: "4000157", optionName: "TRANSLITE ENERGY LIMITED"),
+    SubstationModel(
+        optionCode: "4000157", optionName: "TRANSLITE ENERGY LIMITED"),
     SubstationModel(optionCode: "4000143", optionName: "TRANS ALLIEDS GUNTUR"),
     SubstationModel(optionCode: "4000037", optionName: "TRANSCON INDUSTRIES"),
     SubstationModel(optionCode: "4000096", optionName: "TRINITY"),
-    SubstationModel(optionCode: "4000052", optionName: "UE(Universal Electricals)"),
+    SubstationModel(
+        optionCode: "4000052", optionName: "UE(Universal Electricals)"),
     SubstationModel(optionCode: "4000132", optionName: "Unitech"),
     SubstationModel(optionCode: "4000047", optionName: "UT(Universal Transf.)"),
     SubstationModel(optionCode: "4000038", optionName: "VENUGOPAL ELECTRICALS"),
@@ -712,20 +766,28 @@ class Check11kvViewmodel extends ChangeNotifier {
     SubstationModel(optionCode: "4000042", optionName: "VIJAY TRANSFORMERS"),
     SubstationModel(optionCode: "4000059", optionName: "Vijetha Transformers"),
     SubstationModel(optionCode: "4000074", optionName: "VINOD"),
-    SubstationModel(optionCode: "4000043", optionName: "VISHWANATH TRANFORMERS"),
+    SubstationModel(
+        optionCode: "4000043", optionName: "VISHWANATH TRANFORMERS"),
     SubstationModel(optionCode: "4000076", optionName: "VTST"),
     SubstationModel(optionCode: "4000062", optionName: "Webers"),
     SubstationModel(optionCode: "4000044", optionName: "WEBTECH TRANSFORMERS"),
-    SubstationModel(optionCode: "4000144", optionName: "ABB(Asea Brown Boveri)"),
+    SubstationModel(
+        optionCode: "4000144", optionName: "ABB(Asea Brown Boveri)"),
     SubstationModel(optionCode: "4000139", optionName: "ALSTOM"),
-    SubstationModel(optionCode: "4000136", optionName: "AMOD(AMOD Industries Pvt Ltd)"),
-    SubstationModel(optionCode: "4000153", optionName: "Andhra Pradesh Electrical Equipment Corporation"),
-    SubstationModel(optionCode: "4000152", optionName: "Avana Electrosystems Pvt Ltd"),
+    SubstationModel(
+        optionCode: "4000136", optionName: "AMOD(AMOD Industries Pvt Ltd)"),
+    SubstationModel(
+        optionCode: "4000153",
+        optionName: "Andhra Pradesh Electrical Equipment Corporation"),
+    SubstationModel(
+        optionCode: "4000152", optionName: "Avana Electrosystems Pvt Ltd"),
     SubstationModel(optionCode: "4000148", optionName: "BRG ENERGY Ltd"),
-    SubstationModel(optionCode: "4000154", optionName: "CLASSIC TECHNOLINES PVT LTD"),
+    SubstationModel(
+        optionCode: "4000154", optionName: "CLASSIC TECHNOLINES PVT LTD"),
     SubstationModel(optionCode: "4000146", optionName: "CONCORD"),
     SubstationModel(optionCode: "4000150", optionName: "Crompton Greaves Ltd"),
-    SubstationModel(optionCode: "4000142", optionName: "DHANALAKSHMI TRANSFORMERS (India)"),
+    SubstationModel(
+        optionCode: "4000142", optionName: "DHANALAKSHMI TRANSFORMERS (India)"),
     SubstationModel(optionCode: "4000134", optionName: "GSE(G.S.Electricals)"),
     SubstationModel(optionCode: "4000137", optionName: "HPC Electricals Ltd"),
     SubstationModel(optionCode: "4000099", optionName: "PTR-ACCURATE"),
@@ -752,18 +814,29 @@ class Check11kvViewmodel extends ChangeNotifier {
     SubstationModel(optionCode: "4000119", optionName: "PTR-VE"),
     SubstationModel(optionCode: "4000120", optionName: "PTR-VICTORY"),
     SubstationModel(optionCode: "4000121", optionName: "PTR-VISWANATH"),
-    SubstationModel(optionCode: "4000140", optionName: "RK ELECTRICAL INDUSTRIES"),
+    SubstationModel(
+        optionCode: "4000140", optionName: "RK ELECTRICAL INDUSTRIES"),
     SubstationModel(optionCode: "4000156", optionName: "SECURE"),
     SubstationModel(optionCode: "4000149", optionName: "SHREEM ELECTRIC Ltd"),
     SubstationModel(optionCode: "4000151", optionName: "STELMEC Limited"),
     SubstationModel(optionCode: "4000161", optionName: "TEJASWINI INDUSTRIES"),
-    SubstationModel(optionCode: "4000155", optionName: "VAJRA TRANSPOWER Pvt Ltd"),
-    SubstationModel(optionCode: "4000141", optionName: "VIDYUTH CONTROL SYSTEMS Pvt Ltd"),
-    SubstationModel(optionCode: "4000098", optionName: "VIGNESWARA ELECTRICALS PRODDUTUR"),
-    SubstationModel(optionCode: "4000158", optionName: "VINAYAKA TRANSMISSION PRODUCTS PRIVATE LIMITED"),
-    SubstationModel(optionCode: "4000145", optionName: "VIJAY POWER SYSTEMS-Hyd"),
-    SubstationModel(optionCode: "4000135", optionName: "Vishal Transformers and Switchgears Pvt Ltd"),
-    SubstationModel(optionCode: "4000147", optionName: "WESTERN Transformers & Equipment Pvt Ltd"),
+    SubstationModel(
+        optionCode: "4000155", optionName: "VAJRA TRANSPOWER Pvt Ltd"),
+    SubstationModel(
+        optionCode: "4000141", optionName: "VIDYUTH CONTROL SYSTEMS Pvt Ltd"),
+    SubstationModel(
+        optionCode: "4000098", optionName: "VIGNESWARA ELECTRICALS PRODDUTUR"),
+    SubstationModel(
+        optionCode: "4000158",
+        optionName: "VINAYAKA TRANSMISSION PRODUCTS PRIVATE LIMITED"),
+    SubstationModel(
+        optionCode: "4000145", optionName: "VIJAY POWER SYSTEMS-Hyd"),
+    SubstationModel(
+        optionCode: "4000135",
+        optionName: "Vishal Transformers and Switchgears Pvt Ltd"),
+    SubstationModel(
+        optionCode: "4000147",
+        optionName: "WESTERN Transformers & Equipment Pvt Ltd"),
     SubstationModel(optionCode: "0", optionName: "SELECT"),
   ];
 
@@ -774,11 +847,10 @@ class Check11kvViewmodel extends ChangeNotifier {
 
   void onListMakeSelected(int? index) {
     _selectedMakeIndex = index;
-    _selectedMake= index != null ? _make[index].optionCode : null;
+    _selectedMake = index != null ? _make[index].optionCode : null;
     notifyListeners();
     print("$_selectedMake: selected Make ");
   }
-
 
   //Connected Load
   String? _selectedConnected;
@@ -801,10 +873,14 @@ class Check11kvViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-
-
   //Support Material
-  List<int> supportQty=[0,1,2,3,4,];
+  List<int> supportQty = [
+    0,
+    1,
+    2,
+    3,
+    4,
+  ];
   Map<String, String?> smSelectedMap = {};
 
   List<String> dropdownTitles = [
@@ -822,7 +898,29 @@ class Check11kvViewmodel extends ChangeNotifier {
     }
   }
 
-  List<int> lTDistributionBox=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
+  List<int> lTDistributionBox = [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ];
   String? selectedLTDistribution;
 
   void onListLTSelected(String? value) {
@@ -832,7 +930,7 @@ class Check11kvViewmodel extends ChangeNotifier {
   }
 
   //Plint Type
-  List<String> pLintType=["Plinth","Pillar","Pole mounted"];
+  List<String> pLintType = ["Plinth", "Pillar", "Pole mounted"];
   String? selectedpLintType;
 
   void onListPLintSelected(String? value) {
@@ -842,7 +940,7 @@ class Check11kvViewmodel extends ChangeNotifier {
   }
 
   //Earthing Type
-  List<String> earthingType=["CI", "GI"];
+  List<String> earthingType = ["CI", "GI"];
   String? selectedEarthingType;
 
   void onListEarthingType(String? value) {
@@ -850,8 +948,27 @@ class Check11kvViewmodel extends ChangeNotifier {
     print("selectedEarthingType: $selectedEarthingType");
     notifyListeners();
   }
+
   //No Of Earth Pits
-  List<int> noOfEarthPits=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16];
+  List<int> noOfEarthPits = [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ];
   String? selectedEarthPits;
 
   void onListEarthPits(String? value) {
@@ -859,7 +976,6 @@ class Check11kvViewmodel extends ChangeNotifier {
     print("selectedEarthPits: $selectedEarthPits");
     notifyListeners();
   }
-
 
 //Conductor Size
   String? _selectedConductor;
@@ -872,7 +988,6 @@ class Check11kvViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-
 //Previous Pole Num
   List<PoleFeederEntity> poleFeederList = [];
   String? poleFeederSelected;
@@ -880,6 +995,7 @@ class Check11kvViewmodel extends ChangeNotifier {
   String? poleLat;
   String? poleLon;
   PoleFeederEntity? selectedPoleFeeder;
+
   void selectMapOrList() {
     showDialog(
       context: context,
@@ -911,6 +1027,7 @@ class Check11kvViewmodel extends ChangeNotifier {
       },
     );
   }
+
   void showPoleFeederDropdown() {
     showDialog(
       context: context,
@@ -924,9 +1041,11 @@ class Check11kvViewmodel extends ChangeNotifier {
               setState(() {
                 searchQuery = query;
                 filteredList = poleFeederList.where((item) {
-                  final displayText = (item.tempSeries != null && item.tempSeries!.isNotEmpty
-                      ? '${item.tempSeries}-${item.poleNum}'
-                      : item.poleNum ?? '').toLowerCase();
+                  final displayText =
+                      (item.tempSeries != null && item.tempSeries!.isNotEmpty
+                              ? '${item.tempSeries}-${item.poleNum}'
+                              : item.poleNum ?? '')
+                          .toLowerCase();
                   return displayText.contains(query.toLowerCase());
                 }).toList();
               });
@@ -952,7 +1071,8 @@ class Check11kvViewmodel extends ChangeNotifier {
                       itemCount: filteredList.length,
                       itemBuilder: (context, index) {
                         final item = filteredList[index];
-                        final displayText = item.tempSeries != null && item.tempSeries!.isNotEmpty
+                        final displayText = item.tempSeries != null &&
+                                item.tempSeries!.isNotEmpty
                             ? '${item.tempSeries}-${item.poleNum}'
                             : item.poleNum ?? '';
 
@@ -962,7 +1082,8 @@ class Check11kvViewmodel extends ChangeNotifier {
                           selectedTileColor: Colors.blue.shade50,
                           onTap: () {
                             Navigator.pop(context);
-                           onListPoleFeederChange(item); // 🔥 Ensure you pass the correct `item`
+                            onListPoleFeederChange(
+                                item); // 🔥 Ensure you pass the correct `item`
                           },
                         );
                       },
@@ -977,7 +1098,6 @@ class Check11kvViewmodel extends ChangeNotifier {
     );
   }
 
-
   void onListPoleFeederChange(PoleFeederEntity? value) {
     selectedPoleFeeder = value;
     if (value != null) {
@@ -985,7 +1105,7 @@ class Check11kvViewmodel extends ChangeNotifier {
       poleID = value.id.toString();
       poleLat = value.lat.toString();
       poleLon = value.lon.toString();
-      series=poleFeederSelected?.substring(0, 3);
+      series = poleFeederSelected?.substring(0, 3);
       AlertUtils.showSnackBar(context, poleFeederSelected!, isFalse);
       print("POle Num: $poleFeederSelected");
       print("Series: $series");
@@ -1003,7 +1123,7 @@ class Check11kvViewmodel extends ChangeNotifier {
 
     final requestData = {
       "authToken":
-      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "ssc": args["ssc"],
       "fc": args["fc"],
@@ -1030,7 +1150,7 @@ class Check11kvViewmodel extends ChangeNotifier {
             if (response.data['success'] == isTrue) {
               if (response.data['objectJson'] != null) {
                 final List<dynamic> jsonList =
-                jsonDecode(response.data['objectJson']);
+                    jsonDecode(response.data['objectJson']);
                 final List<PoleFeederEntity> listData = jsonList
                     .map((json) => PoleFeederEntity.fromJson(json))
                     .toList();
@@ -1072,7 +1192,7 @@ class Check11kvViewmodel extends ChangeNotifier {
 
       final requestData = {
         "authToken":
-        SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+            SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
         "api": Apis.API_KEY,
         "ssc": args["ssc"],
         "fc": args["fc"],
@@ -1080,8 +1200,8 @@ class Check11kvViewmodel extends ChangeNotifier {
         "tap": selectedTappingPole == "Straight Tapping"
             ? "s"
             : selectedTappingPole == "Left Tapping"
-            ? "l"
-            : "r",
+                ? "l"
+                : "r",
         "sid": poleID,
       };
 
@@ -1140,15 +1260,25 @@ class Check11kvViewmodel extends ChangeNotifier {
     poleNumber.text = (series != null ? "$series-$poleNum" : poleNum)!;
   }
 
-
-
   //NOT USED
   bool isHTServiceChecked = false;
   List<String> circles = [
-    "KHAMMAM", "HANAMKONDA", "KARIMNAGAR", "NIZAMABAD",
-    "ADILABAD", "KOTHAGUDEM", "WARANGAL", "JANGAON",
-    "BHUPALPALLY", "MAHABUBABAD", "JAGITYAL", "PEDDAPALLY",
-    "KAMAREDDY", "NIRMAL", "ASIFABAD", "MANCHERIAL"
+    "KHAMMAM",
+    "HANAMKONDA",
+    "KARIMNAGAR",
+    "NIZAMABAD",
+    "ADILABAD",
+    "KOTHAGUDEM",
+    "WARANGAL",
+    "JANGAON",
+    "BHUPALPALLY",
+    "MAHABUBABAD",
+    "JAGITYAL",
+    "PEDDAPALLY",
+    "KAMAREDDY",
+    "NIRMAL",
+    "ASIFABAD",
+    "MANCHERIAL"
   ];
 
   void showCircleDialog() {
@@ -1179,12 +1309,11 @@ class Check11kvViewmodel extends ChangeNotifier {
   }
 
   Future<void> loadHTServices(String circleCode) async {
-
     _isLoading = isTrue;
 
     final requestData = {
       "authToken":
-      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "cc": "",
     };
@@ -1248,13 +1377,14 @@ class Check11kvViewmodel extends ChangeNotifier {
       }
     }
   }
+
   Future<void> saveCheck11KVPole() async {
     _isLoading = isTrue;
     notifyListeners();
 
     final requestData = {
       "authToken":
-      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "fc": args["fc"],
       "ssc": args["ssc"],
@@ -1265,8 +1395,8 @@ class Check11kvViewmodel extends ChangeNotifier {
       "tap": selectedTappingPole == "Straight Tapping"
           ? "s"
           : selectedTappingPole == "Left Tapping"
-          ? "l"
-          : "r",
+              ? "l"
+              : "r",
       "pt": selectedSecondGroup.isNotEmpty
           ? selectedSecondGroup[0]
           : (selectedFirstGroup.isNotEmpty ? selectedFirstGroup[0] : null),
@@ -1277,36 +1407,36 @@ class Check11kvViewmodel extends ChangeNotifier {
       "pid": docketEntity!.id,
       "polenum": poleNumber.text.isEmpty ? " " : poleNumber.text.trim(),
       "series": series,
-      if (selectedPole != "Source Pole Not Mapped" && selectedPole != "Origin Pole") ...{
+      if (selectedPole != "Source Pole Not Mapped" &&
+          selectedPole != "Origin Pole") ...{
         "sid": poleID,
         "slat": poleLat,
         "slon": poleLon,
       },
-      "vx":selectedPoleQuantities["V Cross Arm"] ,
-      "hx":selectedPoleQuantities["Horiz. Cross Arm"] ,
-      "sx":selectedPoleQuantities["Channel Cross Arm"] ,
-      "cx":selectedPoleQuantities["Side Arm"] ,
+      "vx": selectedPoleQuantities["V Cross Arm"],
+      "hx": selectedPoleQuantities["Horiz. Cross Arm"],
+      "sx": selectedPoleQuantities["Channel Cross Arm"],
+      "cx": selectedPoleQuantities["Side Arm"],
       //Insulators
-      "pin":selectedInsulators["Pin Insulators"],
-      "disc":selectedInsulators["Disc"],
-      "sha":selectedInsulators["Shackles"],
+      "pin": selectedInsulators["Pin Insulators"],
+      "disc": selectedInsulators["Disc"],
+      "sha": selectedInsulators["Shackles"],
       //Support type
-      "stud":selectedSupportType["Stud Pole"],
-      "stay":selectedSupportType["Stay set"],
-      "cid":docketEntity!.id,
+      "stud": selectedSupportType["Stud Pole"],
+      "stay": selectedSupportType["Stay set"],
+      "cid": docketEntity!.id,
       if (selectedConnected == "DTR") ...{
-        "dtrph": selectedDtrPhase,//dtrStructure.text
+        "dtrph": selectedDtrPhase, //dtrStructure.text
         "dtrcap": selectedCapacityName,
-        "dtrSl":dtrSlNo.text.trim(),
-        "ymfg":selectedYear,
-        "tab":smSelectedMap["Tilting Type AB Switch"]??"",
-        "hzab":smSelectedMap["Horizontal Type AB Switch"],
-        "hg":smSelectedMap["HG Fuse Set"],
-        "plinth":selectedpLintType,
-        "earth":selectedEarthingType,
-        "pits":selectedEarthPits,
-        "ltd":selectedLTDistribution,
-
+        "dtrSl": dtrSlNo.text.trim(),
+        "ymfg": selectedYear,
+        "tab": smSelectedMap["Tilting Type AB Switch"] ?? "",
+        "hzab": smSelectedMap["Horizontal Type AB Switch"],
+        "hg": smSelectedMap["HG Fuse Set"],
+        "plinth": selectedpLintType,
+        "earth": selectedEarthingType,
+        "pits": selectedEarthPits,
+        "ltd": selectedLTDistribution,
       },
       "cross": buildCrossingString(),
       "connLoad": selectedConnected == "No Load" ? "N" : "DTR",
@@ -1346,7 +1476,7 @@ class Check11kvViewmodel extends ChangeNotifier {
                   showSuccessDialog(
                     context,
                     response.data["message"], //Missing mandatory params
-                        () {
+                    () {
                       Navigator.pop(context);
                       resetForm();
                     },
@@ -1367,8 +1497,7 @@ class Check11kvViewmodel extends ChangeNotifier {
                 showAlertDialog(context, "Unable to process your request!");
               }
             } else {
-              showAlertDialog(context,
-                  response.data['message']);
+              showAlertDialog(context, response.data['message']);
             }
           } else {
             // showSessionExpiredDialog(context);
@@ -1394,15 +1523,18 @@ class Check11kvViewmodel extends ChangeNotifier {
   bool validateForm() {
     final selectedItems = poleItems.where((item) => item.isSelected).toList();
     final hasInvalidQty = selectedItems.any(
-          (item) => item.selectedQty == null || item.selectedQty.toString().trim().isEmpty,
+      (item) =>
+          item.selectedQty == null ||
+          item.selectedQty.toString().trim().isEmpty,
     );
     if ((selectedPole == "" || selectedPole == null) &&
-        selectedPoleFeeder==null) {
+        selectedPoleFeeder == null) {
       AlertUtils.showSnackBar(
           context, "Please select the source pole to the current pole", isTrue);
       return false;
-    } else if (poleFeederSelected==null||poleFeederSelected=="") {
-      AlertUtils.showSnackBar(context, "Please select previous pole number", isTrue);
+    } else if (poleFeederSelected == null || poleFeederSelected == "") {
+      AlertUtils.showSnackBar(
+          context, "Please select previous pole number", isTrue);
       return false;
     } else if (selectedTappingPole == "" || selectedTappingPole == null) {
       AlertUtils.showSnackBar(
@@ -1430,13 +1562,15 @@ class Check11kvViewmodel extends ChangeNotifier {
           "Please select the type of point (Cut Point/End Point/Pin Point)",
           isTrue);
       return false;
-    }else  if (selectedItems.isEmpty) {
-        AlertUtils.showSnackBar(context, "Please select at least one cross arm type.", true);
-        return false;
-      } else if (hasInvalidQty) {
-        AlertUtils.showSnackBar(context, "Please enter quantity for all selected cross arms.", true);
-        return false;
-      }else if (selectedCrossings.isEmpty || selectedCrossings == null) {
+    } else if (selectedItems.isEmpty) {
+      AlertUtils.showSnackBar(
+          context, "Please select at least one cross arm type.", true);
+      return false;
+    } else if (hasInvalidQty) {
+      AlertUtils.showSnackBar(
+          context, "Please enter quantity for all selected cross arms.", true);
+      return false;
+    } else if (selectedCrossings.isEmpty || selectedCrossings == null) {
       AlertUtils.showSnackBar(context, "Please select any crossing", isTrue);
       return false;
     } else if (selectedConnected == "" || selectedConnected == null) {
@@ -1444,82 +1578,80 @@ class Check11kvViewmodel extends ChangeNotifier {
           "Please select the any load connected on the current pole", isTrue);
       return false;
     } //DTR
-      else if (selectedConnected == "DTR" &&
-          (selectedCapacity == "" || selectedCapacity == null)) {
-        AlertUtils.showSnackBar(
-            context, "Please select the DTR capacity", isTrue);
-        return false;
-      }else if (selectedConnected == "DTR" &&
-          (_selectedMakeIndex == "" || _selectedMakeIndex == null)) {
-        AlertUtils.showSnackBar(
-            context, "Please select the DTR Make", isTrue);
-        return false;
-      }else if (selectedConnected == "DTR" &&
-          (structureCode.text.isEmpty|| structureCode.text == "")) {
-        AlertUtils.showSnackBar(
-            context, "Please enter Structure Code", isTrue);
-        return false;
-      }else if (selectedConnected == "DTR" &&
-          (equipmentCode.text.isEmpty || equipmentCode.text == null)) {
-        AlertUtils.showSnackBar(
-            context, "Please enter Equipment Code", isTrue);
-        return false;
-      }else if (selectedConnected == "DTR" &&
-          (selectedDtrPhase == "" || selectedDtrPhase == null)) {
-        AlertUtils.showSnackBar(
-            context, "Please select the DTR Phase", isTrue);
-        return false;
-      }else if (selectedConnected == "DTR" &&
-          (dtrSlNo.text.isEmpty || dtrSlNo.text == null)) {
-        AlertUtils.showSnackBar(
-            context, "Please select the DTR Sl.NO", isTrue);
-        return false;
-      }else if (selectedConnected == "DTR" &&
-          (selectedYear == "" || selectedYear == null)) {
-        AlertUtils.showSnackBar(
-            context, "Please select the DTR capacity", isTrue);
-        return false;
-      }else if (selectedConnected == "DTR" &&
-          (smSelectedMap["Tilting Type AB Switch"] == "" || smSelectedMap["Tilting Type AB Switch"] == null)) {
-        AlertUtils.showSnackBar(
-            context, "Please select Tilting Type AB Switch", isTrue);
-        return false;
-      }else if (selectedConnected == "DTR" &&
-          (smSelectedMap["Horizontal Type AB Switch"] == "" || smSelectedMap["Horizontal Type AB Switch"] == null)) {
-        AlertUtils.showSnackBar(
-            context, "Please select the DTR Horizontal Type AB Switch", isTrue);
-        return false;
-      }else if (selectedConnected == "DTR" &&
-          (smSelectedMap["HG Fuse Set"] == "" || smSelectedMap["HG Fuse Set"] == null)) {
-        AlertUtils.showSnackBar(
-            context, "Please select the DTR HG Fuse Set", isTrue);
-        return false;
-      }else if (selectedConnected == "DTR" &&
-          (selectedpLintType == "" || selectedpLintType == null)) {
-        AlertUtils.showSnackBar(
-            context, "Please select the Plint Type", isTrue);
-        return false;
-      }else if (selectedConnected == "DTR" &&
-          (selectedEarthingType == "" ||selectedEarthingType == null)) {
-        AlertUtils.showSnackBar(
-            context, "Please select the DTR Earthing Type", isTrue);
-        return false;
-      }else if (selectedConnected == "DTR" &&
-          (selectedEarthPits == "" || selectedEarthPits == null)) {
-        AlertUtils.showSnackBar(
-            context, "Please select the DTR No of Earth Pits", isTrue);
-        return false;
-      }else if (selectedConnected == "DTR" &&
-          (selectedLTDistribution == "" || selectedLTDistribution == null)) {
-        AlertUtils.showSnackBar(
-            context, "Please select the LT Distribution box", isTrue);
-        return false;
-      }else if (selectedConnected == "DTR" &&
-          (smSelectedMap["Horizontal Type AB Switch"] == "" || smSelectedMap["Horizontal Type AB Switch"] == null)) {
-        AlertUtils.showSnackBar(
-            context, "Please select the DTR Horizontal Type AB Switch", isTrue);
-        return false;
-      } else if (_selectedConductor == "" || _selectedConductor == null) {
+    else if (selectedConnected == "DTR" &&
+        (selectedCapacity == "" || selectedCapacity == null)) {
+      AlertUtils.showSnackBar(
+          context, "Please select the DTR capacity", isTrue);
+      return false;
+    } else if (selectedConnected == "DTR" &&
+        (_selectedMakeIndex == "" || _selectedMakeIndex == null)) {
+      AlertUtils.showSnackBar(context, "Please select the DTR Make", isTrue);
+      return false;
+    } else if (selectedConnected == "DTR" &&
+        (structureCode.text.isEmpty || structureCode.text == "")) {
+      AlertUtils.showSnackBar(context, "Please enter Structure Code", isTrue);
+      return false;
+    } else if (selectedConnected == "DTR" &&
+        (equipmentCode.text.isEmpty || equipmentCode.text == null)) {
+      AlertUtils.showSnackBar(context, "Please enter Equipment Code", isTrue);
+      return false;
+    } else if (selectedConnected == "DTR" &&
+        (selectedDtrPhase == "" || selectedDtrPhase == null)) {
+      AlertUtils.showSnackBar(context, "Please select the DTR Phase", isTrue);
+      return false;
+    } else if (selectedConnected == "DTR" &&
+        (dtrSlNo.text.isEmpty || dtrSlNo.text == null)) {
+      AlertUtils.showSnackBar(context, "Please select the DTR Sl.NO", isTrue);
+      return false;
+    } else if (selectedConnected == "DTR" &&
+        (selectedYear == "" || selectedYear == null)) {
+      AlertUtils.showSnackBar(
+          context, "Please select the DTR capacity", isTrue);
+      return false;
+    } else if (selectedConnected == "DTR" &&
+        (smSelectedMap["Tilting Type AB Switch"] == "" ||
+            smSelectedMap["Tilting Type AB Switch"] == null)) {
+      AlertUtils.showSnackBar(
+          context, "Please select Tilting Type AB Switch", isTrue);
+      return false;
+    } else if (selectedConnected == "DTR" &&
+        (smSelectedMap["Horizontal Type AB Switch"] == "" ||
+            smSelectedMap["Horizontal Type AB Switch"] == null)) {
+      AlertUtils.showSnackBar(
+          context, "Please select the DTR Horizontal Type AB Switch", isTrue);
+      return false;
+    } else if (selectedConnected == "DTR" &&
+        (smSelectedMap["HG Fuse Set"] == "" ||
+            smSelectedMap["HG Fuse Set"] == null)) {
+      AlertUtils.showSnackBar(
+          context, "Please select the DTR HG Fuse Set", isTrue);
+      return false;
+    } else if (selectedConnected == "DTR" &&
+        (selectedpLintType == "" || selectedpLintType == null)) {
+      AlertUtils.showSnackBar(context, "Please select the Plint Type", isTrue);
+      return false;
+    } else if (selectedConnected == "DTR" &&
+        (selectedEarthingType == "" || selectedEarthingType == null)) {
+      AlertUtils.showSnackBar(
+          context, "Please select the DTR Earthing Type", isTrue);
+      return false;
+    } else if (selectedConnected == "DTR" &&
+        (selectedEarthPits == "" || selectedEarthPits == null)) {
+      AlertUtils.showSnackBar(
+          context, "Please select the DTR No of Earth Pits", isTrue);
+      return false;
+    } else if (selectedConnected == "DTR" &&
+        (selectedLTDistribution == "" || selectedLTDistribution == null)) {
+      AlertUtils.showSnackBar(
+          context, "Please select the LT Distribution box", isTrue);
+      return false;
+    } else if (selectedConnected == "DTR" &&
+        (smSelectedMap["Horizontal Type AB Switch"] == "" ||
+            smSelectedMap["Horizontal Type AB Switch"] == null)) {
+      AlertUtils.showSnackBar(
+          context, "Please select the DTR Horizontal Type AB Switch", isTrue);
+      return false;
+    } else if (_selectedConductor == "" || _selectedConductor == null) {
       AlertUtils.showSnackBar(
           context,
           "Please select the conductor size from previous pole to this pole",
@@ -1528,7 +1660,9 @@ class Check11kvViewmodel extends ChangeNotifier {
     } else if ((latitude == "" && longitude == "") ||
         (latitude == null && longitude == null)) {
       AlertUtils.showSnackBar(
-          context, "Please wait until we capture your location. Please make sure you have turned on your location", isTrue);
+          context,
+          "Please wait until we capture your location. Please make sure you have turned on your location",
+          isTrue);
       return false;
     }
     return true;
@@ -1539,19 +1673,17 @@ class Check11kvViewmodel extends ChangeNotifier {
     _selectedTappingPole = null;
     selectedFirstGroup.clear();
     selectedSecondGroup.clear();
-    _selectedPoleHeight="";
-    _selectedCircuits="";
+    _selectedPoleHeight = "";
+    _selectedCircuits = "";
 
-
-    _selectedFormation="";
-    _selectedTypePoint="";
+    _selectedFormation = "";
+    _selectedTypePoint = "";
     selectedCrossings.clear();
-    _selectedConnected="";
+    _selectedConnected = "";
     subStationCapacity.clear();
-    _selectedConductor="";
-    longitude=null;
-    latitude=null;
+    _selectedConductor = "";
+    longitude = null;
+    latitude = null;
     notifyListeners();
   }
-
 }
