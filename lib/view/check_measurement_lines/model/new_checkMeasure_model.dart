@@ -1,7 +1,7 @@
 class NewCheckMeasureModel {
   final int id;
-  final String estimateNo;
-  final String worklDesc;
+  final String? estimateNo;
+  final String? worklDesc;
   final String isDone;
   final String createdBy;
   final String insertDate;

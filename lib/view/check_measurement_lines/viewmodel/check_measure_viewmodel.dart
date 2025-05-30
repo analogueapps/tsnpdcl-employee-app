@@ -406,9 +406,6 @@ class CheckMeasureViewModel extends ChangeNotifier {
     }else if(selectedPurposeCheckboxId=="NCMD"&&(descriptionController.text==""||descriptionController.text.isEmpty)){
       AlertUtils.showSnackBar(context, "Please enter description", isTrue);
       return  false;
-    }else if(selectedPurposeCheckboxId=="NCMD"&&(estimateController.text==""||estimateController.text.isEmpty)){
-      AlertUtils.showSnackBar(context, "Please select Estimate number", isTrue);
-      return  false;
     }
     return true;
   }
@@ -420,7 +417,7 @@ class CheckMeasureViewModel extends ChangeNotifier {
     final requestData = {
       "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
-      "estno":estimateController.text.trim(),
+      "estno":estimateController.text.isEmpty?"":estimateController.text.trim(),
       "fc":listFeederSelect,
       "fn":listFeederItem.firstWhere((item) => item.optionCode == listFeederSelect).optionName,
       "v":selectedCheckboxId,
@@ -477,7 +474,7 @@ class CheckMeasureViewModel extends ChangeNotifier {
         }
       }
     }catch(e){
-      throw Exception("Exception Occurred while Authenticating");
+      throw Exception("Exception Occurred while Authenticating $e");
     }finally{
       _isLoading=false;
       notifyListeners();

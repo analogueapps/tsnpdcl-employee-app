@@ -20,25 +20,26 @@ class PtrFeederScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: CommonColors.colorPrimary,
-          title: const Text(
-            GlobalConstants.ptrFeederLoaders,
-            style:  TextStyle(
-                color: Colors.white,
-                fontSize: toolbarTitleSize,
-                fontWeight: FontWeight.w700),
-          ),
-          iconTheme: const IconThemeData(
-            color: Colors.white,
-          ),
-        ),
-        body: ChangeNotifierProvider(
-          create: (_) => PtrFeederViewmodel(context: context),
-          child: Consumer<PtrFeederViewmodel>(
-            builder: (context, viewModel, child) {
-              return viewModel.isLoading
+    return ChangeNotifierProvider(
+        create: (_) => PtrFeederViewmodel(context: context),
+        child: Consumer<PtrFeederViewmodel>(builder: (context, viewModel, child) {
+          return WillPopScope(
+            onWillPop: () => viewModel.cautionForBackScreen(context),
+            child: Scaffold(
+              appBar: AppBar(
+                backgroundColor: CommonColors.colorPrimary,
+                title: const Text(
+                  GlobalConstants.ptrFeederLoaders,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: toolbarTitleSize,
+                      fontWeight: FontWeight.w700),
+                ),
+                iconTheme: const IconThemeData(
+                  color: Colors.white,
+                ),
+              ),
+              body: viewModel.isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : Padding(
                 padding: const EdgeInsets.all(15),
@@ -56,18 +57,25 @@ class PtrFeederScreen extends StatelessWidget {
                                   child: Padding(
                                     padding: const EdgeInsets.all(10),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
                                       children: [
-                                        Text("SELECT SUBSTATION", style: TextStyle(color: Colors.red[900])),
+                                        Text("SELECT SUBSTATION",
+                                            style: TextStyle(
+                                                color: Colors.red[900])),
                                         const SizedBox(height: 10),
                                         DropdownButtonFormField<String>(
                                           value: viewModel.selectedSs,
-                                          hint: const Text("SELECT SUBSTATION"),
+                                          hint: const Text(
+                                              "SELECT SUBSTATION"),
                                           isExpanded: true,
-                                          items: viewModel.subStationList.map((LcMasterSsList item) {
-                                            return DropdownMenuItem<String>(
+                                          items: viewModel.subStationList
+                                              .map((LcMasterSsList item) {
+                                            return DropdownMenuItem<
+                                                String>(
                                               value: item.optionId,
-                                              child: Text(item.optionName ?? ""),
+                                              child: Text(
+                                                  item.optionName ?? ""),
                                             );
                                           }).toList(),
                                           onChanged: (newValue) {
@@ -77,39 +85,60 @@ class PtrFeederScreen extends StatelessWidget {
                                         const SizedBox(height: 10),
                                         TextButton(
                                           style: TextButton.styleFrom(
-                                            backgroundColor: Colors.grey[300],
+                                            backgroundColor:
+                                            Colors.grey[300],
                                           ),
                                           onPressed: () {
-                                            viewModel.pickDateFromDateTimePicker(context);
+                                            viewModel
+                                                .pickDateFromDateTimePicker(
+                                                context);
                                           },
                                           child: Row(
                                             children: [
-                                              const Icon(Icons.calendar_month_outlined, size: 25, color: Colors.black),
+                                              const Icon(
+                                                  Icons
+                                                      .calendar_month_outlined,
+                                                  size: 25,
+                                                  color: Colors.black),
                                               const SizedBox(width: 8),
                                               Text(
-                                                viewModel.pickedDate == '' || viewModel.pickedDate == "null/null/null"
+                                                viewModel.pickedDate ==
+                                                    '' ||
+                                                    viewModel
+                                                        .pickedDate ==
+                                                        "null/null/null"
                                                     ? "CHOOSE DATE"
-                                                    : viewModel.pickedDate,
-                                                style: TextStyle(color: Colors.red[900]),
+                                                    : viewModel
+                                                    .pickedDate,
+                                                style: TextStyle(
+                                                    color:
+                                                    Colors.red[900]),
                                               ),
                                             ],
                                           ),
                                         ),
                                         const SizedBox(height: 10),
-                                        Text("SELECT LOAD HOURS", style: TextStyle(color: Colors.red[900])),
+                                        Text("SELECT LOAD HOURS",
+                                            style: TextStyle(
+                                                color: Colors.red[900])),
                                         const SizedBox(height: 10),
                                         DropdownButtonFormField<String>(
-                                          value: viewModel.selectedLoadHour,
-                                          hint: const Text("SELECT LOAD HOUR"),
+                                          value:
+                                          viewModel.selectedLoadHour,
+                                          hint: const Text(
+                                              "SELECT LOAD HOUR"),
                                           isExpanded: true,
-                                          items: viewModel.loadHours.map((String value) {
-                                            return DropdownMenuItem<String>(
+                                          items: viewModel.loadHours
+                                              .map((String value) {
+                                            return DropdownMenuItem<
+                                                String>(
                                               value: value,
                                               child: Text(value),
                                             );
                                           }).toList(),
                                           onChanged: (newValue) {
-                                            viewModel.selectedLoadHour = newValue;
+                                            viewModel.selectedLoadHour =
+                                                newValue;
                                           },
                                         ),
                                         const SizedBox(height: 10),
@@ -118,7 +147,8 @@ class PtrFeederScreen extends StatelessWidget {
                                           child: PrimaryButton(
                                             text: "GET DETAILS",
                                             onPressed: () {
-                                              viewModel.getDetails(viewModel.selectedSs);
+                                              viewModel.getDetails(
+                                                  viewModel.selectedSs);
                                             },
                                           ),
                                         ),
@@ -127,32 +157,53 @@ class PtrFeederScreen extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              if (viewModel.loadInAmpsModelList.isNotEmpty)
+                              if (viewModel
+                                  .loadInAmpsModelList.isNotEmpty)
                                 ListView.builder(
-                                  physics: const NeverScrollableScrollPhysics(), // Use parent scroll
-                                  shrinkWrap: true, // Important!
-                                  itemCount: viewModel.loadInAmpsModelList.length,
+                                  physics:
+                                  const NeverScrollableScrollPhysics(),
+                                  // Use parent scroll
+                                  shrinkWrap: true,
+                                  // Important!
+                                  itemCount: viewModel
+                                      .loadInAmpsModelList.length,
                                   itemBuilder: (context, index) {
-                                    final data = viewModel.loadInAmpsModelList[index];
-                                    final ctrl = viewModel.controllers[index];
+                                    final data = viewModel
+                                        .loadInAmpsModelList[index];
+                                    final ctrl =
+                                    viewModel.controllers[index];
 
                                     return Card(
-                                      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 8, horizontal: 12),
                                       child: Padding(
-                                        padding: const EdgeInsets.all(12.0),
+                                        padding:
+                                        const EdgeInsets.all(12.0),
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                           children: [
                                             Align(
-                                            alignment: Alignment.topRight,
-                                            child:Text(data.type ?? '', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.red),),
+                                              alignment:
+                                              Alignment.topRight,
+                                              child: Text(
+                                                data.type ?? '',
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                    FontWeight.bold,
+                                                    color: Colors.red),
+                                              ),
                                             ),
                                             const SizedBox(height: 6),
                                             ViewDetailedLcTileWidget(
-                                                tileKey: "Name", tileValue: " ${data.name ?? ''}"),
-                                           const  Divider(),
+                                                tileKey: "Name",
+                                                tileValue:
+                                                " ${data.name ?? ''}"),
+                                            const Divider(),
                                             ViewDetailedLcTileWidget(
-                                                tileKey: "Capacity", tileValue: " ${data.capacity ?? ''}"),
+                                                tileKey: "Capacity",
+                                                tileValue:
+                                                " ${data.capacity ?? ''}"),
                                             const Divider(),
                                             const SizedBox(height: 10),
                                             _buildTextField('R Phase', ctrl.rController),
@@ -168,59 +219,62 @@ class PtrFeederScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-
                       const SizedBox(height: 10),
                       SizedBox(
                         width: double.infinity,
                         child: PrimaryButton(
                           text: "SUBMIT",
                           onPressed: () {
-                            for (int i = 0; i < viewModel.controllers.length; i++) {
-                              print("Entry $i - R: ${viewModel.controllers[i].rController.text}, "
-                                  "Y: ${viewModel.controllers[i].yController.text}, "
-                                  "B: ${viewModel.controllers[i].bController.text}");
+                            if (viewModel.validateAllPhaseControllers()) {
+                              viewModel.submitLoads();
                             }
+
+                            // for (int i = 0; i < viewModel.controllers.length; i++) {
+                            //   print("Entry $i - R: ${viewModel.controllers[i].rController.text}, "
+                            //       "Y: ${viewModel.controllers[i].yController.text}, "
+                            //       "B: ${viewModel.controllers[i].bController.text}");
+                            // }
                           },
                         ),
                       ),
                     ],
                   ),
                 ),
-              );
-            },
-          ),
-        )
+              ),
+            ),
+          );
+        })
     );
   }
 
   Widget _buildTextField(String label, TextEditingController controller) {
     return Padding(
         padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
-    child:Row(children: [
-      const SizedBox(
-        width: 10.0,
-      ),
-      Expanded(
-        child: Text(
-          label.toUpperCase(),
-          style: const TextStyle(
-            fontWeight: FontWeight.w700,
+        child: Row(children: [
+          const SizedBox(
+            width: 10.0,
           ),
-        ),
-      ),
-      Container(
-        height: 20,
-        width: 1,
-        color: Colors.grey[300],
-      ),
-      Expanded(
-        flex: 2,
-        child: FillTextFormField(
-          controller: controller,
-          keyboardType: TextInputType.number,
-          labelText: label,
-        ),
-      ),
-    ]));
+          Expanded(
+            child: Text(
+              label.toUpperCase(),
+              style: const TextStyle(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          Container(
+            height: 20,
+            width: 1,
+            color: Colors.grey[300],
+          ),
+          Expanded(
+            flex: 2,
+            child: FillTextFormField(
+              controller: controller,
+              keyboardType: TextInputType.number,
+              labelText: label,
+            ),
+          ),
+        ]));
   }
 }

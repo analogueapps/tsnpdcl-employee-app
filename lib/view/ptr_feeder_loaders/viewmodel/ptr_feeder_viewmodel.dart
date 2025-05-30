@@ -55,12 +55,14 @@ class PtrFeederViewmodel extends ChangeNotifier {
   final  TextEditingController yController=  TextEditingController();
   final  TextEditingController bController=  TextEditingController();
 
+  String? statusMessage;
+
   String pickedDate='';
   Future<void> pickDateFromDateTimePicker(BuildContext context) async {
     DateTime? selected= await showDatePicker(
-        context: context,
-        firstDate: DateTime(1900,01,01),
-        lastDate:DateTime.now(),
+      context: context,
+      firstDate: DateTime(1900,01,01),
+      lastDate:DateTime.now(),
     );
     pickedDate='${selected?.day}/${selected?.month}/${selected?.year}';
     notifyListeners();
@@ -147,22 +149,22 @@ class PtrFeederViewmodel extends ChangeNotifier {
     }
   }
 
-    bool validateForm1() {
-      if (_selectedSs == null || _selectedSs!.isEmpty) {
-        AlertUtils.showSnackBar(context, "Please select substation", isTrue);
-        return false;
-      }else if (pickedDate.isEmpty) {
-        AlertUtils.showSnackBar(context, "Please choose date", isTrue);
-        return false;
-      } else if (selectedLoadHour == null || selectedLoadHour!.isEmpty) {
-        AlertUtils.showSnackBar(context, "Please select load hours", isTrue);
-        return false;
-      }
-      return true;
+  bool validateForm1() {
+    if (_selectedSs == null || _selectedSs!.isEmpty) {
+      AlertUtils.showSnackBar(context, "Please select substation", isTrue);
+      return false;
+    }else if (pickedDate.isEmpty) {
+      AlertUtils.showSnackBar(context, "Please choose date", isTrue);
+      return false;
+    } else if (selectedLoadHour == null || selectedLoadHour!.isEmpty) {
+      AlertUtils.showSnackBar(context, "Please select load hours", isTrue);
+      return false;
     }
+    return true;
+  }
 
 
- final List<LoadInAmpsModel> _loadInAmpsModelList=[];
+  final List<LoadInAmpsModel> _loadInAmpsModelList=[];
   List<LoadInAmpsModel> get loadInAmpsModelList=>_loadInAmpsModelList;
 
   Future<void> getPtrFeederSS(String ssCode) async {
@@ -187,21 +189,19 @@ class PtrFeederViewmodel extends ChangeNotifier {
           if(response.data['sessionValid'] == isTrue) {
             if (response.data['taskSuccess'] == isTrue) {
               if(response.data['dataList'] != null) {
-                // final List<dynamic> jsonList = jsonDecode(response.data['dataList']);
                 List<dynamic> jsonList;
-
-                // If dataList is a String, decode it; otherwise, it's already a List
                 if (response.data['dataList'] is String) {
                   jsonList = jsonDecode(response.data['dataList']);
                 } else if (response.data['dataList'] is List) {
                   jsonList = response.data['dataList'];
                 } else {
-                  jsonList = [];  // Fallback to empty list if the type is unexpected
+                  jsonList = [];
                 }
                 _loadInAmpsModelList.clear();
                 final List<LoadInAmpsModel> dataList = jsonList.map((json) => LoadInAmpsModel.fromJson(json)).toList();
                 _loadInAmpsModelList.addAll(dataList);
                 controllers = _loadInAmpsModelList.map((_) => LoadInAmpsControllers()).toList();
+                print('Controller final values: $controllers');
                 notifyListeners();
               }
             }
@@ -220,74 +220,117 @@ class PtrFeederViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<bool> cautionForBackScreen(BuildContext context) async {
+    return await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        titlePadding: EdgeInsets.zero,
+        title: Container(
+            width: double.infinity,
+            height: 60,
+            color: Colors.orange,
+            child: Center(child: const Text("EXIT?"))
+        ),
+        content: const Text("Exit this screen? You will lose any unsaved data."),
+        actions: [
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text("CANCEL"),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange
+            ),
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('EXIT'),
+          ),
+        ],
+      ),
+    ) ?? false;
+  }
 
-  //for (int i = 0; i < loadInAmpsModelList.length; i++) {
-//     final ctrl = controllers[i];
-//     final model = loadInAmpsModelList[i];
-//
-//     model.rPhaseCurrent = _parseFloat(ctrl.rController.text);
-//     model.yPhaseCurrent = _parseFloat(ctrl.yController.text);
-//     model.bPhaseCurrent = _parseFloat(ctrl.bController.text);
-//   }
+  bool validateAllPhaseControllers(){
+    if(_loadInAmpsModelList.isEmpty){
+      AlertUtils.showSnackBar(context, "Please load PTRs and feeders first", isTrue);
+    }
+    for(int i=0;i<controllers.length;i++){
+      String name ='${_loadInAmpsModelList[i].name}' == "PTR" ? '${_loadInAmpsModelList[i].name}(${_loadInAmpsModelList[i].capacity})':'${_loadInAmpsModelList[i].name}';
+      for(int j=0;j<3;j++){
+        if(controllers[i].bController.text.isEmpty || controllers[i].rController.text.isEmpty || controllers[i].yController.text.isEmpty){
+          AlertUtils.showSnackBar(context, "Please load in amps for $name", isTrue);
+          return false;
+        }
+      }
+    }
+    return true;
+  }
 
-  // double? _parseFloat(String value) {
-  //   return value.isEmpty ? null : double.tryParse(value);
-  // }
-  // Future<void> savePtrFeederLoads(String ssCode, ) async {
-  //   _isLoading = isTrue;
-  //   notifyListeners();
-  //
-  //   final payload = {
-  //     "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
-  //     "appId": "in.tsnpdcl.npdclemployee",
-  //     "data":"",
-  //     "calenderDate":"",
-  //     "hours":""
-  //   };
-  //
-  //   var response = await ApiProvider(baseUrl: Apis.SS_END_POINT_BASE_URL).postApiCall(context, Apis.SAVE_PTR_FEEDERS, payload);
-  //   _isLoading = isFalse;
-  //
-  //   try {
-  //     if (response != null) {
-  //       if (response.data is String) {
-  //         response.data = jsonDecode(response.data); // Parse string to JSON
-  //       }
-  //       if (response.statusCode == successResponseCode) {
-  //         if(response.data['sessionValid'] == isTrue) {
-  //           if (response.data['taskSuccess'] == isTrue) {
-  //             if(response.data['dataList'] != null) {
-  //               // final List<dynamic> jsonList = jsonDecode(response.data['dataList']);
-  //               List<dynamic> jsonList;
-  //
-  //               // If dataList is a String, decode it; otherwise, it's already a List
-  //               if (response.data['dataList'] is String) {
-  //                 jsonList = jsonDecode(response.data['dataList']);
-  //               } else if (response.data['dataList'] is List) {
-  //                 jsonList = response.data['dataList'];
-  //               } else {
-  //                 jsonList = [];  // Fallback to empty list if the type is unexpected
-  //               }
-  //               // final List<LcMasterSsList> dataList = jsonList.map((json) => LcMasterSsList.fromJson(json)).toList();
-  //               // _subStationList.addAll(dataList);
-  //               // notifyListeners();
-  //             }
-  //           }
-  //         } else {
-  //           showSessionExpiredDialog(context);
-  //         }
-  //       } else {
-  //         showAlertDialog(context,response.data['message']);
-  //       }
-  //     }
-  //   } catch (e) {
-  //     showErrorDialog(context,  "An error occurred. Please try again.");
-  //     rethrow;
-  //   }
-  //
-  //   notifyListeners();
-  // }
+  Future<void> submitLoads() async{
 
+    _isLoading = isTrue;
+    notifyListeners();
+
+    List<LoadInAmpsModel> feedersList=[];
+    for(int i=0;i<controllers.length;i++){
+      Map<String, dynamic> sample = {
+        "BPhaseCurrent": controllers[i].bController.text,
+        "capacity": _loadInAmpsModelList[i].capacity,
+        "name":_loadInAmpsModelList[i].name,
+        "rPhaseCurrent": controllers[i].rController.text,
+        "sapCode": _loadInAmpsModelList[i].sapCode,
+        "ssCode": _loadInAmpsModelList[i].ssCode,
+        "type": _loadInAmpsModelList[i].type,
+        "yPhaseCurrent": controllers[i].yController.text,
+      };
+      feedersList.add(LoadInAmpsModel.fromJson(sample));
+    }
+    String formattedData = jsonEncode(feedersList.map((f) => f.toJson()).toList());
+    final payload = {
+      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "appId": "in.tsnpdcl.npdclemployee",
+      "data":formattedData,
+      "calenderDate":"${pickedDate}",
+      "hours":"$selectedLoadHour",
+    };
+
+    var response = await ApiProvider(baseUrl: Apis.SS_END_POINT_BASE_URL).postApiCall(context, Apis.SAVE_PTR_FEEDERS, payload);
+    _isLoading = isFalse;
+    print('response ${response}');
+    try {
+      if (response != null) {
+        if (response.data is String) {
+          response.data = jsonDecode(response.data);
+        }
+        if (response.statusCode == successResponseCode) {
+          if(response.data['sessionValid'] == isTrue) {
+            if (response.data['taskSuccess'] == isTrue) {
+              if(response.data['dataList'] != null) {
+                statusMessage=response.data['message'];
+                print('Status message value : $statusMessage');
+                if(response.data['message']!=""){
+                  showSuccessDialog(context, response.data['message'], (){
+                    Navigator.pop(context);
+                  });
+                }
+                _loadInAmpsModelList.clear();
+                notifyListeners();
+              }
+            }
+          } else {
+            showSessionExpiredDialog(context);
+          }
+        } else {
+          showAlertDialog(context,response.data['message']);
+        }
+      }
+    } catch (e) {
+      showErrorDialog(context,  "An error occurred. Please try again.");
+      rethrow;
+    } finally{
+      _isLoading=isFalse;
+    }
+
+  }
 
 
 }

@@ -1,9 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
+import 'dart:ui' as ui;
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tsnpdcl_employee/utils/alerts.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:flutter/material.dart';
@@ -16,12 +19,15 @@ import 'package:tsnpdcl_employee/utils/general_assets.dart';
 import 'package:tsnpdcl_employee/view/check_measurement_lines/model/check_measure_11kv_model.dart';
 import 'package:tsnpdcl_employee/view/check_measurement_lines/model/docket_model.dart';
 import 'package:tsnpdcl_employee/view/check_measurement_lines/model/polefeeder_model.dart';
+import 'package:tsnpdcl_employee/view/pole_tracker/model/digital_feeder_entity.dart';
 import '../../dtr_master/model/circle_model.dart';
 
 class Check11kvViewmodel extends ChangeNotifier {
   Check11kvViewmodel({required this.context, required this.args}) {
     startListening();
     getPolesOnFeeder();
+    // _initializeCameraPosition();
+    // _loadMapData();
     final String? jsonString = args['d'];
     print("argument d data: ${args['d']}");
 
@@ -31,7 +37,7 @@ class Check11kvViewmodel extends ChangeNotifier {
     }
     yearList = List.generate(
       currentYear - 1976 + 1, // Number of elements
-      (index) => (currentYear - index).toString(),
+          (index) => (currentYear - index).toString(),
     );
     selectedYear = yearList[0];
   }
@@ -77,6 +83,63 @@ class Check11kvViewmodel extends ChangeNotifier {
   bool deviceCheck = false;
   String? series, poleNum;
   DocketEntity? docketEntity;
+
+  //Google Map
+  // final LatLng _currentLocation = const LatLng(17.387140, 78.491684);
+  // CameraPosition? _cameraPosition;
+  // GoogleMapController? _mapController;
+  //
+  // Set<Marker> markers = {};
+  // Set<Polyline> polylines = {};
+  //
+  // LatLng get currentLocation => _currentLocation;
+  //
+  // CameraPosition? get cameraPosition => _cameraPosition;
+  //
+  // GoogleMapController? get mapController => _mapController;
+  //
+  // set mapController(GoogleMapController? controller) {
+  //   _mapController = controller;
+  //   notifyListeners();
+  // }
+  //
+  // void _initializeCameraPosition() {
+  //   _cameraPosition = CameraPosition(target: _currentLocation, zoom: 14.0);
+  //   notifyListeners();
+  // }
+  //
+  // Future<void> _loadMapData() async {
+  //   _isLoading=isTrue;
+  //   notifyListeners();
+  //
+  //   // Dummy test marker (you can load your real data here)
+  //   markers.add(
+  //     Marker(
+  //       markerId: MarkerId('test_marker'),
+  //       position: _currentLocation,
+  //       infoWindow: InfoWindow(title: 'Test Marker'),
+  //     ),
+  //   );
+  //
+  //   // Optional test polyline
+  //   polylines.add(Polyline(
+  //     polylineId: PolylineId("line_1"),
+  //     points: [_currentLocation, LatLng(17.390, 78.495)],
+  //     color: Colors.blue,
+  //     width: 4,
+  //   ));
+  //   _isLoading=isFalse;
+  //   notifyListeners();
+  // }
+
+  Completer<GoogleMapController> _controller = Completer();
+
+    LatLng center = const LatLng(17.387140, 78.491684);
+
+  void onMapCreated(GoogleMapController controller) {
+    _controller.complete(controller);
+  }
+
 
   bool _followSwitch = true;
 

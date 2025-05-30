@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:flutter/material.dart';
@@ -67,7 +68,16 @@ class CheckMeasure11kv extends StatelessWidget {
                           color: Colors.grey[200],
                           height: 200,
                           width: double.infinity,
-                          child: const Center(child: Text("Google maps here")),
+                          // child: const Center(child: Text("Google maps here")),
+                          child:viewModel.isLoading
+                              ? const Center(child: CircularProgressIndicator())
+                              : GoogleMap(
+                            onMapCreated: viewModel.onMapCreated,
+                            initialCameraPosition: CameraPosition(
+                              target: viewModel.center,
+                              zoom: 11.0,
+                            ),
+                          ),
                         ),
 
                         // Fixed switch
