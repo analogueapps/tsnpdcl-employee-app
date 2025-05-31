@@ -11,6 +11,7 @@ import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
+import 'package:tsnpdcl_employee/view/ss_maintenance/model/maintenance_finished_model.dart';
 
 class MaintenanceDueViewModel extends ChangeNotifier{
   MaintenanceDueViewModel({required this.context}){
@@ -22,6 +23,9 @@ class MaintenanceDueViewModel extends ChangeNotifier{
   bool _isLoading = isFalse;
   bool get isLoading => _isLoading;
 
+  final List<MaintenanceFinishedModel> _maintenanceItems = [
+  ];
+  List<MaintenanceFinishedModel> get maintenanceItems => _maintenanceItems;
   Future<void> getPendingMaintenanceList() async {
     _isLoading = isTrue;
     notifyListeners();
@@ -45,7 +49,17 @@ class MaintenanceDueViewModel extends ChangeNotifier{
           if(response.data['sessionValid'] == isTrue) {
             if (response.data['taskSuccess'] == isTrue) {
               if(response.data['dataList'] != null) {
-                print("mainteanance due:${response.data['dataList']} ");
+                List<dynamic> jsonList;
+                if (response.data['dataList'] is String) {
+                  jsonList = jsonDecode(response.data['dataList']);
+                } else if (response.data['dataList'] is List) {
+                  jsonList = response.data['dataList'];
+                } else {
+                  jsonList = [];
+                }
+                final List<MaintenanceFinishedModel> dataList = jsonList.map((json) => MaintenanceFinishedModel.fromJson(json)).toList();
+                _maintenanceItems.addAll(dataList);
+                notifyListeners();
               }
             }else {
               showAlertDialog(context,response.data['message']);

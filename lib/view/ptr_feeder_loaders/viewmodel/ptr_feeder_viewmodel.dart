@@ -228,21 +228,21 @@ class PtrFeederViewmodel extends ChangeNotifier {
         title: Container(
             width: double.infinity,
             height: 60,
-            color: Colors.orange,
+            color: Colors.orange[200],
             child: Center(child: const Text("EXIT?"))
         ),
         content: const Text("Exit this screen? You will lose any unsaved data."),
         actions: [
           ElevatedButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text("CANCEL"),
+            child: const Text("CANCEL", style: TextStyle(color: Colors.black)),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange
+                backgroundColor: Colors.orange[200]
             ),
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('EXIT'),
+            child: const Text('EXIT', style: TextStyle(color: Colors.black),),
           ),
         ],
       ),
@@ -252,6 +252,7 @@ class PtrFeederViewmodel extends ChangeNotifier {
   bool validateAllPhaseControllers(){
     if(_loadInAmpsModelList.isEmpty){
       AlertUtils.showSnackBar(context, "Please load PTRs and feeders first", isTrue);
+      return false;
     }
     for(int i=0;i<controllers.length;i++){
       String name ='${_loadInAmpsModelList[i].name}' == "PTR" ? '${_loadInAmpsModelList[i].name}(${_loadInAmpsModelList[i].capacity})':'${_loadInAmpsModelList[i].name}';
@@ -304,7 +305,7 @@ class PtrFeederViewmodel extends ChangeNotifier {
         if (response.statusCode == successResponseCode) {
           if(response.data['sessionValid'] == isTrue) {
             if (response.data['taskSuccess'] == isTrue) {
-              if(response.data['dataList'] != null) {
+              if(response.data['dataList'] != []) {
                 statusMessage=response.data['message'];
                 print('Status message value : $statusMessage');
                 if(response.data['message']!=""){

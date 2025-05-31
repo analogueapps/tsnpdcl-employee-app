@@ -6,7 +6,7 @@ import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
 import 'package:tsnpdcl_employee/network/api_provider.dart';
 import 'package:tsnpdcl_employee/network/api_urls.dart';
-import 'package:tsnpdcl_employee/preference/shared_preference.dart';
+
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/view/ctpt_menu/model/failure_report.dart';

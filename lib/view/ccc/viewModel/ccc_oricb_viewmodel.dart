@@ -16,7 +16,7 @@ import 'package:tsnpdcl_employee/widget/primary_button.dart';
 
 class CccOricbViewmodel extends ChangeNotifier {
   CccOricbViewmodel({required this.context, required this.status}) {
-    getCCCTicket(status);
+    getCCCTicket( status);
   }
 
   final BuildContext context;
@@ -28,7 +28,7 @@ class CccOricbViewmodel extends ChangeNotifier {
   final List<CccOpenModel> _openList = [];
   List<CccOpenModel> get openList => _openList;
 
-  Future<bool> getCCCTicket(String status) async {
+  Future<bool> getCCCTicket( String status) async {
     _isLoading = isTrue;
     notifyListeners();
 
@@ -50,11 +50,16 @@ class CccOricbViewmodel extends ChangeNotifier {
         if (response.statusCode == successResponseCode) {
           if (response.data['sessionValid'] == isTrue) {
             if (response.data['taskSuccess'] == isTrue) {
-                if(response.data['message']!=null&&response.data['dataList']==[]) {
-                  showSuccessDialog(context, response.data['message'], () {
+              final dataList = response.data['dataList'];
+              if (dataList is List && dataList.isEmpty) {
+                await showSuccessDialog(
+                  context,
+                  response.data['message'],
+                      () {
                     Navigator.pop(context);
-                  },);
-                }else if (response.data['dataList'] != null) {
+                  },
+                );
+              } else if (response.data['dataList'] != null) {
                   final dataList = response.data['dataList'];
                   if (dataList is List && dataList.isNotEmpty) {
                     List<CccOpenModel> fetchedList = dataList
@@ -83,25 +88,5 @@ class CccOricbViewmodel extends ChangeNotifier {
     }
     return false;
   }
-
-  // void responseMsg(context, String msg) async {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title:  const SizedBox( width: double.infinity,child:const Text("Empty Folder", style: TextStyle(color:  CommonColors.colorPrimary),)),
-  //         content: Text(msg),
-  //         actions: [
-  //           SizedBox( width: double.infinity,
-  //             child:PrimaryButton(text: "OK", onPressed: () {
-  //               Navigator.of(context).pop();
-  //             },
-  //             ),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
 
 }

@@ -44,6 +44,9 @@ class CCCViewDetailed extends StatelessWidget {
                               fontWeight: FontWeight.w700),
                         ),
                       ]),
+                  actions: [
+                   const  IconButton(onPressed: null, icon: Icon(Icons.history)),
+                  ],
                   iconTheme: const IconThemeData(
                     color: Colors.white,
                   ),

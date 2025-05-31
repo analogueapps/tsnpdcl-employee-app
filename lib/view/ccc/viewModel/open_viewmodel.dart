@@ -215,6 +215,7 @@ class OpenViewmodel extends ChangeNotifier {
                 TextButton(
                   onPressed: () async{
                     String optionStatus= selectedOption=="InProgress"?"3":selectedOption=="Resolved"?"6":"-1";
+                    Navigator.pop(context);
                     final success = await updateTicket(
                       optionStatus,
                       data.ticketNumber!,
@@ -222,11 +223,7 @@ class OpenViewmodel extends ChangeNotifier {
                       selectedDay!,
                       remarks.text,
                     );
-
-                    if (success) {
-                      resetDialogValues();
-                      Navigator.pop(context); // Only close if success
-                    }
+                      print("success: $success");
                   },
                   style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(Colors.green)),
@@ -296,9 +293,11 @@ class OpenViewmodel extends ChangeNotifier {
           if (response.data['sessionValid'] == isTrue) {
             if (response.data['taskSuccess'] == isTrue) {
               if(response.data['message']!=null) {
-                showSuccessDialog(context, response.data['message'], (){
+                await showSuccessDialog(context, response.data['message'], (){
                   Navigator.pop(context);
                 });
+                resetDialogValues();
+                return true;
               }
             }else{
               showErrorDialog(context, response.data['message']);

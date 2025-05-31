@@ -228,12 +228,6 @@ class PtrFeederScreen extends StatelessWidget {
                             if (viewModel.validateAllPhaseControllers()) {
                               viewModel.submitLoads();
                             }
-
-                            // for (int i = 0; i < viewModel.controllers.length; i++) {
-                            //   print("Entry $i - R: ${viewModel.controllers[i].rController.text}, "
-                            //       "Y: ${viewModel.controllers[i].yController.text}, "
-                            //       "B: ${viewModel.controllers[i].bController.text}");
-                            // }
                           },
                         ),
                       ),

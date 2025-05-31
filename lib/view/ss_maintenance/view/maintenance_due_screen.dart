@@ -44,18 +44,41 @@ class MaintenanceDueScreen extends StatelessWidget {
     ),
     ),
     // Centered "It's empty here" text
-    Expanded(
-    child: Center(
-    child: Text(
-    "Data Not Found",
-    style: TextStyle(
-    fontSize: 18,
-    color: Colors.grey[600],
-    fontWeight: FontWeight.w400,
-    ),
-    ),
-    ),
-    ),
+      Expanded(
+        child: viewModel.maintenanceItems.isEmpty
+            ? const Center(child: Text("No Data found"))
+            :  Padding(
+      padding: const EdgeInsets.all(16.0),
+      child:ListView.separated(
+            itemCount: viewModel.maintenanceItems.length,
+            separatorBuilder: (context, index) => const Divider(),
+            itemBuilder: (context, index) {
+              final item = viewModel.maintenanceItems[index];
+              return  Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("#${viewModel.maintenanceItems[index]
+                        .maintenanceId}", style: const TextStyle(
+                        fontSize: doubleTwelve),),
+                    const SizedBox(height: 5),
+                    Text( //ssCode
+                      viewModel.maintenanceItems[index].ssCode!,
+                      style: const TextStyle(
+                          fontSize: doubleFourteen),
+                    ),
+                    const SizedBox(height: 5),
+                    Text( //inspectedDate
+                      "Date: ${viewModel.maintenanceItems[index]
+                          .inspectedDate}",
+                      style: const TextStyle(color: Colors.green,
+                          fontSize: doubleTwelve),
+                    ),
+                  ],
+              );
+            }
+        ),
+        ),
+      ),
     ]
     );
     }

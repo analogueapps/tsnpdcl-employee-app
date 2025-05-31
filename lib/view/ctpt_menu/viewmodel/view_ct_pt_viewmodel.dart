@@ -95,17 +95,22 @@ class FailureReportedListViewModel extends ChangeNotifier {
           if (responseData['tokenValid'] == isTrue) {
             if (responseData['success'] == isTrue) {
               if (responseData['objectJson'] != null) {
-                List<dynamic> reportsJson = responseData['objectJson'] is String
-                    ? jsonDecode(responseData['objectJson']) as List<dynamic>
-                    : responseData['objectJson'] as List<dynamic>;
+                final parsedJson = responseData['objectJson'] is String
+                    ? jsonDecode(responseData['objectJson'])
+                    : responseData['objectJson'];
 
-                _failureReports = reportsJson.map((reportJson) {
-                  return FailureReportModel.fromJson(reportJson);
-                }).toList();
-                notifyListeners();
-              } else if(responseData['objectJson'] == []) {
-                showAlertDialog(context, "No Data Found");
-                _failureReports = []; // Clear list if no data
+                if (parsedJson is List && parsedJson.isEmpty) {
+                  showAlertDialog(context, "No Data Found");
+                } else {
+                  List<FailureReportModel> reports = parsedJson.map<FailureReportModel>((reportJson) {
+                    return FailureReportModel.fromJson(reportJson);
+                  }).toList();
+
+                  _failureReports = reports;
+                  notifyListeners();
+                }
+              } else {
+                _failureReports = [];
                 notifyListeners();
               }
             } else {

@@ -37,15 +37,9 @@ class CccOricb extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-              body: viewModel.isLoading? Positioned.fill(
-                child: Container(
-                  color: Colors.black.withOpacity(0.0),
-                  // Semi-transparent overlay
-                  child: const Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                ),
-              ):         ListView.builder(
+              body: Stack(
+            children:[
+                       ListView.builder(
                   itemCount: viewModel.openList.length,
                   itemBuilder: (context, index) {
                     final data = viewModel.openList[index];
@@ -126,6 +120,17 @@ class CccOricb extends StatelessWidget {
                       ),
                     );
                   }
+              ),
+              if (viewModel.isLoading)
+                Positioned.fill(
+                  child: Container(
+                    color: Colors.black.withOpacity(0.3), // Optional: dim background
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                ),
+            ]
               ),
             );
           }
