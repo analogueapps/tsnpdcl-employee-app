@@ -208,6 +208,7 @@ class Routes {
   static const String cccDashboard = "CCCDashboardScreen";
   static const String cccORICB="CccOricb";
   static const String openDetail="CCCViewDetailed";
+  static const String complaintTrack="CccComplaintTrack";
 
   //SCHEDULES *BHAVANA
   static const String schedule="SchedulesScreen";

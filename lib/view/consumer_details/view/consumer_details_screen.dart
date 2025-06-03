@@ -17,8 +17,8 @@ class ConsumerDetailsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: CommonColors.colorPrimary,
-        title: Text(
-          GlobalConstants.consumerDetailsTitle.toUpperCase(),
+        title: const Text(
+         "Enter Service No",
           style: const TextStyle(
               color: Colors.white,
               fontSize: toolbarTitleSize,

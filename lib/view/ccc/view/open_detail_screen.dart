@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
+import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/view/ccc/model/open_model.dart';
 import 'package:tsnpdcl_employee/view/ccc/viewModel/open_viewmodel.dart';
 import 'package:tsnpdcl_employee/widget/primary_button.dart';
@@ -44,9 +45,10 @@ class CCCViewDetailed extends StatelessWidget {
                               fontWeight: FontWeight.w700),
                         ),
                       ]),
-                  actions: [
-                   const  IconButton(onPressed: null, icon: Icon(Icons.history)),
-                  ],
+                  actions:  [IconButton(onPressed: (){
+                    Navigation.instance.navigateTo(Routes.complaintTrack, args: data.ticketNumber);
+                    },
+                      icon: const Icon(Icons.history, color: Colors.white,))],
                   iconTheme: const IconThemeData(
                     color: Colors.white,
                   ),

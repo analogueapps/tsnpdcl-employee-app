@@ -15,7 +15,11 @@ class DlistFormScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return ChangeNotifierProvider(
+      create: (_) => DlFormViewModel(context: context, dListForm: form),
+      child: Consumer<DlFormViewModel>(
+        builder: (context, viewModel, child) {
+          return Scaffold(
       appBar: AppBar(
         backgroundColor: CommonColors.colorPrimary,
         title: Text(
@@ -25,15 +29,24 @@ class DlistFormScreen extends StatelessWidget {
               fontSize: toolbarTitleSize,
               fontWeight: FontWeight.w700),
         ),
+        actions: [
+          IconButton(onPressed: (){
+            viewModel.saveDlist();
+            }, icon: const Icon(Icons.save, color: Colors.white,)),
+          const SizedBox(width: doubleFive,),
+          const IconButton(onPressed: null, icon: Icon(Icons.folder, color: Colors.white,)),
+        ],
         iconTheme: const IconThemeData(
           color: Colors.white,
         ),
+        leading: IconButton(onPressed:(){
+          Navigator.pop(context);
+        },icon:const Icon(Icons.close), ),
       ),
-      body: ChangeNotifierProvider(
-        create: (_) => DlFormViewModel(context: context, dListForm: form),
-        child: Consumer<DlFormViewModel>(
-          builder: (context, viewModel, child) {
-            return SingleChildScrollView(
+      body:  WillPopScope
+            (
+                onWillPop: () async => false,
+            child: SingleChildScrollView(
               padding: const EdgeInsets.all(doubleTwenty),
               child: Form(
                 key: viewModel.formKey,
@@ -412,10 +425,11 @@ class DlistFormScreen extends StatelessWidget {
                   ],
                 ),
               ),
+            ),
+      ),
             );
           },
         ),
-      ),
     );
   }
 }

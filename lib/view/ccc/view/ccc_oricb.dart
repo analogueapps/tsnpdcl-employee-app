@@ -19,10 +19,10 @@ class CccOricb extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => CccOricbViewmodel(context: context, status: status),
-      child: Consumer<CccOricbViewmodel>(
-          builder: (context, viewModel, child) {
-            return Scaffold(
+              create: (_) => CccOricbViewmodel(context: context, status: status),
+              child: Consumer<CccOricbViewmodel>(
+                  builder: (context, viewModel, child) {
+                    return Scaffold(
               appBar: AppBar(
                 backgroundColor: CommonColors.colorPrimary,
                 title:  Text(

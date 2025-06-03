@@ -10,7 +10,6 @@ import 'package:tsnpdcl_employee/utils/alerts.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/view/ccc/model/open_model.dart';
-import 'package:tsnpdcl_employee/widget/fill_text_form_field.dart';
 import 'package:tsnpdcl_employee/widget/view_detailed_lc_tile_widget.dart';
 
 class OpenViewmodel extends ChangeNotifier {

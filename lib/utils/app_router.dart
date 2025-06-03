@@ -7,6 +7,7 @@ import 'package:tsnpdcl_employee/view/auth/view/employee_id_login_screen.dart';
 import 'package:tsnpdcl_employee/view/auth/view/otp_verification_screen.dart';
 import 'package:tsnpdcl_employee/view/bs_udc_inspection/view/bs_udc_list.dart';
 import 'package:tsnpdcl_employee/view/ccc/model/open_model.dart';
+import 'package:tsnpdcl_employee/view/ccc/view/ccc_complaint_track.dart';
 import 'package:tsnpdcl_employee/view/ccc/view/ccc_dashboard.dart';
 import 'package:tsnpdcl_employee/view/ccc/view/ccc_oricb.dart';
 import 'package:tsnpdcl_employee/view/ccc/view/open_detail_screen.dart';
@@ -628,6 +629,9 @@ class AppRouter {
         final args = settings.arguments as CccOpenModel;
         return MaterialPageRoute(builder: (_) =>  CCCViewDetailed(data: args
         ));
+
+      case CccComplaintTrack.id:
+        return MaterialPageRoute(builder: (_) =>  CccComplaintTrack(ticketID: settings.arguments as String));
 
     //Schedules * Bhavana
       case SchedulesScreen.id:
