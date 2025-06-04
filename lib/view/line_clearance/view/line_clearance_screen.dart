@@ -23,6 +23,7 @@ class LineClearanceScreen extends StatelessWidget {
               fontSize: toolbarTitleSize,
               fontWeight: FontWeight.w700
           ),
+
         ),
         iconTheme: const IconThemeData(
           color: Colors.white,
