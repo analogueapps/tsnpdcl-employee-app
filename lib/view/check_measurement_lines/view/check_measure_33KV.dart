@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
@@ -42,17 +43,18 @@ class CheckMeasure33kv extends StatelessWidget {
               children: [
                 Column(
                   children: [
-                    // Fixed map
-                    InkWell(
-                      child: Container(
-                        color: Colors.grey[200],
-                        height: 200,
-                        width: double.infinity,
-                        child: const Center(child: Text("Google maps here")),
+                    Expanded(
+                      child: GoogleMap(
+                        initialCameraPosition: viewModel.cameraPosition ?? const CameraPosition(target: LatLng(0, 0), zoom: 10),
+                        polylines: viewModel.polylines,
+                        markers: viewModel.markers,
+                        myLocationEnabled: false,
+                        myLocationButtonEnabled: false,
+                        zoomControlsEnabled: true,
+                        onMapCreated: (controller) {
+                          viewModel.mapController = controller;
+                        },
                       ),
-                      onTap: () {
-                        viewModel.showDialogueCopyPoleNum;
-                      },
                     ),
 
                     // Fixed switch
@@ -101,21 +103,22 @@ class CheckMeasure33kv extends StatelessWidget {
                                         // labelText: 'Select an option',
                                         border: OutlineInputBorder(),
                                       ),
-                                      child: Text(
+                                      child: viewModel.poleNumber.text==""?Text(
                                         viewModel.selectedPoleFeeder != null
                                             ? (viewModel.selectedPoleFeeder!
-                                                            .tempSeries !=
-                                                        null &&
-                                                    viewModel
-                                                        .selectedPoleFeeder!
-                                                        .tempSeries!
-                                                        .isNotEmpty
-                                                ? '${viewModel.selectedPoleFeeder!.tempSeries}-${viewModel.selectedPoleFeeder!.poleNum}'
-                                                : viewModel.selectedPoleFeeder!
-                                                        .poleNum ??
-                                                    '')
+                                            .tempSeries !=
+                                            null &&
+                                            viewModel
+                                                .selectedPoleFeeder!
+                                                .tempSeries!
+                                                .isNotEmpty
+                                            ? '${viewModel.selectedPoleFeeder!.tempSeries}-${viewModel.selectedPoleFeeder!.poleNum}'
+                                            : viewModel
+                                            .selectedPoleFeeder!
+                                            .poleNum ??
+                                            '')
                                             : 'Tap to select',
-                                      ),
+                                      ):Text(viewModel.poleNumber.text),
                                     ),
                                   ),
                                 ]),

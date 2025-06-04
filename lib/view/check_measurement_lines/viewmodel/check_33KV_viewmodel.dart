@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
+import 'dart:ui' as ui;
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tsnpdcl_employee/utils/alerts.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +23,8 @@ import '../../dtr_master/model/circle_model.dart';
 
 class Check33kvViewmodel extends ChangeNotifier {
   Check33kvViewmodel({required this.context, required this.args}) {
-    startListening();
+    _handleLocation();
+    _initializeCameraPosition();
     getPolesOnFeeder();
     getSubStationList();
 
@@ -45,7 +49,6 @@ class Check33kvViewmodel extends ChangeNotifier {
   final BuildContext context;
   final Map<String, dynamic> args;
   double MINIMUM_GPS_ACCURACY_REQUIRED = 15.0;
-  String maxId = "9752778"; //From Map initially OL
 
   double? latitude;
   double? longitude;
@@ -98,9 +101,337 @@ class Check33kvViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
+  final LatLng _currentLocation = const LatLng(17.387140, 78.491684);
+  CameraPosition? _cameraPosition;
+
+  LatLng get currentLocation => _currentLocation;
+
+  // Update to nullable getter and setter
+  CameraPosition? get cameraPosition => _cameraPosition;
+
+  set cameraPosition(CameraPosition? position) {
+    _cameraPosition = position;
+    notifyListeners();
+  }
+
+  LatLng? markerPosition;
+  GoogleMapController? _mapController;
+  GoogleMapController? get mapController => _mapController;
+  set mapController(GoogleMapController? controller) {
+    _mapController = controller;
+    notifyListeners();
+  }
+
+  Set<Polyline> polylines = {};
+  Set<Marker> markers = {};
+
+  bool showPoles = true;
+  void _initializeCameraPosition() {
+    // _bitmapDescriptorFromAsset(Assets.);
+    _cameraPosition = CameraPosition(
+      target: _currentLocation,
+      zoom: 14.0,
+    );
+    notifyListeners();
+  }
+  Future<void> processMapData() async {
+    if (poleFeederList.isEmpty) return;
+
+    for (int i = 0; i < poleFeederList.length; i++) {
+      final entity = poleFeederList[i];
+
+      if (entity.sourceLat != null && entity.sourceLon != null) {
+        final polyline = Polyline(
+          polylineId: PolylineId('polyline_$i'),
+          points: [
+            LatLng(double.parse(entity.sourceLat!), double.parse(entity.sourceLon!)),
+            LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+          ],
+          width: 4,
+          color: entity.tempSeries != null ? Colors.blue : entity.newProposalId != null ? Colors.red : Colors.black,
+        );
+        polylines.add(polyline);
+
+        if (showPoles) {
+          // double distance = _calculateDistance(
+          //   double.parse(entity.sourceLat!),
+          //   double.parse(entity.sourceLon!),
+          //   double.parse(entity.lat!),
+          //   double.parse(entity.lon!),
+          // );
+          double distance = Geolocator.distanceBetween(
+            double.parse(entity.sourceLat!),
+            double.parse(entity.sourceLon!),
+            double.parse(entity.lat!),
+            double.parse(entity.lon!),
+          );
+          final midpoint = _calculateMidpoint(
+            double.parse(entity.sourceLat!),
+            double.parse(entity.sourceLon!),
+            double.parse(entity.lat!),
+            double.parse(entity.lon!),
+          );
+          _addTextMarker('${distance.toStringAsFixed(1)}m', midpoint);
+        }
+      }
+
+      // if (showPoles) {
+      //   final marker = Marker(
+      //     markerId: MarkerId('marker_$i'),
+      //     position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+      //     icon: entity.poleType != null && entity.poleType!.toLowerCase().contains('tower')
+      //         ? await _bitmapDescriptorFromAsset(Assets.towerPole)
+      //         : await _bitmapDescriptorFromAsset(Assets.horizontalPole),
+      //   );
+      //   markers.add(marker);
+      //   print("Added marker at: ${marker.position.latitude}, ${marker.position.longitude}");
+      // }
+
+      if (showPoles) {
+        addMarkerWithEntity(entity);
+      }
+      // _addSpecialMarkers(entity);
+      if (i == poleFeederList.length - 1) {
+
+        _cameraPosition = CameraPosition(
+          target: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+          zoom: 14.0,
+        );
+        notifyListeners();
+
+        _mapController?.animateCamera(
+          CameraUpdate.newLatLngZoom(
+            LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+            20.0,
+          ),
+        );
+      }
+    }
+    notifyListeners();
+  }
+
+  Future<void> _addTextMarker(String text, LatLng position) async {
+    final TextPainter textPainter = TextPainter(
+      text: TextSpan(
+        text: text,
+        style: TextStyle(
+          color: Colors.grey[800],
+          fontSize: 25, // Adjust font size
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+    );
+    textPainter.layout(minWidth: 0, maxWidth: double.infinity);
+
+    final recorder = ui.PictureRecorder();
+    final canvas = Canvas(
+      recorder,
+      Rect.fromPoints(
+        const Offset(0, 0),
+        Offset(textPainter.width, textPainter.height),
+      ),
+    );
+
+    // Center the text
+    textPainter.paint(canvas, Offset(0, 0)); // Adjust if necessary
+
+    final picture = recorder.endRecording();
+    final img = await picture.toImage(
+      textPainter.width.toInt(),
+      textPainter.height.toInt(),
+    );
+
+    final ByteData? byteData = await img.toByteData(format: ui.ImageByteFormat.png);
+    if (byteData != null) {
+      final Uint8List uint8List = byteData.buffer.asUint8List();
+      final bitmapDescriptor = BitmapDescriptor.fromBytes(uint8List);
+
+      markers.add(
+        Marker(
+          markerId: MarkerId(position.toString()),
+          position: position,
+          icon: bitmapDescriptor,
+        ),
+      );
+      notifyListeners();
+    } else {
+      print("Error converting image to ByteData");
+    }
+  }
+
+  LatLng _calculateMidpoint(double lat1, double lon1, double lat2, double lon2) {
+    double midLat = (lat1 + lat2) / 2;
+    double midLon = (lon1 + lon2) / 2;
+    return LatLng(midLat, midLon);
+  }
+
+  Future<BitmapDescriptor> _bitmapDescriptorFromAsset(String path) async {
+    final Uint8List data = await _getBytesFromAsset(path, 50);
+    return BitmapDescriptor.fromBytes(data);
+  }
+
+  Future<Uint8List> _getBytesFromAsset(String path, int width) async {
+    ByteData byteData = await rootBundle.load(path);
+    ui.Codec codec = await ui.instantiateImageCodec(byteData.buffer.asUint8List());
+    ui.FrameInfo fi = await codec.getNextFrame();
+    final Uint8List resizedData = (await fi.image.toByteData(format: ui.ImageByteFormat.png))!.buffer.asUint8List();
+    return resizedData;
+  }
+
+  // Optimize for better map rendering performance
+  Future<void> moveCameraToLastPosition() async {
+    if (poleFeederList.isNotEmpty) {
+      final lastItem = poleFeederList.last;
+      final lat = double.parse(lastItem.lat!);
+      final lon = double.parse(lastItem.lon!);
+
+      await _mapController?.animateCamera(
+        CameraUpdate.newLatLngZoom(LatLng(lat, lon), 20.0),
+      );
+    }
+  }
+
+  Map<MarkerId, PoleFeederEntity> markerEntityMap = {};
+
+  void addMarkerWithEntity(PoleFeederEntity entity) async {
+    final markerId = MarkerId(entity.poleNum ?? UniqueKey().toString());
+    final marker = Marker(
+      markerId: markerId,
+      position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+      icon: await _bitmapDescriptorFromAsset(Assets.horizontalPole),
+      onTap: () {
+        _onMarkerTap(markerId);
+      },
+    );
+
+    markers.add(marker);
+    markerEntityMap[markerId] = entity;
+    notifyListeners();
+  }
+
+  PoleFeederEntity? sourcePoleTag;
+
+  void _onMarkerTap(MarkerId markerId) {
+    final entity = markerEntityMap[markerId];
+    print("markerEntityMap entity: $markerEntityMap");
+    if (entity == null) return;
+
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        content: const Text("Copy this pole num to previous pole number box?"),
+        actions: [
+          TextButton(
+            onPressed: () {
+              final poleText = entity.tempSeries != null
+                  ? "${entity.tempSeries}-${entity.poleNum}"
+                  : entity.poleNum;
+              poleNumber.text = poleText ?? '';
+              print("selected Pole number is $poleText");
+              notifyListeners();
+              // If needed, store the entity as tag
+              sourcePoleTag = entity;
+
+              Navigator.pop(context);
+            },
+            child: const Text("Copy"),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancel"),
+          ),
+        ],
+      ),
+    );
+  }
+  void _handleLocation() async {
+
+    bool isLocationEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!isLocationEnabled) {
+      // Show a dialog to enable location services
+      bool? shouldOpenSettings = await showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return WillPopScope(
+            onWillPop: () async => false,
+            child: AlertDialog(
+              title: const Text("Location Service Disabled"),
+              content: const Text("Please enable location services to use this feature."),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: const Text("Open Settings"),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+
+      if (shouldOpenSettings == true) {
+        await Geolocator.openLocationSettings();
+        // After opening settings, check again if the location service is enabled
+        isLocationEnabled = await Geolocator.isLocationServiceEnabled();
+      }
+    }
+    // Check location permissions
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Location permissions are denied."),
+          ),
+        );
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      bool? shouldOpenSettings = await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Location Permission Required"),
+            content: Text("Location permissions are permanently denied. Please enable them in the app settings."),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text("Cancel"),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text("Open Settings"),
+              ),
+            ],
+          );
+        },
+      );
+
+      if (shouldOpenSettings == true) {
+        await Geolocator.openAppSettings();
+        permission = await Geolocator.checkPermission();
+      }
+    }
+
+    if (permission != LocationPermission.whileInUse && permission != LocationPermission.always) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Location permissions are still denied."),
+        ),
+      );
+      return;
+    }
+    await startListening();
+
+  }
+
   StreamSubscription<Position>? _positionStream;
 
-  void startListening() async {
+  Future<void> startListening() async {
     print("started Implementing");
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     LocationPermission permission = await Geolocator.checkPermission();
@@ -661,6 +992,7 @@ class Check33kvViewmodel extends ChangeNotifier {
                     .map((json) => PoleFeederEntity.fromJson(json))
                     .toList();
                 poleFeederList.addAll(listData);
+                processMapData();
               } else {
                 showAlertDialog(context, "No Data Found");
               }
@@ -1057,7 +1389,7 @@ class Check33kvViewmodel extends ChangeNotifier {
     }
   }
 
-  Future<void> save33KVPole() async {
+  Future<void> save33KVPole() async { //922
     _isLoading = isTrue;
     notifyListeners();
 
@@ -1085,7 +1417,7 @@ class Check33kvViewmodel extends ChangeNotifier {
       "typeOfPoint": selectedTypePoint,
       // "pid": docketEntity!.id,
       "polenum": poleNumber.text.isEmpty ? "0000" : poleNumber.text.trim(),
-      "crossingText": "",
+      "crossingText": particularsOfCrossing.text.trim(),
       if (selectedPole != "Origin Pole") ...{
         "series": series,
       },
@@ -1287,35 +1619,35 @@ class Check33kvViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void showDialogueCopyPoleNum() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          content: const SizedBox(
-            height: 40,
-            child: Column(children: [
-              Text(
-                "Copy this pole mum to previous pole number box?",
-              ),
-            ]),
-          ),
-          actions: [
-            TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text("Cancle")),
-            TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text("Copy")),
-          ],
-        );
-      },
-    );
-  }
+  // void showDialogueCopyPoleNum() {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         content: const SizedBox(
+  //           height: 40,
+  //           child: Column(children: [
+  //             Text(
+  //               "Copy this pole mum to previous pole number box?",
+  //             ),
+  //           ]),
+  //         ),
+  //         actions: [
+  //           TextButton(
+  //               onPressed: () {
+  //                 Navigator.pop(context);
+  //               },
+  //               child: Text("Cancle")),
+  //           TextButton(
+  //               onPressed: () {
+  //                 Navigator.pop(context);
+  //               },
+  //               child: Text("Copy")),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   void selectMapOrList() {
     showDialog(

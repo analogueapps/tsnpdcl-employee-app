@@ -63,20 +63,17 @@ class CheckMeasure11kv extends StatelessWidget {
                   child: Stack(children: [
                     Column(
                       children: [
-                        // Fixed map
-                        Container(
-                          color: Colors.grey[200],
-                          height: 200,
-                          width: double.infinity,
-                          // child: const Center(child: Text("Google maps here")),
-                          child:viewModel.isLoading
-                              ? const Center(child: CircularProgressIndicator())
-                              : GoogleMap(
-                            onMapCreated: viewModel.onMapCreated,
-                            initialCameraPosition: CameraPosition(
-                              target: viewModel.center,
-                              zoom: 11.0,
-                            ),
+                        Expanded(
+                          child: GoogleMap(
+                            initialCameraPosition: viewModel.cameraPosition ?? const CameraPosition(target: LatLng(0, 0), zoom: 10),
+                            polylines: viewModel.polylines,
+                            markers: viewModel.markers,
+                            myLocationEnabled: false,
+                            myLocationButtonEnabled: false,
+                            zoomControlsEnabled: true,
+                            onMapCreated: (controller) {
+                              viewModel.mapController = controller;
+                            },
                           ),
                         ),
 
@@ -127,7 +124,7 @@ class CheckMeasure11kv extends StatelessWidget {
                                             // labelText: 'Select an option',
                                             border: OutlineInputBorder(),
                                           ),
-                                          child: Text(
+                                          child: viewModel.poleNumber.text==""?Text(
                                             viewModel.selectedPoleFeeder != null
                                                 ? (viewModel.selectedPoleFeeder!
                                                                 .tempSeries !=
@@ -142,7 +139,7 @@ class CheckMeasure11kv extends StatelessWidget {
                                                             .poleNum ??
                                                         '')
                                                 : 'Tap to select',
-                                          ),
+                                          ):Text(viewModel.poleNumber.text),
                                         ),
                                       ),
                                     ]),

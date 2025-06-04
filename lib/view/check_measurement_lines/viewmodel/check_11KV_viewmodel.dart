@@ -19,15 +19,13 @@ import 'package:tsnpdcl_employee/utils/general_assets.dart';
 import 'package:tsnpdcl_employee/view/check_measurement_lines/model/check_measure_11kv_model.dart';
 import 'package:tsnpdcl_employee/view/check_measurement_lines/model/docket_model.dart';
 import 'package:tsnpdcl_employee/view/check_measurement_lines/model/polefeeder_model.dart';
-import 'package:tsnpdcl_employee/view/pole_tracker/model/digital_feeder_entity.dart';
 import '../../dtr_master/model/circle_model.dart';
 
 class Check11kvViewmodel extends ChangeNotifier {
   Check11kvViewmodel({required this.context, required this.args}) {
     startListening();
+    _initializeCameraPosition();
     getPolesOnFeeder();
-    // _initializeCameraPosition();
-    // _loadMapData();
     final String? jsonString = args['d'];
     print("argument d data: ${args['d']}");
 
@@ -54,7 +52,6 @@ class Check11kvViewmodel extends ChangeNotifier {
   final BuildContext context;
   final Map<String, dynamic> args;
   double MINIMUM_GPS_ACCURACY_REQUIRED = 15.0;
-  String maxId = "9752778"; //From Map initially OL
 
   double? latitude;
   double? longitude;
@@ -84,61 +81,286 @@ class Check11kvViewmodel extends ChangeNotifier {
   String? series, poleNum;
   DocketEntity? docketEntity;
 
-  //Google Map
-  // final LatLng _currentLocation = const LatLng(17.387140, 78.491684);
-  // CameraPosition? _cameraPosition;
-  // GoogleMapController? _mapController;
-  //
-  // Set<Marker> markers = {};
-  // Set<Polyline> polylines = {};
-  //
-  // LatLng get currentLocation => _currentLocation;
-  //
-  // CameraPosition? get cameraPosition => _cameraPosition;
-  //
-  // GoogleMapController? get mapController => _mapController;
-  //
-  // set mapController(GoogleMapController? controller) {
-  //   _mapController = controller;
-  //   notifyListeners();
-  // }
-  //
-  // void _initializeCameraPosition() {
-  //   _cameraPosition = CameraPosition(target: _currentLocation, zoom: 14.0);
-  //   notifyListeners();
-  // }
-  //
-  // Future<void> _loadMapData() async {
-  //   _isLoading=isTrue;
-  //   notifyListeners();
-  //
-  //   // Dummy test marker (you can load your real data here)
-  //   markers.add(
-  //     Marker(
-  //       markerId: MarkerId('test_marker'),
-  //       position: _currentLocation,
-  //       infoWindow: InfoWindow(title: 'Test Marker'),
-  //     ),
-  //   );
-  //
-  //   // Optional test polyline
-  //   polylines.add(Polyline(
-  //     polylineId: PolylineId("line_1"),
-  //     points: [_currentLocation, LatLng(17.390, 78.495)],
-  //     color: Colors.blue,
-  //     width: 4,
-  //   ));
-  //   _isLoading=isFalse;
-  //   notifyListeners();
-  // }
+  final LatLng _currentLocation = const LatLng(17.387140, 78.491684);
+  CameraPosition? _cameraPosition;
 
-  Completer<GoogleMapController> _controller = Completer();
+  LatLng get currentLocation => _currentLocation;
 
-    LatLng center = const LatLng(17.387140, 78.491684);
+  // Update to nullable getter and setter
+  CameraPosition? get cameraPosition => _cameraPosition;
 
-  void onMapCreated(GoogleMapController controller) {
-    _controller.complete(controller);
+  set cameraPosition(CameraPosition? position) {
+    _cameraPosition = position;
+    notifyListeners();
   }
+
+  LatLng? markerPosition;
+  GoogleMapController? _mapController;
+  GoogleMapController? get mapController => _mapController;
+  set mapController(GoogleMapController? controller) {
+    _mapController = controller;
+    notifyListeners();
+  }
+
+  Set<Polyline> polylines = {};
+  Set<Marker> markers = {};
+
+  bool showPoles = true;
+  void _initializeCameraPosition() {
+      // _bitmapDescriptorFromAsset(Assets.);
+      _cameraPosition = CameraPosition(
+        target: _currentLocation,
+        zoom: 14.0,
+      );
+      notifyListeners();
+  }
+  Future<void> processMapData() async {
+    if (poleFeederList.isEmpty) return;
+
+    for (int i = 0; i < poleFeederList.length; i++) {
+      final entity = poleFeederList[i];
+
+      if (entity.sourceLat != null && entity.sourceLon != null) {
+        final polyline = Polyline(
+          polylineId: PolylineId('polyline_$i'),
+          points: [
+            LatLng(double.parse(entity.sourceLat!), double.parse(entity.sourceLon!)),
+            LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+          ],
+          width: 4,
+          color: entity.tempSeries != null ? Colors.blue : entity.newProposalId != null ? Colors.red : Colors.black,
+        );
+        polylines.add(polyline);
+
+        if (showPoles) {
+          // double distance = _calculateDistance(
+          //   double.parse(entity.sourceLat!),
+          //   double.parse(entity.sourceLon!),
+          //   double.parse(entity.lat!),
+          //   double.parse(entity.lon!),
+          // );
+          double distance = Geolocator.distanceBetween(
+            double.parse(entity.sourceLat!),
+            double.parse(entity.sourceLon!),
+            double.parse(entity.lat!),
+            double.parse(entity.lon!),
+          );
+          final midpoint = _calculateMidpoint(
+            double.parse(entity.sourceLat!),
+            double.parse(entity.sourceLon!),
+            double.parse(entity.lat!),
+            double.parse(entity.lon!),
+          );
+          _addTextMarker('${distance.toStringAsFixed(1)}m', midpoint);
+        }
+      }
+
+      // if (showPoles) {
+      //   final marker = Marker(
+      //     markerId: MarkerId('marker_$i'),
+      //     position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+      //     icon: entity.poleType != null && entity.poleType!.toLowerCase().contains('tower')
+      //         ? await _bitmapDescriptorFromAsset(Assets.towerPole)
+      //         : await _bitmapDescriptorFromAsset(Assets.horizontalPole),
+      //   );
+      //   markers.add(marker);
+      //   print("Added marker at: ${marker.position.latitude}, ${marker.position.longitude}");
+      // }
+
+      if (showPoles) {
+         addMarkerWithEntity(entity);
+      }
+      _addSpecialMarkers(entity);
+      if (i == poleFeederList.length - 1) {
+
+        _cameraPosition = CameraPosition(
+          target: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+          zoom: 14.0,
+        );
+        notifyListeners();
+
+        _mapController?.animateCamera(
+          CameraUpdate.newLatLngZoom(
+            LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+            20.0,
+          ),
+        );
+      }
+    }
+    notifyListeners();
+  }
+
+  Future<void> _addSpecialMarkers(PoleFeederEntity entity) async {
+    if (entity.sourceType?.toLowerCase() == 'ss') {
+      markers.add(Marker(
+        markerId: MarkerId('sourceType_${entity.id}'),
+        position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+        icon: entity.feederVolt == "33KV" ? await _bitmapDescriptorFromAsset(Assets.ss132Kv) : await _bitmapDescriptorFromAsset(Assets.ss33Kv),
+      ));
+    }
+    if (entity.loadType != null) {
+      switch (entity.loadType!.toLowerCase()) {
+        case 'ss':
+          markers.add(Marker(
+            markerId: MarkerId('loadType_ss_${entity.id}'),
+            position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+            icon: await _bitmapDescriptorFromAsset(Assets.ss33Kv),
+          ));
+          break;
+        case 'dtr':
+          markers.add(Marker(
+            markerId: MarkerId('loadType_dtr_${entity.id}'),
+            position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+            icon: await _bitmapDescriptorFromAsset(Assets.dtr),
+          ));
+          break;
+        case 'ht':
+          markers.add(Marker(
+            markerId: MarkerId('loadType_ht_${entity.id}'),
+            position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+            icon: await _bitmapDescriptorFromAsset(Assets.htService),
+          ));
+          break;
+      }
+    }
+  }
+
+  Future<void> _addTextMarker(String text, LatLng position) async {
+    final TextPainter textPainter = TextPainter(
+      text: TextSpan(
+        text: text,
+        style: TextStyle(
+          color: Colors.grey[800],
+          fontSize: 25, // Adjust font size
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+    );
+    textPainter.layout(minWidth: 0, maxWidth: double.infinity);
+
+    final recorder = ui.PictureRecorder();
+    final canvas = Canvas(
+      recorder,
+      Rect.fromPoints(
+        const Offset(0, 0),
+        Offset(textPainter.width, textPainter.height),
+      ),
+    );
+
+    // Center the text
+    textPainter.paint(canvas, Offset(0, 0)); // Adjust if necessary
+
+    final picture = recorder.endRecording();
+    final img = await picture.toImage(
+      textPainter.width.toInt(),
+      textPainter.height.toInt(),
+    );
+
+    final ByteData? byteData = await img.toByteData(format: ui.ImageByteFormat.png);
+    if (byteData != null) {
+      final Uint8List uint8List = byteData.buffer.asUint8List();
+      final bitmapDescriptor = BitmapDescriptor.fromBytes(uint8List);
+
+      markers.add(
+        Marker(
+          markerId: MarkerId(position.toString()),
+          position: position,
+          icon: bitmapDescriptor,
+        ),
+      );
+      notifyListeners();
+    } else {
+      print("Error converting image to ByteData");
+    }
+  }
+
+  LatLng _calculateMidpoint(double lat1, double lon1, double lat2, double lon2) {
+    double midLat = (lat1 + lat2) / 2;
+    double midLon = (lon1 + lon2) / 2;
+    return LatLng(midLat, midLon);
+  }
+
+  Future<BitmapDescriptor> _bitmapDescriptorFromAsset(String path) async {
+    final Uint8List data = await _getBytesFromAsset(path, 50);
+    return BitmapDescriptor.fromBytes(data);
+  }
+
+  Future<Uint8List> _getBytesFromAsset(String path, int width) async {
+    ByteData byteData = await rootBundle.load(path);
+    ui.Codec codec = await ui.instantiateImageCodec(byteData.buffer.asUint8List());
+    ui.FrameInfo fi = await codec.getNextFrame();
+    final Uint8List resizedData = (await fi.image.toByteData(format: ui.ImageByteFormat.png))!.buffer.asUint8List();
+    return resizedData;
+  }
+
+  // Optimize for better map rendering performance
+  Future<void> moveCameraToLastPosition() async {
+    if (poleFeederList.isNotEmpty) {
+      final lastItem = poleFeederList.last;
+      final lat = double.parse(lastItem.lat!);
+      final lon = double.parse(lastItem.lon!);
+
+      await _mapController?.animateCamera(
+        CameraUpdate.newLatLngZoom(LatLng(lat, lon), 20.0),
+      );
+    }
+  }
+
+  Map<MarkerId, PoleFeederEntity> markerEntityMap = {};
+
+  void addMarkerWithEntity(PoleFeederEntity entity) async {
+    final markerId = MarkerId(entity.poleNum ?? UniqueKey().toString());
+    final marker = Marker(
+      markerId: markerId,
+      position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+      icon: await _bitmapDescriptorFromAsset(Assets.horizontalPole),
+      onTap: () {
+        _onMarkerTap(markerId);
+      },
+    );
+
+    markers.add(marker);
+    markerEntityMap[markerId] = entity;
+    notifyListeners();
+  }
+
+  PoleFeederEntity? sourcePoleTag;
+
+  void _onMarkerTap(MarkerId markerId) {
+    final entity = markerEntityMap[markerId];
+    print("markerEntityMap entity: $markerEntityMap");
+    if (entity == null) return;
+
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        content: const Text("Copy this pole num to previous pole number box?"),
+        actions: [
+          TextButton(
+            onPressed: () {
+              final poleText = entity.tempSeries != null
+                  ? "${entity.tempSeries}-${entity.poleNum}"
+                  : entity.poleNum;
+              poleNumber.text = poleText ?? '';
+              print("selected Pole number is $poleText");
+              notifyListeners();
+              // If needed, store the entity as tag
+              sourcePoleTag = entity;
+
+              Navigator.pop(context);
+            },
+            child: const Text("Copy"),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancel"),
+          ),
+        ],
+      ),
+    );
+  }
+
 
 
   bool _followSwitch = true;
@@ -432,26 +654,6 @@ class Check11kvViewmodel extends ChangeNotifier {
     print("$_selectedTypePoint: TypePoint selected");
     notifyListeners();
   }
-
-  //Pole Details
-  // List<String> poleDetailsName = [
-  //   "V Cross Arm ",
-  //   "Horiz. Cross Arm",
-  //   "Channet Cross Arm",
-  //   "Side Arm",
-  // ];
-  // String? _selectedPoleDetailsName;
-  // String? get selectedPoleDetailsName => _selectedPoleDetailsName;
-  //
-  // void setSelectedPoleDetailName(String qty) {
-  //   if (_selectedPoleDetailsName == qty) {
-  //     _selectedPoleDetailsName = null; // Unselect if tapped again
-  //   } else {
-  //     _selectedPoleDetailsName = qty;
-  //   }
-  //   print("selectedPoleDetailsName: $_selectedPoleDetailsName");
-  //   notifyListeners();
-  // }
 
   List<int> poleQty = [
     0,
@@ -1073,16 +1275,22 @@ class Check11kvViewmodel extends ChangeNotifier {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text("CANCEL")),
+                child: const Text("CANCEL")),
             TextButton(
               onPressed: () {
                 Navigator.pop(context); // close the dialog
                 showPoleFeederDropdown(); // show dropdown in a new dialog
               },
-              child: Text("SELECT FROM LIST"),
+              child: const Text("SELECT FROM LIST"),
             ),
-            TextButton(
-              onPressed: null,
+              TextButton(
+              onPressed: (){
+                Navigator.pop(context);
+                AlertUtils.showSnackBar(
+                    context,
+                    "Please tap the pole on the map",
+                    isFalse);
+              },
               child: Text("SELECT ON MAP"),
             ),
           ],
@@ -1168,6 +1376,7 @@ class Check11kvViewmodel extends ChangeNotifier {
       poleID = value.id.toString();
       poleLat = value.lat.toString();
       poleLon = value.lon.toString();
+      poleNumber.text=poleFeederSelected??"";
       series = poleFeederSelected?.substring(0, 3);
       AlertUtils.showSnackBar(context, poleFeederSelected!, isFalse);
       print("POle Num: $poleFeederSelected");
@@ -1218,6 +1427,7 @@ class Check11kvViewmodel extends ChangeNotifier {
                     .map((json) => PoleFeederEntity.fromJson(json))
                     .toList();
                 poleFeederList.addAll(listData);
+                processMapData();
               } else {
                 showAlertDialog(context, "No Data Found");
               }
@@ -1468,7 +1678,7 @@ class Check11kvViewmodel extends ChangeNotifier {
       "formation": selectedFormation,
       "typeOfPoint": selectedTypePoint,
       "pid": docketEntity!.id,
-      "polenum": poleNumber.text.isEmpty ? " " : poleNumber.text.trim(),
+      "polenum": poleNumber.text.isEmpty ? "": poleNumber.text.trim(),
       "series": series,
       if (selectedPole != "Source Pole Not Mapped" &&
           selectedPole != "Origin Pole") ...{
@@ -1489,7 +1699,7 @@ class Check11kvViewmodel extends ChangeNotifier {
       "stay": selectedSupportType["Stay set"],
       "cid": docketEntity!.id,
       if (selectedConnected == "DTR") ...{
-        "dtrph": selectedDtrPhase, //dtrStructure.text
+        "dtrph": selectedDtrPhase=="1Q"?"SPH": "3PH",
         "dtrcap": selectedCapacityName,
         "dtrSl": dtrSlNo.text.trim(),
         "ymfg": selectedYear,
