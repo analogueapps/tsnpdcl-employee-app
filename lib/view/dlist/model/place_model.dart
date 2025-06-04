@@ -9,4 +9,7 @@ class Place with ClusterItem {
 
   @override
   LatLng get location => latLng;
+
+
+
 }

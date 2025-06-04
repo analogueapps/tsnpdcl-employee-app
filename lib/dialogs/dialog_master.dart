@@ -54,6 +54,21 @@ Future<void> showAlertDialog(BuildContext context, String message) async {
     Navigation.instance.canPop();
   }
 }
+
+Future<void> showEmptyFolderDialog(BuildContext context, String message) async {
+  final result = await showOkAlertDialog(
+      context: context,
+      title: "Empty Folder",
+      message: message,
+      okLabel: "OK",
+      barrierDismissible: false
+  );
+
+  if (result == OkCancelResult.ok) {
+    Navigation.instance.canPop();
+  }
+}
+
 void showAlertDialogPopScreen(BuildContext context, String message) async{
   // showDialog(
   //   context: context,

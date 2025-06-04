@@ -53,7 +53,7 @@ class AllLcRequestListViewModel extends ChangeNotifier {
         if (response.statusCode == successResponseCode) {
           if(response.data['sessionValid'] == isTrue) {
             if (response.data['taskSuccess'] == isTrue) {
-              if(response.data['dataList'] != null) {
+              if(response.data['dataList'].isNotEmpty) {
                 // final List<dynamic> jsonList = jsonDecode(response.data['dataList']);
                 List<dynamic> jsonList;
 
@@ -68,6 +68,8 @@ class AllLcRequestListViewModel extends ChangeNotifier {
                 final List<AllLcRequestList> dataList = jsonList.map((json) => AllLcRequestList.fromJson(json)).toList();
                 _allLcRequestList.addAll(dataList);
                 notifyListeners();
+              }else{
+                showEmptyFolderDialog(context, response.data['message']);
               }
             }
           } else {
