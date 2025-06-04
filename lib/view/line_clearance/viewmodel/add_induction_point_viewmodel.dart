@@ -18,10 +18,13 @@ class AddInductionPointViewModel extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   String? selectedCheckboxId;
-  bool isSelected(String id) => selectedCheckboxId == id;
+  bool isSelected(String id) {
+    return selectedCheckboxId == id;
+  }
 
   List<SpinnerList> list132kVssItem = [];
   String? list132kVssSelect;
+  int? kv33SsIndex;
 
   List<SpinnerList> list33KvFeederOf132kVssItem = [];
   String? list33KvFeederOf132kVssSelect;
@@ -45,9 +48,10 @@ class AddInductionPointViewModel extends ChangeNotifier {
   AddInductionPointViewModel({required this.context});
 
   void selectCheckbox(String id) {
+    print('enter');
     clearAllList();
     notifyListeners();
-    if (selectedCheckboxId == id) {
+    if (selectedCheckboxId != id) {
       selectedCheckboxId = null;
       selectedCheckboxId = id;
       if(id == "33KV LINE"){
@@ -81,7 +85,7 @@ class AddInductionPointViewModel extends ChangeNotifier {
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
-
+    print('Raw 33kv Response SS : $response');
     try {
       if (response != null) {
         if (response.data is String) {
@@ -94,6 +98,7 @@ class AddInductionPointViewModel extends ChangeNotifier {
                 final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
                 final List<SpinnerList> listData = jsonList.map((json) => SpinnerList.fromJson(json)).toList();
                 list132kVssItem.addAll(listData);
+                print('list132kVssItem : $list132kVssItem');
               }
             } else {
               showAlertDialog(context,response.data['message']);
@@ -145,7 +150,7 @@ class AddInductionPointViewModel extends ChangeNotifier {
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
-
+    print('Raw 33kv Response Feeder : $response');
     try {
       if (response != null) {
         if (response.data is String) {
@@ -158,6 +163,7 @@ class AddInductionPointViewModel extends ChangeNotifier {
                 final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
                 final List<SpinnerList> listData = jsonList.map((json) => SpinnerList.fromJson(json)).toList();
                 list33KvFeederOf132kVssItem.addAll(listData);
+                // print('list33KvFeederOf132kVssItem : ${list33KvFeederOf132kVssItem[0].optionName}');
               }
             } else {
               showAlertDialog(context,response.data['message']);
@@ -490,7 +496,10 @@ class AddInductionPointViewModel extends ChangeNotifier {
         "deviceId": await getDeviceId(),
         "ssCode": args['ssCode'],
         "fdrCode": args['fdrCode'],
+        "type":"NONE",
       };
+
+      print('Request data in our : $requestData');
 
       if(selectedCheckboxId == "NO INDUCTION SOURCE"){
         requestData['type'] = "NONE";
@@ -506,11 +515,11 @@ class AddInductionPointViewModel extends ChangeNotifier {
           showAlertDialog(context, "Please select 33KV Feeder");
           return;
         }
-
-        requestData['ehtSSCode'] = list132kVssSelect;
-        requestData['indSSName'] = list132kVssItem.firstWhere((item) => item.optionCode == list132kVssSelect).optionName;
-        requestData['indFdrCode'] = list33KvFeederOf132kVssSelect;
         requestData['indFdrName'] = list33KvFeederOf132kVssItem.firstWhere((item) => item.optionCode == list33KvFeederOf132kVssSelect).optionName;
+        requestData['indSSName'] = list132kVssItem.firstWhere((item) => item.optionCode == list132kVssSelect).optionName;
+        requestData['ehtSSCode'] = list132kVssSelect;
+        requestData['indFdrCode'] = list33KvFeederOf132kVssSelect;
+
 
       } else if(selectedCheckboxId == "11KV LINE") {
         requestData['type'] = "11KV";
@@ -567,21 +576,21 @@ class AddInductionPointViewModel extends ChangeNotifier {
         context,
         message: "Please wait...",
       );
-
+      print('final sent response : $requestData');
       var response = await ApiProvider(baseUrl: Apis.LC_END_POINT_BASE_URL).postApiCall(context, Apis.ADD_INDUCTION_POINT_URL, requestData);
       if (context.mounted) {
         ProcessDialogHelper.closeDialog(context);
       }
-
+      print('final response : $response');
       try {
         if (response != null) {
           if (response.data is String) {
             response.data = jsonDecode(response.data); // Parse string to JSON
           }
           if (response.statusCode == successResponseCode) {
-            if(response.data['tokenValid'] == isTrue) {
-              if (response.data['success'] == isTrue) {
-                await showSuccessDialog(context, response.data['success'], () {
+            if(response.data['sessionValid'] == isTrue) {
+              if (response.data['taskSuccess'] == isTrue) {
+                await showSuccessDialog(context, response.data['message'], () {
                   Navigation.instance.pushBack();
                   },
                 );
