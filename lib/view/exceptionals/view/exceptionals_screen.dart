@@ -66,7 +66,10 @@ class ExceptionalsScreen extends StatelessWidget {
                         child: const Text("Re-sync", style: TextStyle(color: Colors.white)),
                       ),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          viewModel.findServiceClicked();
+                          print("findServiceClicked is clicked");
+                        },
                         child: const Text("Find Service"),
                       ),
                     ],

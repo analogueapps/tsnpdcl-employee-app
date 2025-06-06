@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
+import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/view/verify_wrong_category/viewmodel/inspectServices_viewmodel.dart';
 import 'package:tsnpdcl_employee/widget/month_year_selector.dart';
 
@@ -75,7 +76,15 @@ class InspectServices extends StatelessWidget {
                       itemCount: viewModel.inspectService.length,
                       itemBuilder: (item,index){
                         final item= viewModel.inspectService[index];
-                        return Column(
+                        return InkWell(
+                        onTap: (){
+                          var argument = {
+                            'areaCode': item.areaCode,
+                            'monthYear':'${viewModel.selectedMonthYear!['month'].toString().toUpperCase()}${viewModel.selectedMonthYear!['year']}' ,
+                          };
+                          Navigation.instance.navigateTo(Routes.wrongCatConfirmationServices, args: argument);
+                        },
+                            child:Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const SizedBox(height: 8,),
@@ -84,13 +93,14 @@ class InspectServices extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text('Total: ${item.totalCount}',style: TextStyle(color: Colors.blue),),
-                                Text('Verified: ${item.verifiedCount}',style: TextStyle(color: Colors.green),),
-                                Text('Pending: ${item.pendingCount}',style: TextStyle(color: Colors.red),),
+                                Text('Total: ${item.totalCount}',style: const TextStyle(color: Colors.blue),),
+                                Text('Verified: ${item.verifiedCount}',style: const TextStyle(color: Colors.green),),
+                                Text('Pending: ${item.pendingCount}',style:const TextStyle(color: Colors.red),),
                               ],
                             ),
                             const Divider(),
                           ],
+                            ),
                         );
                       }
                   ),

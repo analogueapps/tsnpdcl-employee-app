@@ -2,8 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:ffi';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
 import 'package:tsnpdcl_employee/dialogs/process_dialog.dart';
 import 'package:tsnpdcl_employee/network/api_provider.dart';
@@ -148,5 +150,90 @@ class ExceptionalsViewmodel extends ChangeNotifier {
     );
     notifyListeners();
   }
+
+  List<ExceptionalService> _filteredItems = [];
+  List<ExceptionalService> get filteredItems => _filteredItems;
+  String searchText = '';
+  // void loadFilters() {
+  //   exceptionalServices = (jsonDecode(data['data']) as List)
+  //       .map((e) => ExceptionalService.fromJson(e))
+  //       .toList();
+  //
+  //   _filteredItems = List.from(exceptionalServices); // <-- Initialize here
+  //
+  //   _filteredOptionList.clear();
+  //   for (var a in exceptionalServices) {
+  //     if (_filteredOptionList.any((element) => element.optionId == a.ctareacd)) continue;
+  //     _filteredOptionList.add(OptionList(optionId: a.ctareacd, optionName: a.areaname));
+  //   }
+  //
+  //   // Other parsing...
+  //   notifyListeners();
+  // }
+
+  void filterItems(String query) {
+    searchText = query;
+    final lowerQuery = query.toLowerCase();
+
+    _filteredItems = exceptionalServices.where((item) {
+      return item.scno?.toLowerCase().contains(lowerQuery) ?? false ||
+          item.uscno!.toString().toLowerCase().contains(lowerQuery)  ||
+          item.consumerName!.toString().toLowerCase().contains(lowerQuery);
+    }).toList();
+
+    notifyListeners();
+  }
+
+
+  Future<void> findServiceClicked() async {
+    _filteredItems = List.from(exceptionalServices); // reset before opening search
+    notifyListeners();
+    await showCupertinoModalPopup(
+        context: context,
+        builder: (_) => ChangeNotifierProvider.value(
+        value: this, // Provide your current ViewModel
+        child: CupertinoActionSheet(
+      title: const Text('Select Service'),
+      message: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CupertinoSearchTextField(
+            onChanged: filterItems,
+          ),
+          const SizedBox(height: 10),
+          SizedBox(
+            height: 300,
+            child: ListView.separated(
+              itemCount: filteredItems.length,
+              separatorBuilder: (_, __) => const Divider(height: 1, color: CupertinoColors.separator),
+              itemBuilder: (_, index) {
+                final item = filteredItems[index];
+                return CupertinoButton(
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+                  onPressed: () => Navigator.of(context).pop(item),
+                  child: Text(
+                    'SC No: ${item.scno}\n'
+                        'USNO: ${item.uscno?.ceil()}\n'
+                        'NAME: ${item.consumerName}\n'
+                        'Struck Up',
+                    textAlign: TextAlign.left,
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+      cancelButton: CupertinoActionSheetAction(
+        onPressed: () => Navigator.pop(context),
+        child: const Text('Cancel'),
+      ),
+        ),
+        ),
+    );
+  }
+
 
 }

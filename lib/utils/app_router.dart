@@ -141,6 +141,7 @@ import 'package:tsnpdcl_employee/view/tong_tester_readings/view/overLoad_dtr_lis
 import 'package:tsnpdcl_employee/view/tong_tester_readings/view/view_detailed_tong_tester_readings.dart';
 import 'package:tsnpdcl_employee/view/verify_wrong_category/view/areaWiseAbstract.dart';
 import 'package:tsnpdcl_employee/view/verify_wrong_category/view/inspect_services.dart';
+import 'package:tsnpdcl_employee/view/verify_wrong_category/view/wrong_cal_confirmation.dart';
 import 'package:tsnpdcl_employee/view/web_view/view/web_view_screen.dart';
 import 'package:tsnpdcl_employee/widget/month_year_selector.dart';
 import 'package:tsnpdcl_employee/widget/pinch_zoom_imageview.dart';
@@ -656,6 +657,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const AreaWiseAbstractView());
       case InspectServices.id:
         return MaterialPageRoute(builder: (_) => InspectServices(args: settings.arguments as Map<String, dynamic>));
+        case WrongCatConfirmation.id:
+        return MaterialPageRoute(builder: (_) => WrongCatConfirmation(args: settings.arguments as Map<String, dynamic>));
 
       //PTR & FEEDER LOADERS * Bhavana
       case PtrFeederScreen.id:

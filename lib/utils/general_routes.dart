@@ -220,6 +220,7 @@ class Routes {
   //VERIFY WRONG CONFIRMATIONS * BHAVANA
   static const String areaWiseAbstract="AreaWiseAbstractView";
   static const String inspectServices="InspectServices";
+  static const String wrongCatConfirmationServices="WrongCatConfirmation";
 
     //PTR & FEEDERS LOADERS * BHAVANA
     static const String ptrFeederScreen="PtrFreederScreen";
