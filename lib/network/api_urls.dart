@@ -19,6 +19,10 @@ class Apis{
   /// CONSUMER RELATED
   static const NPDCL_EMP_URL = "NpdclEmployeeWebApi/npemp/api";
 
+  ///Asset Mapping
+  static const ROOT_URL_ASSET_MAPPING = "http://210.212.223.88:5656/NPFDAS/ep/asset/";
+  static const ASSET_MAPPING_URL="/map";
+
   ///CHECK READING ROOT DOMAIN * BHAVANA
   static const CHECK_ROOT_URL="http://210.212.223.87:8181/NPDCL2019WebApi/rest/";
 

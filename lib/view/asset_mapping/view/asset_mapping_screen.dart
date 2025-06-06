@@ -18,7 +18,7 @@ class AssetMappingScreen extends StatefulWidget {
 }
 
 class _AssetMappingScreenState extends State<AssetMappingScreen> {
-  final TextEditingController _assetCodeController = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +77,7 @@ class _AssetMappingScreenState extends State<AssetMappingScreen> {
                   const Text('Asset Code', style: TextStyle(fontSize: titleSize, fontWeight: FontWeight.w500)),
                   const SizedBox(height: doubleFifteen),
                   FillTextFormField(
-                    controller: _assetCodeController,
+                    controller: viewModel.assetCodeController,
                     labelText: "",
                     keyboardType: TextInputType.number,
                   ),
@@ -94,16 +94,16 @@ class _AssetMappingScreenState extends State<AssetMappingScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                            'Latitude: ${viewModel.currentPosition?.latitude ?? "Fetching..."}',
+                            'Latitude: ${viewModel.latitude ?? "Fetching..."}',
                             style: const TextStyle(fontSize: titleSize, fontWeight: FontWeight.w500)),
                         const SizedBox(height: doubleTen),
                         Text(
-                            'Longitude: ${viewModel.currentPosition?.longitude ?? "Fetching..."}',
+                            'Longitude: ${viewModel.longitude ?? "Fetching..."}',
                             style: const TextStyle(fontSize: titleSize, fontWeight: FontWeight.w500)),
                         const SizedBox(height: doubleTen),
                         Text(
-                          'Location Accuracy: ${viewModel.locationAccuracy}',
-                          style: const TextStyle(fontSize: titleSize, fontWeight: FontWeight.w500, color: Colors.green),
+                          'Location Accuracy: ${viewModel.totalAccuracy}',
+                          style:  TextStyle(fontSize: titleSize, fontWeight: FontWeight.w500, color: viewModel.totalAccuracy!<=viewModel.MINIMUM_GPS_ACCURACY_REQUIRED ?  Colors.green : Colors.red),
                         ),
                         const SizedBox(height: doubleFifteen),
                         Divider(
@@ -118,8 +118,9 @@ class _AssetMappingScreenState extends State<AssetMappingScreen> {
                         text: "Save",
                         fullWidth: isTrue,
                         onPressed: () {
-                          viewModel.saveAssetInfo(
-                              'HT METER SERVICE', _assetCodeController.text);
+                          if(viewModel.validate(context)){
+                            viewModel.postAssetInfo(context);
+                          }
                         }
                     ),
                   ),
