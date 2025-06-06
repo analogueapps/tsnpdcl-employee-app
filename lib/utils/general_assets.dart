@@ -77,6 +77,7 @@ class Assets {
   static const String ssIcon = 'assets/images/ss_icon.png';
   static const String towerPole = 'assets/images/tower_pole.png';
   static const String dtr = 'assets/images/dtr.png';
+  static const String human = 'assets/images/human.png';
 
   //Check Measurement 11KV
   static const String check11KvLeft='assets/images/check_11kv_left_tap.png';

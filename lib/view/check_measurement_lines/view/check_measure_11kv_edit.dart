@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
@@ -44,18 +45,19 @@ class CheckMeasure11kvEdit extends StatelessWidget {
                 child:  Stack(children: [
                   Column(
                       children: [
-                // Fixed map
-                        GestureDetector(
-                onTap: (){
-                  viewModel.onClickOfMap();
-                },
-                child:Container(
-                color: Colors.grey[200],
-                  height: 200,
-                  width: double.infinity,
-                  child: const Center(child: Text("Google maps here")),
-                ),
-              ),
+                        Expanded(
+                          child: GoogleMap(
+                            initialCameraPosition: viewModel.cameraPosition ?? const CameraPosition(target: LatLng(0, 0), zoom: 10),
+                            polylines: viewModel.polylines,
+                            markers: viewModel.markers.toSet(),
+                            myLocationEnabled: false,
+                            myLocationButtonEnabled: false,
+                            zoomControlsEnabled: true,
+                            onMapCreated: (controller) {
+                              viewModel.mapController = controller;
+                            },
+                          ),
+                        ),
 
                   Expanded(
                       child: viewModel.deleteOrEdit==isFalse?

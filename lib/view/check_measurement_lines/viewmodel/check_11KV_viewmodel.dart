@@ -52,6 +52,9 @@ class Check11kvViewmodel extends ChangeNotifier {
   final BuildContext context;
   final Map<String, dynamic> args;
   double MINIMUM_GPS_ACCURACY_REQUIRED = 15.0;
+  String empName=SharedPreferenceHelper.getStringValue(LoginSdkPrefs.empNameKey);
+  String empDesignation=SharedPreferenceHelper.getStringValue(LoginSdkPrefs.designationCodeKey);
+
 
   double? latitude;
   double? longitude;
@@ -75,6 +78,7 @@ class Check11kvViewmodel extends ChangeNotifier {
   final TextEditingController structureCode = TextEditingController();
   final TextEditingController equipmentCode = TextEditingController();
   final TextEditingController dtrSlNo = TextEditingController();
+
 
   bool serverCheck = false;
   bool deviceCheck = false;
@@ -114,8 +118,37 @@ class Check11kvViewmodel extends ChangeNotifier {
       );
       notifyListeners();
   }
-  Future<void> processMapData() async {
+
+  Future<void> _addHumanMarker() async {
+    final humanIcon = await _bitmapDescriptorFromAsset(Assets.human);
+    print("employee name = $empName");
+    markers.add(Marker(
+      markerId:  MarkerId("$empName($empDesignation)"),
+      position: _currentLocation,
+      icon: humanIcon,
+      infoWindow: InfoWindow(
+        title: '$empName ($empDesignation)',
+      ),
+    ));
+  }
+
+  Future<void> processMapData(bool drawHuman) async {
     if (poleFeederList.isEmpty) return;
+    // if (followSwitch) {
+    //   if (_currentLocation != null) {
+    //     markers.removeWhere((m) => m.markerId.value == 'human_marker');
+    //     try {
+    //       markers.add(Marker(
+    //         markerId: MarkerId('human_marker'),
+    //         position: _currentLocation,
+    //         icon: await _bitmapDescriptorFromAsset(Assets.human),
+    //       ));
+    //       print("Human location: $_currentLocation");
+    //     } catch (e) {
+    //       print("Error adding human marker: $e");
+    //     }
+    //   }
+    // }
 
     for (int i = 0; i < poleFeederList.length; i++) {
       final entity = poleFeederList[i];
@@ -155,24 +188,21 @@ class Check11kvViewmodel extends ChangeNotifier {
         }
       }
 
-      // if (showPoles) {
-      //   final marker = Marker(
-      //     markerId: MarkerId('marker_$i'),
-      //     position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
-      //     icon: entity.poleType != null && entity.poleType!.toLowerCase().contains('tower')
-      //         ? await _bitmapDescriptorFromAsset(Assets.towerPole)
-      //         : await _bitmapDescriptorFromAsset(Assets.horizontalPole),
-      //   );
-      //   markers.add(marker);
-      //   print("Added marker at: ${marker.position.latitude}, ${marker.position.longitude}");
-      // }
-
       if (showPoles) {
          addMarkerWithEntity(entity);
       }
-      _addSpecialMarkers(entity);
-      if (i == poleFeederList.length - 1) {
+      if (followSwitch && currentLocation != null) {
+        await _addHumanMarker();
 
+        mapController?.animateCamera(CameraUpdate.newCameraPosition(
+          CameraPosition(target: currentLocation, zoom: 18),
+        ));
+      }
+
+      if (!drawHuman) {
+        _addSpecialMarkers(entity);
+      }
+      if (i == poleFeederList.length - 1) {
         _cameraPosition = CameraPosition(
           target: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
           zoom: 14.0,
@@ -190,6 +220,7 @@ class Check11kvViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
+
   Future<void> _addSpecialMarkers(PoleFeederEntity entity) async {
     if (entity.sourceType?.toLowerCase() == 'ss') {
       markers.add(Marker(
@@ -198,6 +229,7 @@ class Check11kvViewmodel extends ChangeNotifier {
         icon: entity.feederVolt == "33KV" ? await _bitmapDescriptorFromAsset(Assets.ss132Kv) : await _bitmapDescriptorFromAsset(Assets.ss33Kv),
       ));
     }
+
     if (entity.loadType != null) {
       switch (entity.loadType!.toLowerCase()) {
         case 'ss':
@@ -282,9 +314,16 @@ class Check11kvViewmodel extends ChangeNotifier {
   }
 
   Future<BitmapDescriptor> _bitmapDescriptorFromAsset(String path) async {
-    final Uint8List data = await _getBytesFromAsset(path, 50);
-    return BitmapDescriptor.fromBytes(data);
+    try {
+      final Uint8List data = await _getBytesFromAsset(path, 50);
+      print("Loaded bitmap from asset: $path, size: ${data.length}");
+      return BitmapDescriptor.fromBytes(data);
+    } catch (e) {
+      print("Failed to load bitmap: $e");
+      rethrow;
+    }
   }
+
 
   Future<Uint8List> _getBytesFromAsset(String path, int width) async {
     ByteData byteData = await rootBundle.load(path);
@@ -1427,7 +1466,7 @@ class Check11kvViewmodel extends ChangeNotifier {
                     .map((json) => PoleFeederEntity.fromJson(json))
                     .toList();
                 poleFeederList.addAll(listData);
-                processMapData();
+                processMapData(true);
               } else {
                 showAlertDialog(context, "No Data Found");
               }

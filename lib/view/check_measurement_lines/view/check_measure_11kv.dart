@@ -67,7 +67,7 @@ class CheckMeasure11kv extends StatelessWidget {
                           child: GoogleMap(
                             initialCameraPosition: viewModel.cameraPosition ?? const CameraPosition(target: LatLng(0, 0), zoom: 10),
                             polylines: viewModel.polylines,
-                            markers: viewModel.markers,
+                            markers: viewModel.markers.toSet(),
                             myLocationEnabled: false,
                             myLocationButtonEnabled: false,
                             zoomControlsEnabled: true,
