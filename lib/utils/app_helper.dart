@@ -20,6 +20,8 @@ class LoginSdkPrefs {
   static const String divisionIdKey="DIVISION_ID_KEY";
   static const String designationCodeKey="DESIGNATION_CODE_KEY";
   static const String empNameKey="EMP_NAME_KEY";
+  static const String eroId="ERO_ID";
+
 }
 
 Future<String?> getDeviceId() async {

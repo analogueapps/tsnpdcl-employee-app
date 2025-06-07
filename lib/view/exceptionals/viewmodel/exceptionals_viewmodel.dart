@@ -44,6 +44,9 @@ class ExceptionalsViewmodel extends ChangeNotifier {
     _mapController = controller;
   }
 
+  String empID=SharedPreferenceHelper.getStringValue(LoginSdkPrefs.userIdPrefKey);
+  String eroID=SharedPreferenceHelper.getStringValue(LoginSdkPrefs.eroId);
+
   ExceptionalsViewmodel({required this.context}) {
     _initializeCameraPosition();
     _initializeLoading();
@@ -215,13 +218,14 @@ class ExceptionalsViewmodel extends ChangeNotifier {
                   padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
                   onPressed: () {Navigator.of(context).pop(item);
                     print("Selected Service item : ${item.distCode!}");
-                    String url=
+                    String url= "${Apis.CHECK_BS_UDC_WED_URL}meterChange.jsp?uscno=${item.uscno}&scno=${item.scno}&name=${item.consumerName}&empid=$empID&ero=$eroID&status=${item.exceptionalType}";
                     var arguments={
                       "t":item.uscno,
                       "n":item.consumerName,
                       "sc":item.scno,
                       "st":item.exceptionalType,
-                      "dc":item.distCode
+                      "dc":item.distCode,
+                      "url":url
                     };
                       serviceOnClick(arguments);
                     },

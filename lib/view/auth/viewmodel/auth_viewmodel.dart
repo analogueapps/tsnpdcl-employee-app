@@ -104,6 +104,7 @@ class AuthViewmodel extends ChangeNotifier {
                 await SharedPreferenceHelper.setStringValue(LoginSdkPrefs.divisionIdKey, user[0].secMasterEntity!.divisionId ?? '0000',);
                 await SharedPreferenceHelper.setStringValue(LoginSdkPrefs.designationCodeKey, user[0].designationCode.toString() ?? '',);
                 await SharedPreferenceHelper.setStringValue(LoginSdkPrefs.empNameKey, user[0].empName.toString() ?? '',);
+                await SharedPreferenceHelper.setStringValue(LoginSdkPrefs.eroId, user[0].secMasterEntity!.eroId ?? '',);
 
                 print("login responseee: ${response.data}");
                 //Bhavana
