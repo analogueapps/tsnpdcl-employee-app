@@ -13,6 +13,8 @@ import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
+import 'package:tsnpdcl_employee/utils/general_routes.dart';
+import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/view/exceptionals/model/exceptional_service.dart';
 
 class ExceptionalsViewmodel extends ChangeNotifier {
@@ -211,7 +213,18 @@ class ExceptionalsViewmodel extends ChangeNotifier {
                 return CupertinoButton(
                   alignment: Alignment.centerLeft,
                   padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
-                  onPressed: () => Navigator.of(context).pop(item),
+                  onPressed: () {Navigator.of(context).pop(item);
+                    print("Selected Service item : ${item.distCode!}");
+                    String url=
+                    var arguments={
+                      "t":item.uscno,
+                      "n":item.consumerName,
+                      "sc":item.scno,
+                      "st":item.exceptionalType,
+                      "dc":item.distCode
+                    };
+                      serviceOnClick(arguments);
+                    },
                   child: Text(
                     'SC No: ${item.scno}\n'
                         'USNO: ${item.uscno?.ceil()}\n'
@@ -232,6 +245,51 @@ class ExceptionalsViewmodel extends ChangeNotifier {
       ),
         ),
         ),
+    );
+  }
+
+  Future<void> serviceOnClick(Map<String, dynamic> item) async{
+    showCupertinoDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoAlertDialog(
+          title: const Text("Choose Option"),
+          actions: [
+            CupertinoDialogAction(
+              child: const Text("Show Location"),
+              onPressed: () async {
+                Navigator.pop(context); // Close dialog
+                // _mapController!.animateCamera(
+                //   CameraUpdate.newLatLngZoom(selectedItem.position, 28),
+                // );
+
+
+                // final latLng = parseLatLngFromString(selectedItem.latLong);
+                // final controller = await googleMapController.future;
+                //
+                // controller.animateCamera(
+                //   CameraUpdate.newLatLngZoom(latLng, 28),
+                // );
+                notifyListeners();
+              },
+            ),
+            CupertinoDialogAction(
+              child: const Text("Open Entry Form"),
+              onPressed: () {
+                Navigator.pop(context);
+                print("item clicked is: $item ");
+                // Navigation.instance.navigateTo(
+                //     Routes.dlistAttendScreen, args: jsonEncode(selectedItem));
+              },
+            ),
+            CupertinoDialogAction(
+              isDestructiveAction: true,
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancel"),
+            ),
+          ],
+        );
+      },
     );
   }
 

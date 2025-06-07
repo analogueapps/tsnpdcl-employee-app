@@ -19,6 +19,8 @@ class Apis{
   /// CONSUMER RELATED
   static const NPDCL_EMP_URL = "NpdclEmployeeWebApi/npemp/api";
 
+  ///
+
   ///Asset Mapping
   static const ROOT_URL_ASSET_MAPPING = "http://210.212.223.88:5656/NPFDAS/ep/asset/";
   static const ASSET_MAPPING_URL="/map";
@@ -121,6 +123,8 @@ class Apis{
   static const  VALIDATE_SERVICE="api/validateService";
   static String CHECK_BS_UDC_IP_PORT=SERVER_IP.startsWith("http://192.168.30")?"http://10.100.4.58:7000":"http://210.212.223.83:7000";
   static String CHECK_BS_UDC_WED_URL=CHECK_BS_UDC_IP_PORT+"/NpdclEmployeeWebApi/";
+  ///PAGE ROUTE URL
+  static String PAGE_ROUTE_URL=CHECK_BS_UDC_IP_PORT+"/NpdclEmployeeWebApi/";
 
   ///ONLINE PR * BHAVANA
   static const   ONLINE_PR_END_POINT_BASE_URL= "$SERVER_IP:5656/NPFDAS/ep/onlinePr/";
