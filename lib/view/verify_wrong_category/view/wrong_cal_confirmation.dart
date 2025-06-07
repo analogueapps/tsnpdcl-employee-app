@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
+import 'package:tsnpdcl_employee/view/verify_wrong_category/viewmodel/wrong_cat_confirmation_viewmodel.dart';
 
 class WrongCatConfirmation extends StatelessWidget {
   static const id = Routes.wrongCatConfirmationServices;
@@ -26,7 +28,14 @@ class WrongCatConfirmation extends StatelessWidget {
             }, icon: const Icon(Icons.arrow_back))
 
         ),
-        body: Text("AreaWise Abstart onTap ${args['areaCode']}"),
+        body:  ChangeNotifierProvider(
+    create: (_)=>WrongCatConfirmationViewmodel( context: context, args: args),
+    child: Consumer<WrongCatConfirmationViewmodel>(
+    builder: (context,viewModel,child){
+    return Text("");//
+    }
+    ),
+        ),
     );
   }
 }

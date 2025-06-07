@@ -151,6 +151,8 @@ class Apis{
   static const VERIFY_WRONG_CONFIRM_URL="$SERVER_IP:5656/NPFDAS/ep/wrongCat/";
   static const GET_ALL_ABSTRACT="getAllAbstract";
   static const GET_VERIFY_ABSTRACT="getAbstract";
+  static const GET_CAT_CONFIRM="getCatConfirmEntities";
+
 
   ///PTR & FEEDER LOADERS
   static const GET_PTR_FEEDERS_SS="getPtrAndFeedersOfSs";

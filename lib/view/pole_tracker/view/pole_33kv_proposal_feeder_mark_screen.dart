@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tsnpdcl_employee/utils/app_constants.dart';
+import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 
 class Pole33kvProposalFeederMarkScreen extends StatelessWidget {
@@ -12,6 +14,24 @@ class Pole33kvProposalFeederMarkScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return  Scaffold(
+        appBar: AppBar(
+        backgroundColor: CommonColors.colorPrimary,
+        title: Text(
+        "Select".toUpperCase(),
+    style: const TextStyle(
+    color: Colors.white,
+    fontSize: toolbarTitleSize,
+    fontWeight: FontWeight.w700
+    ),
+    ),
+    iconTheme: const IconThemeData(
+    color: Colors.white,
+    ),
+    ),
+    body:Text(""),
+    );
+
   }
 }
+//Should do

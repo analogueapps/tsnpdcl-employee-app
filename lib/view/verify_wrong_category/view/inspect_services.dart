@@ -80,7 +80,9 @@ class InspectServices extends StatelessWidget {
                         onTap: (){
                           var argument = {
                             'areaCode': item.areaCode,
-                            'monthYear':'${viewModel.selectedMonthYear!['month'].toString().toUpperCase()}${viewModel.selectedMonthYear!['year']}' ,
+                            'monthYear':viewModel.selectedMonthYear != null
+                                ? '${viewModel.selectedMonthYear!['month'].toString().toUpperCase()}${viewModel?.selectedMonthYear!['year']}'
+                                : '${args['month']}${args['year']}' ,
                           };
                           Navigation.instance.navigateTo(Routes.wrongCatConfirmationServices, args: argument);
                         },

@@ -69,7 +69,9 @@ class AllLcRequestListViewModel extends ChangeNotifier {
                 _allLcRequestList.addAll(dataList);
                 notifyListeners();
               }else{
-                showEmptyFolderDialog(context, response.data['message']);
+                showEmptyFolderDialog(context, response.data['message'], (){
+                  Navigator.pop(context);
+                });
               }
             }
           } else {

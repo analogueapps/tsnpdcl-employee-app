@@ -369,7 +369,7 @@ class PoleTrackerSelectionScreen extends StatelessWidget {
                       fullWidth: isTrue,
                       text: "DIGITIZE NOW",
                       onPressed: () {
-                        viewModel.onDigitizeClicked();
+                        viewModel.digitizeNow();
                       }
                   ),
                   const SizedBox(height: doubleTen,),
@@ -378,7 +378,8 @@ class PoleTrackerSelectionScreen extends StatelessWidget {
                       buttonColor: CommonColors.colorSecondary,
                       text: "SAVE FOR OFFLINE",
                       onPressed: () {
-                        //viewModel.onNextClicked();
+                        viewModel.saveForOffline();
+                        print("save for offline");
                       }
                   ),
                   const SizedBox(height: doubleTwenty,),
