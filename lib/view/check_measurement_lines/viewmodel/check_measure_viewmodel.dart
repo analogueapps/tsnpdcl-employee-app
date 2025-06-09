@@ -403,10 +403,11 @@ class CheckMeasureViewModel extends ChangeNotifier {
     }else if(selectedPurposeCheckboxId==""||selectedPurposeCheckboxId==null){
       AlertUtils.showSnackBar(context, "Please select Substation", isTrue);
       return  false;
-    }else if(selectedPurposeCheckboxId=="NCMD"&&(descriptionController.text==""||descriptionController.text.isEmpty)){
-      AlertUtils.showSnackBar(context, "Please enter description", isTrue);
-      return  false;
     }
+    // else if(selectedPurposeCheckboxId=="NCMD"&&(descriptionController.text==""||descriptionController.text.isEmpty)){
+    //   AlertUtils.showSnackBar(context, "Please enter description", isTrue);
+    //   return  false;
+    // }
     return true;
   }
 

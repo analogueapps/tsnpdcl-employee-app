@@ -49,6 +49,9 @@ class Check33kvViewmodel extends ChangeNotifier {
   final BuildContext context;
   final Map<String, dynamic> args;
   double MINIMUM_GPS_ACCURACY_REQUIRED = 15.0;
+  String empName=SharedPreferenceHelper.getStringValue(LoginSdkPrefs.empNameKey);
+  String empDesignation=SharedPreferenceHelper.getStringValue(LoginSdkPrefs.designationCodeKey);
+
 
   double? latitude;
   double? longitude;
@@ -134,8 +137,31 @@ class Check33kvViewmodel extends ChangeNotifier {
     );
     notifyListeners();
   }
-  Future<void> processMapData() async {
+
+  Future<void> _addHumanMarker() async {
+    final humanIcon = await _bitmapDescriptorFromAsset(Assets.human);
+    print("employee name = $empName");
+    markers.add(Marker(
+      markerId:  MarkerId("$empName($empDesignation)"),
+      position: _currentLocation,
+      icon: humanIcon,
+      infoWindow: InfoWindow(
+        title: '$empName ($empDesignation)',
+      ),
+    ));
+  }
+
+  Future<void> processMapData(bool drawHuman) async {
     if (poleFeederList.isEmpty) return;
+
+    if (followSwitch && currentLocation != null) {
+      await _addHumanMarker();
+
+      mapController?.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(target: currentLocation, zoom: 18),
+      ));
+    }
+
 
     for (int i = 0; i < poleFeederList.length; i++) {
       final entity = poleFeederList[i];
@@ -190,24 +216,63 @@ class Check33kvViewmodel extends ChangeNotifier {
       if (showPoles) {
         addMarkerWithEntity(entity);
       }
-      // _addSpecialMarkers(entity);
-      if (i == poleFeederList.length - 1) {
-
-        _cameraPosition = CameraPosition(
-          target: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
-          zoom: 14.0,
-        );
-        notifyListeners();
-
-        _mapController?.animateCamera(
-          CameraUpdate.newLatLngZoom(
-            LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
-            20.0,
-          ),
-        );
+      if (!drawHuman) {
+        _addSpecialMarkers(entity);
       }
+      // check this once
+      // if (i == poleFeederList.length - 1) {
+      //
+      //   _cameraPosition = CameraPosition(
+      //     target: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+      //     zoom: 14.0,
+      //   );
+      //   notifyListeners();
+      //
+      //   _mapController?.animateCamera(
+      //     CameraUpdate.newLatLngZoom(
+      //       LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+      //       20.0,
+      //     ),
+      //   );
+      // }
     }
     notifyListeners();
+  }
+
+  Future<void> _addSpecialMarkers(PoleFeederEntity entity) async {
+    if (entity.sourceType?.toLowerCase() == 'ss') {
+      markers.add(Marker(
+        markerId: MarkerId('sourceType_${entity.id}'),
+        position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+        icon: entity.feederVolt == "33KV" ? await _bitmapDescriptorFromAsset(Assets.ss132Kv) : await _bitmapDescriptorFromAsset(Assets.ss33Kv),
+      ));
+    }
+
+    if (entity.loadType != null) {
+      switch (entity.loadType!.toLowerCase()) {
+        case 'ss':
+          markers.add(Marker(
+            markerId: MarkerId('loadType_ss_${entity.id}'),
+            position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+            icon: await _bitmapDescriptorFromAsset(Assets.ss33Kv),
+          ));
+          break;
+        case 'dtr':
+          markers.add(Marker(
+            markerId: MarkerId('loadType_dtr_${entity.id}'),
+            position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+            icon: await _bitmapDescriptorFromAsset(Assets.dtr),
+          ));
+          break;
+        case 'ht':
+          markers.add(Marker(
+            markerId: MarkerId('loadType_ht_${entity.id}'),
+            position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+            icon: await _bitmapDescriptorFromAsset(Assets.htService),
+          ));
+          break;
+      }
+    }
   }
 
   Future<void> _addTextMarker(String text, LatLng position) async {
@@ -992,7 +1057,7 @@ class Check33kvViewmodel extends ChangeNotifier {
                     .map((json) => PoleFeederEntity.fromJson(json))
                     .toList();
                 poleFeederList.addAll(listData);
-                processMapData();
+                processMapData(true);
               } else {
                 showAlertDialog(context, "No Data Found");
               }

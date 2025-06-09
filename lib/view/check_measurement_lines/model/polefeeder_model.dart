@@ -158,4 +158,47 @@ class PoleFeederEntity {
       'insertDate': insertDate?.toIso8601String(),
     };
   }
+
+  @override
+  String toString() {
+    return '''
+PoleFeederEntity(
+  id: $id,
+  poleNum: $poleNum,
+  newProposalId: $newProposalId,
+  sourceId: $sourceId,
+  sourceLat: $sourceLat,
+  sourceLon: $sourceLon,
+  sourceType: $sourceType,
+  isProposalExecuted: $isProposalExecuted,
+  distfrmSourcePole: $distfrmSourcePole,
+  sourceAtsCode: $sourceAtsCode,
+  poleType: $poleType,
+  poleHeight: $poleHeight,
+  noOfCkts: $noOfCkts,
+  formation: $formation,
+  typeOfPoint: $typeOfPoint,
+  crossing: $crossing,
+  condLoadCode: $condLoadCode,
+  loadType: $loadType,
+  haveLoad: $haveLoad,
+  condSize: $condSize,
+  lat: $lat,
+  lon: $lon,
+  remarks: $remarks,
+  purpose: $purpose,
+  voltage: $voltage,
+  ssCode: $ssCode,
+  feederCode: $feederCode,
+  ssVolt: $ssVolt,
+  feederVolt: $feederVolt,
+  createdBy: $createdBy,
+  crossingText: $crossingText,
+  tempSeries: $tempSeries,
+  tapping: $tapping,
+  dtrId: $dtrId,
+  noOfAglCon: $noOfAglCon,
+  insertDate: $insertDate
+)''';
+  }
 }

@@ -1,9 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
+import 'dart:ui' as ui;
+
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tsnpdcl_employee/utils/alerts.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +16,7 @@ import 'package:tsnpdcl_employee/network/api_provider.dart';
 import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
+import 'package:tsnpdcl_employee/utils/general_assets.dart';
 import 'package:tsnpdcl_employee/view/check_measurement_lines/model/docket_model.dart';
 import 'package:tsnpdcl_employee/view/check_measurement_lines/model/polefeeder_model.dart';
 import '../../dtr_master/model/circle_model.dart';
@@ -19,6 +24,7 @@ import '../../dtr_master/model/circle_model.dart';
 class Pole11kvViewmodel extends ChangeNotifier {
   Pole11kvViewmodel({required this.context, required this.args}) {
     startListening();
+    _initializeCameraPosition();
     getPolesOnFeeder();
     final String? jsonString = args['d'];
     print("argument d data: ${args['d']}");
@@ -41,7 +47,9 @@ class Pole11kvViewmodel extends ChangeNotifier {
   final BuildContext context;
   final Map<String, dynamic> args;
   double MINIMUM_GPS_ACCURACY_REQUIRED = 15.0;
-  String maxId = "9752778"; //From Map initially OL
+  int maxId =0; //From Map initially OL
+  String empName=SharedPreferenceHelper.getStringValue(LoginSdkPrefs.empNameKey);
+  String empDesignation=SharedPreferenceHelper.getStringValue(LoginSdkPrefs.designationCodeKey);
 
   double? latitude;
   double? longitude;
@@ -58,6 +66,308 @@ class Pole11kvViewmodel extends ChangeNotifier {
   bool deviceCheck = false;
   String? series, poleNum;
   DocketEntity? docketEntity;
+
+  final LatLng _currentLocation = const LatLng(17.387140, 78.491684);
+  CameraPosition? _cameraPosition;
+
+  LatLng get currentLocation => _currentLocation;
+
+  // Update to nullable getter and setter
+  CameraPosition? get cameraPosition => _cameraPosition;
+
+  set cameraPosition(CameraPosition? position) {
+    _cameraPosition = position;
+    notifyListeners();
+  }
+
+  LatLng? markerPosition;
+  GoogleMapController? _mapController;
+  GoogleMapController? get mapController => _mapController;
+  set mapController(GoogleMapController? controller) {
+    _mapController = controller;
+    notifyListeners();
+  }
+
+  Set<Polyline> polylines = {};
+  Set<Marker> markers = {};
+
+  bool showPoles = true;
+  void _initializeCameraPosition() {
+    // _bitmapDescriptorFromAsset(Assets.);
+    _cameraPosition = CameraPosition(
+      target: _currentLocation,
+      zoom: 14.0,
+    );
+    notifyListeners();
+  }
+
+  Future<void> _addHumanMarker() async {
+    final humanIcon = await _bitmapDescriptorFromAsset(Assets.human);
+    print("employee name = $empName");
+    markers.add(Marker(
+      markerId:  MarkerId("$empName($empDesignation)"),
+      position: _currentLocation,
+      icon: humanIcon,
+      infoWindow: InfoWindow(
+        title: '$empName ($empDesignation)',
+      ),
+    ));
+  }
+
+  Future<void> processMapData(bool drawHuman) async {
+    if (poleFeederList.isEmpty) return;
+    if (followSwitch && currentLocation != null) {
+      await _addHumanMarker();
+
+      mapController?.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(target: currentLocation, zoom: 18),
+      ));
+    }
+
+    for (int i = 0; i < poleFeederList.length; i++) {
+      final entity = poleFeederList[i];
+        maxId=max(poleFeederList[i].id,maxId);
+        print("MaxId in pole11kv is 9752778 : $maxId");
+      if (entity.sourceLat != null && entity.sourceLon != null) {
+        final polyline = Polyline(
+          polylineId: PolylineId('polyline_$i'),
+          points: [
+            LatLng(double.parse(entity.sourceLat!), double.parse(entity.sourceLon!)),
+            LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+          ],
+          width: 4,
+          color: entity.tempSeries != null ? Colors.blue : entity.newProposalId != null ? Colors.red : Colors.black,
+        );
+        polylines.add(polyline);
+
+        if (showPoles) {
+          // double distance = _calculateDistance(
+          //   double.parse(entity.sourceLat!),
+          //   double.parse(entity.sourceLon!),
+          //   double.parse(entity.lat!),
+          //   double.parse(entity.lon!),
+          // );
+          double distance = Geolocator.distanceBetween(
+            double.parse(entity.sourceLat!),
+            double.parse(entity.sourceLon!),
+            double.parse(entity.lat!),
+            double.parse(entity.lon!),
+          );
+          final midpoint = _calculateMidpoint(
+            double.parse(entity.sourceLat!),
+            double.parse(entity.sourceLon!),
+            double.parse(entity.lat!),
+            double.parse(entity.lon!),
+          );
+          _addTextMarker('${distance.toStringAsFixed(1)}m', midpoint);
+        }
+      }
+
+      if (showPoles) {
+        addMarkerWithEntity(entity);
+      }
+
+
+      if (!drawHuman) {
+        _addSpecialMarkers(entity);
+      }
+      // if (i == poleFeederList.length - 1) {
+      //   _cameraPosition = CameraPosition(
+      //     target: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+      //     zoom: 14.0,
+      //   );
+      //   notifyListeners();
+      //
+      //   _mapController?.animateCamera(
+      //     CameraUpdate.newLatLngZoom(
+      //       LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+      //       20.0,
+      //     ),
+      //   );
+      // }
+    }
+    notifyListeners();
+  }
+
+
+  Future<void> _addSpecialMarkers(PoleFeederEntity entity) async {
+    if (entity.sourceType?.toLowerCase() == 'ss') {
+      markers.add(Marker(
+        markerId: MarkerId('sourceType_${entity.id}'),
+        position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+        icon: entity.feederVolt == "33KV" ? await _bitmapDescriptorFromAsset(Assets.ss132Kv) : await _bitmapDescriptorFromAsset(Assets.ss33Kv),
+      ));
+    }
+
+    if (entity.loadType != null) {
+      switch (entity.loadType!.toLowerCase()) {
+        case 'ss':
+          markers.add(Marker(
+            markerId: MarkerId('loadType_ss_${entity.id}'),
+            position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+            icon: await _bitmapDescriptorFromAsset(Assets.ss33Kv),
+          ));
+          break;
+        case 'dtr':
+          markers.add(Marker(
+            markerId: MarkerId('loadType_dtr_${entity.id}'),
+            position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+            icon: await _bitmapDescriptorFromAsset(Assets.dtr),
+          ));
+          break;
+        case 'ht':
+          markers.add(Marker(
+            markerId: MarkerId('loadType_ht_${entity.id}'),
+            position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+            icon: await _bitmapDescriptorFromAsset(Assets.htService),
+          ));
+          break;
+      }
+    }
+  }
+
+  Future<void> _addTextMarker(String text, LatLng position) async {
+    final TextPainter textPainter = TextPainter(
+      text: TextSpan(
+        text: text,
+        style: TextStyle(
+          color: Colors.grey[800],
+          fontSize: 25, // Adjust font size
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+    );
+    textPainter.layout(minWidth: 0, maxWidth: double.infinity);
+
+    final recorder = ui.PictureRecorder();
+    final canvas = Canvas(
+      recorder,
+      Rect.fromPoints(
+        const Offset(0, 0),
+        Offset(textPainter.width, textPainter.height),
+      ),
+    );
+
+    // Center the text
+    textPainter.paint(canvas, Offset(0, 0)); // Adjust if necessary
+
+    final picture = recorder.endRecording();
+    final img = await picture.toImage(
+      textPainter.width.toInt(),
+      textPainter.height.toInt(),
+    );
+
+    final ByteData? byteData = await img.toByteData(format: ui.ImageByteFormat.png);
+    if (byteData != null) {
+      final Uint8List uint8List = byteData.buffer.asUint8List();
+      final bitmapDescriptor = BitmapDescriptor.fromBytes(uint8List);
+
+      markers.add(
+        Marker(
+          markerId: MarkerId(position.toString()),
+          position: position,
+          icon: bitmapDescriptor,
+        ),
+      );
+      notifyListeners();
+    } else {
+      print("Error converting image to ByteData");
+    }
+  }
+
+  LatLng _calculateMidpoint(double lat1, double lon1, double lat2, double lon2) {
+    double midLat = (lat1 + lat2) / 2;
+    double midLon = (lon1 + lon2) / 2;
+    return LatLng(midLat, midLon);
+  }
+
+  Future<BitmapDescriptor> _bitmapDescriptorFromAsset(String path) async {
+    try {
+      final Uint8List data = await _getBytesFromAsset(path, 50);
+      print("Loaded bitmap from asset: $path, size: ${data.length}");
+      return BitmapDescriptor.fromBytes(data);
+    } catch (e) {
+      print("Failed to load bitmap: $e");
+      rethrow;
+    }
+  }
+
+
+  Future<Uint8List> _getBytesFromAsset(String path, int width) async {
+    ByteData byteData = await rootBundle.load(path);
+    ui.Codec codec = await ui.instantiateImageCodec(byteData.buffer.asUint8List());
+    ui.FrameInfo fi = await codec.getNextFrame();
+    final Uint8List resizedData = (await fi.image.toByteData(format: ui.ImageByteFormat.png))!.buffer.asUint8List();
+    return resizedData;
+  }
+
+  // Optimize for better map rendering performance
+  Future<void> moveCameraToLastPosition() async {
+    if (poleFeederList.isNotEmpty) {
+      final lastItem = poleFeederList.last;
+      final lat = double.parse(lastItem.lat!);
+      final lon = double.parse(lastItem.lon!);
+
+      await _mapController?.animateCamera(
+        CameraUpdate.newLatLngZoom(LatLng(lat, lon), 20.0),
+      );
+    }
+  }
+
+  Map<MarkerId, PoleFeederEntity> markerEntityMap = {};
+
+  void addMarkerWithEntity(PoleFeederEntity entity) async {
+    final markerId = MarkerId(entity.poleNum ?? UniqueKey().toString());
+    final marker = Marker(
+      markerId: markerId,
+      position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+      icon: await _bitmapDescriptorFromAsset(Assets.horizontalPole),
+      // onTap: () {
+      //   _onMarkerTap(markerId);
+      // },
+    );
+
+    markers.add(marker);
+    markerEntityMap[markerId] = entity;
+    notifyListeners();
+  }
+
+  PoleFeederEntity? sourcePoleTag;
+
+  // void _onMarkerTap(MarkerId markerId) {
+  //   final entity = markerEntityMap[markerId];
+  //   print("markerEntityMap entity: $markerEntityMap");
+  //   if (entity == null) return;
+  //
+  //   showDialog(
+  //     context: context,
+  //     builder: (_) => AlertDialog(
+  //       content: const Text("Copy this pole num to previous pole number box?"),
+  //       actions: [
+  //         TextButton(
+  //           onPressed: () {
+  //             final poleText = entity.tempSeries != null
+  //                 ? "${entity.tempSeries}-${entity.poleNum}"
+  //                 : entity.poleNum;
+  //             poleNumber.text = poleText ?? '';
+  //             print("selected Pole number is $poleText");
+  //             notifyListeners();
+  //             // If needed, store the entity as tag
+  //             sourcePoleTag = entity;
+  //
+  //             Navigator.pop(context);
+  //           },
+  //           child: const Text("Copy"),
+  //         ),
+  //         TextButton(
+  //           onPressed: () => Navigator.pop(context),
+  //           child: const Text("Cancel"),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   bool _followSwitch = true;
 
@@ -86,6 +396,7 @@ class Pole11kvViewmodel extends ChangeNotifier {
       latitude = position.latitude;
       longitude = position.longitude;
       totalAccuracy = position.accuracy; // <-- This is in meters
+
 
       notifyListeners();
 
@@ -378,6 +689,7 @@ class Pole11kvViewmodel extends ChangeNotifier {
                     .map((json) => PoleFeederEntity.fromJson(json))
                     .toList();
                 poleFeederList.addAll(listData);
+                processMapData(true);
               } else {
                 showAlertDialog(context, "No Data Found");
               }

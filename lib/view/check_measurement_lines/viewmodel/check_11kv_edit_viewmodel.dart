@@ -128,24 +128,8 @@ class Check11kvEditViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> processMapData(bool drawHuman) async {
+  Future<void> processMapData() async {
     if (poleFeederList.isEmpty) return;
-    // if (followSwitch) {
-    //   if (_currentLocation != null) {
-    //     markers.removeWhere((m) => m.markerId.value == 'human_marker');
-    //     try {
-    //       markers.add(Marker(
-    //         markerId: MarkerId('human_marker'),
-    //         position: _currentLocation,
-    //         icon: await _bitmapDescriptorFromAsset(Assets.human),
-    //       ));
-    //       print("Human location: $_currentLocation");
-    //     } catch (e) {
-    //       print("Error adding human marker: $e");
-    //     }
-    //   }
-    // }
-
     for (int i = 0; i < poleFeederList.length; i++) {
       final entity = poleFeederList[i];
 
@@ -187,17 +171,8 @@ class Check11kvEditViewmodel extends ChangeNotifier {
       if (showPoles) {
         addMarkerWithEntity(entity);
       }
-      // if (currentLocation != null) {
-      //   await _addHumanMarker();
-      //
-      //   mapController?.animateCamera(CameraUpdate.newCameraPosition(
-      //     CameraPosition(target: currentLocation, zoom: 18),
-      //   ));
-      // }
 
-      if (!drawHuman) {
         _addSpecialMarkers(entity);
-      }
       if (i == poleFeederList.length - 1) {
         _cameraPosition = CameraPosition(
           target: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
@@ -351,8 +326,46 @@ class Check11kvEditViewmodel extends ChangeNotifier {
       position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
       icon: await _bitmapDescriptorFromAsset(Assets.horizontalPole),
       onTap: () {
-        onClickOfMap();
+        onClickOfMap(entity);
         print(" Entity object is: $entity");
+        //Entity object is: PoleFeederEntity(
+        //   id: 9753104,
+        //   poleNum: 1234,
+        //   newProposalId: 753,
+        //   sourceId: 139359,
+        //   sourceLat: 18.0280611,
+        //   sourceLon: 79.6085881,
+        //   sourceType: POLE,
+        //   isProposalExecuted: n,
+        //   distfrmSourcePole: null,
+        //   sourceAtsCode: null,
+        //   poleType: Rail Pole,
+        //   poleHeight: 9.1 Mtr. Pole,
+        //   noOfCkts: 2 Circuits,
+        //   formation: Vertical,
+        //   typeOfPoint: Pin Point,
+        //   crossing: |Building Crossing|LT Line|33KV Line|11KV Line,
+        //   condLoadCode: null,
+        //   loadType: null,
+        //   haveLoad: N,
+        //   condSize: 34 sq.mm,
+        //   lat: 17.444559,
+        //   lon: 78.3844594,
+        //   remarks: null,
+        //   purpose: DIGI,
+        //   voltage: 11KV,
+        //   ssCode: 0019-33KV SS-AREPALLY,
+        //   feederCode: 0019-01-11KV LAMENSION,
+        //   ssVolt: 33/11KV,
+        //   feederVolt: 11KV,
+        //   createdBy: 70000000,
+        //   crossingText: null,
+        //   tempSeries: ARE,
+        //   tapping: r,
+        //   dtrId: null,
+        //   noOfAglCon: null,
+        //   insertDate: null
+        // )
       },
     );
 
@@ -380,7 +393,7 @@ class Check11kvEditViewmodel extends ChangeNotifier {
   double _degToRad(double deg) => deg * pi / 180;
 
 
-  void onClickOfMap(){
+  void onClickOfMap(PoleFeederEntity entity){
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -505,7 +518,7 @@ class Check11kvEditViewmodel extends ChangeNotifier {
                     .map((json) => PoleFeederEntity.fromJson(json))
                     .toList();
                 poleFeederList.addAll(listData);
-                processMapData(true);
+                processMapData();
               } else {
                 showAlertDialog(context, "No Data Found");
               }
@@ -587,6 +600,76 @@ class Check11kvEditViewmodel extends ChangeNotifier {
   String? _selectedPole;
 
   String? get selectedPole => _selectedPole;
+
+  void showPoleFeederDropdown() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        List<PoleFeederEntity> filteredList = List.from(poleFeederList);
+        String searchQuery = '';
+
+        return StatefulBuilder(
+          builder: (context, setState) {
+            void filterList(String query) {
+              setState(() {
+                searchQuery = query;
+                filteredList = poleFeederList.where((item) {
+                  final displayText =
+                  (item.tempSeries != null && item.tempSeries!.isNotEmpty
+                      ? '${item.tempSeries}-${item.poleNum}'
+                      : item.poleNum ?? '')
+                      .toLowerCase();
+                  return displayText.contains(query.toLowerCase());
+                }).toList();
+              });
+            }
+
+            return AlertDialog(
+              title: const Text('Select Pole Feeder'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    decoration: const InputDecoration(
+                      hintText: 'Search pole feeder...',
+                      prefixIcon: Icon(Icons.search),
+                    ),
+                    onChanged: filterList,
+                  ),
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    height: 300,
+                    width: double.maxFinite,
+                    child: ListView.builder(
+                      itemCount: filteredList.length,
+                      itemBuilder: (context, index) {
+                        final item = filteredList[index];
+                        final displayText = item.tempSeries != null &&
+                            item.tempSeries!.isNotEmpty
+                            ? '${item.tempSeries}-${item.poleNum}'
+                            : item.poleNum ?? '';
+
+                        return ListTile(
+                          title: Text(displayText),
+                          selected: item == selectedPoleFeeder,
+                          selectedTileColor: Colors.blue.shade50,
+                          onTap: () {
+                            Navigator.pop(context);
+                            onListPoleFeederChange(
+                                item); // 🔥 Ensure you pass the correct `item`
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
 
   void setSelectedPole(String title) {
     _selectedPole = title;

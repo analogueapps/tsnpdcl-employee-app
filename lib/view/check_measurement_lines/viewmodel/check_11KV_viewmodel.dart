@@ -134,21 +134,13 @@ class Check11kvViewmodel extends ChangeNotifier {
 
   Future<void> processMapData(bool drawHuman) async {
     if (poleFeederList.isEmpty) return;
-    // if (followSwitch) {
-    //   if (_currentLocation != null) {
-    //     markers.removeWhere((m) => m.markerId.value == 'human_marker');
-    //     try {
-    //       markers.add(Marker(
-    //         markerId: MarkerId('human_marker'),
-    //         position: _currentLocation,
-    //         icon: await _bitmapDescriptorFromAsset(Assets.human),
-    //       ));
-    //       print("Human location: $_currentLocation");
-    //     } catch (e) {
-    //       print("Error adding human marker: $e");
-    //     }
-    //   }
-    // }
+    if (followSwitch && currentLocation != null) {
+      await _addHumanMarker();
+
+      mapController?.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(target: currentLocation, zoom: 18),
+      ));
+    }
 
     for (int i = 0; i < poleFeederList.length; i++) {
       final entity = poleFeederList[i];
@@ -191,31 +183,25 @@ class Check11kvViewmodel extends ChangeNotifier {
       if (showPoles) {
          addMarkerWithEntity(entity);
       }
-      if (followSwitch && currentLocation != null) {
-        await _addHumanMarker();
-
-        mapController?.animateCamera(CameraUpdate.newCameraPosition(
-          CameraPosition(target: currentLocation, zoom: 18),
-        ));
-      }
 
       if (!drawHuman) {
         _addSpecialMarkers(entity);
       }
-      if (i == poleFeederList.length - 1) {
-        _cameraPosition = CameraPosition(
-          target: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
-          zoom: 14.0,
-        );
-        notifyListeners();
-
-        _mapController?.animateCamera(
-          CameraUpdate.newLatLngZoom(
-            LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
-            20.0,
-          ),
-        );
-      }
+      // Check this once
+      // if (i == poleFeederList.length - 1) {
+      //   _cameraPosition = CameraPosition(
+      //     target: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+      //     zoom: 14.0,
+      //   );
+      //   notifyListeners();
+      //
+      //   _mapController?.animateCamera(
+      //     CameraUpdate.newLatLngZoom(
+      //       LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+      //       20.0,
+      //     ),
+      //   );
+      // }
     }
     notifyListeners();
   }

@@ -75,24 +75,32 @@ class CheckMeasure11kvEdit extends StatelessWidget {
                 ),
                 SizedBox(height: doubleTen,),
                 const Text('Previous Pole Num.'),
-                DropdownButton<PoleFeederEntity>(
-                  isExpanded: true,
-                  hint: const Text("Select an option"),
-                  value: viewModel.selectedPoleFeeder,
-                  items: viewModel.poleFeederList
-                      .map((item) {
-                    final displayText = item.tempSeries != null && item.tempSeries!.isNotEmpty
-                        ? '${item.tempSeries}-${item.poleNum}'
-                        : item.poleNum ?? '';
-                    return DropdownMenuItem<PoleFeederEntity>(
-                      value: item,
-                      child: Text(displayText),
-                    );
-                  })
-                      .toList(),
-                  onChanged: (value) {
-                    viewModel.onListPoleFeederChange(value);
+                GestureDetector(
+                  onTap: () {
+                    viewModel.showPoleFeederDropdown();
                   },
+                  child: InputDecorator(
+                    decoration: const InputDecoration(
+                      // labelText: 'Select an option',
+                      border: OutlineInputBorder(),
+                    ),
+                    child: viewModel.poleNumber.text==""?Text(
+                      viewModel.selectedPoleFeeder != null
+                          ? (viewModel.selectedPoleFeeder!
+                          .tempSeries !=
+                          null &&
+                          viewModel
+                              .selectedPoleFeeder!
+                              .tempSeries!
+                              .isNotEmpty
+                          ? '${viewModel.selectedPoleFeeder!.tempSeries}-${viewModel.selectedPoleFeeder!.poleNum}'
+                          : viewModel
+                          .selectedPoleFeeder!
+                          .poleNum ??
+                          '')
+                          : 'Tap to select',
+                    ):Text(viewModel.poleNumber.text),
+                  ),
                 ),
                const SizedBox(height: doubleTen,),
 

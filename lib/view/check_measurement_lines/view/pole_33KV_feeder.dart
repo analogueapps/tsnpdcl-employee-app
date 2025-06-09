@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
@@ -40,12 +41,18 @@ class Pole33kvFeeder extends StatelessWidget {
               child: Stack(children: [
                 Column(
                   children: [
-                    // Fixed map
-                    Container(
-                      color: Colors.grey[200],
-                      height: 200,
-                      width: double.infinity,
-                      child: const Center(child: Text("Google maps here")),
+                    Expanded(
+                      child: GoogleMap(
+                        initialCameraPosition: viewModel.cameraPosition ?? const CameraPosition(target: LatLng(0, 0), zoom: 10),
+                        polylines: viewModel.polylines,
+                        markers: viewModel.markers,
+                        myLocationEnabled: false,
+                        myLocationButtonEnabled: false,
+                        zoomControlsEnabled: true,
+                        onMapCreated: (controller) {
+                          viewModel.mapController = controller;
+                        },
+                      ),
                     ),
 
                     // Fixed switch
@@ -102,26 +109,32 @@ class Pole33kvFeeder extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     const Text('Previous Pole Num.'),
-                                    DropdownButton<PoleFeederEntity>(
-                                      isExpanded: true,
-                                      hint: const Text("Select an option"),
-                                      value: viewModel.selectedPoleFeeder,
-                                      items:
-                                          viewModel.poleFeederList.map((item) {
-                                        final displayText = item.tempSeries !=
-                                                    null &&
-                                                item.tempSeries!.isNotEmpty
-                                            ? '${item.tempSeries}-${item.poleNum}'
-                                            : item.poleNum ?? '';
-                                        return DropdownMenuItem<
-                                            PoleFeederEntity>(
-                                          value: item,
-                                          child: Text(displayText),
-                                        );
-                                      }).toList(),
-                                      onChanged: (value) {
-                                        viewModel.onListPoleFeederChange(value);
+                                    GestureDetector(
+                                      onTap: () {
+                                        viewModel.showPoleFeederDropdown();
                                       },
+                                      child: InputDecorator(
+                                        decoration: const InputDecoration(
+                                          // labelText: 'Select an option',
+                                          border: OutlineInputBorder(),
+                                        ),
+                                        child: viewModel.poleNumber.text==""?Text(
+                                          viewModel.selectedPoleFeeder != null
+                                              ? (viewModel.selectedPoleFeeder!
+                                              .tempSeries !=
+                                              null &&
+                                              viewModel
+                                                  .selectedPoleFeeder!
+                                                  .tempSeries!
+                                                  .isNotEmpty
+                                              ? '${viewModel.selectedPoleFeeder!.tempSeries}-${viewModel.selectedPoleFeeder!.poleNum}'
+                                              : viewModel
+                                              .selectedPoleFeeder!
+                                              .poleNum ??
+                                              '')
+                                              : 'Tap to select',
+                                        ):Text(viewModel.poleNumber.text),
+                                      ),
                                     ),
                                   ]),
                             ),
