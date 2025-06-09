@@ -102,11 +102,15 @@ class PoleTrackerSelectionViewModel extends ChangeNotifier {
       selectedPurposeCheckboxId = null; // Uncheck if the same checkbox is clicked
     } else {
       selectedPurposeCheckboxId = id;
-      if(id == "NFP") {
-        listFeederItem.add(SpinnerList(optionCode: "NFP", optionName: "New Feeder Proposal"));
+      if (id == "NFP") {
+        listFeederItem.clear(); // ✅ Clear before adding
+        listFeederItem.add(
+          SpinnerList(optionCode: "NFP", optionName: "New Feeder Proposal"),
+        );
         listFeederSelect = "NFP";
         listFeederSelectBottom = listFeederSelect;
-      } else {
+      }
+      else {
         get33KVFeederOf132KVSSLines(listSubStationSelect!);
       }
     }
@@ -385,7 +389,7 @@ class PoleTrackerSelectionViewModel extends ChangeNotifier {
   }
 
   Future<void> digitizeNow() async {
-    if(onDigitizeClicked()){
+    if(!onDigitizeClicked()){
       return;
     }else{
       if(selectedProposalCheckboxId == "CNP") {
@@ -411,8 +415,15 @@ class PoleTrackerSelectionViewModel extends ChangeNotifier {
         }
 
       } else if(selectedPurposeCheckboxId == "DEF") {
+        var argument = {
+          'p': false,
+          'ssc': listSubStationSelect,
+          'ssn': listSubStationItem.firstWhere((item) => item.optionCode == listSubStationSelect).optionName,
+          'fc': listFeederSelect,
+          'fn': listFeederItem.firstWhere((item) => item.optionCode == listFeederSelect).optionName,
+        };
         if(selectedCheckboxId=="33KV Line"){
-          Navigation.instance.navigateTo(Routes.pole33kvProposalFeederMarkScreen, args: listSubStationSelect);
+          Navigation.instance.navigateTo(Routes.pole33kvProposalFeederMarkScreen, args: argument);
         }else{
           var argument = {
             'p': false,
@@ -428,7 +439,7 @@ class PoleTrackerSelectionViewModel extends ChangeNotifier {
   }
 
   Future<void> saveForOffline() async {
-    if (onDigitizeClicked()) {
+    if (!onDigitizeClicked()) {
       print("save on onDigitizeClicked");
       return;
     }else{
@@ -476,11 +487,11 @@ class PoleTrackerSelectionViewModel extends ChangeNotifier {
       "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "v": selectedCheckboxId,
-      "ssn": listSubStationSelect,
-      "ssc": listSubStationItem.firstWhere((item) => item.optionCode == listSubStationSelect).optionName,
+      "ssn": listSubStationItem.firstWhere((item) => item.optionCode == listSubStationSelect).optionName,
+      "ssc":  listSubStationSelect,
       "fc": listFeederSelect,
       "fn": listFeederItem.firstWhere((item) => item.optionCode == listFeederSelect).optionName,
-      "pt": selectedProposalCheckboxId == "CNP" ? "NFP" : "LEP",
+      "pt": selectedProposalCheckboxId == "NFP" ? "NFP" : "LEP",
       "pdc": descriptionController.text.trim(),
       "estno": estimateController.text.trim(),
     };
@@ -492,7 +503,7 @@ class PoleTrackerSelectionViewModel extends ChangeNotifier {
       "data": jsonEncode(requestData),
     };
 
-    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.AUTH_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.NPDCL_EMP_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -570,22 +581,40 @@ class PoleTrackerSelectionViewModel extends ChangeNotifier {
     try {
       if (response != null) {
         if (response.data is String) {
-          response.data = jsonDecode(response.data); // Parse string to JSON
+          response.data = jsonDecode(response.data);
         }
         if (response.statusCode == successResponseCode) {
           if (response.data['tokenValid'] == isTrue) {
             List<dynamic> responseList = jsonDecode(response.data['objectJson']);
 
             List<DigitalFeederEntity> poleList = responseList.map((item) => DigitalFeederEntity.fromJson(item)).toList();
-            final offLineFeeder = OffLineFeeder(
-                ssCode: listSubStationSelect??"",
+
+            final databaseOffLineFeeder = OffLineFeeder(
+              ssCode: listSubStationSelect??"",
               ssName: listSubStationItem.firstWhere((item) => item.optionCode == listSubStationSelect).optionName??"",
-           feederCode: listFeederSelect??"",
+              feederCode: listFeederSelect??"",
               feederName: listFeederItem.firstWhere((item) => item.optionCode == listFeederSelect).optionName??"",
               insertDate: DateTime.now().millisecondsSinceEpoch,
               voltageLevel: selectedCheckboxId=="11 KV Line" ? "11KV" : "33KV",
+              digitalFeederEntityList:poleList,
             );
-            await DatabaseHelper.instance.insertOfflineFeeder(offLineFeeder, poleList);
+            await DatabaseHelper.instance.insertOfflineFeeder(databaseOffLineFeeder, poleList);
+
+            // *** WARNING ***
+            // I/flutter (22899):
+            // I/flutter (22899): Invalid argument [{id: 625712, newProposalId: null, sourceId: 625162, sourceLat: 18.3318643, sourceLon: 78.4001671, sourceType: POLE, isProposalExecuted: y, poleType: PSSC Pole, poleHeight: 8.0 Mtr. Pole, noOfCkts: 1 Circuit, formation: Triangular, typeOfPoint: Pin Point, crossing: None, loadType: null, haveLoad: N, condSize: 55 sq.mm, lat: 18.3326197, lon: 78.400194, purpose: DIGI, voltage: 11KV, ssCode: 0848-33KV SS-AREPALLY, feederCode: 0848-02-11KV AREPALLYAGL, ssVolt: 33/11KV, feederVolt: 11KV, insertDate: Jul 8, 2020 12:00:00 AM, createdBy: 40001406, poleNum: ARE003, tempSeries: null, tapping: s, distanceFeeder: .084264925163863672592452071353429884305, circleCode: null, fName: null, sName: null, extensionPole: N}, {id: 625720, newProposalId: null, sourceId: 625712, sourceLat: 18.3326197, sourceLon: 78.400194, sourceType: POLE, isProposalExecuted: y, poleType: PSSC Pole, poleHeight: 8.0 Mtr. Pole, noOfCkts: 1 Circuit, formation: Triangular, typeOfPoint: Pin Point, crossing: None, loadT
+            // I/flutter (22899): #0      _checkArg (package:sqflite_common/src/value_utils.dart:30:7)
+            // I/flutter (22899): #1      checkNonNullValue (package:sqflite_common/src/value_utils.dart:51:5)
+            // I/flutter (22899): #2      new SqlBuilder.insert.<anonymous closure> (package:sqflite_common/src/sql_builder.dart:180:11)
+            // I/flutter (22899): #3      _LinkedHashMapMixin.forEach (dart:_compact_hash:763:13)
+            // I/flutter (22899): #4      new SqlBuilder.insert (package:sqflite_common/src/sql_builder.dart:169:14)
+            // I/flutter (22899): #5      SqfliteDatabaseExecutorMixin.insert (package:sqflite_common/src/database_mixin.dart:61:32)
+            // I/flutter (22899): #6      DatabaseHelper.insertOfflineFeeder (package:tsnpdcl_employee/view/pole_tracker/database/save_offline_feeder.dart:53:14)
+            // I/flutter (22899): <asynchronous suspension>
+            // I/flutter (22899): #7      PoleTrackerSelectionViewModel.getPolesOnFeeder (package:tsnpdcl_employee/view/pole_tracker/viewmodel/pole_tracker_selection_viewmodel.dart:590:13)
+            // I/flutter (22899): <asynchronous suspension>
+            // E/flutter (22899): [ERROR:flutter/runtime/dart_vm_initializer.cc(40)] Unhandled Exception: DatabaseException(java.util.HashMap cannot be cast to java.lang.Integer) sql 'INSERT OR REPLACE INTO offline_feeder (feederCode, feederName, ssCode, ssName, voltageLevel, insertDate, digitalFeederEntityList) VALUES (?, ?, ?, ?, ?, ?, ?)' args [0848-02-11KV AREPALLYAGL, AREPALLY AGL, 0848-33KV SS-AREPALLY, AREPALLY, 11KV, 1749461642799, [{sourceId: 625162, sourceLat: 18.3318643, poleHei...]
+
             showDialog(
               context: context,
               builder: (_) => AlertDialog(
@@ -594,12 +623,13 @@ class PoleTrackerSelectionViewModel extends ChangeNotifier {
                     '${listFeederItem.firstWhere((item) => item.optionCode == listFeederSelect).optionName} saved for offline digitization, existing poles on feeder ${poleList.length}'),
                 actions: [
                   TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
+                      onPressed: () { Navigator.of(context).pop();
+                      print("Pole tracker poleList : $poleList");},
                       child: const Text('OK')),
+
                 ],
               ),
             );
-
 
           } else {
             showSessionExpiredDialog(context);
@@ -609,7 +639,7 @@ class PoleTrackerSelectionViewModel extends ChangeNotifier {
         }
       }
     } catch (e) {
-      showErrorDialog(context, "An error occurred. Please try again.");
+      showErrorDialog(context, "$e");
       rethrow;
     }
 
@@ -653,8 +683,9 @@ class PoleTrackerSelectionViewModel extends ChangeNotifier {
         if (response.statusCode == successResponseCode) {
           if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
-              if (response.data['message'] != "[]") {
-                final List<dynamic> structures = jsonDecode(response.data['message']);
+              final decoded = jsonDecode(response.data['message']);
+              if (decoded is List && decoded.isNotEmpty){
+                final List<dynamic> structures =decoded;
                 final dbHelper = StructureDatabaseHelper.instance;
                 print("Structure insertions starting...");
 
@@ -675,8 +706,7 @@ class PoleTrackerSelectionViewModel extends ChangeNotifier {
         }
       }
     } catch (e) {
-      // showErrorDialog(context, "An error occurred. Please try again.");
-      showErrorDialog(context, "$e");
+      showErrorDialog(context, "An error occurred. Please try again.");
       print("Stacktrace: $e");
       rethrow;
     }

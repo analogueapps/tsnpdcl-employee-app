@@ -157,4 +157,7 @@ class Apis{
   ///PTR & FEEDER LOADERS
   static const GET_PTR_FEEDERS_SS="getPtrAndFeedersOfSs";
   static const SAVE_PTR_FEEDERS="savePtrAndFeederLoads";
+
+  ///POLE TRACKER
+ static const CREATE_NEW_PROPOSAL="createNewProposal";
 }

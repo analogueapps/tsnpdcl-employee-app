@@ -9,7 +9,7 @@ class OffLineFeeder {
   String voltageLevel;
   int insertDate;
   List<DigitalFeederEntity> digitalFeederEntityList;
-  List<DigitalFeederOfflineEntity> digitalFeederOfflineEntities;
+  // List<DigitalFeederOfflineEntity> digitalFeederOfflineEntities;
 
   OffLineFeeder({
     required this.feederCode,
@@ -19,7 +19,7 @@ class OffLineFeeder {
     required this.voltageLevel,
     required this.insertDate,
     this.digitalFeederEntityList = const [],
-    this.digitalFeederOfflineEntities = const [],
+    // this.digitalFeederOfflineEntities = const [],
   });
 
   factory OffLineFeeder.fromJson(Map<String, dynamic> json) {
@@ -34,10 +34,10 @@ class OffLineFeeder {
           ?.map((e) => DigitalFeederEntity.fromJson(e))
           .toList() ??
           [],
-      digitalFeederOfflineEntities: (json['digitalFeederOfflineEntities'] as List?)
-          ?.map((e) => DigitalFeederOfflineEntity.fromJson(e))
-          .toList() ??
-          [],
+      // digitalFeederOfflineEntities: (json['digitalFeederOfflineEntities'] as List?)
+      //     ?.map((e) => DigitalFeederOfflineEntity.fromJson(e))
+      //     .toList() ??
+      //     [],
     );
   }
 
@@ -51,8 +51,8 @@ class OffLineFeeder {
       'insertDate': insertDate,
       'digitalFeederEntityList':
       digitalFeederEntityList.map((e) => e.toJson()).toList(),
-      'digitalFeederOfflineEntities':
-      digitalFeederOfflineEntities.map((e) => e.toJson()).toList(),
+      // 'digitalFeederOfflineEntities':
+      // digitalFeederOfflineEntities.map((e) => e.toJson()).toList(),
     };
   }
 }

@@ -13,7 +13,7 @@ class DatabaseHelper {
 
   Future<Database> get database async {
     if (_database != null) return _database!;
-    _database = await _initDB('gis_database.db');
+    _database = await _initDB('offline_feeder.db');
     return _database!;
   }
 

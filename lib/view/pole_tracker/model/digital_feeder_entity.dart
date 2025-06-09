@@ -226,4 +226,46 @@ class DigitalFeederEntity {
     map['extensionPole'] = extensionPole;
     return map;
   }
+
+  @override
+  String toString() {
+    return 'DigitalFeederEntity('
+        'id: $id, '
+        'newProposalId: $newProposalId, '
+        'sourceId: $sourceId, '
+        'sourceLat: $sourceLat, '
+        'sourceLon: $sourceLon, '
+        'sourceType: $sourceType, '
+        'isProposalExecuted: $isProposalExecuted, '
+        'poleType: $poleType, '
+        'poleHeight: $poleHeight, '
+        'noOfCkts: $noOfCkts, '
+        'formation: $formation, '
+        'typeOfPoint: $typeOfPoint, '
+        'crossing: $crossing, '
+        'loadType: $loadType, '
+        'haveLoad: $haveLoad, '
+        'condSize: $condSize, '
+        'lat: $lat, '
+        'lon: $lon, '
+        'purpose: $purpose, '
+        'voltage: $voltage, '
+        'ssCode: $ssCode, '
+        'feederCode: $feederCode, '
+        'ssVolt: $ssVolt, '
+        'feederVolt: $feederVolt, '
+        'insertDate: $insertDate, '
+        'createdBy: $createdBy, '
+        'poleNum: $poleNum, '
+        'tempSeries: $tempSeries, '
+        'tapping: $tapping, '
+        'distanceFeeder: $distanceFeeder, '
+        'circleCode: $circleCode, '
+        'fName: $fName, '
+        'sName: $sName, '
+        'extensionPole: $extensionPole'
+        ')';
+  }
+
+
 }
