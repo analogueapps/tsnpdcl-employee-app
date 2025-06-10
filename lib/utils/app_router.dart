@@ -657,25 +657,25 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const AreaWiseAbstractView());
       case InspectServices.id:
         return MaterialPageRoute(builder: (_) => InspectServices(args: settings.arguments as Map<String, dynamic>));
-        case WrongCatConfirmation.id:
+      case WrongCatConfirmation.id:
         return MaterialPageRoute(builder: (_) => WrongCatConfirmation(args: settings.arguments as Map<String, dynamic>));
 
-      //PTR & FEEDER LOADERS * Bhavana
+    //PTR & FEEDER LOADERS * Bhavana
       case PtrFeederScreen.id:
         return MaterialPageRoute(builder: (_) => const PtrFeederScreen());
 
-        //CHECK MEASUREMENT(LINES)*BHAVANA
-        case CheckMeasureScreen.id:
+    //CHECK MEASUREMENT(LINES)*BHAVANA
+      case CheckMeasureScreen.id:
         return MaterialPageRoute(builder: (_) => const CheckMeasureScreen());
-        case DocketScreen.id:
+      case DocketScreen.id:
         return MaterialPageRoute(builder: (_) =>  DocketScreen(ssc: settings.arguments as String));
-        case Pole11kvFeeder.id:
+      case Pole11kvFeeder.id:
         return MaterialPageRoute(builder: (_) =>  Pole11kvFeeder(args: settings.arguments as Map<String, dynamic>));
-        case Pole33kvFeeder.id:
+      case Pole33kvFeeder.id:
         return MaterialPageRoute(builder: (_) =>  Pole33kvFeeder(args: settings.arguments as Map<String, dynamic>));
-        case CheckMeasure11kv.id:
+      case CheckMeasure11kv.id:
         return MaterialPageRoute(builder: (_) =>  CheckMeasure11kv(args: settings.arguments as Map<String, dynamic>));
-        case CheckMeasure33kv.id:
+      case CheckMeasure33kv.id:
         return MaterialPageRoute(builder: (_) =>  CheckMeasure33kv(args: settings.arguments as Map<String, dynamic>));
       case CheckMeasure11kvEdit.id:
         return MaterialPageRoute(builder: (_) =>  CheckMeasure11kvEdit(args: settings.arguments as Map<String, dynamic>));
