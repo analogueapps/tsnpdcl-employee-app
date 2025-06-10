@@ -378,7 +378,7 @@ class PoleTrackerSelectionScreen extends StatelessWidget {
                       buttonColor: CommonColors.colorSecondary,
                       text: "SAVE FOR OFFLINE",
                       onPressed: () {
-                        viewModel.saveForOffline();
+                        // viewModel.saveForOffline();
                         print("save for offline");
                       }
                   ),

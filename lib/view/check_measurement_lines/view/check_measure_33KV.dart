@@ -715,22 +715,22 @@ class CheckMeasure33kv extends StatelessWidget {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 11,
                                     ),
                                     const Divider(
                                       color: Colors.grey,
                                       thickness: 0.2,
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 11,
                                     ),
-                                    Text('Choose Sub Station'),
+                                    const Text('Choose SubStation'),
                                     Container(
                                       width: double.infinity,
                                       // or fixed width
                                       padding:
-                                          EdgeInsets.symmetric(horizontal: 12),
+                                         const EdgeInsets.symmetric(horizontal: 12),
                                       child: DropdownButton<SpinnerList>(
                                         isExpanded: true,
                                         hint: const Text("Select a substation"),
@@ -741,7 +741,7 @@ class CheckMeasure33kv extends StatelessWidget {
                                             value: substation,
                                             child: Text(
                                                 substation?.optionName ??
-                                                    'Unnamed'),
+                                                    ''),
                                           );
                                         }).toList(),
                                         onChanged: (SpinnerList? newValue) {

@@ -20,6 +20,7 @@ import 'package:tsnpdcl_employee/view/check_measurement_lines/model/polefeeder_m
 
 class Pole33kvViewmodel extends ChangeNotifier {
   Pole33kvViewmodel({required this.context, required this.args}) {
+    _handleLocation();
     startListening();
     _initializeCameraPosition();
     getPolesOnFeeder();

@@ -33,6 +33,18 @@ class Pole33kvProposalFeederMarkScreen extends StatelessWidget {
     iconTheme: const IconThemeData(
     color: Colors.white,
     ),
+          actions: [
+            TextButton(
+                onPressed: (){},
+                child:  Text(
+                  "Edit".toUpperCase(),
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: btnTextSize,
+                      fontWeight: FontWeight.w700
+                  ),)
+            ),
+          ],
     ),
     body:ChangeNotifierProvider(
       create: (_) => PoleProposal33kvFeederMarkViewmodel(context: context, args: args),
@@ -86,6 +98,9 @@ class Pole33kvProposalFeederMarkScreen extends StatelessWidget {
                             valueColor: Colors.green,
                           ),
 
+                          Visibility(
+                            visible:viewModel.poleID=="",
+                          child:
                           Row(
                             children: [
                               checkbox(
@@ -96,6 +111,7 @@ class Pole33kvProposalFeederMarkScreen extends StatelessWidget {
                                 true,
                               ),
                             ],
+                          ),
                           ),
 
                           Visibility(
@@ -113,7 +129,7 @@ class Pole33kvProposalFeederMarkScreen extends StatelessWidget {
                                         // labelText: 'Select an option',
                                         border: OutlineInputBorder(),
                                       ),
-                                      child: viewModel.poleNumber.text==""?Text(
+                                      child: Text(
                                         viewModel.selectedPoleFeeder != null
                                             ? (viewModel.selectedPoleFeeder!
                                             .tempSeries !=
@@ -128,7 +144,7 @@ class Pole33kvProposalFeederMarkScreen extends StatelessWidget {
                                             .poleNum ??
                                             '')
                                             : 'Tap to select',
-                                      ):Text(viewModel.poleNumber.text),
+                                      ),
                                     ),
                                   ),
                                 ]),
@@ -218,7 +234,7 @@ class Pole33kvProposalFeederMarkScreen extends StatelessWidget {
                                     ),
                                     checkbox(
                                       context,
-                                      "Tower(M+3) ",
+                                      "Tower(M+3)",
                                       viewModel.selectedFirstGroup
                                           .contains("Tower(M+3)")
                                           ? "Tower(M+3)"
@@ -229,7 +245,7 @@ class Pole33kvProposalFeederMarkScreen extends StatelessWidget {
                                     ),
                                     checkbox(
                                       context,
-                                      "Tower(M+9) ",
+                                      "Tower(M+9)",
                                       viewModel.selectedFirstGroup
                                           .contains("Tower(M+9)")
                                           ? "Tower(M+9)"
@@ -249,7 +265,7 @@ class Pole33kvProposalFeederMarkScreen extends StatelessWidget {
                                   children: [
                                     checkbox(
                                       context,
-                                      "Tubular ",
+                                      "Tubular",
                                       viewModel.selectedFirstGroup
                                           .contains("Tubular")
                                           ? "Tubular"
@@ -261,28 +277,28 @@ class Pole33kvProposalFeederMarkScreen extends StatelessWidget {
                                     checkbox(
                                       context,
                                       "Joist",
-                                      viewModel.selectedSecondGroup
+                                      viewModel.selectedFirstGroup
                                           .contains("Joist")
                                           ? "Joist"
                                           : null,
                                           (val) =>
-                                          viewModel.toggleSecondGroup(val),
-                                      viewModel.isSecondGroupEnabled,
+                                          viewModel.toggleFirstGroup(val),
+                                      isTrue,
                                     ),
                                     checkbox(
                                       context,
                                       "Rail Pole",
-                                      viewModel.selectedSecondGroup
+                                      viewModel.selectedFirstGroup
                                           .contains("Rail Pole")
                                           ? "Rail Pole"
                                           : null,
                                           (val) =>
-                                          viewModel.toggleSecondGroup(val),
-                                      viewModel.isSecondGroupEnabled,
+                                          viewModel.toggleFirstGroup(val),
+                                    isTrue,
                                     ),
                                     checkbox(
                                       context,
-                                      "Tower(M+6) ",
+                                      "Tower(M+6)",
                                       viewModel.selectedFirstGroup
                                           .contains("Tower(M+6)")
                                           ? "Tower(M+6)"
@@ -293,7 +309,7 @@ class Pole33kvProposalFeederMarkScreen extends StatelessWidget {
                                     ),
                                     checkbox(
                                       context,
-                                      "Tower(M+12) ",
+                                      "Tower(M+12)",
                                       viewModel.selectedFirstGroup
                                           .contains("Tower(M+12)")
                                           ? "Tower(M+12)"
@@ -479,11 +495,21 @@ class Pole33kvProposalFeederMarkScreen extends StatelessWidget {
                                         ),
                                         multipleCheckbox(
                                           context,
-                                          "Transmission Lines",
+                                          "Transmission(400KV)",
                                           viewModel.selectedCrossings,
                                               (bool? checked) {
                                             viewModel.setSelectedCrossings(
-                                                "Transmission Lines");
+                                                "Transmission(400KV)");
+                                          },
+                                          true,
+                                        ),
+                                        multipleCheckbox(
+                                          context,
+                                          "Transmission(132KV)",
+                                          viewModel.selectedCrossings,
+                                              (bool? checked) {
+                                            viewModel.setSelectedCrossings(
+                                                "Transmission(132KV)");
                                           },
                                           true,
                                         ),
@@ -517,11 +543,21 @@ class Pole33kvProposalFeederMarkScreen extends StatelessWidget {
                                         ),
                                         multipleCheckbox(
                                           context,
-                                          "Other Common Lines",
+                                          "Transmission(220KV)",
                                           viewModel.selectedCrossings,
                                               (bool? checked) {
                                             viewModel.setSelectedCrossings(
-                                                "Other Common Lines");
+                                                "Transmission(220KV)");
+                                          },
+                                          true,
+                                        ),
+                                        multipleCheckbox(
+                                          context,
+                                          "Other Commun. Lines",
+                                          viewModel.selectedCrossings,
+                                              (bool? checked) {
+                                            viewModel.setSelectedCrossings(
+                                                "Other Commun. Lines");
                                           },
                                           true,
                                         ),
@@ -532,7 +568,16 @@ class Pole33kvProposalFeederMarkScreen extends StatelessWidget {
                               ),
                             ],
                           ),
-
+                          TextFormField(
+                            controller: viewModel.particularsOfCrossing,
+                            decoration: const InputDecoration(
+                              // labelText: "Enter remarks here",
+                              hintText: "Particulars of crossing(Optional)",
+                              border: OutlineInputBorder(),
+                              alignLabelWithHint: true,
+                            ),
+                          ),
+                            const SizedBox(height: doubleTen,),
                           const Text("Connected Load"),
                           Row(
                             children: [
@@ -550,30 +595,71 @@ class Pole33kvProposalFeederMarkScreen extends StatelessWidget {
                                 viewModel.setSelectedConnected,
                                 true,
                               ),
+                              checkbox(
+                                context,
+                                "HT Service",
+                                viewModel.selectedConnected,
+                                viewModel.setSelectedConnected,
+                                true,
+                              ),
                             ],
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              const Text("Substation Capacity"),
-                              const SizedBox(
-                                width: 50,
-                              ),
-                              SizedBox(
-                                width: 150,
-                                child: TextFormField(
-                                  maxLines: 1,
-                                  controller: viewModel.subStationCapacity,
-                                  keyboardType: TextInputType.text,
-                                  decoration: const InputDecoration(
-                                    hintText: "2X5MVA",
-                                    border: OutlineInputBorder(),
-                                    alignLabelWithHint: true,
+                          const Divider(
+                            color: Colors.grey,
+                            thickness: 0.2,
+                          ),
+                          Visibility(
+                          visible: viewModel.selectedConnected ==
+                          "Sub Station",
+                          child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text("Choose Substation"),
+                            DropdownButton<String>(
+                            isExpanded: true,
+                            hint: const Text("Select an option"),
+                            value: viewModel.listSubStationSelect,
+                            items: viewModel.listSubStationItem
+                                .map((item) =>
+                            DropdownMenuItem<String>(
+                            value: item.optionCode,
+                            child: Text(item.optionName!),
+                            ))
+                                .toList(),
+                            onChanged: (value) {
+                            viewModel.onListSubStationItemSelect(value);
+                            },
+                            ),
+                          ]
+                          ),
+                          ),
+                          Visibility(
+                            visible: viewModel.selectedConnected ==
+                                "HT Service",
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text("Choose Service"),
+                                  DropdownButton<String>(
+                                    isExpanded: true,
+                                    hint: viewModel.htServiceList.isNotEmpty?const Text("Select an option"): const Text(""),
+                                    value: viewModel.selectedHtServiceName,
+                                    items: viewModel.htServiceList
+                                        .map((item) =>
+                                        DropdownMenuItem<String>(
+                                          value: item.optionId,
+                                          child: Text(item.optionName!),
+                                        ))
+                                        .toList(),
+                                    onChanged: (value) {
+                                      viewModel.onHtServiceChange(value);
+                                    },
                                   ),
-                                ),
-                              ),
-                            ],
+                                ]
+                            ),
                           ),
+
+
                           const Text("Conductor Size"),
                           Row(
                             children: [
@@ -628,6 +714,10 @@ class Pole33kvProposalFeederMarkScreen extends StatelessWidget {
                           const SizedBox(
                             height: 10,
                           ),
+                          Container(color:Colors.grey[200],
+                              height: 50,
+                              child:const Center(child: Text("Network Survey Options", style: TextStyle(fontSize: doubleFifteen),))),
+                          const SizedBox(height: doubleTen,),
                           SizedBox(
                             width: double.infinity,
                             child: PrimaryButton(
@@ -705,4 +795,3 @@ Widget multipleCheckbox(
     controlAffinity: ListTileControlAffinity.leading,
   );
 }
-//Should do

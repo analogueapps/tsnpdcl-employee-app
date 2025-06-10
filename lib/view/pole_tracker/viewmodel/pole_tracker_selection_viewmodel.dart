@@ -91,9 +91,9 @@ class PoleTrackerSelectionViewModel extends ChangeNotifier {
       showAlertDialog(context, "Please select the Substation first.!");
       return;
     }
-    // listFeederItem.clear();
-    // listFeederSelect = null;
-    // listFeederSelectBottom = null;
+    listFeederItem.clear();
+    listFeederSelect = null;
+    listFeederSelectBottom = null;
     selectedProposalCheckboxId = null;
     newSketchPropEntity = null;
     descriptionController.clear();
@@ -110,9 +110,12 @@ class PoleTrackerSelectionViewModel extends ChangeNotifier {
         listFeederSelect = "NFP";
         listFeederSelectBottom = listFeederSelect;
       }
-      else {
-        get33KVFeederOf132KVSSLines(listSubStationSelect!);
-      }
+      else if(selectedCheckboxId=="33KV Line") {
+          get33KVFeederOf132KVSSLines(listSubStationSelect!);
+        }else if(selectedCheckboxId=="11 KV Line") {
+          getFeeders(listSubStationSelect!);
+        }
+
     }
     notifyListeners(); // Notify the view about the change
   }
@@ -208,7 +211,7 @@ class PoleTrackerSelectionViewModel extends ChangeNotifier {
     descriptionController.clear();
     estimateController.clear();
     print("listSubStationSelect: $listSubStationSelect");
-    getFeeders(listSubStationSelect!);
+    // getFeeders(listSubStationSelect!);
     notifyListeners();
   }
 
