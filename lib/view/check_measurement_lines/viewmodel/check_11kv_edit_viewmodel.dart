@@ -328,44 +328,6 @@ class Check11kvEditViewmodel extends ChangeNotifier {
       onTap: () {
         onClickOfMap(entity);
         print(" Entity object is: $entity");
-        //Entity object is: PoleFeederEntity(
-        //   id: 9753104,
-        //   poleNum: 1234,
-        //   newProposalId: 753,
-        //   sourceId: 139359,
-        //   sourceLat: 18.0280611,
-        //   sourceLon: 79.6085881,
-        //   sourceType: POLE,
-        //   isProposalExecuted: n,
-        //   distfrmSourcePole: null,
-        //   sourceAtsCode: null,
-        //   poleType: Rail Pole,
-        //   poleHeight: 9.1 Mtr. Pole,
-        //   noOfCkts: 2 Circuits,
-        //   formation: Vertical,
-        //   typeOfPoint: Pin Point,
-        //   crossing: |Building Crossing|LT Line|33KV Line|11KV Line,
-        //   condLoadCode: null,
-        //   loadType: null,
-        //   haveLoad: N,
-        //   condSize: 34 sq.mm,
-        //   lat: 17.444559,
-        //   lon: 78.3844594,
-        //   remarks: null,
-        //   purpose: DIGI,
-        //   voltage: 11KV,
-        //   ssCode: 0019-33KV SS-AREPALLY,
-        //   feederCode: 0019-01-11KV LAMENSION,
-        //   ssVolt: 33/11KV,
-        //   feederVolt: 11KV,
-        //   createdBy: 70000000,
-        //   crossingText: null,
-        //   tempSeries: ARE,
-        //   tapping: r,
-        //   dtrId: null,
-        //   noOfAglCon: null,
-        //   insertDate: null
-        // )
       },
     );
 

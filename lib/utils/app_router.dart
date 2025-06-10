@@ -117,6 +117,7 @@ import 'package:tsnpdcl_employee/view/pole_tracker/view/new_proposal_screen.dart
 import 'package:tsnpdcl_employee/view/pole_tracker/view/pole_11kv_feeder_mark_screen.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/view/pole_33kv_proposal_feeder_mark_screen.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/view/pole_proposal_11kv_feeder_mark_screen.dart';
+import 'package:tsnpdcl_employee/view/pole_tracker/view/pole_proposal_33kv_feeder_edit.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/view/pole_tracker_selection_screen.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/view/pole_tracker_selection_view_sketch_screen.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/view/view_digital_sketch_screen.dart';
@@ -284,6 +285,10 @@ class AppRouter {
       case Pole33kvProposalFeederMarkScreen.id:
         return MaterialPageRoute(
             builder: (_) => Pole33kvProposalFeederMarkScreen(
+                args: settings.arguments as Map<String, dynamic>));
+        case PoleProposal33kvFeederEdit.id:
+        return MaterialPageRoute(
+            builder: (_) => PoleProposal33kvFeederEdit(
                 args: settings.arguments as Map<String, dynamic>));
       case Pole11kvFeederMarkScreen.id:
         return MaterialPageRoute(
@@ -657,25 +662,25 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const AreaWiseAbstractView());
       case InspectServices.id:
         return MaterialPageRoute(builder: (_) => InspectServices(args: settings.arguments as Map<String, dynamic>));
-      case WrongCatConfirmation.id:
+        case WrongCatConfirmation.id:
         return MaterialPageRoute(builder: (_) => WrongCatConfirmation(args: settings.arguments as Map<String, dynamic>));
 
-    //PTR & FEEDER LOADERS * Bhavana
+      //PTR & FEEDER LOADERS * Bhavana
       case PtrFeederScreen.id:
         return MaterialPageRoute(builder: (_) => const PtrFeederScreen());
 
-    //CHECK MEASUREMENT(LINES)*BHAVANA
-      case CheckMeasureScreen.id:
+        //CHECK MEASUREMENT(LINES)*BHAVANA
+        case CheckMeasureScreen.id:
         return MaterialPageRoute(builder: (_) => const CheckMeasureScreen());
-      case DocketScreen.id:
+        case DocketScreen.id:
         return MaterialPageRoute(builder: (_) =>  DocketScreen(ssc: settings.arguments as String));
-      case Pole11kvFeeder.id:
+        case Pole11kvFeeder.id:
         return MaterialPageRoute(builder: (_) =>  Pole11kvFeeder(args: settings.arguments as Map<String, dynamic>));
-      case Pole33kvFeeder.id:
+        case Pole33kvFeeder.id:
         return MaterialPageRoute(builder: (_) =>  Pole33kvFeeder(args: settings.arguments as Map<String, dynamic>));
-      case CheckMeasure11kv.id:
+        case CheckMeasure11kv.id:
         return MaterialPageRoute(builder: (_) =>  CheckMeasure11kv(args: settings.arguments as Map<String, dynamic>));
-      case CheckMeasure33kv.id:
+        case CheckMeasure33kv.id:
         return MaterialPageRoute(builder: (_) =>  CheckMeasure33kv(args: settings.arguments as Map<String, dynamic>));
       case CheckMeasure11kvEdit.id:
         return MaterialPageRoute(builder: (_) =>  CheckMeasure11kvEdit(args: settings.arguments as Map<String, dynamic>));

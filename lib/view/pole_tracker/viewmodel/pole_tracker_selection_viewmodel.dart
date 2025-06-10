@@ -428,14 +428,7 @@ class PoleTrackerSelectionViewModel extends ChangeNotifier {
         if(selectedCheckboxId=="33KV Line"){
           Navigation.instance.navigateTo(Routes.pole33kvProposalFeederMarkScreen, args: argument);
         }else{
-          var argument = {
-            'p': false,
-            'ssc': listSubStationSelect,
-            'ssn': listSubStationItem.firstWhere((item) => item.optionCode == listSubStationSelect).optionName,
-            'fc': listFeederSelect,
-            'fn': listFeederItem.firstWhere((item) => item.optionCode == listFeederSelect).optionName,
-          };
-          Navigation.instance.navigateTo(Routes.pole11kvFeederMarkScreen, args: argument);
+          Navigation.instance.navigateTo(Routes.poleProposal11kvFeederMarkScreen, args: argument);
         }
       }
     }
