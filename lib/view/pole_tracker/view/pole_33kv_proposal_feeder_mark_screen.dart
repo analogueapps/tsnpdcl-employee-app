@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
+import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/viewmodel/pole_proposal_33kv_feeder_mark_viewmodel.dart';
 import 'package:tsnpdcl_employee/widget/primary_button.dart';
 import 'package:tsnpdcl_employee/widget/view_detailed_lc_tile_widget.dart';
@@ -19,7 +20,11 @@ class Pole33kvProposalFeederMarkScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return  ChangeNotifierProvider(
+      create: (_) => PoleProposal33kvFeederMarkViewmodel(context: context, args: args),
+      child: Consumer<PoleProposal33kvFeederMarkViewmodel>(
+        builder: (context, viewModel, child) {
+          return Scaffold(
         appBar: AppBar(
         backgroundColor: CommonColors.colorPrimary,
         title: Text(
@@ -35,7 +40,17 @@ class Pole33kvProposalFeederMarkScreen extends StatelessWidget {
     ),
           actions: [
             TextButton(
-                onPressed: (){},
+                onPressed: (){
+                  var argument = {
+                    'ssc': viewModel.ssc,
+                    'ssn': viewModel.ssn,
+                    'fc': viewModel.feederCode,
+                    'fn': viewModel.feederName,
+                  };
+                  Navigation.instance.navigateTo(
+                      Routes.pole33kvProposalFeederMarkEditScreen,
+                      args: argument);
+                },
                 child:  Text(
                   "Edit".toUpperCase(),
                   style: const TextStyle(
@@ -46,11 +61,7 @@ class Pole33kvProposalFeederMarkScreen extends StatelessWidget {
             ),
           ],
     ),
-    body:ChangeNotifierProvider(
-      create: (_) => PoleProposal33kvFeederMarkViewmodel(context: context, args: args),
-      child: Consumer<PoleProposal33kvFeederMarkViewmodel>(
-        builder: (context, viewModel, child) {
-          return Form(
+    body: Form(
             key: viewModel.formKey,
             child: Stack(children: [
               Column(
@@ -130,20 +141,7 @@ class Pole33kvProposalFeederMarkScreen extends StatelessWidget {
                                         border: OutlineInputBorder(),
                                       ),
                                       child: Text(
-                                        viewModel.selectedPoleFeeder != null
-                                            ? (viewModel.selectedPoleFeeder!
-                                            .tempSeries !=
-                                            null &&
-                                            viewModel
-                                                .selectedPoleFeeder!
-                                                .tempSeries!
-                                                .isNotEmpty
-                                            ? '${viewModel.selectedPoleFeeder!.tempSeries}-${viewModel.selectedPoleFeeder!.poleNum}'
-                                            : viewModel
-                                            .selectedPoleFeeder!
-                                            .poleNum ??
-                                            '')
-                                            : 'Tap to select',
+                                        viewModel.poleFeederSelected ?? 'Tap to select',
                                       ),
                                     ),
                                   ),
@@ -740,10 +738,10 @@ class Pole33kvProposalFeederMarkScreen extends StatelessWidget {
                   ),
                 ),
             ]),
-          );
+          ),
+    );
         },
       ),
-    ),
     );
 
   }

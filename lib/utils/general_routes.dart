@@ -47,6 +47,7 @@ class Routes {
   static const String poleTrackerSelectionScreen = "PoleTrackerSelectionScreen";
   static const String poleProposal11kvFeederMarkScreen = "PoleProposal11kvFeederMarkScreen";
   static const String pole33kvProposalFeederMarkScreen = "Pole33kvProposalFeederMarkScreen";
+  static const String pole33kvProposalFeederMarkEditScreen = "PoleProposal33kvFeederEdit";
   static const String pole11kvFeederMarkScreen = "Pole11kvFeederMarkScreen";
   static const String viewOfflineFeedersScreen = "ViewOfflineFeedersScreen";
 

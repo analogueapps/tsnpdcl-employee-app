@@ -118,22 +118,9 @@ class Pole33kvFeeder extends StatelessWidget {
                                           // labelText: 'Select an option',
                                           border: OutlineInputBorder(),
                                         ),
-                                        child: viewModel.poleNumber.text==""?Text(
-                                          viewModel.selectedPoleFeeder != null
-                                              ? (viewModel.selectedPoleFeeder!
-                                              .tempSeries !=
-                                              null &&
-                                              viewModel
-                                                  .selectedPoleFeeder!
-                                                  .tempSeries!
-                                                  .isNotEmpty
-                                              ? '${viewModel.selectedPoleFeeder!.tempSeries}-${viewModel.selectedPoleFeeder!.poleNum}'
-                                              : viewModel
-                                              .selectedPoleFeeder!
-                                              .poleNum ??
-                                              '')
-                                              : 'Tap to select',
-                                        ):Text(viewModel.poleNumber.text),
+                                        child: Text(
+                                          viewModel.poleFeederSelected ??"Tap to select",
+                                        )
                                       ),
                                     ),
                                   ]),

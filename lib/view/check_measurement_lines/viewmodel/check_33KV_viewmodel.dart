@@ -392,7 +392,7 @@ class Check33kvViewmodel extends ChangeNotifier {
               final poleText = entity.tempSeries != null
                   ? "${entity.tempSeries}-${entity.poleNum}"
                   : entity.poleNum;
-              poleNumber.text = poleText ?? '';
+              poleFeederSelected= poleText ?? '';
               print("selected Pole number is $poleText");
               notifyListeners();
               // If needed, store the entity as tag

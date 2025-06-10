@@ -171,20 +171,20 @@ class Pole11kvViewmodel extends ChangeNotifier {
       if (!drawHuman) {
         _addSpecialMarkers(entity);
       }
-      // if (i == poleFeederList.length - 1) {
-      //   _cameraPosition = CameraPosition(
-      //     target: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
-      //     zoom: 14.0,
-      //   );
-      //   notifyListeners();
-      //
-      //   _mapController?.animateCamera(
-      //     CameraUpdate.newLatLngZoom(
-      //       LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
-      //       20.0,
-      //     ),
-      //   );
-      // }
+      if (i == poleFeederList.length - 1) {
+        _cameraPosition = CameraPosition(
+          target: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+          zoom: 14.0,
+        );
+        notifyListeners();
+
+        _mapController?.animateCamera(
+          CameraUpdate.newLatLngZoom(
+            LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+            20.0,
+          ),
+        );
+      }
     }
     notifyListeners();
   }

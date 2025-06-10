@@ -367,7 +367,7 @@ class Check11kvViewmodel extends ChangeNotifier {
               final poleText = entity.tempSeries != null
                   ? "${entity.tempSeries}-${entity.poleNum}"
                   : entity.poleNum;
-              poleNumber.text = poleText ?? '';
+              poleFeederSelected = poleText ?? '';
               print("selected Pole number is $poleText");
               notifyListeners();
               // If needed, store the entity as tag
@@ -1401,7 +1401,6 @@ class Check11kvViewmodel extends ChangeNotifier {
       poleID = value.id.toString();
       poleLat = value.lat.toString();
       poleLon = value.lon.toString();
-      poleNumber.text=poleFeederSelected??"";
       series = poleFeederSelected?.substring(0, 3);
       AlertUtils.showSnackBar(context, poleFeederSelected!, isFalse);
       print("POle Num: $poleFeederSelected");

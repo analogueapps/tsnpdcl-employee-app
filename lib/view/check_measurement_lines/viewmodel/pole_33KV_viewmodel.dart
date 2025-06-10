@@ -179,21 +179,21 @@ class Pole33kvViewmodel extends ChangeNotifier {
         _addSpecialMarkers(entity);
 
       }
-      // if (i == poleFeederList.length - 1) {
-      //
-      //   _cameraPosition = CameraPosition(
-      //     target: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
-      //     zoom: 14.0,
-      //   );
-      //   notifyListeners();
-      //
-      //   _mapController?.animateCamera(
-      //     CameraUpdate.newLatLngZoom(
-      //       LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
-      //       20.0,
-      //     ),
-      //   );
-      // }
+      if (i == poleFeederList.length - 1) {
+
+        _cameraPosition = CameraPosition(
+          target: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+          zoom: 14.0,
+        );
+        notifyListeners();
+
+        _mapController?.animateCamera(
+          CameraUpdate.newLatLngZoom(
+            LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+            20.0,
+          ),
+        );
+      }
     }
     notifyListeners();
   }
@@ -351,7 +351,7 @@ class Pole33kvViewmodel extends ChangeNotifier {
               final poleText = entity.tempSeries != null
                   ? "${entity.tempSeries}-${entity.poleNum}"
                   : entity.poleNum;
-              poleNumber.text = poleText ?? '';
+              poleFeederSelected = poleText ?? '';
               print("selected Pole number is $poleText");
               notifyListeners();
               // If needed, store the entity as tag
@@ -581,7 +581,7 @@ class Pole33kvViewmodel extends ChangeNotifier {
                             Navigator.pop(context);
                             onListPoleFeederChange(
                                 item);
-                            poleNumber.text=item.poleNum!;
+                            poleFeederSelected=item.poleNum!;
                             notifyListeners();// 🔥 Ensure you pass the correct `item`
                           },
                         );
