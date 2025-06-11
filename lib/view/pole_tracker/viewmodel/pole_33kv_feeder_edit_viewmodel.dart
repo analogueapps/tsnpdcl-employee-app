@@ -21,43 +21,34 @@ import 'package:tsnpdcl_employee/view/check_measurement_lines/model/docket_model
 import 'package:tsnpdcl_employee/view/check_measurement_lines/model/polefeeder_model.dart';
 import 'package:tsnpdcl_employee/view/check_readings/model/ero_model.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/model/spinner_list.dart';
+import 'package:tsnpdcl_employee/view/rfss/database/mapping_agl_db/agl_databases/structure_code_db.dart';
 
-class PoleProposal33kvFeederMarkViewmodel extends ChangeNotifier {
-  PoleProposal33kvFeederMarkViewmodel(
-      {required this.context, required this.args}){
+import '../../check_measurement_lines/model/structure_capacity_model.dart';
+
+class Pole33kvFeederEditViewmodel extends ChangeNotifier {
+  Pole33kvFeederEditViewmodel(
+      {required this.context, required this.args}) {
     startListening();
     _handleLocation();
     _initializeCameraPosition();
     getPolesOnFeeder();
-    final String? jsonString = args['d'];
-    print("argument d data: ${args['d']}");
-
-    if (args['p'] == isTrue) {
-      docketEntity = DocketEntity.fromJson(jsonDecode(jsonString!));
-      print("docketEntity ${docketEntity!.id}");
-    }
+    // final String? jsonString = args['d'];
+    // print("argument d data: ${args['d']}");
+    //
+    // if (args['p'] == isTrue) {
+    //   docketEntity = DocketEntity.fromJson(jsonDecode(jsonString!));
+    //   print("docketEntity ${docketEntity!.id}");
+    // }
   }
+
   @override
   void dispose() {
     _positionStream?.cancel();
     super.dispose();
   }
 
-  // Current View Context
   final formKey = GlobalKey<FormState>();
-
-  final BuildContext context;
-  final Map<String, dynamic> args;
-  double MINIMUM_GPS_ACCURACY_REQUIRED = 15.0;
-  int maxId = 0; //From Map initially OL
-  String get feederName => args['fn'];
-
-  String get feederCode => args['fc'];
-
-  String get ssc => args['ssc'];
-
-  String get ssn => args['ssn'];
-
+  int maxId = 0;
 
   double? latitude;
   double? longitude;
@@ -66,6 +57,9 @@ class PoleProposal33kvFeederMarkViewmodel extends ChangeNotifier {
   bool _isLoading = isFalse;
 
   bool get isLoading => _isLoading;
+
+  final BuildContext context;
+  final Map<String, dynamic> args;
 
   final TextEditingController poleNumber = TextEditingController();
   final TextEditingController particularsOfCrossing = TextEditingController();
@@ -76,6 +70,8 @@ class PoleProposal33kvFeederMarkViewmodel extends ChangeNotifier {
   List<int> undoStack = [];
   List<PoleFeederEntity> digitalFeederEntityList = [];
   final int UNDO_STACK_SIZE = 10;
+
+  bool deleteOrEdit= isFalse;
 
   bool serverCheck = false;
   bool deviceCheck = false;
@@ -120,7 +116,6 @@ class PoleProposal33kvFeederMarkViewmodel extends ChangeNotifier {
 
   bool showPoles = true;
   void _initializeCameraPosition() {
-    // _bitmapDescriptorFromAsset(Assets.);
     _cameraPosition = CameraPosition(
       target: _currentLocation,
       zoom: 14.0,
@@ -342,7 +337,7 @@ class PoleProposal33kvFeederMarkViewmodel extends ChangeNotifier {
       position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
       icon: await _bitmapDescriptorFromAsset(Assets.horizontalPole),
       onTap: () {
-        _onMarkerTap(markerId);
+        onClickOfMap(entity);
       },
     );
 
@@ -353,37 +348,65 @@ class PoleProposal33kvFeederMarkViewmodel extends ChangeNotifier {
 
   PoleFeederEntity? sourcePoleTag;
 
-  void _onMarkerTap(MarkerId markerId) {
-    final entity = markerEntityMap[markerId];
-    print("markerEntityMap entity: $markerEntityMap");
-    if (entity == null) return;
-
+  void onClickOfMap(PoleFeederEntity entity){
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        content: const Text("Copy this pole num to previous pole number box?"),
-        actions: [
-          TextButton(
-            onPressed: () {
-              final poleText = entity.tempSeries != null
-                  ? "${entity.tempSeries}-${entity.poleNum}"
-                  : entity.poleNum;
-              poleFeederSelected = poleText ?? '';
-              print("selected Pole number is $poleText");
-              notifyListeners();
-              // If needed, store the entity as tag
-              sourcePoleTag = entity;
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: const Text(
+            "What would you like to do?",
+          ),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  deletePoleDialog();
+                },
+                child: const Text("DELETE")),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                deleteOrEdit=isTrue;
+                notifyListeners();
+                showAlertDialog(context,
+                    "Please choose Source Pole Num or check Source pole not mapped or origin Pole");
+              },
+              child: const Text("EDIT THIS POLE DATA"),
+            ),
+            TextButton(
+              onPressed: (){ Navigator.pop(context);},
+              child: const Text("CANCEL"),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
-              Navigator.pop(context);
-            },
-            child: const Text("Copy"),
+  void deletePoleDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Delete Pole?"),
+          content:  const Text(
+            "Delete 0000 pole? \n You can revert this action!",
           ),
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Cancel"),
-          ),
-        ],
-      ),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  // should implement deletePole();  api here
+                },
+                child: const Text("DELETE")),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text("CANCEL"),
+            ),
+          ],
+        );
+      },
     );
   }
   void _handleLocation() async {
@@ -489,18 +512,18 @@ class PoleProposal33kvFeederMarkViewmodel extends ChangeNotifier {
       humanLocation=  LatLng(latitude!, longitude!);
       notifyListeners();
 
-      if (_selectedPole == "" || _selectedPole == null) {
-        if (poleID != null) {
-          distanceDisplay = isTrue;
-          distanceBtnPoles = calculateDistance(latitude!, longitude!,
-              double.parse(poleLat!), double.parse(poleLon!));
-          print("distanceBtnPoles: $distanceBtnPoles");
-          notifyListeners();
-        } else {
-          distanceDisplay = false;
-          notifyListeners();
-        }
-      }
+      // if (_selectedPole == "" || _selectedPole == null) {
+      //   if (poleID != null) {
+      //     distanceDisplay = isTrue;
+      //     distanceBtnPoles = calculateDistance(latitude!, longitude!,
+      //         double.parse(poleLat!), double.parse(poleLon!));
+      //     print("distanceBtnPoles: $distanceBtnPoles");
+      //     notifyListeners();
+      //   } else {
+      //     distanceDisplay = false;
+      //     notifyListeners();
+      //   }
+      // }
     });
   }
 
@@ -525,445 +548,6 @@ class PoleProposal33kvFeederMarkViewmodel extends ChangeNotifier {
   }
 
   double _degToRad(double deg) => deg * pi / 180;
-
-//Pole selection
-  String? _selectedPole;
-
-  String? get selectedPole => _selectedPole;
-
-  void setSelectedPole(String title) {
-    _selectedPole = title;
-    if (_selectedPole == "Origin Pole") {
-      series = null;
-      poleNum = args["fn"].substring(0, 3) + "001";
-      print("PoleNum: $poleNum");
-    }
-    print("$_selectedPole: filter selected");
-    notifyListeners();
-  }
-
-  void showPoleFeederDropdown() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        List<PoleFeederEntity> filteredList = List.from(poleFeederList);
-        String searchQuery = '';
-
-        return StatefulBuilder(
-          builder: (context, setState) {
-            void filterList(String query) {
-              setState(() {
-                searchQuery = query;
-                filteredList = poleFeederList.where((item) {
-                  final displayText =
-                  (item.tempSeries != null && item.tempSeries!.isNotEmpty
-                      ? '${item.tempSeries}-${item.poleNum}'
-                      : item.poleNum ?? '')
-                      .toLowerCase();
-                  return displayText.contains(query.toLowerCase());
-                }).toList();
-              });
-            }
-
-            return AlertDialog(
-              title: const Text('Select Pole Feeder'),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextField(
-                    decoration: const InputDecoration(
-                      hintText: 'Search pole feeder...',
-                      prefixIcon: Icon(Icons.search),
-                    ),
-                    onChanged: filterList,
-                  ),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    height: 300,
-                    width: double.maxFinite,
-                    child: ListView.builder(
-                      itemCount: filteredList.length,
-                      itemBuilder: (context, index) {
-                        final item = filteredList[index];
-                        final displayText = item.tempSeries != null &&
-                            item.tempSeries!.isNotEmpty
-                            ? '${item.tempSeries}-${item.poleNum}'
-                            : item.poleNum ?? '';
-
-                        return ListTile(
-                          title: Text(displayText),
-                          selected: item == selectedPoleFeeder,
-                          selectedTileColor: Colors.blue.shade50,
-                          onTap: () {
-                            Navigator.pop(context);
-                            onListPoleFeederChange(
-                                item);
-                            poleFeederSelected=item.poleNum!;
-                            notifyListeners();// 🔥 Ensure you pass the correct `item`
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
-  //Tapping from previous pole
-  String? _selectedTappingPole;
-
-  String? get selectedTappingPole => _selectedTappingPole;
-
-  void setSelectedTappingPole(String title) {
-    _selectedTappingPole = title;
-    print("$_selectedTappingPole:  tap selected");
-    if(selectedPole!="Origin Pole") {
-      generatePoleNum(false);
-    }
-    if (_selectedTappingPole == "Left Tapping") {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            content: SizedBox(
-              height: 300,
-              child: Column(children: [
-                const Text(
-                  "Please be sure your field condition resemble to below show scenario for selecting",
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Image.asset(Assets.check11KvLeft),
-              ]),
-            ),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    // if (selectedPole == "" ||
-                    //     _selectedPole == null ||
-                    //     _selectedPole == 'Source Pole Not Mapped' &&
-                    //         selectedTappingPole != null) {
-                    //   showAlertDialog(context,
-                    //       "Please choose Source Pole Num or check Source pole not mapped or origin Pole");
-                    // }
-                  },
-                  child: const Text("OK")),
-            ],
-          );
-        },
-      );
-    } else if (_selectedTappingPole == "Right Tapping") {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            content: SizedBox(
-              height: 300,
-              child: Column(children: [
-                const Text(
-                  "Please be sure your field condition resemble to below show scenario for selecting",
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Image.asset(Assets.check11KvRight),
-              ]),
-            ),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    // if (selectedPole == "" ||
-                    //     _selectedPole == null ||
-                    //     _selectedPole == 'Source Pole Not Mapped' &&
-                    //         selectedTappingPole != null) {
-                    //   showAlertDialog(context,
-                    //       "Please choose Source Pole Num or check Source pole not mapped or origin Pole");
-                    // }
-                  },
-                  child: Text("OK")),
-            ],
-          );
-        },
-      );
-    } else {
-      print("$_selectedTappingPole:  tap selected");
-      if (selectedPole == "" ||
-          _selectedPole == null ||
-          _selectedPole == 'Source Pole Not Mapped' &&
-              selectedTappingPole != null) {
-        showAlertDialog(context,
-            "Please choose Source Pole Num or check Source pole not mapped or origin Pole");
-      }
-    }
-  }
-
-  //Any Crossings:
-  List<String> selectedCrossings = [];
-
-  void setSelectedCrossings(String title) {
-    if (title == "None") {
-      selectedCrossings = ["None"];
-    } else {
-      selectedCrossings.remove("None");
-
-      if (selectedCrossings.contains(title)) {
-        selectedCrossings.remove(title);
-      } else {
-        selectedCrossings.add(title);
-      }
-    }
-    notifyListeners();
-  }
-
-  String buildCrossingString() {
-    if (selectedCrossings.contains("None")) {
-      return "None";
-    }
-
-    return selectedCrossings.join('|');
-  }
-
-  //Pole type
-  List<String> selectedFirstGroup = [];
-
-  void toggleFirstGroup(String val) {
-    val = val.trim();
-    if (selectedFirstGroup.contains(val)) {
-      selectedFirstGroup.remove(val);
-    } else {
-      selectedFirstGroup = [val];
-    }
-    print("selectedFirstGroup $selectedFirstGroup");
-
-    notifyListeners();
-  }
-
-
-  //pole height
-  List<String> poleHeightData = [
-    "8.0 Mtr. Pole",
-    "11 Mtr. Pole",
-    "13 Mtr(Tower)",
-    "19 Mtr(Tower)",
-    "9.1 Mtr. Pole",
-    "10 Mtrs(Tower)",
-    "16 Mtr(Tower)"
-  ];
-
-  String? _selectedPoleHeight;
-
-  String? get selectedPoleHeight => _selectedPoleHeight;
-
-  void setSelectedPoleHeight(String height) {
-    if (_selectedPoleHeight == height) {
-      _selectedPoleHeight = null; // Unselect if tapped again
-    } else {
-      _selectedPoleHeight = height;
-    }
-    print("Selected height: $_selectedPoleHeight");
-    notifyListeners();
-  }
-
-  //Circuits
-  String? _selectedCircuits;
-
-  String? get selectedCircuits => _selectedCircuits;
-
-  void setSelectedCircuits(String title) {
-    _selectedCircuits = title;
-    print("$_selectedCircuits: Circuits selected");
-    notifyListeners();
-  }
-
-  //Formation
-  String? _selectedFormation;
-
-  String? get selectedFormation => _selectedFormation;
-
-  void setSelectedFormation(String title) {
-    _selectedFormation = title;
-    print("$_selectedFormation: Formation selected");
-    notifyListeners();
-  }
-
-  //Type of point
-  String? _selectedTypePoint;
-
-  String? get selectedTypePoint => _selectedTypePoint;
-
-  void setSelectedTypePoint(String title) {
-    _selectedTypePoint = title;
-    print("$_selectedTypePoint: TypePoint selected");
-    notifyListeners();
-  }
-
-  //Connected Load
-  String? _selectedConnected;
-
-  String? get selectedConnected => _selectedConnected;
-
-  void setSelectedConnected(String title) {
-    listSubStationItem.clear();
-    listSubStationSelect = null;
-    _selectedConnected = title;
-    if(_selectedConnected=="Sub Station"){
-      load33KvssList();
-    }
-    else if (_selectedConnected == "HT Service") {
-      showCircleDialog();
-    }
-    print("$_selectedConnected: Connected  selected");
-    notifyListeners();
-  }
-
-//Conductor Size
-  String? _selectedConductor;
-  String? get selectedConductor => _selectedConductor;
-
-  void setSelectedConductor(String title) {
-    _selectedConductor = title;
-    print("$_selectedConductor : Conductor   selected");
-    notifyListeners();
-  }
-
-  //Sub Station
-  List<SpinnerList> listSubStationItem = [];
-  String? listSubStationSelect;
-
-  void onListSubStationItemSelect(String? selected) {
-    listSubStationSelect = selected;
-    notifyListeners();
-  }
-
-  Future<void> load33KvssList() async {
-    ProcessDialogHelper.showProcessDialog(
-      context,
-      message: "Loading...",
-    );
-
-    final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
-      "api": Apis.API_KEY,
-    };
-
-    final payload = {
-      "path": "/load/ss",
-      "apiVersion": "1.0",
-      "method": "POST",
-      "data": jsonEncode(requestData),
-    };
-
-    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.NPDCL_EMP_URL, payload);
-    if (context.mounted) {
-      ProcessDialogHelper.closeDialog(context);
-    }
-
-    try {
-      if (response != null) {
-        if (response.data is String) {
-          response.data = jsonDecode(response.data); // Parse string to JSON
-        }
-        if (response.statusCode == successResponseCode) {
-          if(response.data['tokenValid'] == isTrue) {
-            if (response.data['success'] == isTrue) {
-              if(response.data['objectJson'] != null) {
-                final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
-                final List<SpinnerList> listData = jsonList.map((json) => SpinnerList.fromJson(json)).toList();
-                listSubStationItem.addAll(listData);
-              }
-            } else {
-              showAlertDialog(context,response.data['message']);
-            }
-          } else {
-            showSessionExpiredDialog(context);
-          }
-        } else {
-          showAlertDialog(context,response.data['message']);
-        }
-      }
-    } catch (e) {
-      showErrorDialog(context,  "An error occurred. Please try again.");
-      rethrow;
-    }
-
-    notifyListeners();
-  }
-
-  //HT Serivce
-  List<EroModel> htServiceList = [];
-  String? selectedHtServiceName;
-  void onHtServiceChange(String? htServiceName) {
-    print('get the area name : $htServiceName');
-    selectedHtServiceName = htServiceName;
-    notifyListeners();
-  }
-
-  Future<void> loadHTServices(String circleCode) async {
-    _isLoading = isTrue;
-    notifyListeners();
-
-    final requestData = {
-      "authToken":
-      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
-      "api": Apis.API_KEY,
-      "cc": circleCode,
-    };
-
-    final payload = {
-      "path": "/getHTServicesOfCircle",
-      "apiVersion": "1.0.1",
-      "method": "POST",
-      "data": jsonEncode(requestData),
-    };
-
-    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
-        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
-    _isLoading = isFalse;
-
-    try {
-      if (response != null) {
-        if (response.data is String) {
-          response.data = jsonDecode(response.data); // Parse string to JSON
-        }
-        if (response.statusCode == successResponseCode) {
-          if (response.data['tokenValid'] == isTrue) {
-            if (response.data['success'] == isTrue) {
-              if (response.data['objectJson'] != null) {
-                final  List<dynamic> objectJson = jsonDecode(response.data['objectJson']);
-                final List<EroModel> listData = objectJson
-                      .map((json) => EroModel.fromJson(json))
-                      .toList();
-                htServiceList.addAll(listData);
-                  notifyListeners();
-              } else {
-                showAlertDialog(context, "No  HT Services found!");
-              }
-            } else {
-              showAlertDialog(context,
-                  response.data['objectJson']);
-            }
-          } else {
-            showSessionExpiredDialog(context);
-          }
-        } else {
-          showAlertDialog(context, response.data['message']);
-        }
-      }
-    } catch (e) {
-      showErrorDialog(context, "An error occurred. Please try again.");
-      rethrow;
-    }
-
-    notifyListeners();
-  }
 
 
   List<PoleFeederEntity> poleFeederList = [];
@@ -1072,11 +656,11 @@ class PoleProposal33kvFeederMarkViewmodel extends ChangeNotifier {
         "ssc": args["ssc"],
         "fc": args["fc"],
         "not": false,
-        "tap": selectedTappingPole == "Straight Tapping"
-            ? "s"
-            : selectedTappingPole == "Left Tapping"
-            ? "l"
-            : "r",
+        // "tap": selectedTappingPole == "Straight Tapping"
+        //     ? "s"
+        //     : selectedTappingPole == "Left Tapping"
+        //     ? "l"
+        //     : "r",
         "sid": poleID,
       };
 
@@ -1108,7 +692,7 @@ class PoleProposal33kvFeederMarkViewmodel extends ChangeNotifier {
                     series = list[0];
                     poleNum = list[1];
 
-                    setPoleNum();
+                    // setPoleNum();
                   }
                 } else {
                   showAlertDialog(context, "No Data Found");
@@ -1143,90 +727,568 @@ class PoleProposal33kvFeederMarkViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setPoleNum() {
-    poleNumber.text = (series != null ? "$series-$poleNum" : poleNum)!;
-  }
 
-  List<String> circles = [
-    "KHAMMAM",
-    "HANAMKONDA",
-    "KARIMNAGAR",
-    "NIZAMABAD",
-    "ADILABAD",
-    "KOTHAGUDEM",
-    "WARANGAL",
-    "JANGAON",
-    "BHUPALPALLY",
-    "MAHABUBABAD",
-    "JAGITYAL",
-    "PEDDAPALLY",
-    "KAMAREDDY",
-    "NIRMAL",
-    "ASIFABAD",
-    "MANCHERIAL"
-  ];
 
-  void showCircleDialog() {
+  String? _selectedPole;
+
+  String? get selectedPole => _selectedPole;
+
+  void showPoleFeederDropdown() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Choose Circle'),
-          content: Container(
-            width: double.maxFinite,
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: circles.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(circles[index]),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    loadHTServices((index + 1).toString());
-                  },
-                );
-              },
-            ),
-          ),
+        List<PoleFeederEntity> filteredList = List.from(poleFeederList);
+        String searchQuery = '';
+
+        return StatefulBuilder(
+          builder: (context, setState) {
+            void filterList(String query) {
+              setState(() {
+                searchQuery = query;
+                filteredList = poleFeederList.where((item) {
+                  final displayText =
+                  (item.tempSeries != null && item.tempSeries!.isNotEmpty
+                      ? '${item.tempSeries}-${item.poleNum}'
+                      : item.poleNum ?? '')
+                      .toLowerCase();
+                  return displayText.contains(query.toLowerCase());
+                }).toList();
+              });
+            }
+
+            return AlertDialog(
+              title: const Text('Select Pole Feeder'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    decoration: const InputDecoration(
+                      hintText: 'Search pole feeder...',
+                      prefixIcon: Icon(Icons.search),
+                    ),
+                    onChanged: filterList,
+                  ),
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    height: 300,
+                    width: double.maxFinite,
+                    child: ListView.builder(
+                      itemCount: filteredList.length,
+                      itemBuilder: (context, index) {
+                        final item = filteredList[index];
+                        final displayText = item.tempSeries != null &&
+                            item.tempSeries!.isNotEmpty
+                            ? '${item.tempSeries}-${item.poleNum}'
+                            : item.poleNum ?? '';
+
+                        return ListTile(
+                          title: Text(displayText),
+                          selected: item == selectedPoleFeeder,
+                          selectedTileColor: Colors.blue.shade50,
+                          onTap: () {
+                            Navigator.pop(context);
+                            onListPoleFeederChange(
+                                item); // 🔥 Ensure you pass the correct `item`
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
         );
       },
     );
   }
 
+  void setSelectedPole(String title) {
+    _selectedPole = title;
+    if (_selectedPole == "Origin Pole") {
+      series = null;
+      poleNum = args["fn"].substring(0, 3) + "001";
+      print("PoleNum: $poleNum");
+    }
+    print("$_selectedPole: filter selected");
+    notifyListeners();
+  }
 
-  Future<void> submit33KVForm() async {
+
+
+  void setPoleNum() {
+    if(selectedTappingPole=="Is Extension Pole?"){
+      poleNumber.text = (series != null ? "$series-$poleNum (EP)" : "$poleNum(EP)" )!;
+    }
+    poleNumber.text = (series != null ? "$series-$poleNum" : poleNum)!;
+  }
+
+
+  //Tapping from previous pole
+  String? _selectedTappingPole;
+
+  String? get selectedTappingPole => _selectedTappingPole;
+
+  void setSelectedTappingPole(String title) {
+    _selectedTappingPole = title;
+    notifyListeners();
+    print("$_selectedTappingPole:  tap selected");
+    if(_selectedTappingPole!=null && _selectedTappingPole!.isNotEmpty){
+      generatePoleNum(serverCheck);
+    }
+  }
+
+  //Is Extension Pole
+  String? isExtensionSelected;
+
+  void setSelectedExtension(String value) {
+    isExtensionSelected = value;
+    notifyListeners();
+    print("$isExtensionSelected:  tap selected");
+    //Is Extension Pole?:  tap selected
+  }
+
+  //Pole type
+  List<String> selectedFirstGroup = [];
+  List<String> selectedSecondGroup = [];
+
+  void toggleFirstGroup(String val) {
+    if (selectedSecondGroup.length == 2) {
+      selectedSecondGroup.removeLast();
+    }
+
+    if (selectedFirstGroup.contains(val)) {
+      selectedFirstGroup.remove(val);
+    } else {
+      selectedFirstGroup = [val];
+    }
+    print("selectedFirstGroup $selectedFirstGroup");
+
+    notifyListeners();
+  }
+
+  void toggleSecondGroup(String val) {
+    bool wasCol1Selected = selectedFirstGroup.isNotEmpty;
+
+    if (selectedSecondGroup.contains(val)) {
+      selectedSecondGroup.remove(val);
+    } else {
+      if (wasCol1Selected) {
+        selectedFirstGroup.clear();
+      }
+
+      final limit = 2;
+
+      if (selectedSecondGroup.length < limit) {
+        selectedSecondGroup.add(val);
+      } else {
+        selectedSecondGroup.removeAt(0);
+        selectedSecondGroup.add(val);
+      }
+    }
+    print("selectedSecondGroup: $selectedSecondGroup");
+    notifyListeners();
+  }
+
+  bool get isSecondGroupEnabled => true;
+
+
+  //Pole Height
+  List<String> poleHeightData = [
+    "8.0 Mtr. Pole",
+    "11 Mtr. Pole",
+    "13 Mtr(Tower)",
+    "19 Mtr(Tower)",
+    "9.1 Mtr. Pole",
+    "10 Mtrs(Tower)",
+    "16 Mtr(Tower)"
+  ];
+
+  String? _selectedPoleHeight;
+
+  String? get selectedPoleHeight => _selectedPoleHeight;
+
+  void setSelectedPoleHeight(String height) {
+    if (_selectedPoleHeight == height) {
+      _selectedPoleHeight = null; // Unselect if tapped again
+    } else {
+      _selectedPoleHeight = height;
+    }
+    print("Selected height: $_selectedPoleHeight");
+    notifyListeners();
+  }
+
+  //No.of Circuits on pole
+  String? _selectedCircuits;
+
+  String? get selectedCircuits => _selectedCircuits;
+
+  void setSelectedCircuits(String title) {
+    _selectedCircuits = title;
+    print("$_selectedCircuits: Circuits selected");
+    notifyListeners();
+  }
+
+  //Formation
+  String? _selectedFormation;
+
+  String? get selectedFormation => _selectedFormation;
+
+  void setSelectedFormation(String title) {
+    _selectedFormation = title;
+    print("$_selectedFormation: Formation selected");
+    notifyListeners();
+  }
+
+  //Type of point
+  String? _selectedTypePoint;
+
+  String? get selectedTypePoint => _selectedTypePoint;
+
+  void setSelectedTypePoint(String title) {
+    _selectedTypePoint = title;
+    print("$_selectedTypePoint: TypePoint selected");
+    notifyListeners();
+  }
+
+  //Connected Load
+  String? _selectedConnected;
+
+  String? get selectedConnected => _selectedConnected;
+
+  void setSelectedConnected(String title) {
+    _selectedConnected = title;
+    print("$_selectedConnected: Connected  selected");
+    notifyListeners();
+  }
+
+  //Any Crossings:
+  List<String> selectedCrossings = [];
+
+  void setSelectedCrossings(String title) {
+    if (title == "None") {
+      selectedCrossings = ["None"];
+    } else {
+      selectedCrossings.remove("None");
+
+      if (selectedCrossings.contains(title)) {
+        selectedCrossings.remove(title);
+      } else {
+        selectedCrossings.add(title);
+      }
+    }
+    notifyListeners();
+  }
+
+  List<String> selectedPoleStatus = [];
+
+  void setSelectedPoleStatus(String title) {
+
+    if (selectedPoleStatus.contains(title)) {
+      selectedPoleStatus.remove(title);
+    } else {
+      selectedPoleStatus.add(title);
+    }
+    print("setSelectedPoleStatus: $selectedPoleStatus");
+    notifyListeners();
+  }
+
+  String buildCrossingString() {
+    if (selectedCrossings.contains("None")) {
+      return "None";
+    }
+
+    return selectedCrossings.join('|');
+  }
+
+  //select structure code
+  List<Option> structureCodes = [];
+  Option? selectedCode;
+  String? selectedCapacity;
+
+
+
+  Future<void> loadStructureCodes() async {
+    final structures = await StructureDatabaseHelper.instance.getAllStructures();
+    structureCodes = structures
+        .where((e) => e.structureCode != null && e.capacity != null)
+        .map((e) => Option(
+      code: e.structureCode!,
+      capacity: e.capacity!,
+    ))
+        .toList();
+    print("Done loading data from DB Structure");
+
+  }
+
+  void setSelectedDtr(Option title) {
+    selectedCode = title;
+    print("${selectedCode?.code}: selectedCode");
+    print("${selectedCode?.capacity}: selectedCode capacity");
+    notifyListeners();
+  }
+
+
+
+
+  String? _selectedConductor;
+
+  String? get selectedConductor => _selectedConductor;
+
+  void setSelectedConductor(String title) {
+    _selectedConductor = title;
+    print("$_selectedConductor : Conductor   selected");
+    notifyListeners();
+  }
+
+  String? abCableSelected;
+  void setSelectedabCable(String title) {
+    abCableSelected = title;
+    print("$abCableSelected : abCableSelected   selected");
+    notifyListeners();
+  }
+
+  //Conductor Status
+  List<String> selectedConductorStatus = [];
+
+  void setSelectedConductorStatus(String title) {
+
+    if (selectedConductorStatus.contains(title)) {
+      selectedConductorStatus.remove(title);
+    } else {
+      selectedConductorStatus.add(title);
+    }
+    print("selectedConductorStatus: $selectedConductorStatus");
+    notifyListeners();
+  }
+
+  //Stud/Stay Required
+  List<String> selectedStudStayRequired = [];
+
+  void setSelectedStudStayRequired(String title) {
+
+    if (selectedStudStayRequired.contains(title)) {
+      selectedStudStayRequired.remove(title);
+    } else {
+      selectedStudStayRequired.add(title);
+    }
+    print("selectedStudStayRequired: $selectedStudStayRequired");
+    notifyListeners();
+  }
+
+  //Middle Poles Required
+  List<String> selectedMiddlePolesRequired = [];
+
+  void setSelectedMiddlePolesRequired(String title) {
+
+    if (selectedMiddlePolesRequired.contains(title)) {
+      selectedMiddlePolesRequired.remove(title);
+    } else {
+      selectedMiddlePolesRequired.add(title);
+    }
+    print("selectedMiddlePolesRequired: $selectedMiddlePolesRequired");
+    notifyListeners();
+  }
+
+  //Cross Arm Status
+  List<String> selectedCrossArmStatus = [];
+
+  void setSelectedCrossArmStatus(String title) {
+
+    if (selectedCrossArmStatus.contains(title)) {
+      selectedCrossArmStatus.remove(title);
+    } else {
+      selectedCrossArmStatus.add(title);
+    }
+    print("selectedConductorStatus: $selectedCrossArmStatus");
+    notifyListeners();
+  }
+
+  //Insulators/Discs
+  List<String> insulatorDiscType = ["Select","Discs","Insulators"];
+  String? selectedInsulatorDiscType;
+
+  void onListInsulatorDiscType(String? value) {
+    if (insulatorDiscType.contains(value)) {
+      selectedInsulatorDiscType = value;
+      notifyListeners();
+      print("selectedInsulatorDiscType: $selectedInsulatorDiscQty");
+    } else {
+      print("Invalid value: $value");
+    }
+  }
+
+
+  List<String> insulatorDiscQty = ["Select",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",];
+  String? selectedInsulatorDiscQty;
+
+  void onListInsulatorDiscQty(String? value) {
+    if (insulatorDiscQty.contains(value)) {
+      selectedInsulatorDiscQty = value;
+      notifyListeners();
+      print("selectedInsulatorDiscQty: $selectedInsulatorDiscQty");
+    } else {
+      print("Invalid value: $value");
+    }
+  }
+
+
+  //DTR Details
+  //AB
+  List<String> selectedABSwitch = [];
+
+  void setSelectedABSwitch(String title) {
+
+    if (selectedABSwitch.contains(title)) {
+      selectedABSwitch.remove(title);
+    } else {
+      selectedABSwitch.add(title);
+    }
+    print("selectedABSwitch: $selectedABSwitch");
+    notifyListeners();
+  }
+
+  //LT
+  List<String> selectedLTFuse = [];
+
+  void setSelectedLTFuse(String title) {
+
+    if (selectedLTFuse.contains(title)) {
+      selectedLTFuse.remove(title);
+    } else {
+      selectedLTFuse.add(title);
+    }
+    print("selectedLTFuse: $selectedLTFuse");
+    notifyListeners();
+  }
+
+  //HT
+  List<String> selectedHTFuse = [];
+
+  void setSelectedHTFuse(String title) {
+
+    if (selectedHTFuse.contains(title)) {
+      selectedHTFuse.remove(title);
+    } else {
+      selectedHTFuse.add(title);
+    }
+    print("selectedHTFuse: $selectedHTFuse");
+    notifyListeners();
+  }
+
+  //DTR Plinth
+  List<String> selectedDTRPlinth = [];
+
+  void setSelectedDTRPlinth(String title) {
+
+    if (selectedDTRPlinth.contains(title)) {
+      selectedDTRPlinth.remove(title);
+    } else {
+      selectedDTRPlinth.add(title);
+    }
+    print("selectedDTRPlinth: $selectedDTRPlinth");
+    notifyListeners();
+  }
+
+  //DTR Earthing
+  List<String> selectedDTREarth = [];
+
+  void setSelectedDTREarth(String title) {
+
+    if (selectedDTREarth.contains(title)) {
+      selectedDTREarth.remove(title);
+    } else {
+      selectedDTREarth.add(title);
+    }
+    print("selectedDTREarth: $selectedDTREarth");
+    notifyListeners();
+  }
+
+  //Earth Pipe Status
+  List<String> selectedEarthPipe = [];
+
+  void setSelectedEarthPipe(String title) {
+
+    if (selectedEarthPipe.contains(title)) {
+      selectedEarthPipe.remove(title);
+    } else {
+      selectedEarthPipe.add(title);
+    }
+    print("selectedEarthPipe: $selectedEarthPipe");
+    notifyListeners();
+  }
+
+  //Bi-metailc
+  List<String> selectedBiMetalic = [];
+
+  void setSelectedBiMetalic(String title) {
+
+    if (selectedBiMetalic.contains(title)) {
+      selectedBiMetalic.remove(title);
+    } else {
+      selectedBiMetalic.add(title);
+    }
+    print("selectedBiMetalic: $selectedBiMetalic");
+    notifyListeners();
+  }
+
+
+  //Lightening Arrestors
+  List<String> selectedLighteningArr = [];
+
+  void setSelectedLighteningArr(String title) {
+
+    if (selectedLighteningArr.contains(title)) {
+      selectedLighteningArr.remove(title);
+    } else {
+      selectedLighteningArr.add(title);
+    }
+    print("selectedLighteningArr: $selectedLighteningArr");
+    notifyListeners();
+  }
+
+
+  Future<void> submitCheck11KVForm() async {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
       notifyListeners();
 
       if (!validateForm()) {
         return;
-      }
-      // else if (totalAccuracy! > 15.0) {
-      //   showAlertDialog(context,
-      //       "Please wait until we reach minimum GPS accuracy i.e 15.0 mts");
-      // }
-      else {
-        save33KVPole();
+      } else if (totalAccuracy! > 15.0) {
+        showAlertDialog(context,
+            "Please wait until we reach minimum GPS accuracy i.e 15.0 mts");
+      } else {
+        saveCheck11KVPole();
         print("in else block");
       }
     }
   }
 
-  Future<void> save33KVPole() async {
+  Future<void> saveCheck11KVPole() async {
     _isLoading = isTrue;
     notifyListeners();
+    // PoleFeederEntity d= selectedDigitalPole;
 
     final requestData = {
       "loadLatestDataOnly": true,
-      "maxId": maxId, // from map
+      "maxId": "",//from map
       "authToken":
       SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "fc": args["fc"],
       "ssc": args["ssc"],
-      "fv": "33KV",
-      "ssv": "220\\/132KV\\/33KV",
+      "fv": "11KV",
+      "ssv": "33\\/11KV",
       "not": false,
       "origin": selectedPole == "Origin Pole" ? true : false,
       "tap": selectedTappingPole == "Straight Tapping"
@@ -1234,30 +1296,36 @@ class PoleProposal33kvFeederMarkViewmodel extends ChangeNotifier {
           : selectedTappingPole == "Left Tapping"
           ? "l"
           : "r",
-      "pt": selectedFirstGroup.isNotEmpty ? selectedFirstGroup[0] : null,
+      "pt": selectedSecondGroup.isNotEmpty
+          ? selectedSecondGroup[0]
+          : (selectedFirstGroup.isNotEmpty ? selectedFirstGroup[0] : null),
       "ph": selectedPoleHeight,
       "nockt": selectedCircuits,
       "formation": selectedFormation,
       "typeOfPoint": selectedTypePoint,
-      "crossingText":particularsOfCrossing.text.trim(),
       "polenum": poleNumber.text.isEmpty ? "0000" : poleNumber.text.trim(),
-      "series": series,
+      "series": series,//null
+
       if (selectedPole == "" || selectedPole == null) ...{
         "sid": poleID,
         "slat": poleLat,
         "slon": poleLon,
       },
       "cross": buildCrossingString(),
-      "connLoad": selectedConnected == "No Load" ? "N" : selectedConnected=="HT Service"?"HT":"SS",
-      "cs": selectedConductor,
-      "ss": listSubStationSelect ?? "",
-      "ht":selectedHtServiceName??"",
-      "lat": "$latitude",
-      "lon": "$longitude",
+      "connLoad": selectedConnected == "No Load" ? "N" : "DTR",
+      if (selectedConnected == "DTR") ...{
+        "structCode": selectedCode?.code,
+        "cap": selectedCode?.capacity,
+      },
+      "cs": abCableSelected==""?selectedConductor:abCableSelected, //check this(bhav)
+      "lat": poleLat,//d.getLat()
+      "lon": poleLon,
+      "digitalID":"", //d.getId()
     };
 
+    print("requestData: $requestData");
     final payload = {
-      "path": "/saveDigitalFeederPoleForExistingFeeder",
+      "path": "/save11KvDigitalFeederPoleForExistingFeeder",
       "apiVersion": "1.0.1",
       "method": "POST",
       "data": jsonEncode(requestData),
@@ -1270,6 +1338,7 @@ class PoleProposal33kvFeederMarkViewmodel extends ChangeNotifier {
 
     try {
       if (response != null) {
+        Navigator.pop(context);
         if (response.data is String) {
           response.data = jsonDecode(response.data);
         }
@@ -1277,54 +1346,15 @@ class PoleProposal33kvFeederMarkViewmodel extends ChangeNotifier {
           if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
               if (response.data['objectJson'] != null) {
-                  List<dynamic> jsonList;
-                  if (response.data['objectJson'] is String) {
-                    jsonList = jsonDecode(response.data['objectJson']);
-                  } else if (response.data['objectJson'] is List) {
-                    jsonList = response.data['objectJson'];
-                  } else {
-                    jsonList = [];
-                  }
-                  final List<PoleFeederEntity> listData = jsonList
-                      .map((json) => PoleFeederEntity.fromJson(json))
-                      .toList();
-                  int timeLapse = DateTime.now().millisecondsSinceEpoch;
-
-                  // Add all items to local list
-                  digitalFeederEntityList.addAll(listData);
-
-                  final now = DateTime.now();
-                  final formatter = DateFormat('dd MM yyyy hh:mm:ss.SSS');
-                  print("Done adding to local object: ${formatter.format(now)} "
-                      "Time Lapse: ${DateTime.now().millisecondsSinceEpoch - timeLapse} msecs");
-
-                  timeLapse = DateTime.now().millisecondsSinceEpoch;
-
-                  if (digitalFeederEntityList.isNotEmpty) {
-                    final lastItem = digitalFeederEntityList.last;
-
-                    if (lastItem.createdBy == SharedPreferenceHelper.getStringValue(LoginSdkPrefs.userIdPrefKey) ){
-                      if (undoStack.length > UNDO_STACK_SIZE) {
-                        undoStack.removeLast();
-                      }
-
-                      undoStack.insert(0, lastItem.id);
-                      print("undoStack: $undoStack");
-                    }
-                  }
-                  if (response.data["message"] != null) {
-                    showSuccessDialog(
-                      context,
-                      response.data["message"],
-                          () {
-                        Navigator.pop(context);
-                        resetForm();
-                      },
-                    );
-                  }
-
-                print("data added in docketList");
-                notifyListeners();
+                if (response.data["message"] != null) {
+                  showSuccessDialog(
+                    context,
+                    response.data["message"], //Missing mandatory params
+                        () {
+                      Navigator.pop(context);
+                    },
+                  );
+                }
               } else {
                 showAlertDialog(context, "Unable to process your request!");
               }
@@ -1335,17 +1365,13 @@ class PoleProposal33kvFeederMarkViewmodel extends ChangeNotifier {
           } else {
             showSessionExpiredDialog(context);
           }
+        } else {
+          showAlertDialog(context,
+              "Error connecting to the server, Please try after sometime");
         }
-      } else {
-        showAlertDialog(context,
-            "Error connecting to the server, Please try after sometime");
       }
     } catch (e) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        showErrorDialog(context, "An error occurred. Please try again.");
-      });
-      rethrow;
-    } finally {
+      showErrorDialog(context, "An error occurred. Please try again.");
       _isLoading = false;
       notifyListeners();
     }
@@ -1354,13 +1380,8 @@ class PoleProposal33kvFeederMarkViewmodel extends ChangeNotifier {
   }
 
   bool validateForm() {
-    if ((selectedPole == "" || selectedPole == null) &&
-        selectedPoleFeeder == null) {
-      AlertUtils.showSnackBar(
-          context, "Please select the source pole to the current pole", isTrue);
-      return false;
-    } else if (poleNumber.text == "" ) {
-      AlertUtils.showSnackBar(context, "Please enter Pole Number", isTrue);
+    if (poleFeederSelected==null||poleFeederSelected=="") {
+      AlertUtils.showSnackBar(context, "Please select previous pole number", isTrue);
       return false;
     } else if (selectedTappingPole == "" || selectedTappingPole == null) {
       AlertUtils.showSnackBar(
@@ -1368,7 +1389,7 @@ class PoleProposal33kvFeederMarkViewmodel extends ChangeNotifier {
           "Please select tapping type from previous pole to current pole",
           isTrue);
       return false;
-    } else if (selectedFirstGroup.isEmpty) {
+    } else if (selectedFirstGroup.isEmpty && selectedSecondGroup.isEmpty) {
       AlertUtils.showSnackBar(context, "Please select the  Pole Type", isTrue);
       return false;
     } else if (_selectedPoleHeight == "" || _selectedPoleHeight == null) {
@@ -1388,23 +1409,16 @@ class PoleProposal33kvFeederMarkViewmodel extends ChangeNotifier {
           "Please select the type of point (Cut Point/End Point/Pin Point)",
           isTrue);
       return false;
-    } else if (selectedCrossings.isEmpty || selectedCrossings == null) {
+    }else if (selectedCrossings.isEmpty || selectedCrossings == null) {
       AlertUtils.showSnackBar(context, "Please select any crossing", isTrue);
       return false;
     } else if (selectedConnected == "" || selectedConnected == null) {
       AlertUtils.showSnackBar(context,
           "Please select the any load connected on the current pole", isTrue);
       return false;
-    } //DTR
-    else if (selectedConnected == "Sub Station" &&
-        (listSubStationSelect == "" || listSubStationSelect == null)) {
-      AlertUtils.showSnackBar(
-          context, "Please choose the SubStation ", isTrue);
-      return false;
-    } else if (selectedConnected == "HT Service" &&
-        (selectedHtServiceName == "" || selectedHtServiceName == null)) {
-      AlertUtils.showSnackBar(
-          context, "Please choose the Service ", isTrue);
+    }else if (selectedConnected == "DTR" &&( selectedCode == null||selectedCode=="")) {
+      AlertUtils.showSnackBar(context,
+          "Please select structure code", isTrue);
       return false;
     } else if (_selectedConductor == "" || _selectedConductor == null) {
       AlertUtils.showSnackBar(
@@ -1412,33 +1426,13 @@ class PoleProposal33kvFeederMarkViewmodel extends ChangeNotifier {
           "Please select the conductor size from previous pole to this pole",
           isTrue);
       return false;
-    } else if ((latitude == "" && longitude == "") ||
+    }
+    else if ((latitude == "" && longitude == "") ||
         (latitude == null && longitude == null)) {
-      //location
       AlertUtils.showSnackBar(
-          context,
-          "Please wait until we capture your location. Please make sure you have turned on your location",
-          isTrue);
+          context, "Please wait until we capture your location. Please make sure you have turned on your location", isTrue);
       return false;
     }
     return true;
-  }
-
-  void resetForm() {
-    _selectedPole = "";
-    poleNumber.clear();
-    _selectedTappingPole = null;
-    selectedFirstGroup.clear();
-    _selectedPoleHeight = "";
-    _selectedCircuits = "";
-    _selectedFormation = "";
-    _selectedTypePoint = "";
-    selectedCrossings.clear();
-    _selectedConnected = "";
-    listSubStationSelect="";
-    _selectedConductor = "";
-    longitude = null;
-    latitude = null;
-    notifyListeners();
   }
 }

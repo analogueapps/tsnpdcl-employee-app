@@ -644,9 +644,9 @@ class CheckMeasure11kvEdit extends StatelessWidget {
                     child: multipleCheckbox(
                       context,
                       "9.1 Mtr. Pole",
-                      viewModel.selectedConductorStatus,
+                      viewModel.selectedMiddlePolesRequired,
                           (bool? checked) {
-                        viewModel.setSelectedConductorStatus(
+                        viewModel.setSelectedMiddlePolesRequired(
                             "9.1 Mtr. Pole");
                       },
                     ),
@@ -655,9 +655,9 @@ class CheckMeasure11kvEdit extends StatelessWidget {
                     child: multipleCheckbox(
                       context,
                       "8.0 Mtr. Pole",
-                      viewModel.selectedConductorStatus,
+                      viewModel.selectedMiddlePolesRequired,
                           (bool? checked) {
-                        viewModel.setSelectedConductorStatus(
+                        viewModel.setSelectedMiddlePolesRequired(
                             "8.0 Mtr. Pole");
                       },
                     ),
@@ -672,9 +672,9 @@ class CheckMeasure11kvEdit extends StatelessWidget {
                     child: multipleCheckbox(
                       context,
                       "Stay Set",
-                      viewModel.selectedConductorStatus,
+                      viewModel.selectedStudStayRequired,
                           (bool? checked) {
-                        viewModel.setSelectedConductorStatus(
+                        viewModel.setSelectedStudStayRequired(
                             "Stay Set");
                       },
                     ),
@@ -683,16 +683,87 @@ class CheckMeasure11kvEdit extends StatelessWidget {
                     child: multipleCheckbox(
                       context,
                       "Stud Pole",
-                      viewModel.selectedConductorStatus,
+                      viewModel.selectedStudStayRequired,
                           (bool? checked) {
-                        viewModel.setSelectedConductorStatus(
+                        viewModel.setSelectedStudStayRequired(
                             "Stud Pole");
                       },
                     ),
                   ),
                 ]
                 ),
-                ///Insulators/Discs Required? need to do
+                ///Insulators/Discs Required? need to do {impletemented check}
+                const SizedBox(
+                  height: doubleTen,
+                ),
+                const Divider(
+                  color: Colors.grey,
+                  thickness: 0.2,
+                ),
+                const Text("Insulators/Discs Required?"),
+                Row(children: [
+                  Expanded(
+                    child: Column(
+                        crossAxisAlignment:
+                        CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Type",
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                          DropdownButtonFormField<String>(
+                            value:
+                            viewModel.selectedInsulatorDiscType,
+                            hint: const Text("Select"),
+                            isExpanded: true,
+                            items: viewModel.insulatorDiscType
+                                .map((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                            onChanged: (newValue) => viewModel
+                                .onListInsulatorDiscType(newValue),
+                          ),
+                        ]),
+                  ),
+                  const SizedBox(width: doubleTen),
+                  const Divider(
+                    color: Colors.grey,
+                    thickness: 0.2,
+                  ),
+                  Expanded(
+                    child: Column(
+                        crossAxisAlignment:
+                        CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Qty",
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                          DropdownButtonFormField<String>(
+                              value:
+                              viewModel.selectedInsulatorDiscQty,
+                              hint: const Text("Select"),
+                              isExpanded: true,
+                              items: viewModel.insulatorDiscQty
+                                  .map((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                              onChanged: (newValue) {
+                                viewModel
+                                    .onListInsulatorDiscType(
+                                    newValue);
+                              }
+                          ),
+                        ]),
+                  ),
+                ]),
+
                 SizedBox(height: doubleTen,),
                 Text("Cross Arm Status?"),
                 Row(children: [
@@ -701,7 +772,7 @@ class CheckMeasure11kvEdit extends StatelessWidget {
                     child: multipleCheckbox(
                       context,
                       "Good",
-                      viewModel.selectedConductorStatus,
+                      viewModel.selectedCrossArmStatus,
                           (bool? checked) {
                         viewModel.setSelectedConductorStatus(
                             "Good");
@@ -712,7 +783,7 @@ class CheckMeasure11kvEdit extends StatelessWidget {
                     child: multipleCheckbox(
                       context,
                       "Bad",
-                      viewModel.selectedConductorStatus,
+                      viewModel.selectedCrossArmStatus,
                           (bool? checked) {
                         viewModel.setSelectedConductorStatus(
                             "Bad");

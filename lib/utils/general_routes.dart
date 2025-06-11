@@ -45,11 +45,12 @@ class Routes {
   static const String viewDigitalSketchScreen = "ViewDigitalSketchScreen";
   static const String newProposalScreen = "NewProposalScreen";
   static const String poleTrackerSelectionScreen = "PoleTrackerSelectionScreen";
-  static const String poleProposal11kvFeederMarkScreen = "PoleProposal11kvFeederMarkScreen";
-  static const String pole33kvProposalFeederMarkScreen = "Pole33kvProposalFeederMarkScreen";
-  static const String pole33kvProposalFeederMarkEditScreen = "PoleProposal33kvFeederEdit";
   static const String pole11kvFeederMarkScreen = "Pole11kvFeederMarkScreen";
+  static const String pole33kvFeederMarkScreen = "Pole33kvFeederMarkScreen";
+  static const String pole33kvFeederMarkEditScreen = "PoleProposal33kvFeederEdit";
   static const String viewOfflineFeedersScreen = "ViewOfflineFeedersScreen";
+  static const String pmiInspectionForm = "PmiInspectionForm";
+  static const String pmiList = "PmiList";
 
   // BILLING RELATED
   static const String gruhaJyothiScreen = "GruhaJyothiScreen";

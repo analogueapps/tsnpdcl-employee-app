@@ -17,13 +17,15 @@ import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/utils/general_assets.dart';
+import 'package:tsnpdcl_employee/utils/general_routes.dart';
+import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/view/check_measurement_lines/model/docket_model.dart';
 import 'package:tsnpdcl_employee/view/check_measurement_lines/model/polefeeder_model.dart';
 import 'package:tsnpdcl_employee/view/check_readings/model/ero_model.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/model/spinner_list.dart';
 
-class PoleProposal11kvFeederMarkViewmodel extends ChangeNotifier {
-  PoleProposal11kvFeederMarkViewmodel(
+class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
+  Pole11kvFeederMarkViewmodel(
       {required this.context, required this.args}){
     startListening();
     _handleLocation();
@@ -69,6 +71,7 @@ class PoleProposal11kvFeederMarkViewmodel extends ChangeNotifier {
 
   final TextEditingController poleNumber = TextEditingController();
   final TextEditingController particularsOfCrossing = TextEditingController();
+  final TextEditingController remarksController = TextEditingController();
 
   String empName=SharedPreferenceHelper.getStringValue(LoginSdkPrefs.empNameKey);
   String empDesignation=SharedPreferenceHelper.getStringValue(LoginSdkPrefs.designationCodeKey);
@@ -342,7 +345,7 @@ class PoleProposal11kvFeederMarkViewmodel extends ChangeNotifier {
       position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
       icon: await _bitmapDescriptorFromAsset(Assets.horizontalPole),
       onTap: () {
-        _onMarkerTap(markerId);
+        poleSelectedOnMap();
       },
     );
 
@@ -353,39 +356,6 @@ class PoleProposal11kvFeederMarkViewmodel extends ChangeNotifier {
 
   PoleFeederEntity? sourcePoleTag;
 
-  void _onMarkerTap(MarkerId markerId) {
-    final entity = markerEntityMap[markerId];
-    print("markerEntityMap entity: $markerEntityMap");
-    if (entity == null) return;
-
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        content: const Text("Copy this pole num to previous pole number box?"),
-        actions: [
-          TextButton(
-            onPressed: () {
-              final poleText = entity.tempSeries != null
-                  ? "${entity.tempSeries}-${entity.poleNum}"
-                  : entity.poleNum;
-              poleFeederSelected = poleText ?? '';
-              print("selected Pole number is $poleText");
-              notifyListeners();
-              // If needed, store the entity as tag
-              sourcePoleTag = entity;
-
-              Navigator.pop(context);
-            },
-            child: const Text("Copy"),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Cancel"),
-          ),
-        ],
-      ),
-    );
-  }
   void _handleLocation() async {
 
     bool isLocationEnabled = await Geolocator.isLocationServiceEnabled();
@@ -525,6 +495,82 @@ class PoleProposal11kvFeederMarkViewmodel extends ChangeNotifier {
   }
 
   double _degToRad(double deg) => deg * pi / 180;
+
+  Future<void> poleSelectedOnMap()async{
+    // final entity = markerEntityMap[markerId];
+    // print("markerEntityMap entity: $markerEntityMap");
+    // if (entity == null) return;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Choose Options'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                // final poleText = entity.tempSeries != null
+                //     ? "${entity.tempSeries}-${entity.poleNum}"
+                //     : entity.poleNum;
+                // poleFeederSelected = poleText ?? '';
+                // print("selected Pole number is $poleText");
+                // notifyListeners();
+                // // If needed, store the entity as tag
+                // sourcePoleTag = entity;
+
+                Navigator.pop(context);
+              },
+              child: const Text("Copy Pole Number?"),
+            ),
+            TextButton(
+              onPressed: (){
+                Navigator.pop(context);
+
+                var argument = {
+                  'p': false,
+                  'ssc': ssc,
+                  'ssn':ssn,
+                  'fc': feederCode,
+                  'fn':feederName,
+                  'digitalPoleId': "",
+                  'voltage': "",
+                  'scheduleId': 0,
+                  // "dtrId":""
+                };
+                Navigation.instance.navigateTo(
+                    Routes.pmiInspectionForm,
+                    args: argument);
+              },
+              child: const Text("Enter PMI data"),
+            ),
+            TextButton(
+              onPressed: (){
+                Navigator.pop(context);
+                var argument = {
+                  'p': false,
+                  'ssc': ssc,
+                  'ssn': ssn,
+                  'fc': feederCode,
+                  'fn':feederName,
+                  'digitalPoleId': "",
+                  // "dtrId":""
+                };
+                Navigation.instance.navigateTo(
+                    Routes.pmiList,
+                    args: argument);
+              },
+              child: const Text("View PMI History of this Pole"),
+            ),
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text("CANCEL")),
+          ],
+        );
+      },
+    );
+  }
 
 //Pole selection
   String? _selectedPole;
@@ -887,6 +933,85 @@ class PoleProposal11kvFeederMarkViewmodel extends ChangeNotifier {
       selectedConductorStatus.add(title);
     }
     print("selectedConductorStatus: $selectedConductorStatus");
+    notifyListeners();
+  }
+
+  //Stud/Stay Required
+  List<String> selectedStudStayRequired = [];
+
+  void setSelectedStudStayRequired(String title) {
+
+    if (selectedStudStayRequired.contains(title)) {
+      selectedStudStayRequired.remove(title);
+    } else {
+      selectedStudStayRequired.add(title);
+    }
+    print("selectedStudStayRequired: $selectedStudStayRequired");
+    notifyListeners();
+  }
+
+  //Middle Poles Required
+  List<String> selectedMiddlePolesRequired = [];
+
+  void setSelectedMiddlePolesRequired(String title) {
+
+    if (selectedMiddlePolesRequired.contains(title)) {
+      selectedMiddlePolesRequired.remove(title);
+    } else {
+      selectedMiddlePolesRequired.add(title);
+    }
+    print("selectedMiddlePolesRequired: $selectedMiddlePolesRequired");
+    notifyListeners();
+  }
+
+  //Insulators/Discs
+  List<String> insulatorDiscType = ["Select","Discs","Insulators"];
+  String? selectedInsulatorDiscType;
+
+  void onListInsulatorDiscType(String? value) {
+    if (insulatorDiscType.contains(value)) {
+      selectedInsulatorDiscType = value;
+      notifyListeners();
+      print("selectedInsulatorDiscType: $selectedInsulatorDiscQty");
+    } else {
+      print("Invalid value: $value");
+    }
+  }
+
+
+  List<String> insulatorDiscQty = ["Select",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",];
+  String? selectedInsulatorDiscQty;
+
+  void onListInsulatorDiscQty(String? value) {
+    if (insulatorDiscQty.contains(value)) {
+      selectedInsulatorDiscQty = value;
+      notifyListeners();
+      print("selectedInsulatorDiscQty: $selectedInsulatorDiscQty");
+    } else {
+      print("Invalid value: $value");
+    }
+  }
+
+  //cross arm status
+  List<String> selectedCrossArmStatus = [];
+
+  void setSelectedCrossArmStatus(String title) {
+
+    if (selectedCrossArmStatus.contains(title)) {
+      selectedCrossArmStatus.remove(title);
+    } else {
+      selectedCrossArmStatus.add(title);
+    }
+    print("selectedCrossArmStatus: $selectedCrossArmStatus");
     notifyListeners();
   }
 

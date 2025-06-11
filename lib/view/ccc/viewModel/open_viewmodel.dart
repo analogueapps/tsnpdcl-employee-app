@@ -194,7 +194,7 @@ class OpenViewmodel extends ChangeNotifier {
                           border: OutlineInputBorder(),
                           alignLabelWithHint: true,
                         ),
-                      )
+                      ),
 
                     ],
                   ),

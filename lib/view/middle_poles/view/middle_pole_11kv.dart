@@ -36,21 +36,22 @@ class MiddlePole11kv extends StatelessWidget {
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                  const Spacer(),
-                  IconButton(
+                ],
+              ),
+              actions: [
+                IconButton(
                     icon: const Icon(Icons.save_outlined),
                     color: Colors.white,
                     onPressed: (){
                       viewModel.submitForm();
                     }
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.folder_outlined),
-                    color: Colors.white,
-                    onPressed: () => print("Folder icon pressed"),
-                  ),
-                ],
-              ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.folder_outlined),
+                  color: Colors.white,
+                  onPressed: () => print("Folder icon pressed"),
+                ),
+              ],
               iconTheme: const IconThemeData(color: Colors.white),
               leading: IconButton(
                 icon: const Icon(Icons.close),

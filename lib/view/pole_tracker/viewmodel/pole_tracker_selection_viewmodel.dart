@@ -370,7 +370,6 @@ class PoleTrackerSelectionViewModel extends ChangeNotifier {
               if(response.data['objectJson'] != null) {
                 final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
                 final List<SpinnerList> listData = jsonList.map((json) => SpinnerList.fromJson(json)).toList();
-                listFeederItem.add(SpinnerList(optionCode: "NFP", optionName: "New Feeder Proposal"));
                 listFeederItem.addAll(listData);
               }
             } else {
@@ -426,9 +425,9 @@ class PoleTrackerSelectionViewModel extends ChangeNotifier {
           'fn': listFeederItem.firstWhere((item) => item.optionCode == listFeederSelect).optionName,
         };
         if(selectedCheckboxId=="33KV Line"){
-          Navigation.instance.navigateTo(Routes.pole33kvProposalFeederMarkScreen, args: argument);
+          Navigation.instance.navigateTo(Routes.pole33kvFeederMarkScreen, args: argument);
         }else{
-          Navigation.instance.navigateTo(Routes.poleProposal11kvFeederMarkScreen, args: argument);
+          Navigation.instance.navigateTo(Routes.pole11kvFeederMarkScreen, args: argument);
         }
       }
     }

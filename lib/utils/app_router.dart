@@ -114,10 +114,11 @@ import 'package:tsnpdcl_employee/view/pdms/view/view_firms_screen.dart';
 import 'package:tsnpdcl_employee/view/pdms/view/view_inspection_tickets_screen.dart';
 import 'package:tsnpdcl_employee/view/pdms/view/view_pole_dumped_location_screen.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/view/new_proposal_screen.dart';
+import 'package:tsnpdcl_employee/view/pole_tracker/view/pmi_inspection_form.dart';
+import 'package:tsnpdcl_employee/view/pole_tracker/view/pmi_list.dart';
+import 'package:tsnpdcl_employee/view/pole_tracker/view/pole_33kv_feeder_mark_screen.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/view/pole_11kv_feeder_mark_screen.dart';
-import 'package:tsnpdcl_employee/view/pole_tracker/view/pole_33kv_proposal_feeder_mark_screen.dart';
-import 'package:tsnpdcl_employee/view/pole_tracker/view/pole_proposal_11kv_feeder_mark_screen.dart';
-import 'package:tsnpdcl_employee/view/pole_tracker/view/pole_proposal_33kv_feeder_edit.dart';
+import 'package:tsnpdcl_employee/view/pole_tracker/view/pole_33kv_feeder_mark_edit.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/view/pole_tracker_selection_screen.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/view/pole_tracker_selection_view_sketch_screen.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/view/view_digital_sketch_screen.dart';
@@ -278,21 +279,25 @@ class AppRouter {
       case PoleTrackerSelectionScreen.id:
         return MaterialPageRoute(
             builder: (_) => const PoleTrackerSelectionScreen());
-      case PoleProposal11kvFeederMarkScreen.id:
-        return MaterialPageRoute(
-            builder: (_) => PoleProposal11kvFeederMarkScreen(
-                args: settings.arguments as Map<String, dynamic>));
-      case Pole33kvProposalFeederMarkScreen.id:
-        return MaterialPageRoute(
-            builder: (_) => Pole33kvProposalFeederMarkScreen(
-                args: settings.arguments as Map<String, dynamic>));
-        case PoleProposal33kvFeederEdit.id:
-        return MaterialPageRoute(
-            builder: (_) => PoleProposal33kvFeederEdit(
-                args: settings.arguments as Map<String, dynamic>));
       case Pole11kvFeederMarkScreen.id:
         return MaterialPageRoute(
             builder: (_) => Pole11kvFeederMarkScreen(
+                args: settings.arguments as Map<String, dynamic>));
+      case Pole33kvFeederMarkScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => Pole33kvFeederMarkScreen(
+                args: settings.arguments as Map<String, dynamic>));
+        case Pole33kvFeederEdit.id:
+        return MaterialPageRoute(
+            builder: (_) => Pole33kvFeederEdit(
+                args: settings.arguments as Map<String, dynamic>));
+        case PmiInspectionForm.id:
+        return MaterialPageRoute(
+            builder: (_) => PmiInspectionForm(
+                args: settings.arguments as Map<String, dynamic>));
+        case PmiList.id:
+        return MaterialPageRoute(
+            builder: (_) => PmiList(
                 args: settings.arguments as Map<String, dynamic>));
       case ViewOfflineFeedersScreen.id:
         return MaterialPageRoute(

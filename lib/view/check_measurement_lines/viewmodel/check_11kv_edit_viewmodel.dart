@@ -981,6 +981,86 @@ String? isExtensionSelected;
     notifyListeners();
   }
 
+  //Stud/Stay Required
+  List<String> selectedStudStayRequired = [];
+
+  void setSelectedStudStayRequired(String title) {
+
+    if (selectedStudStayRequired.contains(title)) {
+      selectedStudStayRequired.remove(title);
+    } else {
+      selectedStudStayRequired.add(title);
+    }
+    print("selectedStudStayRequired: $selectedStudStayRequired");
+    notifyListeners();
+  }
+
+  //Middle Poles Required
+  List<String> selectedMiddlePolesRequired = [];
+
+  void setSelectedMiddlePolesRequired(String title) {
+
+    if (selectedMiddlePolesRequired.contains(title)) {
+      selectedMiddlePolesRequired.remove(title);
+    } else {
+      selectedMiddlePolesRequired.add(title);
+    }
+    print("selectedMiddlePolesRequired: $selectedMiddlePolesRequired");
+    notifyListeners();
+  }
+
+  //Cross Arm Status
+  List<String> selectedCrossArmStatus = [];
+
+  void setSelectedCrossArmStatus(String title) {
+
+    if (selectedCrossArmStatus.contains(title)) {
+      selectedCrossArmStatus.remove(title);
+    } else {
+      selectedCrossArmStatus.add(title);
+    }
+    print("selectedConductorStatus: $selectedCrossArmStatus");
+    notifyListeners();
+  }
+
+  //Insulators/Discs
+  List<String> insulatorDiscType = ["Select","Discs","Insulators"];
+  String? selectedInsulatorDiscType;
+
+  void onListInsulatorDiscType(String? value) {
+    if (insulatorDiscType.contains(value)) {
+      selectedInsulatorDiscType = value;
+      notifyListeners();
+      print("selectedInsulatorDiscType: $selectedInsulatorDiscQty");
+    } else {
+      print("Invalid value: $value");
+    }
+  }
+
+
+  List<String> insulatorDiscQty = ["Select",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",];
+  String? selectedInsulatorDiscQty;
+
+  void onListInsulatorDiscQty(String? value) {
+    if (insulatorDiscQty.contains(value)) {
+      selectedInsulatorDiscQty = value;
+      notifyListeners();
+      print("selectedInsulatorDiscQty: $selectedInsulatorDiscQty");
+    } else {
+      print("Invalid value: $value");
+    }
+  }
+
+
   //DTR Details
   //AB
   List<String> selectedABSwitch = [];

@@ -5,15 +5,15 @@ import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
-import 'package:tsnpdcl_employee/view/pole_tracker/viewmodel/pole_proposal_33kv_feeder_mark_viewmodel.dart';
+import 'package:tsnpdcl_employee/view/pole_tracker/viewmodel/pole_33kv_feeder_mark_viewmodel.dart';
 import 'package:tsnpdcl_employee/widget/primary_button.dart';
 import 'package:tsnpdcl_employee/widget/view_detailed_lc_tile_widget.dart';
 
-class Pole33kvProposalFeederMarkScreen extends StatelessWidget {
-  static const id = Routes.pole33kvProposalFeederMarkScreen;
+class Pole33kvFeederMarkScreen extends StatelessWidget {
+  static const id = Routes.pole33kvFeederMarkScreen;
   final Map<String, dynamic> args;
 
-  const Pole33kvProposalFeederMarkScreen({
+  const Pole33kvFeederMarkScreen({
     super.key,
     required this.args,
   });
@@ -21,8 +21,8 @@ class Pole33kvProposalFeederMarkScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  ChangeNotifierProvider(
-      create: (_) => PoleProposal33kvFeederMarkViewmodel(context: context, args: args),
-      child: Consumer<PoleProposal33kvFeederMarkViewmodel>(
+      create: (_) => Pole33kvFeederMarkViewmodel(context: context, args: args),
+      child: Consumer<Pole33kvFeederMarkViewmodel>(
         builder: (context, viewModel, child) {
           return Scaffold(
         appBar: AppBar(
@@ -48,7 +48,7 @@ class Pole33kvProposalFeederMarkScreen extends StatelessWidget {
                     'fn': viewModel.feederName,
                   };
                   Navigation.instance.navigateTo(
-                      Routes.pole33kvProposalFeederMarkEditScreen,
+                      Routes.pole33kvFeederMarkEditScreen,
                       args: argument);
                 },
                 child:  Text(
@@ -748,7 +748,7 @@ class Pole33kvProposalFeederMarkScreen extends StatelessWidget {
 }
 Widget checkbox(BuildContext context, String title, String? selected,
     void Function(String) selectedFunction, bool enabled) {
-  return Consumer<PoleProposal33kvFeederMarkViewmodel>(
+  return Consumer<Pole33kvFeederMarkViewmodel>(
     builder: (context, viewModel, child) {
       return Row(
         mainAxisSize: MainAxisSize.min,
