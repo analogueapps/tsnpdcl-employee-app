@@ -9,6 +9,7 @@ import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/viewmodel/pole_33kv_feeder_edit_viewmodel.dart';
 import 'package:tsnpdcl_employee/widget/fill_text_form_field.dart';
 import 'package:tsnpdcl_employee/widget/primary_button.dart';
+import 'package:tsnpdcl_employee/widget/view_detailed_lc_head_widget.dart' show ViewDetailedLcHeadWidget;
 import 'package:tsnpdcl_employee/widget/view_detailed_lc_tile_widget.dart';
 
 import '../../check_measurement_lines/model/structure_capacity_model.dart';
@@ -84,7 +85,7 @@ class Pole33kvFeederEdit extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const ViewDetailedLcTileWidget(
-                          tileKey: "SubStation",
+                          tileKey: "Selected Pole",
                           tileValue: "0000",
                           valueColor: Colors.red,
                         ),
@@ -138,22 +139,13 @@ class Pole33kvFeederEdit extends StatelessWidget {
                           viewModel.selectedTappingPole,
                           viewModel.setSelectedTappingPole,
                         ),
-                        checkbox(
-                          context,
-                          "Is Extension Pole?",
-                          viewModel.isExtensionSelected,
-                          viewModel.setSelectedExtension,
-                        ),
 
                         SizedBox(height: doubleTen,),
                         const Text("Pole Number"),
                         TextFormField(
-                          // maxLines: null,
-                          // minLines: 5,
                           controller: viewModel.poleNumber,
                           keyboardType: TextInputType.text,
                           decoration: const InputDecoration(
-                            // hintText: "Type here...",
                             border: OutlineInputBorder(),
                             alignLabelWithHint: true,
                           ),
@@ -365,7 +357,6 @@ class Pole33kvFeederEdit extends StatelessWidget {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Row for "None", "33KV Line", "11KV Line"
                             Row(
                               children: [
                                 Expanded(
@@ -486,11 +477,11 @@ class Pole33kvFeederEdit extends StatelessWidget {
                                       ),
                                       multipleCheckbox(
                                         context,
-                                        "Other Common Lines",
+                                        "Other Commun. Lines",
                                         viewModel.selectedCrossings,
                                             (bool? checked) {
                                           viewModel.setSelectedCrossings(
-                                              "Other Common Lines");
+                                              "Other Commnn. Lines");
                                         },
                                       ),
                                     ],
@@ -514,39 +505,68 @@ class Pole33kvFeederEdit extends StatelessWidget {
                             ),
                             checkbox(
                               context,
-                              "DTR",
+                              "Sub Station",
+                              viewModel.selectedConnected,
+                              viewModel.setSelectedConnected,
+                            ),
+                            checkbox(
+                              context,
+                              "HT Service",
                               viewModel.selectedConnected,
                               viewModel.setSelectedConnected,
                             ),
                           ],
                         ),
-                        const SizedBox(height: doubleTen,),
+                        const Divider(
+                          color: Colors.grey,
+                          thickness: 0.2,
+                        ),
                         Visibility(
-                          visible:viewModel.selectedConnected=="DTR" ,
+                          visible: viewModel.selectedConnected ==
+                              "Sub Station",
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("Select structure code".toUpperCase()),
-                                DropdownButton<Option>(
-                                  value: viewModel.selectedCode,
-                                  hint: Text('Select Structure Code'),
+                                const Text("Choose Substation"),
+                                DropdownButton<String>(
                                   isExpanded: true,
-                                  items: viewModel.structureCodes.map((option) {
-                                    return DropdownMenuItem<Option>(
-                                      value: option,
-                                      child: Text(option.code),
-                                    );
-                                  }).toList(),
+                                  hint: const Text("Select an option"),
+                                  value: viewModel.listSubStationSelect,
+                                  items: viewModel.listSubStationItem
+                                      .map((item) =>
+                                      DropdownMenuItem<String>(
+                                        value: item.optionCode,
+                                        child: Text(item.optionName!),
+                                      ))
+                                      .toList(),
                                   onChanged: (value) {
-                                    viewModel.setSelectedDtr (value!);
+                                    viewModel.onListSubStationItemSelect(value);
                                   },
                                 ),
-                                const Text("Didn't find the Structure code?", style: TextStyle(color:Colors.red, fontWeight: FontWeight.bold),),
-                                const SizedBox(height: doubleTen,),
-                                Align(alignment: Alignment.bottomRight,child:SizedBox(width: 150,child: PrimaryButton(onPressed: (){Navigation.instance.navigateTo(
-                                  Routes.createOnlineDTR,
-                                );
-                                }, text: 'ADD DTR',),),
+                              ]
+                          ),
+                        ),
+                        Visibility(
+                          visible: viewModel.selectedConnected ==
+                              "HT Service",
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text("Choose Service"),
+                                DropdownButton<String>(
+                                  isExpanded: true,
+                                  hint: viewModel.htServiceList.isNotEmpty?const Text("Select an option"): const Text(""),
+                                  value: viewModel.selectedHtServiceName,
+                                  items: viewModel.htServiceList
+                                      .map((item) =>
+                                      DropdownMenuItem<String>(
+                                        value: item.optionId,
+                                        child: Text(item.optionName!),
+                                      ))
+                                      .toList(),
+                                  onChanged: (value) {
+                                    viewModel.onHtServiceChange(value);
+                                  },
                                 ),
                               ]
                           ),
@@ -554,12 +574,6 @@ class Pole33kvFeederEdit extends StatelessWidget {
 
                         const SizedBox(height: doubleTen),
                         const Text("Conductor Size"),
-                        checkbox(
-                          context,
-                          "AB Cable",
-                          viewModel.abCableSelected ,
-                          viewModel.setSelectedabCable ,
-                        ),
                         Row(
                           children: [
                             checkbox(
@@ -583,531 +597,12 @@ class Pole33kvFeederEdit extends StatelessWidget {
                           ],
                         ),
 
-                        Container(color:Colors.brown[200], child:const Center(child: Text("System Strength Details",style: TextStyle(fontSize: toolbarTitleSize),))),
-                        const SizedBox(height: doubleTen,),
-                        Text("Pole Status"),
-                        multipleCheckbox(
-                          context,
-                          "Broken",
-                          viewModel.selectedPoleStatus,
-                              (bool? checked) {
-                            viewModel.setSelectedPoleStatus(
-                                "Broken");
-                          },
-                        ),
-                        multipleCheckbox(
-                          context,
-                          "Leaned",
-                          viewModel.selectedPoleStatus,
-                              (bool? checked) {
-                            viewModel.setSelectedPoleStatus(
-                                "Leaned");
-                          },
-                        ),
-                        multipleCheckbox(
-                          context,
-                          "Pole Replacement with 9.1Mtr with \n T-Raiser(Road Crossing)",
-                          viewModel.selectedPoleStatus,
-                              (bool? checked) {
-                            viewModel.setSelectedPoleStatus(
-                                "Pole Replacement with 9.1Mtr with \n T-Raiser(Road Crossing)");
-                          },
-                        ) ,
-                        multipleCheckbox(
-                          context,
-                          "Rusted",
-                          viewModel.selectedPoleStatus,
-                              (bool? checked) {
-                            viewModel.setSelectedPoleStatus(
-                                "Rusted");
-                          },
-                        ),
-                        SizedBox(height: doubleTen,),
-                        Text("Conductor Status"),
-                        Row(children: [
-
-                          Expanded(
-                            child: multipleCheckbox(
-                              context,
-                              "Damaged",
-                              viewModel.selectedConductorStatus,
-                                  (bool? checked) {
-                                viewModel.setSelectedConductorStatus(
-                                    "Damaged");
-                              },
-                            ),
-                          ),
-                          Expanded(
-                            child: multipleCheckbox(
-                              context,
-                              "Restring required",
-                              viewModel.selectedConductorStatus,
-                                  (bool? checked) {
-                                viewModel.setSelectedConductorStatus(
-                                    "Restring required");
-                              },
-                            ),
-                          ),
-                        ]
-                        ),
-
-                        ///Change function and selected values from here
-                        const SizedBox(height: doubleTen,),
-                        const Text("Middle Poles Required?"),
-                        Row(children: [
-                          Expanded(
-                            child: multipleCheckbox(
-                              context,
-                              "9.1 Mtr. Pole",
-                              viewModel.selectedMiddlePolesRequired,
-                                  (bool? checked) {
-                                viewModel.setSelectedMiddlePolesRequired(
-                                    "9.1 Mtr. Pole");
-                              },
-                            ),
-                          ),
-                          Expanded(
-                            child: multipleCheckbox(
-                              context,
-                              "8.0 Mtr. Pole",
-                              viewModel.selectedMiddlePolesRequired,
-                                  (bool? checked) {
-                                viewModel.setSelectedMiddlePolesRequired(
-                                    "8.0 Mtr. Pole");
-                              },
-                            ),
-                          ),
-                        ]
-                        ),
-                        SizedBox(height: doubleTen,),
-                        Text("Stud/Stay Required?"),
-                        Row(children: [
-
-                          Expanded(
-                            child: multipleCheckbox(
-                              context,
-                              "Stay Set",
-                              viewModel.selectedStudStayRequired,
-                                  (bool? checked) {
-                                viewModel.setSelectedStudStayRequired(
-                                    "Stay Set");
-                              },
-                            ),
-                          ),
-                          Expanded(
-                            child: multipleCheckbox(
-                              context,
-                              "Stud Pole",
-                              viewModel.selectedStudStayRequired,
-                                  (bool? checked) {
-                                viewModel.setSelectedStudStayRequired(
-                                    "Stud Pole");
-                              },
-                            ),
-                          ),
-                        ]
-                        ),
-                        ///Insulators/Discs Required? need to do {impletemented check}
-                        const SizedBox(
-                          height: doubleTen,
-                        ),
-                        const Divider(
-                          color: Colors.grey,
-                          thickness: 0.2,
-                        ),
-                        const Text("Insulators/Discs Required?"),
-                        Row(children: [
-                          Expanded(
-                            child: Column(
-                                crossAxisAlignment:
-                                CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Type",
-                                    style: TextStyle(color: Colors.grey),
-                                  ),
-                                  DropdownButtonFormField<String>(
-                                    value:
-                                    viewModel.selectedInsulatorDiscType,
-                                    hint: const Text("Select"),
-                                    isExpanded: true,
-                                    items: viewModel.insulatorDiscType
-                                        .map((String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value),
-                                      );
-                                    }).toList(),
-                                    onChanged: (newValue) => viewModel
-                                        .onListInsulatorDiscType(newValue),
-                                  ),
-                                ]),
-                          ),
-                          const SizedBox(width: doubleTen),
-                          const Divider(
-                            color: Colors.grey,
-                            thickness: 0.2,
-                          ),
-                          Expanded(
-                            child: Column(
-                                crossAxisAlignment:
-                                CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    "Qty",
-                                    style: TextStyle(color: Colors.grey),
-                                  ),
-                                  DropdownButtonFormField<String>(
-                                      value:
-                                      viewModel.selectedInsulatorDiscQty,
-                                      hint: const Text("Select"),
-                                      isExpanded: true,
-                                      items: viewModel.insulatorDiscQty
-                                          .map((String value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Text(value),
-                                        );
-                                      }).toList(),
-                                      onChanged: (newValue) {
-                                        viewModel
-                                            .onListInsulatorDiscType(
-                                            newValue);
-                                      }
-                                  ),
-                                ]),
-                          ),
-                        ]),
-
-                        SizedBox(height: doubleTen,),
-                        Text("Cross Arm Status?"),
-                        Row(children: [
-
-                          Expanded(
-                            child: multipleCheckbox(
-                              context,
-                              "Good",
-                              viewModel.selectedCrossArmStatus,
-                                  (bool? checked) {
-                                viewModel.setSelectedConductorStatus(
-                                    "Good");
-                              },
-                            ),
-                          ),
-                          Expanded(
-                            child: multipleCheckbox(
-                              context,
-                              "Bad",
-                              viewModel.selectedCrossArmStatus,
-                                  (bool? checked) {
-                                viewModel.setSelectedConductorStatus(
-                                    "Bad");
-                              },
-                            ),
-                          ),
-                        ]
-                        ),
-                        Container(color:Colors.brown[200], child:const Center(child: Text("DTR Details",style: TextStyle(fontSize: toolbarTitleSize),))),
-                        const SizedBox(height: doubleTen,),
-                        const  Text("AB Switch Exists?"),
-                        Row(children: [
-
-                          Expanded(
-                            child: Column(
-                              children: [
-
-                                multipleCheckbox(
-                                  context,
-                                  "NO",
-                                  viewModel.selectedABSwitch,
-                                      (bool? checked) {
-                                    viewModel.setSelectedABSwitch(
-                                        "NO");
-                                  },
-                                ),
-
-
-                                multipleCheckbox(
-                                  context,
-                                  "Yes, But bad condition",
-                                  viewModel.selectedABSwitch,
-                                      (bool? checked) {
-                                    viewModel.setSelectedABSwitch(
-                                        "Yes, But bad condition");
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            child: multipleCheckbox(
-                              context,
-                              "Yes(Good Condition)",
-                              viewModel.selectedABSwitch,
-                                  (bool? checked) {
-                                viewModel.setSelectedABSwitch(
-                                    "Yes(Good Condition)");
-                              },
-                            ),
-                          ),
-                        ]
-                        ),
-
-                        const SizedBox(height: doubleTen,),
-                        const  Text("LT Fuse Set Exists?"),
-                        Row(children: [
-
-                          Expanded(
-                            child: Column(
-                              children: [
-
-                                multipleCheckbox(
-                                  context,
-                                  "NO",
-                                  viewModel.selectedLTFuse,
-                                      (bool? checked) {
-                                    viewModel.setSelectedLTFuse(
-                                        "NO");
-                                  },
-                                ),
-
-
-                                multipleCheckbox(
-                                  context,
-                                  "Yes, But bad condition",
-                                  viewModel.selectedLTFuse,
-                                      (bool? checked) {
-                                    viewModel.setSelectedLTFuse(
-                                        "Yes, But bad condition");
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            child: multipleCheckbox(
-                              context,
-                              "Yes(Good Condition)",
-                              viewModel.selectedLTFuse,
-                                  (bool? checked) {
-                                viewModel.setSelectedLTFuse(
-                                    "Yes(Good Condition)");
-                              },
-                            ),
-                          ),
-                        ]
-                        ),
-
-                        const SizedBox(height: doubleTen,),
-                        const  Text("HT Fuse Set Exists?"),
-                        Row(children: [
-
-                          Expanded(
-                            child: Column(
-                              children: [
-
-                                multipleCheckbox(
-                                  context,
-                                  "NO",
-                                  viewModel.selectedHTFuse,
-                                      (bool? checked) {
-                                    viewModel.setSelectedHTFuse(
-                                        "NO");
-                                  },
-                                ),
-
-
-                                multipleCheckbox(
-                                  context,
-                                  "Yes, But bad condition",
-                                  viewModel.selectedHTFuse,
-                                      (bool? checked) {
-                                    viewModel.setSelectedHTFuse(
-                                        "Yes, But bad condition");
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            child: multipleCheckbox(
-                              context,
-                              "Yes(Good Condition)",
-                              viewModel.selectedHTFuse,
-                                  (bool? checked) {
-                                viewModel.setSelectedHTFuse(
-                                    "Yes(Good Condition)");
-                              },
-                            ),
-                          ),
-                        ]
-                        ),
-
-                        const SizedBox(height: doubleTen,),
-                        const  Text("DTR Plinth Exists?"),
-                        Row(children: [
-
-                          Expanded(
-                            child: Column(
-                              children: [
-
-                                multipleCheckbox(
-                                  context,
-                                  "NO",
-                                  viewModel.selectedDTRPlinth,
-                                      (bool? checked) {
-                                    viewModel.setSelectedDTRPlinth(
-                                        "NO");
-                                  },
-                                ),
-
-
-                                multipleCheckbox(
-                                  context,
-                                  "Yes, But bad condition",
-                                  viewModel.selectedDTRPlinth,
-                                      (bool? checked) {
-                                    viewModel.setSelectedDTRPlinth(
-                                        "Yes, But bad condition");
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            child: multipleCheckbox(
-                              context,
-                              "Yes(Good Condition)",
-                              viewModel.selectedDTRPlinth,
-                                  (bool? checked) {
-                                viewModel.setSelectedDTRPlinth(
-                                    "Yes(Good Condition)");
-                              },
-                            ),
-                          ),
-                        ]
-                        ),
-
-                        const SizedBox(height: doubleTen,),
-                        const  Text("DTR Earthing"),
-                        Row(children: [
-
-                          Expanded(
-                            child: multipleCheckbox(
-                              context,
-                              "G.I Earthing",
-                              viewModel.selectedDTREarth,
-                                  (bool? checked) {
-                                viewModel.setSelectedDTREarth(
-                                    "G.I Earthing");
-                              },
-                            ),
-                          ),
-                          Expanded(
-                            child: multipleCheckbox(
-                              context,
-                              "Flat",
-                              viewModel.selectedDTREarth,
-                                  (bool? checked) {
-                                viewModel.setSelectedDTREarth(
-                                    "Flat");
-                              },
-                            ),
-                          ),
-                        ]
-                        ),
-
-                        const SizedBox(height: doubleTen,),
-                        const  Text("Earth Pipe Status"),
-                        Row(children: [
-
-                          Expanded(
-                            child: multipleCheckbox(
-                              context,
-                              "Good",
-                              viewModel.selectedEarthPipe,
-                                  (bool? checked) {
-                                viewModel.setSelectedEarthPipe(
-                                    "Good");
-                              },
-                            ),
-                          ),
-                          Expanded(
-                            child: multipleCheckbox(
-                              context,
-                              "Bad",
-                              viewModel.selectedEarthPipe,
-                                  (bool? checked) {
-                                viewModel.setSelectedEarthPipe(
-                                    "Bad");
-                              },
-                            ),
-                          ),
-                        ]
-                        ),
-
-                        const SizedBox(height: doubleTen,),
-                        const  Text("Bi - Metalic Clamps Exists"),
-                        Row(children: [
-
-                          Expanded(
-                            child: multipleCheckbox(
-                              context,
-                              "Yes",
-                              viewModel.selectedBiMetalic,
-                                  (bool? checked) {
-                                viewModel.setSelectedBiMetalic(
-                                    "Yes");
-                              },
-                            ),
-                          ),
-                          Expanded(
-                            child: multipleCheckbox(
-                              context,
-                              "No",
-                              viewModel.selectedBiMetalic,
-                                  (bool? checked) {
-                                viewModel.setSelectedBiMetalic(
-                                    "No");
-                              },
-                            ),
-                          ),
-                        ]
-                        ),
-
-                        const SizedBox(height: doubleTen,),
-                        const  Text("Lightening Arrestors Exists?"),
-                        Row(children: [
-
-                          Expanded(
-                            child: multipleCheckbox(
-                              context,
-                              "Yes",
-                              viewModel.selectedLighteningArr,
-                                  (bool? checked) {
-                                viewModel.setSelectedLighteningArr(
-                                    "Yes");
-                              },
-                            ),
-                          ),
-                          Expanded(
-                            child: multipleCheckbox(
-                              context,
-                              "No",
-                              viewModel.selectedLighteningArr,
-                                  (bool? checked) {
-                                viewModel.setSelectedLighteningArr(
-                                    "No");
-                              },
-                            ),
-                          ),
-                        ]
-                        ),
                         const Text("You are at Location coordinates"),
                         const SizedBox(height: 10,),
                         SizedBox(width: double.infinity,
                           child:PrimaryButton(text: "Update Pole", onPressed: viewModel.submitCheck11KVForm),
                         ),
+                        const ViewDetailedLcHeadWidget(title: 'Network Survey Options'),
                       ]
                   ),
                 ),

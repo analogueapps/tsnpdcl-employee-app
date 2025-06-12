@@ -464,11 +464,11 @@ class Pole11kvFeeder extends StatelessWidget {
                                           ),
                                           multipleCheckbox(
                                             context,
-                                            "Other Common Lines",
+                                            "Other Commun. Lines",
                                             viewModel.selectedCrossings,
                                             (bool? checked) {
                                               viewModel.setSelectedCrossings(
-                                                  "Other Common Lines");
+                                                  "Other Commun. Lines");
                                             },
                                             true,
                                           ),

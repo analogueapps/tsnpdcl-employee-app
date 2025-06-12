@@ -959,8 +959,195 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
   void setSelectedConnected(String title) {
     _selectedConnected = title;
     print("$_selectedConnected: Connected  selected");
+    if(_selectedConnected=="Sub Station"){
+      load33KvssList();
+    }
+    else if (_selectedConnected == "HT Service") {
+      showCircleDialog();
+    }
+    print("$_selectedConnected: Connected  selected");
+    notifyListeners();
     notifyListeners();
   }
+
+  //Sub Station
+  List<SpinnerList> listSubStationItem = [];
+  String? listSubStationSelect;
+
+  void onListSubStationItemSelect(String? selected) {
+    listSubStationSelect = selected;
+    notifyListeners();
+  }
+
+  Future<void> load33KvssList() async {
+    ProcessDialogHelper.showProcessDialog(
+      context,
+      message: "Loading...",
+    );
+
+    final requestData = {
+      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "api": Apis.API_KEY,
+    };
+
+    final payload = {
+      "path": "/load/ss",
+      "apiVersion": "1.0",
+      "method": "POST",
+      "data": jsonEncode(requestData),
+    };
+
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    if (context.mounted) {
+      ProcessDialogHelper.closeDialog(context);
+    }
+
+    try {
+      if (response != null) {
+        if (response.data is String) {
+          response.data = jsonDecode(response.data); // Parse string to JSON
+        }
+        if (response.statusCode == successResponseCode) {
+          if(response.data['tokenValid'] == isTrue) {
+            if (response.data['success'] == isTrue) {
+              if(response.data['objectJson'] != null) {
+                final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
+                final List<SpinnerList> listData = jsonList.map((json) => SpinnerList.fromJson(json)).toList();
+                listSubStationItem.addAll(listData);
+              }
+            } else {
+              showAlertDialog(context,response.data['message']);
+            }
+          } else {
+            showSessionExpiredDialog(context);
+          }
+        } else {
+          showAlertDialog(context,response.data['message']);
+        }
+      }
+    } catch (e) {
+      showErrorDialog(context,  "An error occurred. Please try again.");
+      rethrow;
+    }
+
+    notifyListeners();
+  }
+
+  List<String> circles = [
+    "KHAMMAM",
+    "HANAMKONDA",
+    "KARIMNAGAR",
+    "NIZAMABAD",
+    "ADILABAD",
+    "KOTHAGUDEM",
+    "WARANGAL",
+    "JANGAON",
+    "BHUPALPALLY",
+    "MAHABUBABAD",
+    "JAGITYAL",
+    "PEDDAPALLY",
+    "KAMAREDDY",
+    "NIRMAL",
+    "ASIFABAD",
+    "MANCHERIAL"
+  ];
+
+  void showCircleDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Choose Circle'),
+          content: Container(
+            width: double.maxFinite,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: circles.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(circles[index]),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    loadHTServices((index + 1).toString());
+                  },
+                );
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+
+  //HT Serivce
+  List<EroModel> htServiceList = [];
+  String? selectedHtServiceName;
+  void onHtServiceChange(String? htServiceName) {
+    print('get the area name : $htServiceName');
+    selectedHtServiceName = htServiceName;
+    notifyListeners();
+  }
+
+  Future<void> loadHTServices(String circleCode) async {
+    _isLoading = isTrue;
+    notifyListeners();
+
+    final requestData = {
+      "authToken":
+      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "api": Apis.API_KEY,
+      "cc": circleCode,
+    };
+
+    final payload = {
+      "path": "/getHTServicesOfCircle",
+      "apiVersion": "1.0.1",
+      "method": "POST",
+      "data": jsonEncode(requestData),
+    };
+
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    _isLoading = isFalse;
+
+    try {
+      if (response != null) {
+        if (response.data is String) {
+          response.data = jsonDecode(response.data); // Parse string to JSON
+        }
+        if (response.statusCode == successResponseCode) {
+          if (response.data['tokenValid'] == isTrue) {
+            if (response.data['success'] == isTrue) {
+              if (response.data['objectJson'] != null) {
+                final  List<dynamic> objectJson = jsonDecode(response.data['objectJson']);
+                final List<EroModel> listData = objectJson
+                    .map((json) => EroModel.fromJson(json))
+                    .toList();
+                htServiceList.addAll(listData);
+                notifyListeners();
+              } else {
+                showAlertDialog(context, "No  HT Services found!");
+              }
+            } else {
+              showAlertDialog(context,
+                  response.data['objectJson']);
+            }
+          } else {
+            showSessionExpiredDialog(context);
+          }
+        } else {
+          showAlertDialog(context, response.data['message']);
+        }
+      }
+    } catch (e) {
+      showErrorDialog(context, "An error occurred. Please try again.");
+      rethrow;
+    }
+
+    notifyListeners();
+  }
+
 
   //Any Crossings:
   List<String> selectedCrossings = [];
@@ -1041,12 +1228,6 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-  String? abCableSelected;
-  void setSelectedabCable(String title) {
-    abCableSelected = title;
-    print("$abCableSelected : abCableSelected   selected");
-    notifyListeners();
-  }
 
   //Conductor Status
   List<String> selectedConductorStatus = [];
@@ -1062,199 +1243,6 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-  //Stud/Stay Required
-  List<String> selectedStudStayRequired = [];
-
-  void setSelectedStudStayRequired(String title) {
-
-    if (selectedStudStayRequired.contains(title)) {
-      selectedStudStayRequired.remove(title);
-    } else {
-      selectedStudStayRequired.add(title);
-    }
-    print("selectedStudStayRequired: $selectedStudStayRequired");
-    notifyListeners();
-  }
-
-  //Middle Poles Required
-  List<String> selectedMiddlePolesRequired = [];
-
-  void setSelectedMiddlePolesRequired(String title) {
-
-    if (selectedMiddlePolesRequired.contains(title)) {
-      selectedMiddlePolesRequired.remove(title);
-    } else {
-      selectedMiddlePolesRequired.add(title);
-    }
-    print("selectedMiddlePolesRequired: $selectedMiddlePolesRequired");
-    notifyListeners();
-  }
-
-  //Cross Arm Status
-  List<String> selectedCrossArmStatus = [];
-
-  void setSelectedCrossArmStatus(String title) {
-
-    if (selectedCrossArmStatus.contains(title)) {
-      selectedCrossArmStatus.remove(title);
-    } else {
-      selectedCrossArmStatus.add(title);
-    }
-    print("selectedConductorStatus: $selectedCrossArmStatus");
-    notifyListeners();
-  }
-
-  //Insulators/Discs
-  List<String> insulatorDiscType = ["Select","Discs","Insulators"];
-  String? selectedInsulatorDiscType;
-
-  void onListInsulatorDiscType(String? value) {
-    if (insulatorDiscType.contains(value)) {
-      selectedInsulatorDiscType = value;
-      notifyListeners();
-      print("selectedInsulatorDiscType: $selectedInsulatorDiscQty");
-    } else {
-      print("Invalid value: $value");
-    }
-  }
-
-
-  List<String> insulatorDiscQty = ["Select",
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9",];
-  String? selectedInsulatorDiscQty;
-
-  void onListInsulatorDiscQty(String? value) {
-    if (insulatorDiscQty.contains(value)) {
-      selectedInsulatorDiscQty = value;
-      notifyListeners();
-      print("selectedInsulatorDiscQty: $selectedInsulatorDiscQty");
-    } else {
-      print("Invalid value: $value");
-    }
-  }
-
-
-  //DTR Details
-  //AB
-  List<String> selectedABSwitch = [];
-
-  void setSelectedABSwitch(String title) {
-
-    if (selectedABSwitch.contains(title)) {
-      selectedABSwitch.remove(title);
-    } else {
-      selectedABSwitch.add(title);
-    }
-    print("selectedABSwitch: $selectedABSwitch");
-    notifyListeners();
-  }
-
-  //LT
-  List<String> selectedLTFuse = [];
-
-  void setSelectedLTFuse(String title) {
-
-    if (selectedLTFuse.contains(title)) {
-      selectedLTFuse.remove(title);
-    } else {
-      selectedLTFuse.add(title);
-    }
-    print("selectedLTFuse: $selectedLTFuse");
-    notifyListeners();
-  }
-
-  //HT
-  List<String> selectedHTFuse = [];
-
-  void setSelectedHTFuse(String title) {
-
-    if (selectedHTFuse.contains(title)) {
-      selectedHTFuse.remove(title);
-    } else {
-      selectedHTFuse.add(title);
-    }
-    print("selectedHTFuse: $selectedHTFuse");
-    notifyListeners();
-  }
-
-  //DTR Plinth
-  List<String> selectedDTRPlinth = [];
-
-  void setSelectedDTRPlinth(String title) {
-
-    if (selectedDTRPlinth.contains(title)) {
-      selectedDTRPlinth.remove(title);
-    } else {
-      selectedDTRPlinth.add(title);
-    }
-    print("selectedDTRPlinth: $selectedDTRPlinth");
-    notifyListeners();
-  }
-
-  //DTR Earthing
-  List<String> selectedDTREarth = [];
-
-  void setSelectedDTREarth(String title) {
-
-    if (selectedDTREarth.contains(title)) {
-      selectedDTREarth.remove(title);
-    } else {
-      selectedDTREarth.add(title);
-    }
-    print("selectedDTREarth: $selectedDTREarth");
-    notifyListeners();
-  }
-
-  //Earth Pipe Status
-  List<String> selectedEarthPipe = [];
-
-  void setSelectedEarthPipe(String title) {
-
-    if (selectedEarthPipe.contains(title)) {
-      selectedEarthPipe.remove(title);
-    } else {
-      selectedEarthPipe.add(title);
-    }
-    print("selectedEarthPipe: $selectedEarthPipe");
-    notifyListeners();
-  }
-
-  //Bi-metailc
-  List<String> selectedBiMetalic = [];
-
-  void setSelectedBiMetalic(String title) {
-
-    if (selectedBiMetalic.contains(title)) {
-      selectedBiMetalic.remove(title);
-    } else {
-      selectedBiMetalic.add(title);
-    }
-    print("selectedBiMetalic: $selectedBiMetalic");
-    notifyListeners();
-  }
-
-
-  //Lightening Arrestors
-  List<String> selectedLighteningArr = [];
-
-  void setSelectedLighteningArr(String title) {
-
-    if (selectedLighteningArr.contains(title)) {
-      selectedLighteningArr.remove(title);
-    } else {
-      selectedLighteningArr.add(title);
-    }
-    print("selectedLighteningArr: $selectedLighteningArr");
-    notifyListeners();
-  }
 
 
   Future<void> submitCheck11KVForm() async {
@@ -1268,7 +1256,7 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
         showAlertDialog(context,
             "Please wait until we reach minimum GPS accuracy i.e 15.0 mts");
       } else {
-        saveCheck11KVPole();
+        // saveCheck11KVPole();
         print("in else block");
       }
     }
@@ -1277,18 +1265,17 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
   Future<void> saveCheck11KVPole() async {
     _isLoading = isTrue;
     notifyListeners();
-    // PoleFeederEntity d= selectedDigitalPole;
 
     final requestData = {
       "loadLatestDataOnly": true,
-      "maxId": "",//from map
+      "maxId": maxId,//from map
       "authToken":
       SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "fc": args["fc"],
       "ssc": args["ssc"],
       "fv": "11KV",
-      "ssv": "33\\/11KV",
+      "ssv": "220\\/132KV\\/33KV",
       "not": false,
       "origin": selectedPole == "Origin Pole" ? true : false,
       "tap": selectedTappingPole == "Straight Tapping"
@@ -1312,12 +1299,14 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
         "slon": poleLon,
       },
       "cross": buildCrossingString(),
-      "connLoad": selectedConnected == "No Load" ? "N" : "DTR",
-      if (selectedConnected == "DTR") ...{
-        "structCode": selectedCode?.code,
-        "cap": selectedCode?.capacity,
+      "connLoad": selectedConnected == "No Load" ? "N" : selectedConnected=="HT Service"?"HT":"SS",
+      "cs": selectedConductor,
+      if(selectedConnected=="Sub Station")...{
+        "ss": listSubStationSelect ?? ""
+      }
+      else if(selectedConnected=="HT Service")...{
+        "ht": selectedHtServiceName ?? ""
       },
-      "cs": abCableSelected==""?selectedConductor:abCableSelected, //check this(bhav)
       "lat": poleLat,//d.getLat()
       "lon": poleLon,
       "digitalID":"", //d.getId()
@@ -1325,7 +1314,7 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
 
     print("requestData: $requestData");
     final payload = {
-      "path": "/save11KvDigitalFeederPoleForExistingFeeder",
+      "path": "/saveDigitalFeederPoleForExistingFeeder",
       "apiVersion": "1.0.1",
       "method": "POST",
       "data": jsonEncode(requestData),
@@ -1380,8 +1369,11 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
   }
 
   bool validateForm() {
-    if (poleFeederSelected==null||poleFeederSelected=="") {
-      AlertUtils.showSnackBar(context, "Please select previous pole number", isTrue);
+    if ((selectedPole == "" || selectedPole == null) &&(poleFeederSelected==null||poleFeederSelected=="")) {
+      AlertUtils.showSnackBar(context, "Please select the source pole to the current pole", isTrue);
+      return false;
+    } else if (poleNumber.text == "" ) {
+      AlertUtils.showSnackBar(context, "Please enter Pole Number", isTrue);
       return false;
     } else if (selectedTappingPole == "" || selectedTappingPole == null) {
       AlertUtils.showSnackBar(
@@ -1389,7 +1381,7 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
           "Please select tapping type from previous pole to current pole",
           isTrue);
       return false;
-    } else if (selectedFirstGroup.isEmpty && selectedSecondGroup.isEmpty) {
+    } else if (selectedFirstGroup.isEmpty) {
       AlertUtils.showSnackBar(context, "Please select the  Pole Type", isTrue);
       return false;
     } else if (_selectedPoleHeight == "" || _selectedPoleHeight == null) {
@@ -1412,13 +1404,15 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
     }else if (selectedCrossings.isEmpty || selectedCrossings == null) {
       AlertUtils.showSnackBar(context, "Please select any crossing", isTrue);
       return false;
-    } else if (selectedConnected == "" || selectedConnected == null) {
-      AlertUtils.showSnackBar(context,
-          "Please select the any load connected on the current pole", isTrue);
+    } else if (selectedConnected == "Sub Station" &&
+        (listSubStationSelect == "" || listSubStationSelect == null)) {
+      AlertUtils.showSnackBar(
+          context, "Please choose the SubStation ", isTrue);
       return false;
-    }else if (selectedConnected == "DTR" &&( selectedCode == null||selectedCode=="")) {
-      AlertUtils.showSnackBar(context,
-          "Please select structure code", isTrue);
+    } else if (selectedConnected == "HT Service" &&
+        (selectedHtServiceName == "" || selectedHtServiceName == null)) {
+      AlertUtils.showSnackBar(
+          context, "Please choose the Service ", isTrue);
       return false;
     } else if (_selectedConductor == "" || _selectedConductor == null) {
       AlertUtils.showSnackBar(

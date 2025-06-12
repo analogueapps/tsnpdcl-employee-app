@@ -154,10 +154,10 @@ class Apis{
   static const GET_CAT_CONFIRM="getCatConfirmEntities";
 
 
-  ///PTR & FEEDER LOADERS
+  ///PTR & FEEDER LOADERS * BHAVANA
   static const GET_PTR_FEEDERS_SS="getPtrAndFeedersOfSs";
   static const SAVE_PTR_FEEDERS="savePtrAndFeederLoads";
 
-  ///POLE TRACKER
+  ///POLE TRACKER * BHAVANA
  static const CREATE_NEW_PROPOSAL="createNewProposal";
 }

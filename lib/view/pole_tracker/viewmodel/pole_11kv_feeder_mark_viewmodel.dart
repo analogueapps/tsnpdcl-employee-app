@@ -1325,7 +1325,7 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
         "slon": poleLon,
       },
       "cross": buildCrossingString(),
-      "connLoad": selectedConnected == "No Load" ? "N" : selectedConnected=="HT Service"?"HT":"SS",
+      // "connLoad": selectedConnected == "No Load" ? "N" : selectedConnected=="HT Service"?"HT":"SS",
       "cs": selectedConductor,
       "ss": listSubStationSelect ?? "",
       "ht":selectedHtServiceName??"",

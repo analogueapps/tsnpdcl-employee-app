@@ -1391,11 +1391,7 @@ class Pole33kvFeederMarkViewmodel extends ChangeNotifier {
     } else if (selectedCrossings.isEmpty || selectedCrossings == null) {
       AlertUtils.showSnackBar(context, "Please select any crossing", isTrue);
       return false;
-    } else if (selectedConnected == "" || selectedConnected == null) {
-      AlertUtils.showSnackBar(context,
-          "Please select the any load connected on the current pole", isTrue);
-      return false;
-    } //DTR
+    }
     else if (selectedConnected == "Sub Station" &&
         (listSubStationSelect == "" || listSubStationSelect == null)) {
       AlertUtils.showSnackBar(
