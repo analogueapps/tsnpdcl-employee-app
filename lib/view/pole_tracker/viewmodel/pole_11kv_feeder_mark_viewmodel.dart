@@ -21,8 +21,10 @@ import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/view/check_measurement_lines/model/docket_model.dart';
 import 'package:tsnpdcl_employee/view/check_measurement_lines/model/polefeeder_model.dart';
+import 'package:tsnpdcl_employee/view/check_measurement_lines/model/structure_capacity_model.dart';
 import 'package:tsnpdcl_employee/view/check_readings/model/ero_model.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/model/spinner_list.dart';
+import 'package:tsnpdcl_employee/view/rfss/database/mapping_agl_db/agl_databases/structure_code_db.dart';
 
 class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
   Pole11kvFeederMarkViewmodel(
@@ -857,6 +859,15 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
     }
   }
 
+  String? isExtensionSelected;
+
+  void setSelectedExtension(String value) {
+    isExtensionSelected = value;
+    notifyListeners();
+    print("$isExtensionSelected:  tap selected");
+    //Is Extension Pole?:  tap selected
+  }
+
   //Any Crossings:
   List<String> selectedCrossings = [];
 
@@ -970,6 +981,32 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
+  //select structure code
+  List<Option> structureCodes = [];
+  Option? selectedCode;
+  String? selectedCapacity;
+
+
+
+  Future<void> loadStructureCodes() async {
+    final structures = await StructureDatabaseHelper.instance.getAllStructures();
+    structureCodes = structures
+        .where((e) => e.structureCode != null && e.capacity != null)
+        .map((e) => Option(
+      code: e.structureCode!,
+      capacity: e.capacity!,
+    ))
+        .toList();
+    print("Done loading data from DB Structure");
+
+  }
+
+  void setSelectedDtr(Option title) {
+    selectedCode = title;
+    print("${selectedCode?.code}: selectedCode");
+    print("${selectedCode?.capacity}: selectedCode capacity");
+    notifyListeners();
+  }
 //Conductor Size
   String? _selectedConductor;
   String? get selectedConductor => _selectedConductor;
@@ -990,6 +1027,13 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
       selectedPoleStatus.add(title);
     }
     print("setSelectedPoleStatus: $selectedPoleStatus");
+    notifyListeners();
+  }
+
+  String? abCableSelected;
+  void setSelectedabCable(String title) {
+    abCableSelected = title;
+    print("$abCableSelected : abCableSelected   selected");
     notifyListeners();
   }
 
@@ -1149,12 +1193,117 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-  //HT Serivce
-  List<EroModel> htServiceList = [];
-  String? selectedHtServiceName;
-  void onHtServiceChange(String? htServiceName) {
-    print('get the area name : $htServiceName');
-    selectedHtServiceName = htServiceName;
+  //DTR Details
+  //AB
+  List<String> selectedABSwitch = [];
+
+  void setSelectedABSwitch(String title) {
+
+    if (selectedABSwitch.contains(title)) {
+      selectedABSwitch.remove(title);
+    } else {
+      selectedABSwitch.add(title);
+    }
+    print("selectedABSwitch: $selectedABSwitch");
+    notifyListeners();
+  }
+
+  //LT
+  List<String> selectedLTFuse = [];
+
+  void setSelectedLTFuse(String title) {
+
+    if (selectedLTFuse.contains(title)) {
+      selectedLTFuse.remove(title);
+    } else {
+      selectedLTFuse.add(title);
+    }
+    print("selectedLTFuse: $selectedLTFuse");
+    notifyListeners();
+  }
+
+  //HT
+  List<String> selectedHTFuse = [];
+
+  void setSelectedHTFuse(String title) {
+
+    if (selectedHTFuse.contains(title)) {
+      selectedHTFuse.remove(title);
+    } else {
+      selectedHTFuse.add(title);
+    }
+    print("selectedHTFuse: $selectedHTFuse");
+    notifyListeners();
+  }
+
+  //DTR Plinth
+  List<String> selectedDTRPlinth = [];
+
+  void setSelectedDTRPlinth(String title) {
+
+    if (selectedDTRPlinth.contains(title)) {
+      selectedDTRPlinth.remove(title);
+    } else {
+      selectedDTRPlinth.add(title);
+    }
+    print("selectedDTRPlinth: $selectedDTRPlinth");
+    notifyListeners();
+  }
+
+  //DTR Earthing
+  List<String> selectedDTREarth = [];
+
+  void setSelectedDTREarth(String title) {
+
+    if (selectedDTREarth.contains(title)) {
+      selectedDTREarth.remove(title);
+    } else {
+      selectedDTREarth.add(title);
+    }
+    print("selectedDTREarth: $selectedDTREarth");
+    notifyListeners();
+  }
+
+  //Earth Pipe Status
+  List<String> selectedEarthPipe = [];
+
+  void setSelectedEarthPipe(String title) {
+
+    if (selectedEarthPipe.contains(title)) {
+      selectedEarthPipe.remove(title);
+    } else {
+      selectedEarthPipe.add(title);
+    }
+    print("selectedEarthPipe: $selectedEarthPipe");
+    notifyListeners();
+  }
+
+  //Bi-metailc
+  List<String> selectedBiMetalic = [];
+
+  void setSelectedBiMetalic(String title) {
+
+    if (selectedBiMetalic.contains(title)) {
+      selectedBiMetalic.remove(title);
+    } else {
+      selectedBiMetalic.add(title);
+    }
+    print("selectedBiMetalic: $selectedBiMetalic");
+    notifyListeners();
+  }
+
+
+  //Lightening Arrestors
+  List<String> selectedLighteningArr = [];
+
+  void setSelectedLighteningArr(String title) {
+
+    if (selectedLighteningArr.contains(title)) {
+      selectedLighteningArr.remove(title);
+    } else {
+      selectedLighteningArr.add(title);
+    }
+    print("selectedLighteningArr: $selectedLighteningArr");
     notifyListeners();
   }
 
@@ -1350,10 +1499,10 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
       if (!validateForm()) {
         return;
       }
-      // else if (totalAccuracy! > 15.0) {
-      //   showAlertDialog(context,
-      //       "Please wait until we reach minimum GPS accuracy i.e 15.0 mts");
-      // }
+      else if (totalAccuracy! > 15.0) {
+        showAlertDialog(context,
+            "Please wait until we reach minimum GPS accuracy i.e 15.0 mts");
+      }
       else {
         save33KVPole();
         print("in else block");
@@ -1373,8 +1522,8 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
       "api": Apis.API_KEY,
       "fc": args["fc"],
       "ssc": args["ssc"],
-      "fv": "33KV",
-      "ssv": "220\\/132KV\\/33KV",
+      "fv": "11KV",
+      "ssv": "33\\/11KV",
       "not": false,
       "origin": selectedPole == "Origin Pole" ? true : false,
       "tap": selectedTappingPole == "Straight Tapping"
@@ -1396,10 +1545,38 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
         "slon": poleLon,
       },
       "cross": buildCrossingString(),
-      // "connLoad": selectedConnected == "No Load" ? "N" : selectedConnected=="HT Service"?"HT":"SS",
+      "connLoad": selectedConnected == "No Load" ? "N" : "DTR",
+      if (selectedConnected == "DTR") ...{
+        "structCode": selectedCode?.code,
+        "cap": selectedCode?.capacity,
+      },
+      if(abCableSelected=="AB Cable")...{
+        "cs":"AB",
+        "ab_cable":"Y",
+      },
       "cs": selectedConductor,
-      "ss": listSubStationSelect ?? "",
-      "ht":selectedHtServiceName??"",
+      "pole_broken":"",
+      "pole_rusted":"",
+      "pole_leaned":"",
+      "pole_replacement_with_t":"",
+      "conductor_status":"",
+      "middle_pole_required":"",
+      "stay_set_required":"",
+      "insulators_type":"",
+      "insulators_type_qty":"",
+      "cross_arms":"",
+      if(selectedConnected!="No Load")...{
+        "ab_switch":selectedABSwitch=="NO"?"NO":selectedABSwitch=="Yes, But bad condition"?"BAD":selectedABSwitch=="Yes(Good Condition)"?"GOOD":null,
+        "lt_fuse_set":"",
+        "ht_fuse_set":"",
+        "dtr_plinth":"",
+        "earthing_type":"",
+        "earthing_pipe_status":"",
+        "bimetalic_exists":"",
+        "lightening_arrrestors":"",
+      },
+      "extension":"",
+      "remarks":remarksController.text.trim(),
       "lat": "$latitude",
       "lon": "$longitude",
     };
@@ -1544,17 +1721,7 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
           "Please select the any load connected on the current pole", isTrue);
       return false;
     } //DTR
-    else if (selectedConnected == "Sub Station" &&
-        (listSubStationSelect == "" || listSubStationSelect == null)) {
-      AlertUtils.showSnackBar(
-          context, "Please choose the SubStation ", isTrue);
-      return false;
-    } else if (selectedConnected == "HT Service" &&
-        (selectedHtServiceName == "" || selectedHtServiceName == null)) {
-      AlertUtils.showSnackBar(
-          context, "Please choose the Service ", isTrue);
-      return false;
-    } else if (_selectedConductor == "" || _selectedConductor == null) {
+     else if (_selectedConductor == "" || _selectedConductor == null) {
       AlertUtils.showSnackBar(
           context,
           "Please select the conductor size from previous pole to this pole",

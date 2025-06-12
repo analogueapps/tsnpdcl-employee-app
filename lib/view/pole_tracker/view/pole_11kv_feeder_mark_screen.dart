@@ -6,6 +6,7 @@ import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
+import 'package:tsnpdcl_employee/view/check_measurement_lines/model/structure_capacity_model.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/viewmodel/pole_11kv_feeder_mark_viewmodel.dart';
 import 'package:tsnpdcl_employee/widget/primary_button.dart';
 import 'package:tsnpdcl_employee/widget/view_detailed_lc_tile_widget.dart';
@@ -176,6 +177,13 @@ class Pole11kvFeederMarkScreen extends StatelessWidget {
                               "Right Tapping",
                               viewModel.selectedTappingPole,
                               viewModel.setSelectedTappingPole,
+                              viewModel.selectedPole != "Origin Pole",
+                            ),
+                            checkbox(
+                              context,
+                              "Is Extension Pole?",
+                              viewModel.isExtensionSelected,
+                              viewModel.setSelectedExtension,
                               viewModel.selectedPole != "Origin Pole",
                             ),
                             const Divider(
@@ -627,11 +635,51 @@ class Pole11kvFeederMarkScreen extends StatelessWidget {
                                 ),
                               ],
                             ),
+
+                            const SizedBox(height: doubleTen,),
+                            Visibility(
+                              visible:viewModel.selectedConnected=="DTR" ,
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("Select structure code".toUpperCase()),
+                                    DropdownButton<Option>(
+                                      value: viewModel.selectedCode,
+                                      hint: Text('Select Structure Code'),
+                                      isExpanded: true,
+                                      items: viewModel.structureCodes.map((option) {
+                                        return DropdownMenuItem<Option>(
+                                          value: option,
+                                          child: Text(option.code),
+                                        );
+                                      }).toList(),
+                                      onChanged: (value) {
+                                        viewModel.setSelectedDtr (value!);
+                                      },
+                                    ),
+                                    const Text("Didn't find the Structure code?", style: TextStyle(color:Colors.red, fontWeight: FontWeight.bold),),
+                                    const SizedBox(height: doubleTen,),
+                                    Align(alignment: Alignment.bottomRight,child:SizedBox(width: 150,child: PrimaryButton(onPressed: (){Navigation.instance.navigateTo(
+                                      Routes.createOnlineDTR,
+                                    );
+                                    }, text: 'ADD DTR',),),
+                                    ),
+                                  ]
+                              ),
+                            ),
+
                             const Divider(
                               color: Colors.grey,
                               thickness: 0.2,
                             ),
                             const Text("Conductor Size"),
+                            checkbox(
+                              context,
+                              "AB Cable",
+                              viewModel.abCableSelected ,
+                              viewModel.setSelectedabCable ,
+                              isTrue
+                            ),
                             Row(
                               children: [
                                 checkbox(
@@ -899,6 +947,322 @@ class Pole11kvFeederMarkScreen extends StatelessWidget {
                             ),
                             const SizedBox(
                               height: doubleTen,
+                            ),
+                            Container(color:Colors.brown[200], child:const Center(child: Text("DTR Details",style: TextStyle(fontSize: toolbarTitleSize),))),
+                            const SizedBox(height: doubleTen,),
+                            const  Text("AB Switch Exists?"),
+                            Row(children: [
+
+                              Expanded(
+                                child: Column(
+                                  children: [
+
+                                    multipleCheckbox(
+                                      context,
+                                      "NO",
+                                      viewModel.selectedABSwitch,
+                                          (bool? checked) {
+                                        viewModel.setSelectedABSwitch(
+                                            "NO");
+                                      },
+                                      isTrue,
+                                    ),
+
+
+                                    multipleCheckbox(
+                                      context,
+                                      "Yes, But bad condition",
+                                      viewModel.selectedABSwitch,
+                                          (bool? checked) {
+                                        viewModel.setSelectedABSwitch(
+                                            "Yes, But bad condition");
+                                      },
+                                      isTrue,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                child: multipleCheckbox(
+                                  context,
+                                  "Yes(Good Condition)",
+                                  viewModel.selectedABSwitch,
+                                      (bool? checked) {
+                                    viewModel.setSelectedABSwitch(
+                                        "Yes(Good Condition)");
+                                  },
+                                  isTrue,
+                                ),
+                              ),
+                            ]
+                            ),
+
+                            const SizedBox(height: doubleTen,),
+                            const  Text("LT Fuse Set Exists?"),
+                            Row(children: [
+
+                              Expanded(
+                                child: Column(
+                                  children: [
+
+                                    multipleCheckbox(
+                                      context,
+                                      "NO",
+                                      viewModel.selectedLTFuse,
+                                          (bool? checked) {
+                                        viewModel.setSelectedLTFuse(
+                                            "NO");
+                                      },
+                                      isTrue,
+                                    ),
+
+
+                                    multipleCheckbox(
+                                      context,
+                                      "Yes, But bad condition",
+                                      viewModel.selectedLTFuse,
+                                          (bool? checked) {
+                                        viewModel.setSelectedLTFuse(
+                                            "Yes, But bad condition");
+                                      },
+                                      isTrue,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                child: multipleCheckbox(
+                                  context,
+                                  "Yes(Good Condition)",
+                                  viewModel.selectedLTFuse,
+                                      (bool? checked) {
+                                    viewModel.setSelectedLTFuse(
+                                        "Yes(Good Condition)");
+                                  },
+                                  isTrue,
+                                ),
+                              ),
+                            ]
+                            ),
+
+                            const SizedBox(height: doubleTen,),
+                            const  Text("HT Fuse Set Exists?"),
+                            Row(children: [
+
+                              Expanded(
+                                child: Column(
+                                  children: [
+
+                                    multipleCheckbox(
+                                      context,
+                                      "NO",
+                                      viewModel.selectedHTFuse,
+                                          (bool? checked) {
+                                        viewModel.setSelectedHTFuse(
+                                            "NO");
+                                      },
+                                      isTrue,
+                                    ),
+
+
+                                    multipleCheckbox(
+                                      context,
+                                      "Yes, But bad condition",
+                                      viewModel.selectedHTFuse,
+                                          (bool? checked) {
+                                        viewModel.setSelectedHTFuse(
+                                            "Yes, But bad condition");
+                                      },
+                                      isTrue,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                child: multipleCheckbox(
+                                  context,
+                                  "Yes(Good Condition)",
+                                  viewModel.selectedHTFuse,
+                                      (bool? checked) {
+                                    viewModel.setSelectedHTFuse(
+                                        "Yes(Good Condition)");
+                                  },
+                                  isTrue,
+                                ),
+                              ),
+                            ]
+                            ),
+
+                            const SizedBox(height: doubleTen,),
+                            const  Text("DTR Plinth Exists?"),
+                            Row(children: [
+
+                              Expanded(
+                                child: Column(
+                                  children: [
+
+                                    multipleCheckbox(
+                                      context,
+                                      "NO",
+                                      viewModel.selectedDTRPlinth,
+                                          (bool? checked) {
+                                        viewModel.setSelectedDTRPlinth(
+                                            "NO");
+                                      },
+                                      isTrue,
+                                    ),
+
+
+                                    multipleCheckbox(
+                                      context,
+                                      "Yes, But bad condition",
+                                      viewModel.selectedDTRPlinth,
+                                          (bool? checked) {
+                                        viewModel.setSelectedDTRPlinth(
+                                            "Yes, But bad condition");
+                                      },
+                                      isTrue,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                child: multipleCheckbox(
+                                  context,
+                                  "Yes(Good Condition)",
+                                  viewModel.selectedDTRPlinth,
+                                      (bool? checked) {
+                                    viewModel.setSelectedDTRPlinth(
+                                        "Yes(Good Condition)");
+                                  },
+                                  isTrue,
+                                ),
+                              ),
+                            ]
+                            ),
+
+                            const SizedBox(height: doubleTen,),
+                            const  Text("DTR Earthing"),
+                            Row(children: [
+
+                              Expanded(
+                                child: multipleCheckbox(
+                                  context,
+                                  "G.I Earthing",
+                                  viewModel.selectedDTREarth,
+                                      (bool? checked) {
+                                    viewModel.setSelectedDTREarth(
+                                        "G.I Earthing");
+                                  },
+                                  isTrue,
+                                ),
+                              ),
+                              Expanded(
+                                child: multipleCheckbox(
+                                  context,
+                                  "Flat",
+                                  viewModel.selectedDTREarth,
+                                      (bool? checked) {
+                                    viewModel.setSelectedDTREarth(
+                                        "Flat");
+                                  },
+                                  isTrue,
+                                ),
+                              ),
+                            ]
+                            ),
+
+                            const SizedBox(height: doubleTen,),
+                            const  Text("Earth Pipe Status"),
+                            Row(children: [
+
+                              Expanded(
+                                child: multipleCheckbox(
+                                  context,
+                                  "Good",
+                                  viewModel.selectedEarthPipe,
+                                      (bool? checked) {
+                                    viewModel.setSelectedEarthPipe(
+                                        "Good");
+                                  },
+                                  isTrue,
+                                ),
+                              ),
+                              Expanded(
+                                child: multipleCheckbox(
+                                  context,
+                                  "Bad",
+                                  viewModel.selectedEarthPipe,
+                                      (bool? checked) {
+                                    viewModel.setSelectedEarthPipe(
+                                        "Bad");
+                                  },
+                                  isTrue,
+                                ),
+                              ),
+                            ]
+                            ),
+
+                            const SizedBox(height: doubleTen,),
+                            const  Text("Bi - Metalic Clamps Exists"),
+                            Row(children: [
+
+                              Expanded(
+                                child: multipleCheckbox(
+                                  context,
+                                  "Yes",
+                                  viewModel.selectedBiMetalic,
+                                      (bool? checked) {
+                                    viewModel.setSelectedBiMetalic(
+                                        "Yes");
+                                  },
+                                  isTrue,
+                                ),
+                              ),
+                              Expanded(
+                                child: multipleCheckbox(
+                                  context,
+                                  "No",
+                                  viewModel.selectedBiMetalic,
+                                      (bool? checked) {
+                                    viewModel.setSelectedBiMetalic(
+                                        "No");
+                                  },
+                                  isTrue,
+                                ),
+                              ),
+                            ]
+                            ),
+
+                            const SizedBox(height: doubleTen,),
+                            const  Text("Lightening Arrestors Exists?"),
+                            Row(children: [
+
+                              Expanded(
+                                child: multipleCheckbox(
+                                  context,
+                                  "Yes",
+                                  viewModel.selectedLighteningArr,
+                                      (bool? checked) {
+                                    viewModel.setSelectedLighteningArr(
+                                        "Yes");
+                                  },
+                                  isTrue,
+                                ),
+                              ),
+                              Expanded(
+                                child: multipleCheckbox(
+                                  context,
+                                  "No",
+                                  viewModel.selectedLighteningArr,
+                                      (bool? checked) {
+                                    viewModel.setSelectedLighteningArr(
+                                        "No");
+                                  },
+                                  isTrue,
+                                ),
+                              ),
+                            ]
                             ),
                             const Text(
                               "REMARKS",

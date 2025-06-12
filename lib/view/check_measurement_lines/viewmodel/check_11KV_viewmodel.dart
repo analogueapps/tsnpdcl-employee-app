@@ -134,7 +134,7 @@ class Check11kvViewmodel extends ChangeNotifier {
 
   Future<void> processMapData(bool drawHuman) async {
     if (poleFeederList.isEmpty) return;
-    if (followSwitch && currentLocation != null) {
+    if (followSwitch &&currentLocation != null) {
       await _addHumanMarker();
 
       mapController?.animateCamera(CameraUpdate.newCameraPosition(
