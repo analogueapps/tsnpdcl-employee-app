@@ -68,16 +68,16 @@ class CheckMeasure11kvEdit extends StatelessWidget {
               child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const ViewDetailedLcTileWidget(
+                 ViewDetailedLcTileWidget(
                   tileKey: "SubStation",
-                  tileValue: "0000",
+                  tileValue: viewModel.poleData!.poleNum??"",
                   valueColor: Colors.red,
                 ),
                 SizedBox(height: doubleTen,),
                 const Text('Previous Pole Num.'),
                 GestureDetector(
                   onTap: () {
-                    viewModel.showPoleFeederDropdown();
+                    viewModel.showPoleFeederDropdown(viewModel.poleData!.tempSeries??"");
                   },
                   child: InputDecorator(
                     decoration: const InputDecoration(
@@ -328,7 +328,7 @@ class CheckMeasure11kvEdit extends StatelessWidget {
                     checkbox(
                         context,
                         "Cut Point",
-                        viewModel.selectedTypePoint,
+                          viewModel.selectedTypePoint,
                         viewModel.setSelectedTypePoint,
                     ),
                     checkbox(
@@ -350,7 +350,6 @@ class CheckMeasure11kvEdit extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Row for "None", "33KV Line", "11KV Line"
                     Row(
                       children: [
                         Expanded(
@@ -774,7 +773,7 @@ class CheckMeasure11kvEdit extends StatelessWidget {
                       "Good",
                       viewModel.selectedCrossArmStatus,
                           (bool? checked) {
-                        viewModel.setSelectedConductorStatus(
+                        viewModel.setSelectedCrossArmStatus(
                             "Good");
                       },
                     ),
@@ -785,7 +784,7 @@ class CheckMeasure11kvEdit extends StatelessWidget {
                       "Bad",
                       viewModel.selectedCrossArmStatus,
                           (bool? checked) {
-                        viewModel.setSelectedConductorStatus(
+                        viewModel.setSelectedCrossArmStatus(
                             "Bad");
                       },
                     ),

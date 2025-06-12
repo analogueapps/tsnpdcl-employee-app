@@ -122,8 +122,8 @@ class PmiInspectionFormViewmodel extends ChangeNotifier {
      final requestData = {
        "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
        "api": Apis.API_KEY,
-       "voltage":"11KV",
-       "digitalPoleId":9752757,
+       "voltage":args['voltage'],
+       "digitalPoleId":args['digitalPoleId'],
        "scheduleId":0,
        "readOnly":false
      };

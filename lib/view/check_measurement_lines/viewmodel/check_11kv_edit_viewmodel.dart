@@ -30,6 +30,7 @@ class Check11kvEditViewmodel extends ChangeNotifier {
     _initializeCameraPosition();
     loadStructureCodes();
     getPolesOnFeeder();
+
   }
   final BuildContext context;
   final Map<String, dynamic> args;
@@ -50,7 +51,7 @@ class Check11kvEditViewmodel extends ChangeNotifier {
   final TextEditingController particularsOfCrossing = TextEditingController();
   final TextEditingController remarks = TextEditingController();
   String? series, poleNum;
-  DocketEntity? docketEntity;
+  PoleFeederEntity? poleData;
 
   double? latitude;
   double? longitude;
@@ -58,6 +59,7 @@ class Check11kvEditViewmodel extends ChangeNotifier {
   bool distanceDisplay = false;
   double? distanceBtnPoles;
   double MINIMUM_GPS_ACCURACY_REQUIRED = 15.0;
+  int maxId=0;
 
   StreamSubscription<Position>? _positionStream;
 
@@ -130,9 +132,14 @@ class Check11kvEditViewmodel extends ChangeNotifier {
 
   Future<void> processMapData() async {
     if (poleFeederList.isEmpty) return;
+      // await _addHumanMarker();
+      // mapController?.animateCamera(CameraUpdate.newCameraPosition(
+      //   CameraPosition(target: humanLocation, zoom: 18),
+      // ));
+
     for (int i = 0; i < poleFeederList.length; i++) {
       final entity = poleFeederList[i];
-
+      maxId=max(poleFeederList[i].id,maxId);
       if (entity.sourceLat != null && entity.sourceLon != null) {
         final polyline = Polyline(
           polylineId: PolylineId('polyline_$i'),
@@ -328,6 +335,7 @@ class Check11kvEditViewmodel extends ChangeNotifier {
       onTap: () {
         onClickOfMap(entity);
         print(" Entity object is: $entity");
+        poleData=entity;
       },
     );
 
@@ -375,8 +383,7 @@ class Check11kvEditViewmodel extends ChangeNotifier {
                 Navigator.pop(context);
                 deleteOrEdit=isTrue;
                 notifyListeners();
-                showAlertDialog(context,
-                    "Please choose Source Pole Num or check Source pole not mapped or origin Pole");
+                initialValuesFromPole();
               },
               child: const Text("EDIT THIS POLE DATA"),
             ),
@@ -388,6 +395,87 @@ class Check11kvEditViewmodel extends ChangeNotifier {
         );
       },
     );
+  }
+
+  void initialValuesFromPole(){
+    _selectedTappingPole=poleData!.tapping=='r'?'Right Tapping':poleData!.tapping=='l'?'Left Tapping':'Straight Tapping';
+    if (_selectedTappingPole == "Straight Tapping" ||
+        _selectedTappingPole == "Left Tapping") {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: SizedBox(
+              height: 300,
+              child: Column(children: [
+                const Text(
+                  "Please be sure your field condition resemble to below show scenario for selecting",
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Image.asset(Assets.check11KvLeft),
+              ]),
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    showAlertDialog(context,
+                        "Please choose Source Pole Num or check Source pole not mapped or origin Pole");
+                  },
+                  child: Text("OK")),
+            ],
+          );
+        },
+      );
+    } else if (_selectedTappingPole == "Right Tapping") {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: SizedBox(
+              height: 300,
+              child: Column(children: [
+                const Text(
+                  "Please be sure your field condition resemble to below show scenario for selecting",
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Image.asset(Assets.check11KvRight),
+              ]),
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    showAlertDialog(context,
+                        "Please choose Source Pole Num or check Source pole not mapped or origin Pole");
+                  },
+                  child: Text("OK")),
+            ],
+          );
+        },
+      );
+    }
+    _selectedPoleHeight=poleData!.poleHeight;
+    _selectedPoleHeight=poleData!.poleHeight;
+    _selectedCircuits=poleData!.noOfCkts;
+    _selectedFormation=poleData!.formation;
+    _selectedTypePoint=poleData!.typeOfPoint;
+    String poleCrossings= poleData!.crossing??"";
+    List<String> crossings = poleCrossings
+        .split('|')
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty)
+        .toList();
+
+    selectedCrossings = crossings;
+    _selectedConductor=poleData!.condSize;
+    String poleTypes= poleData!.poleType??"";
+    setInitialPoleType(poleTypes);
+    notifyListeners();
   }
 
   void deletePoleDialog() {
@@ -450,8 +538,8 @@ class Check11kvEditViewmodel extends ChangeNotifier {
       "authToken":
       SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
-      "ssc": args["ssc"],
-      "fc": args["fc"],
+      "ssc": args["ssc"], //poleData!.ssCode
+      "fc": args["fc"], //PoleData!.feederCode
     };
 
     final payload = {
@@ -563,12 +651,19 @@ class Check11kvEditViewmodel extends ChangeNotifier {
 
   String? get selectedPole => _selectedPole;
 
-  void showPoleFeederDropdown() {
+  void showPoleFeederDropdown(String  filterString ) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        List<PoleFeederEntity> filteredList = List.from(poleFeederList);
         String searchQuery = '';
+
+        // ✅ Initial filtered list showing only items starting with "ARE"
+        List<PoleFeederEntity> filteredList = poleFeederList.where((item) {
+          final displayText = (item.tempSeries != null && item.tempSeries!.isNotEmpty
+              ? '${item.tempSeries}-${item.poleNum}'
+              : item.poleNum ?? '');
+          return displayText.startsWith('ARE'); // lowercase for consistency
+        }).toList();
 
         return StatefulBuilder(
           builder: (context, setState) {
@@ -576,8 +671,8 @@ class Check11kvEditViewmodel extends ChangeNotifier {
               setState(() {
                 searchQuery = query;
                 filteredList = poleFeederList.where((item) {
-                  final displayText =
-                  (item.tempSeries != null && item.tempSeries!.isNotEmpty
+                  final displayText = (item.tempSeries != null &&
+                      item.tempSeries!.isNotEmpty
                       ? '${item.tempSeries}-${item.poleNum}'
                       : item.poleNum ?? '')
                       .toLowerCase();
@@ -617,8 +712,7 @@ class Check11kvEditViewmodel extends ChangeNotifier {
                           selectedTileColor: Colors.blue.shade50,
                           onTap: () {
                             Navigator.pop(context);
-                            onListPoleFeederChange(
-                                item); // 🔥 Ensure you pass the correct `item`
+                            onListPoleFeederChange(item);
                           },
                         );
                       },
@@ -632,6 +726,7 @@ class Check11kvEditViewmodel extends ChangeNotifier {
       },
     );
   }
+
 
   void setSelectedPole(String title) {
     _selectedPole = title;
@@ -752,7 +847,67 @@ class Check11kvEditViewmodel extends ChangeNotifier {
     _selectedTappingPole = title;
     notifyListeners();
     print("$_selectedTappingPole:  tap selected");
-if(_selectedTappingPole!=null && _selectedTappingPole!.isNotEmpty){
+    if (_selectedTappingPole == "Straight Tapping" ||
+        _selectedTappingPole == "Left Tapping") {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: SizedBox(
+              height: 300,
+              child: Column(children: [
+                const Text(
+                  "Please be sure your field condition resemble to below show scenario for selecting",
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Image.asset(Assets.check11KvLeft),
+              ]),
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    showAlertDialog(context,
+                        "Please choose Source Pole Num or check Source pole not mapped or origin Pole");
+                  },
+                  child: Text("OK")),
+            ],
+          );
+        },
+      );
+    } else if (_selectedTappingPole == "Right Tapping") {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: SizedBox(
+              height: 300,
+              child: Column(children: [
+                const Text(
+                  "Please be sure your field condition resemble to below show scenario for selecting",
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Image.asset(Assets.check11KvRight),
+              ]),
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    showAlertDialog(context,
+                        "Please choose Source Pole Num or check Source pole not mapped or origin Pole");
+                  },
+                  child: Text("OK")),
+            ],
+          );
+        },
+      );
+    }
+    if(_selectedTappingPole!=null && _selectedTappingPole!.isNotEmpty){
   generatePoleNum(serverCheck);
 }
   }
@@ -767,9 +922,28 @@ String? isExtensionSelected;
     //Is Extension Pole?:  tap selected
   }
 
-  //Pole type
+  //Pole type poleType: Rail Pole, in selected pole in map
   List<String> selectedFirstGroup = [];
   List<String> selectedSecondGroup = [];
+
+  final List<String> firstGroupOptions = [
+    "Spun Pole", "RS joist", "PSSC Pole", "Tower(M+3)", "Tower(M+6)", "Tower(M+9)", "Tower(M+12)"
+  ];
+
+  final List<String> secondGroupOptions = [
+    "Tubular", "Joist", "Rail Pole"
+  ];
+
+
+
+  void setInitialPoleType(String value) {
+    if (firstGroupOptions.contains(value)) {
+      selectedFirstGroup = [value];
+    } else if (secondGroupOptions.contains(value)) {
+      selectedSecondGroup = [value];
+    }
+    notifyListeners();
+  }
 
   void toggleFirstGroup(String val) {
     if (selectedSecondGroup.length == 2) {
@@ -1183,9 +1357,6 @@ String? isExtensionSelected;
 
       if (!validateForm()) {
         return;
-      } else if (totalAccuracy! > 15.0) {
-        showAlertDialog(context,
-            "Please wait until we reach minimum GPS accuracy i.e 15.0 mts");
       } else {
         saveCheck11KVPole();
         print("in else block");
@@ -1200,7 +1371,7 @@ String? isExtensionSelected;
 
     final requestData = {
       "loadLatestDataOnly": true,
-      "maxId": "",//from map
+      "maxId": maxId,
       "authToken":
       SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
@@ -1223,7 +1394,7 @@ String? isExtensionSelected;
       "formation": selectedFormation,
       "typeOfPoint": selectedTypePoint,
       "polenum": poleNumber.text.isEmpty ? "0000" : poleNumber.text.trim(),
-        "series": series,//null
+      "series": poleData!.tempSeries,
 
       if (selectedPole == "" || selectedPole == null) ...{
         "sid": poleID,
@@ -1236,10 +1407,11 @@ String? isExtensionSelected;
         "structCode": selectedCode?.code,
         "cap": selectedCode?.capacity,
       },
-      "cs": abCableSelected==""?selectedConductor:abCableSelected, //check this(bhav)
-      "lat": poleLat,//d.getLat()
-      "lon": poleLon,
-      "digitalID":"", //d.getId()
+      "cs": _selectedConductor==""?abCableSelected:_selectedConductor,
+
+      "lat": poleData!.lat.toString(),//d.getLat()
+      "lon": poleData!.lon.toString(),
+      "digitalID":poleData!.id,
     };
 
     print("requestData: $requestData");
@@ -1344,12 +1516,6 @@ String? isExtensionSelected;
           context,
           "Please select the conductor size from previous pole to this pole",
           isTrue);
-      return false;
-    }
-    else if ((latitude == "" && longitude == "") ||
-        (latitude == null && longitude == null)) {
-      AlertUtils.showSnackBar(
-          context, "Please wait until we capture your location. Please make sure you have turned on your location", isTrue);
       return false;
     }
     return true;

@@ -76,7 +76,7 @@ class Pole33kvFeederEdit extends StatelessWidget {
                 ),
                 ),
                 Expanded(
-                child: viewModel.deleteOrEdit!=isFalse?
+                child: viewModel.deleteOrEdit==isFalse?
                 Container():
                 SingleChildScrollView(
                   padding:const EdgeInsets.only(

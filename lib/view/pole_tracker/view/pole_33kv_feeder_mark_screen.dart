@@ -110,7 +110,7 @@ class Pole33kvFeederMarkScreen extends StatelessWidget {
                           ),
 
                           Visibility(
-                            visible:viewModel.poleID=="",
+                            visible:viewModel.poleFeederSelected=="",
                           child:
                           Row(
                             children: [

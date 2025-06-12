@@ -67,12 +67,26 @@ class Pole11kvFeederMarkScreen extends StatelessWidget {
                 Column(
                   children: [
                     Expanded(
-                      child: GestureDetector(
-                      onTap: (){
-                        viewModel.poleSelectedOnMap();
-                      },
-                        child:Text("Google Maps"),
-                    ),
+                      child: GoogleMap(
+                        initialCameraPosition: viewModel.cameraPosition ??
+                            const CameraPosition(
+                                target: LatLng(0, 0), zoom: 10),
+                        polylines: viewModel.polylines,
+                        markers: viewModel.markers,
+                        myLocationEnabled: false,
+                        myLocationButtonEnabled: false,
+                        zoomControlsEnabled: true,
+                        onMapCreated: (controller) {
+                          viewModel.mapController = controller;
+                        },
+                      ),
+
+                    //   GestureDetector(
+                    //   onTap: (){
+                    //     viewModel.poleSelectedOnMap();
+                    //   },
+                    //     child:Text("Google Maps"),
+                    // ),
                     ),
                     // Fixed switch
                     SwitchListTile(

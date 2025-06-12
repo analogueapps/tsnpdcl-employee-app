@@ -31,13 +31,6 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
     _handleLocation();
     _initializeCameraPosition();
     getPolesOnFeeder();
-    // final String? jsonString = args['d'];
-    // print("argument d data: ${args['d']}");
-    //
-    // if (args['p'] == isTrue) {
-    //   docketEntity = DocketEntity.fromJson(jsonDecode(jsonString!));
-    //   print("docketEntity ${docketEntity!.id}");
-    // }
   }
   @override
   void dispose() {
@@ -51,7 +44,7 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
   final BuildContext context;
   final Map<String, dynamic> args;
   double MINIMUM_GPS_ACCURACY_REQUIRED = 15.0;
-  int maxId = 0; //From Map initially OL
+  int maxId = 0;
   String get feederName => args['fn'];
 
   String get feederCode => args['fc'];
@@ -75,6 +68,7 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
 
   String empName=SharedPreferenceHelper.getStringValue(LoginSdkPrefs.empNameKey);
   String empDesignation=SharedPreferenceHelper.getStringValue(LoginSdkPrefs.designationCodeKey);
+  PoleFeederEntity? poleData;
 
   List<int> undoStack = [];
   List<PoleFeederEntity> digitalFeederEntityList = [];
@@ -345,7 +339,9 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
       position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
       icon: await _bitmapDescriptorFromAsset(Assets.horizontalPole),
       onTap: () {
-        poleSelectedOnMap();
+        // poleSelectedOnMap();
+        _onMarkerTap(markerId, entity);
+        poleData=entity;
       },
     );
 
@@ -355,6 +351,81 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
   }
 
   PoleFeederEntity? sourcePoleTag;
+  void _onMarkerTap(MarkerId markerId, PoleFeederEntity entity) {
+    final entity = markerEntityMap[markerId];
+    print("markerEntityMap entity: $markerEntityMap");
+    if (entity == null) return;
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Choose Options'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  final poleText = entity.tempSeries != null
+                      ? "${entity.tempSeries}-${entity.poleNum}"
+                      : entity.poleNum;
+                  poleFeederSelected = poleText ?? '';
+                  print("selected Pole number is $poleText");
+                  notifyListeners();
+                  // If needed, store the entity as tag
+                  sourcePoleTag = entity;
+
+                  Navigator.pop(context);
+                },
+                child: const Text("Copy Pole Number?"),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+
+                  var argument = {
+                    'p': false,
+                    'ssc': ssc,
+                    'ssn': ssn,
+                    'fc': feederCode,
+                    'fn': feederName,
+                    'digitalPoleId': entity.id,
+                    'voltage': entity.voltage,
+                    'scheduleId': 0,
+                    // "dtrId":""
+                  };
+                  Navigation.instance.navigateTo(
+                      Routes.pmiInspectionForm,
+                      args: argument);
+                },
+                child: const Text("Enter PMI data"),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  var argument = {
+                    'p': false,
+                    'ssc': ssc,
+                    'ssn': ssn,
+                    'fc': feederCode,
+                    'fn': feederName,
+                    'digitalPoleId': entity.id,
+                    // "dtrId":""
+                  };
+                  Navigation.instance.navigateTo(
+                      Routes.pmiList,
+                      args: argument);
+                },
+                child: const Text("View PMI History of this Pole"),
+              ),
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text("CANCEL")),
+            ],
+          );
+        }
+          );
+    }
 
   void _handleLocation() async {
 
@@ -1296,7 +1367,7 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
 
     final requestData = {
       "loadLatestDataOnly": true,
-      "maxId": maxId, // from map
+      "maxId": maxId,
       "authToken":
       SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,

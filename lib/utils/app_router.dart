@@ -115,7 +115,7 @@ import 'package:tsnpdcl_employee/view/pdms/view/view_inspection_tickets_screen.d
 import 'package:tsnpdcl_employee/view/pdms/view/view_pole_dumped_location_screen.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/view/new_proposal_screen.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/view/pmi_inspection_form.dart';
-import 'package:tsnpdcl_employee/view/pole_tracker/view/pmi_list.dart';
+// import 'package:tsnpdcl_employee/view/pole_tracker/view/pmi_list.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/view/pole_33kv_feeder_mark_screen.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/view/pole_11kv_feeder_mark_screen.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/view/pole_33kv_feeder_mark_edit.dart';
@@ -295,10 +295,10 @@ class AppRouter {
         return MaterialPageRoute(
             builder: (_) => PmiInspectionForm(
                 args: settings.arguments as Map<String, dynamic>));
-        case PmiList.id:
-        return MaterialPageRoute(
-            builder: (_) => PmiList(
-                args: settings.arguments as Map<String, dynamic>));
+        // case PmiList.id:
+        // return MaterialPageRoute(
+        //     builder: (_) => PmiList(
+        //         args: settings.arguments as Map<String, dynamic>));
       case ViewOfflineFeedersScreen.id:
         return MaterialPageRoute(
             builder: (_) => const ViewOfflineFeedersScreen());
