@@ -50,7 +50,9 @@ import 'package:tsnpdcl_employee/view/dtr_master/view/view_mapped/mapped_dtr.dar
 import 'package:tsnpdcl_employee/view/dtr_master/view/view_mapped/struct_details.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/view/view_offline_data.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/view/view_mapped/configure_filter.dart';
+import 'package:tsnpdcl_employee/view/exceptionals/view/barCodeScanner_view.dart';
 import 'package:tsnpdcl_employee/view/exceptionals/view/exceptionals_screen.dart';
+import 'package:tsnpdcl_employee/view/exceptionals/view/meter_change_entry.dart';
 import 'package:tsnpdcl_employee/view/failure_dtr_inspection/view/dtr_inspection.dart';
 import 'package:tsnpdcl_employee/view/failure_dtr_inspection/view/failure_dtr_inspection_screen.dart';
 import 'package:tsnpdcl_employee/view/failure_dtr_inspection/view/view_closed_reports.dart';
@@ -689,6 +691,10 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) =>  CheckMeasure33kv(args: settings.arguments as Map<String, dynamic>));
       case CheckMeasure11kvEdit.id:
         return MaterialPageRoute(builder: (_) =>  CheckMeasure11kvEdit(args: settings.arguments as Map<String, dynamic>));
+      case MeterChangeEntryScreen.id:
+        return MaterialPageRoute(builder: (_) =>  MeterChangeEntryScreen(args: settings.arguments as Map<String, dynamic>));
+      case BarCodeScannerScreen.id:
+        return MaterialPageRoute(builder: (_) => const BarCodeScannerScreen() );
 
       default:
         return MaterialPageRoute(

@@ -282,8 +282,8 @@ class ExceptionalsViewmodel extends ChangeNotifier {
               onPressed: () {
                 Navigator.pop(context);
                 print("item clicked is: $item ");
-                // Navigation.instance.navigateTo(
-                //     Routes.dlistAttendScreen, args: jsonEncode(selectedItem));
+                Navigation.instance.navigateTo(
+                    Routes.meterChangeEntryScreen, args:item);
               },
             ),
             CupertinoDialogAction(

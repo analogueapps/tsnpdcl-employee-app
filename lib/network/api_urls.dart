@@ -154,10 +154,19 @@ class Apis{
   static const GET_CAT_CONFIRM="getCatConfirmEntities";
 
 
-  ///PTR & FEEDER LOADERS * BHAVANA
+  ///PTR & FEEDER LOADERS
   static const GET_PTR_FEEDERS_SS="getPtrAndFeedersOfSs";
   static const SAVE_PTR_FEEDERS="savePtrAndFeederLoads";
 
-  ///POLE TRACKER * BHAVANA
+  ///POLE TRACKER
  static const CREATE_NEW_PROPOSAL="createNewProposal";
+
+  ///Exceptionals
+  static String IP_PORT_METER_MAKE=SERVER_IP.startsWith("http://192.168.30")?"http://10.100.4.58:7000":"http://210.212.223.83:7000";
+  static const METER_MAKE="/NpdclEmployeeWebApi/npemp/api";
+  static String METER_CHANGE="http://10.100.4.58:7000/NpdclEmployeeWebApi/npemp/api";
+  static String METER_CHANGE_COMPLETE_ROOT = "/NpdclEmployeeWebApi/npemp/api";
+  static const METER_CHANGE_BASE_URL = "http://10.100.4.58:7000";
+
 }
+

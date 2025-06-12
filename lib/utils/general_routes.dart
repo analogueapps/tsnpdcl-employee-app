@@ -54,6 +54,7 @@ class Routes {
 
   // BILLING RELATED
   static const String gruhaJyothiScreen = "GruhaJyothiScreen";
+  static const String meterChangeEntryScreen = "MeterChangeEntryScreen";
 
   // MANAGE STAFF
   static const String manageStaffsScreen = "ManageStaffsScreen";
@@ -74,8 +75,7 @@ class Routes {
   // REPORTS
   static const String reportsScreen = "ReportsScreen";
 
-  // EXCEPTIONALS
-  static const String exceptionalsScreen = "ExceptionalsScreen";
+
 
   // FILTER
   static const String filterScreen = "FilterScreen";
@@ -235,6 +235,11 @@ class Routes {
     static const String check33kvScreen="CheckMeasure11kv";
     static const String check11kvScreen="CheckMeasure33kv";
     static const String check11kvScreenEdit="CheckMeasure11kvEdit";
+
+  // EXCEPTIONALS
+  static const String exceptionalsScreen = "ExceptionalsScreen";
+  static const String scanBarCoder = "BarCodeScannerScreen";
+
 
 
 }
