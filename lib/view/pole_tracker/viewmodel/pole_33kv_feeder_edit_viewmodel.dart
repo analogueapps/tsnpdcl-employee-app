@@ -32,13 +32,6 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
     _handleLocation();
     _initializeCameraPosition();
     getPolesOnFeeder();
-    // final String? jsonString = args['d'];
-    // print("argument d data: ${args['d']}");
-    //
-    // if (args['p'] == isTrue) {
-    //   docketEntity = DocketEntity.fromJson(jsonDecode(jsonString!));
-    //   print("docketEntity ${docketEntity!.id}");
-    // }
   }
 
   @override
@@ -70,6 +63,7 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
   List<int> undoStack = [];
   List<PoleFeederEntity> digitalFeederEntityList = [];
   final int UNDO_STACK_SIZE = 10;
+  PoleFeederEntity? poleData;
 
   bool deleteOrEdit= isFalse;
 
@@ -337,7 +331,8 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
       position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
       icon: await _bitmapDescriptorFromAsset(Assets.horizontalPole),
       onTap: () {
-        onClickOfMap(entity);
+        onClickOfMap();
+        poleData=entity;
       },
     );
 
@@ -348,7 +343,7 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
 
   PoleFeederEntity? sourcePoleTag;
 
-  void onClickOfMap(PoleFeederEntity entity){
+  void onClickOfMap(){
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -360,7 +355,7 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
             TextButton(
                 onPressed: () {
                   Navigator.pop(context);
-                  deletePoleDialog();
+                  deletePoleDialog(poleData!.id);
                 },
                 child: const Text("DELETE")),
             TextButton(
@@ -383,7 +378,7 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
     );
   }
 
-  void deletePoleDialog() {
+  void deletePoleDialog(int entity) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -395,7 +390,7 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
           actions: [
             TextButton(
                 onPressed: () {
-                  // should implement deletePole();  api here
+                  deletePole(entity);
                 },
                 child: const Text("DELETE")),
             TextButton(
@@ -1242,7 +1237,108 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
     print("selectedConductorStatus: $selectedConductorStatus");
     notifyListeners();
   }
+  //Undo Pole
+  Future<void>  deletePole(int id)async{
+    _isLoading = isTrue;
+    notifyListeners();
+    final requestData = {
+      "authToken":
+      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "api": Apis.API_KEY,
+      "fc": args["fc"],
+      "ssc": args["ssc"],
+      "poleId":""
+    };
+    final payload = {
+      "path": "/undoPole",
+      "apiVersion": "1.0.1",
+      "method": "POST",
+      "data": jsonEncode(requestData),
+    };
 
+    print("payload: ${jsonEncode(payload)}");
+
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+
+    try {
+      if (response != null) {
+        Navigator.pop(context);
+        if (response.data is String) {
+          response.data = jsonDecode(response.data);
+        }
+        if (response.statusCode == successResponseCode) {
+          if (response.data['tokenValid'] == isTrue) {
+            if (response.data['success'] == isTrue) {
+              if (response.data['objectJson'] != null) {
+                List<dynamic> jsonList;
+                if (response.data['objectJson'] is String) {
+                  jsonList = jsonDecode(response.data['objectJson']);
+                } else if (response.data['objectJson'] is List) {
+                  jsonList = response.data['objectJson'];
+                } else {
+                  jsonList = [];
+                }
+                final List<PoleFeederEntity> listData = jsonList
+                    .map((json) => PoleFeederEntity.fromJson(json))
+                    .toList();
+                int timeLapse = DateTime.now().millisecondsSinceEpoch;
+                if (listData != null && listData.isNotEmpty) {
+                  digitalFeederEntityList = [];
+                  digitalFeederEntityList.addAll(listData);
+                }
+                if (undoStack.length > UNDO_STACK_SIZE) {
+                  undoStack.removeLast();
+                }
+                final now = DateTime.now();
+                final formatter = DateFormat('dd MM yyyy hh:mm:ss.SSS');
+                print("Done adding to local object: ${formatter.format(now)} "
+                    "Time Lapse: ${DateTime.now().millisecondsSinceEpoch - timeLapse} msecs");
+
+                timeLapse = DateTime.now().millisecondsSinceEpoch;
+
+                if (digitalFeederEntityList.isNotEmpty) {
+                  final lastItem = digitalFeederEntityList.last;
+
+                  if (lastItem.createdBy == SharedPreferenceHelper.getStringValue(LoginSdkPrefs.userIdPrefKey) ){
+                    if (undoStack.length > UNDO_STACK_SIZE) {
+                      undoStack.removeLast();
+                    }
+                    print("undoStack: $undoStack");
+                  }
+                }
+                if (response.data["message"] != null) {
+                  showSuccessDialog(
+                    context,
+                    response.data["message"], //Missing mandatory params
+                        () {
+                      Navigator.pop(context);
+                    },
+                  );
+                }
+              } else {
+                showAlertDialog(context, "Unable to process your request!");
+              }
+            } else {
+              showAlertDialog(context,
+                  response.data['message']);
+            }
+          } else {
+            showSessionExpiredDialog(context);
+          }
+        } else {
+          showAlertDialog(context,
+              "Error connecting to the server, Please try after sometime");
+        }
+      }
+    } catch (e) {
+      showErrorDialog(context, "An error occurred. Please try again.");
+      _isLoading = false;
+      notifyListeners();
+    }
+
+    notifyListeners();
+  }
 
 
   Future<void> submitCheck11KVForm() async {
@@ -1268,7 +1364,7 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
 
     final requestData = {
       "loadLatestDataOnly": true,
-      "maxId": maxId,//from map
+      "maxId": maxId,
       "authToken":
       SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
@@ -1291,7 +1387,7 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
       "formation": selectedFormation,
       "typeOfPoint": selectedTypePoint,
       "polenum": poleNumber.text.isEmpty ? "0000" : poleNumber.text.trim(),
-      "series": series,//null
+      "series": poleData!.tempSeries,
 
       if (selectedPole == "" || selectedPole == null) ...{
         "sid": poleID,
@@ -1307,9 +1403,9 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
       else if(selectedConnected=="HT Service")...{
         "ht": selectedHtServiceName ?? ""
       },
-      "lat": poleLat,//d.getLat()
-      "lon": poleLon,
-      "digitalID":"", //d.getId()
+      "lat": poleData!.lat.toString(),
+      "lon": poleData!.lon.toString(),
+      "digitalID":poleData!.id,
     };
 
     print("requestData: $requestData");
@@ -1335,6 +1431,41 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
           if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
               if (response.data['objectJson'] != null) {
+                List<dynamic> jsonList;
+                if (response.data['objectJson'] is String) {
+                  jsonList = jsonDecode(response.data['objectJson']);
+                } else if (response.data['objectJson'] is List) {
+                  jsonList = response.data['objectJson'];
+                } else {
+                  jsonList = [];
+                }
+                final List<PoleFeederEntity> listData = jsonList
+                    .map((json) => PoleFeederEntity.fromJson(json))
+                    .toList();
+                int timeLapse = DateTime.now().millisecondsSinceEpoch;
+
+                // Add all items to local list
+                digitalFeederEntityList.addAll(listData);
+
+                final now = DateTime.now();
+                final formatter = DateFormat('dd MM yyyy hh:mm:ss.SSS');
+                print("Done adding to local object: ${formatter.format(now)} "
+                    "Time Lapse: ${DateTime.now().millisecondsSinceEpoch - timeLapse} msecs");
+
+                timeLapse = DateTime.now().millisecondsSinceEpoch;
+
+                if (digitalFeederEntityList.isNotEmpty) {
+                  final lastItem = digitalFeederEntityList.last;
+
+                  if (lastItem.createdBy == SharedPreferenceHelper.getStringValue(LoginSdkPrefs.userIdPrefKey) ){
+                    if (undoStack.length > UNDO_STACK_SIZE) {
+                      undoStack.removeLast();
+                    }
+
+                    undoStack.insert(0, lastItem.id);
+                    print("undoStack: $undoStack");
+                  }
+                }
                 if (response.data["message"] != null) {
                   showSuccessDialog(
                     context,

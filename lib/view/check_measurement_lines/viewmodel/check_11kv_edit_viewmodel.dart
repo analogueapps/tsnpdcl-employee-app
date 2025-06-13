@@ -375,7 +375,7 @@ class Check11kvEditViewmodel extends ChangeNotifier {
             TextButton(
                 onPressed: () {
                 Navigator.pop(context);
-                deletePoleDialog();
+                deletePoleDialog(poleData!.id);
                 },
                 child: const Text("DELETE")),
             TextButton(
@@ -478,7 +478,7 @@ class Check11kvEditViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void deletePoleDialog() {
+  void deletePoleDialog(int id) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -490,7 +490,7 @@ class Check11kvEditViewmodel extends ChangeNotifier {
           actions: [
             TextButton(
                 onPressed: () {
-                  // should implement deletePole();  api here
+                  deletePole(id);
                 },
                 child: const Text("DELETE")),
             TextButton(
@@ -591,7 +591,7 @@ class Check11kvEditViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> deletePole() async {
+  Future<void> deletePole(int id) async {
 
     _isLoading = isTrue;
 
@@ -599,7 +599,7 @@ class Check11kvEditViewmodel extends ChangeNotifier {
       "authToken":
       SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
-      "poleId":"", // from map
+      "poleId":id, // from map
       "ssc": args["ssc"],
       "fc": args["fc"],
     };

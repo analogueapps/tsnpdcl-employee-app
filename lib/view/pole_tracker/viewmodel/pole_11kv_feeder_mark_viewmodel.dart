@@ -1038,43 +1038,31 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
   }
 
   //Conductor Status
-  List<String> selectedConductorStatus = [];
+  String? _selectedConductorStatus;
+  String? get selectedConductorStatus => _selectedConductorStatus;
 
   void setSelectedConductorStatus(String title) {
-
-    if (selectedConductorStatus.contains(title)) {
-      selectedConductorStatus.remove(title);
-    } else {
-      selectedConductorStatus.add(title);
-    }
+    _selectedConductorStatus=title;
     print("selectedConductorStatus: $selectedConductorStatus");
     notifyListeners();
   }
 
   //Stud/Stay Required
-  List<String> selectedStudStayRequired = [];
+  String? _selectedStudStayRequired;
+  String? get selectedStudStayRequired => _selectedStudStayRequired;
 
   void setSelectedStudStayRequired(String title) {
-
-    if (selectedStudStayRequired.contains(title)) {
-      selectedStudStayRequired.remove(title);
-    } else {
-      selectedStudStayRequired.add(title);
-    }
+    _selectedStudStayRequired=title;
     print("selectedStudStayRequired: $selectedStudStayRequired");
     notifyListeners();
   }
 
   //Middle Poles Required
-  List<String> selectedMiddlePolesRequired = [];
+  String? _selectedMiddlePolesRequired;
+  String? get selectedMiddlePolesRequired => _selectedMiddlePolesRequired;
 
   void setSelectedMiddlePolesRequired(String title) {
-
-    if (selectedMiddlePolesRequired.contains(title)) {
-      selectedMiddlePolesRequired.remove(title);
-    } else {
-      selectedMiddlePolesRequired.add(title);
-    }
+    _selectedMiddlePolesRequired=title;
     print("selectedMiddlePolesRequired: $selectedMiddlePolesRequired");
     notifyListeners();
   }
@@ -1117,15 +1105,11 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
   }
 
   //cross arm status
-  List<String> selectedCrossArmStatus = [];
+   String? _selectedCrossArmStatus;
+  String? get selectedCrossArmStatus => _selectedCrossArmStatus;
 
   void setSelectedCrossArmStatus(String title) {
-
-    if (selectedCrossArmStatus.contains(title)) {
-      selectedCrossArmStatus.remove(title);
-    } else {
-      selectedCrossArmStatus.add(title);
-    }
+    _selectedCrossArmStatus=title;
     print("selectedCrossArmStatus: $selectedCrossArmStatus");
     notifyListeners();
   }
@@ -1195,114 +1179,82 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
 
   //DTR Details
   //AB
-  List<String> selectedABSwitch = [];
+  String? _selectedABSwitch;
+  String? get selectedABSwitch => _selectedABSwitch;
 
   void setSelectedABSwitch(String title) {
-
-    if (selectedABSwitch.contains(title)) {
-      selectedABSwitch.remove(title);
-    } else {
-      selectedABSwitch.add(title);
-    }
+    _selectedABSwitch=title;
     print("selectedABSwitch: $selectedABSwitch");
     notifyListeners();
   }
 
   //LT
-  List<String> selectedLTFuse = [];
+  String? _selectedLTFuse;
+  String? get selectedLTFuse => _selectedLTFuse;
 
   void setSelectedLTFuse(String title) {
-
-    if (selectedLTFuse.contains(title)) {
-      selectedLTFuse.remove(title);
-    } else {
-      selectedLTFuse.add(title);
-    }
+    _selectedLTFuse=title;
     print("selectedLTFuse: $selectedLTFuse");
     notifyListeners();
   }
 
   //HT
-  List<String> selectedHTFuse = [];
+  String? _selectedHTFuse;
+  String? get selectedHTFuse => _selectedHTFuse;
 
   void setSelectedHTFuse(String title) {
-
-    if (selectedHTFuse.contains(title)) {
-      selectedHTFuse.remove(title);
-    } else {
-      selectedHTFuse.add(title);
-    }
+    _selectedHTFuse=title;
     print("selectedHTFuse: $selectedHTFuse");
     notifyListeners();
   }
 
   //DTR Plinth
-  List<String> selectedDTRPlinth = [];
+  String? _selectedDTRPlinth;
+  String? get selectedDTRPlinth=> _selectedDTRPlinth;
 
   void setSelectedDTRPlinth(String title) {
-
-    if (selectedDTRPlinth.contains(title)) {
-      selectedDTRPlinth.remove(title);
-    } else {
-      selectedDTRPlinth.add(title);
-    }
+    _selectedDTRPlinth=title;
     print("selectedDTRPlinth: $selectedDTRPlinth");
     notifyListeners();
   }
 
   //DTR Earthing
-  List<String> selectedDTREarth = [];
+  String? _selectedDTREarth;
+  String? get selectedDTREarth => _selectedDTREarth;
 
   void setSelectedDTREarth(String title) {
-
-    if (selectedDTREarth.contains(title)) {
-      selectedDTREarth.remove(title);
-    } else {
-      selectedDTREarth.add(title);
-    }
+    _selectedDTREarth=title;
     print("selectedDTREarth: $selectedDTREarth");
     notifyListeners();
   }
 
   //Earth Pipe Status
-  List<String> selectedEarthPipe = [];
+  String? _selectedEarthPipe;
+  String? get selectedEarthPipe => _selectedEarthPipe;
 
   void setSelectedEarthPipe(String title) {
-
-    if (selectedEarthPipe.contains(title)) {
-      selectedEarthPipe.remove(title);
-    } else {
-      selectedEarthPipe.add(title);
-    }
+    _selectedEarthPipe=title;
     print("selectedEarthPipe: $selectedEarthPipe");
     notifyListeners();
   }
 
   //Bi-metailc
-  List<String> selectedBiMetalic = [];
+  String? _selectedBiMetalic;
+  String? get selectedBiMetalic => _selectedBiMetalic;
 
   void setSelectedBiMetalic(String title) {
-
-    if (selectedBiMetalic.contains(title)) {
-      selectedBiMetalic.remove(title);
-    } else {
-      selectedBiMetalic.add(title);
-    }
+    _selectedBiMetalic=title;
     print("selectedBiMetalic: $selectedBiMetalic");
     notifyListeners();
   }
 
 
   //Lightening Arrestors
-  List<String> selectedLighteningArr = [];
+  String? _selectedLighteningArr;
+  String? get selectedLighteningArr => _selectedLighteningArr;
 
   void setSelectedLighteningArr(String title) {
-
-    if (selectedLighteningArr.contains(title)) {
-      selectedLighteningArr.remove(title);
-    } else {
-      selectedLighteningArr.add(title);
-    }
+    _selectedLighteningArr=title;
     print("selectedLighteningArr: $selectedLighteningArr");
     notifyListeners();
   }
@@ -1504,13 +1456,13 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
             "Please wait until we reach minimum GPS accuracy i.e 15.0 mts");
       }
       else {
-        save33KVPole();
+        savePolePoint();
         print("in else block");
       }
     }
   }
 
-  Future<void> save33KVPole() async {
+  Future<void> savePolePoint() async {
     _isLoading = isTrue;
     notifyListeners();
 
@@ -1555,27 +1507,27 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
         "ab_cable":"Y",
       },
       "cs": selectedConductor,
-      "pole_broken":"",
-      "pole_rusted":"",
-      "pole_leaned":"",
-      "pole_replacement_with_t":"",
-      "conductor_status":"",
-      "middle_pole_required":"",
-      "stay_set_required":"",
-      "insulators_type":"",
-      "insulators_type_qty":"",
-      "cross_arms":"",
+      "pole_broken":selectedPoleStatus=="Broken"?"Y":null,
+      "pole_rusted":selectedPoleStatus=="Rusted"?"Y":null,
+      "pole_leaned":selectedPoleStatus=="Leaned"?"Y":null,
+      "pole_replacement_with_t":selectedPoleStatus=="Pole Replacement with 9.1Mtr"?"Y":null,
+      "conductor_status":selectedConductorStatus=="Restring required"?"RESTRING":selectedConductorStatus=="Damaged"?"DAMAGED":null,
+      "middle_pole_required":selectedMiddlePolesRequired=="8.0 Mtr. Pole"?"8Mtr":selectedMiddlePolesRequired=="9.1 Mtr. Pole"?"9.1Mtr":null,
+      "stay_set_required":selectedStudStayRequired=="Stay Set"?"STAY":selectedStudStayRequired=="Stud Pole"?"STUD":null,
+      "insulators_type":selectedInsulatorDiscType??null,
+      "insulators_type_qty":selectedInsulatorDiscQty??null,
+      "cross_arms":selectedCrossArmStatus=="Bad"?"BAD":selectedCrossArmStatus=="Good"?"GOOD":null,
       if(selectedConnected!="No Load")...{
         "ab_switch":selectedABSwitch=="NO"?"NO":selectedABSwitch=="Yes, But bad condition"?"BAD":selectedABSwitch=="Yes(Good Condition)"?"GOOD":null,
-        "lt_fuse_set":"",
-        "ht_fuse_set":"",
-        "dtr_plinth":"",
-        "earthing_type":"",
-        "earthing_pipe_status":"",
-        "bimetalic_exists":"",
-        "lightening_arrrestors":"",
+        "lt_fuse_set":selectedLTFuse=="NO"?"NO":selectedLTFuse=="Yes, But bad condition"?"BAD":selectedLTFuse=="Yes(Good Condition)"?"GOOD":null,
+        "ht_fuse_set":selectedHTFuse=="NO"?"NO":selectedHTFuse=="Yes, But bad condition"?"BAD":selectedHTFuse=="Yes(Good Condition)"?"GOOD":null,
+        "dtr_plinth":selectedDTRPlinth=="NO"?"NO":selectedDTRPlinth=="Yes, But bad condition"?"BAD":selectedDTRPlinth=="Yes(Good Condition)"?"GOOD":null,
+        "earthing_type":selectedDTREarth=="NO"?"NO":selectedDTREarth=="Yes, But bad condition"?"BAD":selectedDTREarth=="Yes(Good Condition)"?"GOOD":null,
+        "earthing_pipe_status":selectedEarthPipe=="NO"?"NO":selectedEarthPipe=="Yes, But bad condition"?"BAD":selectedEarthPipe=="Yes(Good Condition)"?"GOOD":null,
+        "bimetalic_exists":selectedBiMetalic=="NO"?"NO":selectedBiMetalic=="Yes, But bad condition"?"BAD":selectedBiMetalic=="Yes(Good Condition)"?"GOOD":null,
+        "lightening_arrrestors":selectedLighteningArr=="NO"?"NO":selectedLighteningArr=="Yes, But bad condition"?"BAD":selectedLighteningArr=="Yes(Good Condition)"?"GOOD":null,
       },
-      "extension":"",
+      "extension":isExtensionSelected=="Is Extension Pole?"?true:false,
       "remarks":remarksController.text.trim(),
       "lat": "$latitude",
       "lon": "$longitude",

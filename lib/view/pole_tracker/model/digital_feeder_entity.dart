@@ -6,6 +6,8 @@ DigitalFeederEntity digitalFeederEntityFromJson(String str) =>
 String digitalFeederEntityToJson(DigitalFeederEntity data) =>
     json.encode(data.toJson());
 
+
+
 class DigitalFeederEntity {
   DigitalFeederEntity({
     this.id,
