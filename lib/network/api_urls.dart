@@ -74,6 +74,7 @@ class Apis{
   /// DTR MAINTENANCE
   static const DTR_END_POINT_BASE_URL = "$SERVER_IP:5656/NPFDAS/ep/dtr/";
   static const GET_DTR_MASTER_INDEX_URL = "getDtrMasterIndex";
+  static const OPEN_DTR_DEFECT_SHEET="openDtrDefectSheet";
   static const GET_DTR_MASTER_FILTER_DATA_URL = "getDtrMasterFilterData";
   static const GET_FILTERED_DTR_MASTER_DATA_URL = "getFilteredDtrMasterData";
   static const GET_DTR_INSPECTIONS_URL = "getDtrInspections";

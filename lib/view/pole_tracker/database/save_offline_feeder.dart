@@ -32,7 +32,8 @@ class OFDatabaseHelper {
                     ssCode TEXT,
                     ssName TEXT,
                     voltageLevel TEXT,
-                    insertDate INTEGER
+                    insertDate INTEGER,
+                    poleListJson TEXT
                   )
                 ''');
   }
@@ -73,89 +74,9 @@ class OFDatabaseHelper {
         where: 'feederCode = ?', whereArgs: [feederCode]);
   }
 
-  Future close() async {
+  Future<void> clearAllOfflineFeeders() async {
     final db = await database;
-    db.close();
+    await db.delete('offline_feeder');
   }
 
-  //Digital Feeder
-  Future<Database> get dFDatabase async {
-    if (_database != null) return _database!;
-
-    _database = await _dFInitDB('digital_feeder.db');
-    return _database!;
-  }
-  Future<Database> _dFInitDB(String filePath) async {
-    final dbPath = await getDatabasesPath();
-    final path = join(dbPath, filePath);
-
-    return await openDatabase(path, version: 1, onCreate: _dFCreateDB);
-  }
-  Future _dFCreateDB(Database db, int version) async {
-    await db.execute('''
-                  CREATE TABLE digital_feeder (
-                    id INTEGER PRIMARY KEY,
-                    newProposalId INTEGER,
-                    sourceId INTEGER,
-                    sourceLat TEXT,
-                    sourceLon TEXT,
-                    sourceType TEXT,
-                    isProposalExecuted TEXT,
-                    poleType TEXT,
-                    poleHeight TEXT,
-                    noOfCkts TEXT,
-                    formation TEXT,
-                    typeOfPoint TEXT,
-                    crossing TEXT,
-                    loadType TEXT,
-                    haveLoad TEXT,
-                    condSize TEXT,
-                    lat TEXT,
-                    lon TEXT,
-                    purpose TEXT,
-                    voltage TEXT,
-                    ssCode TEXT,
-                    feederCode TEXT,
-                    ssVolt TEXT,
-                    feederVolt TEXT,
-                    insertDate TEXT,
-                    createdBy TEXT,
-                    poleNum TEXT,
-                    tempSeries TEXT,
-                    tapping TEXT,
-                    distanceFeeder TEXT,
-                    circleCode INTEGER,
-                    fName TEXT,
-                    sName TEXT,
-                    extensionPole TEXT
-                  )
-                ''');
-  }
-  Future<void> dFInsert(List<DigitalFeederEntity> entityList) async {
-    final db = await instance.database;
-
-    Batch batch = db.batch();
-
-    for (var entity in entityList) {
-      batch.insert(
-        'digital_feeder',
-        entity.toJson(),
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
-    }
-
-    await batch.commit(noResult: true);
-  }
-
-  Future<List<DigitalFeederEntity>> getAllDF() async {
-    final db = await instance.database;
-    final result = await db.query('digital_feeder');
-
-    return result.map((json) => DigitalFeederEntity.fromJson(json)).toList();
-  }
-
-  Future closeDF() async {
-    final db = await instance.database;
-    db.close();
-  }
 }

@@ -591,7 +591,10 @@ class PoleTrackerSelectionViewModel extends ChangeNotifier {
               feederName: listFeederItem.firstWhere((item) => item.optionCode == listFeederSelect).optionName??"",
               insertDate: DateTime.now().millisecondsSinceEpoch,
               voltageLevel: selectedCheckboxId=="11 KV Line" ? "11KV" : "33KV",
+              poleList: poleList,
             );
+            // await OFDatabaseHelper.instance.clearAllOfflineFeeders();
+            // print("Database delete complete: ");
             await OFDatabaseHelper.instance.insertOfflineFeeder(databaseOffLineFeeder);
             print("Database insert complete: ");
             showDialog(

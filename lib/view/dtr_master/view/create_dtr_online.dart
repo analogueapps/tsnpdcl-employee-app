@@ -430,15 +430,21 @@ class CreateDtrOnline extends StatelessWidget {
                                       ),
                                       ),
                                     ),
-                                    SizedBox(height: 10,),
-                                    Container(
-                                      height: 50,
-                                      color:Colors.grey[200],
-                                      ),
+                                   const SizedBox(height: 10,),
                                   ],
                                 ),
 
                               ),
+                              Container(
+                                height: 30,
+                                width: double.infinity,
+                                color:Colors.grey[200],
+                                child:viewModel.totalAccuracy!=null?Text(
+                                  'Location Accuracy: ${viewModel.totalAccuracy!.toStringAsFixed(1) } mts / 15.0 mts',
+                                  style:  TextStyle(fontSize: titleSize, fontWeight: FontWeight.w500, color: viewModel.totalAccuracy!<=viewModel.MINIMUM_GPS_ACCURACY_REQUIRED ?  Colors.green : Colors.red),
+                                ): const Text(""),
+                              ),
+                              const SizedBox(height: doubleFive,),
                               SizedBox(
                                 width: double.infinity,
                                 child: PrimaryButton(

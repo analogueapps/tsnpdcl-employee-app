@@ -203,9 +203,6 @@ class NonAglViewModel extends ChangeNotifier {
 
       final response = await ApiProvider(baseUrl: Apis.ROOT_URL)
           .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
-    // if (context.mounted) {
-    //   ProcessDialogHelper.closeDialog(context);
-    // }
 
     try {
       if (response != null) {
@@ -483,4 +480,44 @@ class NonAglViewModel extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  void showSearchableStructureDialog(BuildContext context) async {
+    final selected = await showDialog<String>(
+      context: context,
+      builder: (context) {
+        String filter = '';
+        return StatefulBuilder(
+          builder: (context, setState) {
+            final filtered = struct
+                .where((s) => s.toLowerCase().contains(filter.toLowerCase()))
+                .toList();
+            return AlertDialog(
+              title: TextField(
+                decoration: InputDecoration(hintText: "Search"),
+                onChanged: (val) => setState(() => filter = val),
+              ),
+              content: SizedBox(
+                width: double.maxFinite,
+                height: 300,
+                child: ListView.builder(
+                  itemCount: filtered.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(filtered[index]),
+                      onTap: () => Navigator.pop(context, filtered[index]),
+                    );
+                  },
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+
+    if (selected != null) {
+     onListStructureSelected(selected);
+    }
+  }
+
 }

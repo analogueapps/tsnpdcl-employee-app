@@ -104,7 +104,7 @@ class DtrMaintenanceInspectionScreen extends StatelessWidget {
             bottomNavigationBar: Padding(
               padding: const EdgeInsets.all(doubleTwenty),
               child: PrimaryButton(
-                  text: "Submit".toUpperCase(),
+                  text: "ASSIGN FOR MAINTENANCE".toUpperCase(),
                   fullWidth: isTrue,
                   onPressed: () {
                     final htSideViewModel =

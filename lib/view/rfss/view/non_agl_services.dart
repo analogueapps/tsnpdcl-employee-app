@@ -1,3 +1,4 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -89,18 +90,28 @@ class NonAglServices extends StatelessWidget {
                         ),
                         const SizedBox(height: 5,),
                         const Text("Select Structure Code"),
-                        DropdownButton<String>(
-                          isExpanded: true,
-                          hint: const Text("Select Structure Code"),
-                          value: viewModel.selectedStructure,
-                          items: viewModel.struct.map((item) {
-                            return DropdownMenuItem<String>(
-                              value: item,
-                              child: Text(item),
-                            );
-                          }).toList(),
-                          onChanged: (value) => viewModel.onListStructureSelected(value),
+                        // DropdownButton<String>(
+                        //   isExpanded: true,
+                        //   hint: const Text("Select Structure Code"),
+                        //   value: viewModel.selectedStructure,
+                        //   items: viewModel.struct.map((item) {
+                        //     return DropdownMenuItem<String>(
+                        //       value: item,
+                        //       child: Text(item),
+                        //     );
+                        //   }).toList(),
+                        //   onChanged: (value) => viewModel.onListStructureSelected(value),
+                        // ),
+
+                      TextFormField(
+                        readOnly: true,
+                        controller: TextEditingController(text: viewModel.selectedStructure ?? ''),
+                        onTap: () => viewModel.showSearchableStructureDialog(context),
+                        decoration: const InputDecoration(
+                          labelText: "Select Structure Code",
+                          border: OutlineInputBorder(),
                         ),
+                      ),
                         if (viewModel.selectedStructure != null)
                           Text(
                              viewModel.selectedStructure!,

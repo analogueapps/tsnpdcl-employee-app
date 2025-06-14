@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
@@ -74,9 +75,8 @@ class FailureReportedList extends StatelessWidget {
                   onTap: () {
                     Navigation.instance.navigateTo(
                       Routes.viewDetailedCtptReport,
-                      args: report, // report is a FailureReportModel
+                      args: report,
                     );
-                    // viewModel.navigateToIndividualReport();
                   },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
@@ -92,10 +92,9 @@ class FailureReportedList extends StatelessWidget {
                           children: [
                             Text(
                               'Reg No. ${report.data['reportId'] ?? 'N/A'}',
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Colors.grey.shade600,
-                                fontSize: 18,
+                                fontSize: 15,
                               ),
                             ),
                             Text(
@@ -108,13 +107,13 @@ class FailureReportedList extends StatelessWidget {
                           ],
                         ),
                         Text(
-                          'SC No. ${report.data['scNo'] ?? 'N/A'} ${report.data['cName'] != null && report.data['cName']!.isNotEmpty ? '(${report.data['cName']})' : ''}',
-                          style: TextStyle(
+                          'SC No. ${report.data['htScno'] ?? 'N/A'} \n ${report.data['cName'] != null && report.data['cName']!.isNotEmpty ? '(${report.data['cName']})' : ''}',
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: Colors.grey.shade600,
-                            fontSize: 18,
+                            fontSize: 14,
                           ),
                         ),
+                        const SizedBox(height: doubleTen,),
                         Row(
                           mainAxisAlignment:
                           MainAxisAlignment.spaceBetween,
@@ -123,7 +122,6 @@ class FailureReportedList extends StatelessWidget {
                               report.data['reportDate'] ?? 'N/A',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Colors.grey.shade500,
                                 fontSize: 12,
                               ),
                             ),

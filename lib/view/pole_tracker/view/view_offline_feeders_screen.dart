@@ -58,33 +58,52 @@ class ViewOfflineFeedersScreen extends StatelessWidget {
   }
 
   Widget offlineFeederData(OffLineFeeder feeder)  {
-   return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('SS Code: ${feeder.ssCode}'.toUpperCase()),
-            Text('SS Name: ${feeder.ssName}'. toUpperCase()),
-            Text('Feeder Code: ${feeder.feederCode}'.toUpperCase()),
-            Text('Feeder Name: ${feeder.feederName}'.toUpperCase()),
-            const SizedBox(height: doubleTen,),
-            const Text("Offline Pole: 0 No.s"),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-              ElevatedButton(onPressed: null, style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.deepOrange)), child:  Text("Upload".toUpperCase(),style: const TextStyle(color:Colors.white),),),
-              ElevatedButton(onPressed: null, style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.grey[300])), child: Text("digitise offline".toUpperCase(),style: const TextStyle(color:Colors.black),)),
-            ],
-            ),
-            // Text('Voltage Level: ${feeder.voltageLevel}'.toUpperCase()),
-            // Text('Insert Date: ${DateTime.fromMillisecondsSinceEpoch(feeder.insertDate)}'),
-          ],
-        ),
-      ),
-    );
+   return Consumer<ViewOfflineFeedersViewmodel>(
+       builder: (context, viewModel, child)
+   {
+     return Card(
+       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+       elevation: 4,
+       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+       child: Padding(
+         padding: const EdgeInsets.all(12.0),
+         child: Column(
+           crossAxisAlignment: CrossAxisAlignment.start,
+           children: [
+             Text('SS Code: ${feeder.ssCode}'.toUpperCase()),
+             Text('SS Name: ${feeder.ssName}'.toUpperCase()),
+             Text('Feeder Code: ${feeder.feederCode}'.toUpperCase()),
+             Text('Feeder Name: ${feeder.feederName}'.toUpperCase()),
+             const SizedBox(height: doubleTen,),
+             TextButton(onPressed: () {
+               viewModel.OfflinePole(feeder.voltageLevel, feeder.feederCode, feeder.feederName, feeder.ssCode, feeder.ssName);
+             },
+                 style: ButtonStyle(backgroundColor:MaterialStateProperty.all(Colors.white)),
+                 child: Text("Offline Pole: ${feeder.poleList.length} No.s", style: const TextStyle(color:Colors.black),)),
+             Row(
+               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+               children: [
+                 ElevatedButton(onPressed: null,
+                   style: ButtonStyle(
+                       backgroundColor: MaterialStateProperty.all(
+                           Colors.deepOrange)),
+                   child: Text("Upload".toUpperCase(),
+                     style: const TextStyle(color: Colors.white),),),
+                 ElevatedButton(onPressed: null,
+                     style: ButtonStyle(
+                         backgroundColor: MaterialStateProperty.all(
+                             Colors.grey[300])),
+                     child: Text("digitise offline".toUpperCase(),
+                       style: const TextStyle(color: Colors.black),)),
+               ],
+             ),
+             // Text('Voltage Level: ${feeder.voltageLevel}'.toUpperCase()),
+             // Text('Insert Date: ${DateTime.fromMillisecondsSinceEpoch(feeder.insertDate)}'),
+           ],
+         ),
+       ),
+     );
+   }
+   );
   }
 }

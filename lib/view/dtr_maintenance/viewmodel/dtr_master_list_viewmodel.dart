@@ -75,16 +75,16 @@ class DtrMasterListViewmodel extends ChangeNotifier {
           //if(response.data['sessionValid'] == isTrue) {
           if (response.data['taskSuccess'] == isTrue) {
             if(response.data['dataList'] != null) {
-              // final List<dynamic> jsonList = jsonDecode(response.data['dataList']);
+
               List<dynamic> jsonList;
 
-              // If dataList is a String, decode it; otherwise, it's already a List
+
               if (response.data['dataList'] is String) {
                 jsonList = jsonDecode(response.data['dataList']);
               } else if (response.data['dataList'] is List) {
                 jsonList = response.data['dataList'];
               } else {
-                jsonList = [];  // Fallback to empty list if the type is unexpected
+                jsonList = [];
               }
               final List<DtrStructureIndexModel> dataList = jsonList.map((json) => DtrStructureIndexModel.fromJson(json)).toList();
               _dtrStructureIndexList.addAll(dataList);

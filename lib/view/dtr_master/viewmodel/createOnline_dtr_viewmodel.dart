@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -34,8 +35,12 @@ class OnlineDtrViewmodel extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   bool isLocationGranted = false;
-  String? _latitude;
-  String? _longitude;
+
+  double MINIMUM_GPS_ACCURACY_REQUIRED = 15.0;
+  StreamSubscription<Position>? _positionStream;
+  double? latitude;
+  double? longitude;
+  double? totalAccuracy;
 
   final ImageUploader _imageUploader = ImageUploader();
   final formKey = GlobalKey<FormState>();
@@ -48,7 +53,7 @@ class OnlineDtrViewmodel extends ChangeNotifier {
   List<DtrCardData> dtrCardData = [];
 
   void init() {
-    getCurrentLocation();
+    fetchCurrentLocation();
     getDistributions();
 
     _ssno = List.generate(
@@ -57,6 +62,14 @@ class OnlineDtrViewmodel extends ChangeNotifier {
     );
     sapDTRStructCode.text = "SELECT-SS-0001";
   }
+
+  @override
+  void dispose() {
+    _positionStream?.cancel();
+    super.dispose();
+  }
+
+
 
   String? _selectedFilter;
   String? get selectedFilter => _selectedFilter;
@@ -905,39 +918,29 @@ class OnlineDtrViewmodel extends ChangeNotifier {
   }
 
 
-  Future<void> getCurrentLocation() async {
-    try {
-      LocationPermission permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-          AlertUtils.showSnackBar(context, "Location permission denied", isTrue);
-          return;
-        }
-      }
+  Future<void> fetchCurrentLocation() async {
+    _isLoading = true;
+    notifyListeners();
 
-      if (permission == LocationPermission.deniedForever) {
-        AlertUtils.showSnackBar(
-            context, "Location permissions are permanently denied", isTrue);
-        return;
-      }
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    LocationPermission permission = await Geolocator.checkPermission();
 
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
-
-      _latitude = position.latitude.toString();
-      _longitude = position.longitude.toString();
-      isLocationGranted = true;
-
-      print("Geo Current location: $_latitude , $_longitude");
-
-      notifyListeners();
-    } catch (e) {
-      print("Error fetching location: $e");
-      AlertUtils.showSnackBar(context, "Error fetching location", isTrue);
+    if (!serviceEnabled || permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
     }
+
+    _positionStream = Geolocator.getPositionStream(
+      locationSettings: LocationSettings(accuracy: LocationAccuracy.high),
+    ).listen((Position position) {
+      latitude = position.latitude;
+      longitude = position.longitude;
+      totalAccuracy = position.accuracy;
+      print("totalAccuracy: $totalAccuracy");
+      _isLoading = false;
+      notifyListeners();
+    });
   }
+
 
   Future<void> requestSerialNo(int cardIndex) async {
     if (_isLoading || cardIndex >= dtrCardData.length) return;
@@ -1144,8 +1147,8 @@ class OnlineDtrViewmodel extends ChangeNotifier {
                 .firstWhere((f) => f.optionCode == _selectedFeeder)
                 .optionName,
             hgFuseSet: _selectedHGFuse!,
-            lat: double.parse(_latitude!),
-            lon: double.parse(_longitude!),
+            lat: latitude!,
+            lon: longitude!,
             loadPattern: _selectedLoadPattern!,
             ltFuseSet: _selectedLTFuseSet!,
             ltFuseType: _selectedLTFuseType!,
@@ -1331,9 +1334,9 @@ class OnlineDtrViewmodel extends ChangeNotifier {
           context, "Please select Load Pattern",
           isTrue);
       return false;
-    }else if (_latitude==null|| _longitude==null ) {
-      getCurrentLocation();
-      print(" Final Loaction $_latitude and $_longitude");
+    }else if (latitude==null|| longitude==null ) {
+      fetchCurrentLocation();
+      print(" Final Loaction $latitude and $longitude");
       AlertUtils.showSnackBar(
           context, "Please await until we capture  your current location",
           isTrue);
