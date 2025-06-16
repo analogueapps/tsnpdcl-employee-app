@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
+// import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
 import 'package:tsnpdcl_employee/dialogs/process_dialog.dart';
@@ -83,7 +83,7 @@ class MeterChangeEntryScreenViewModel extends ChangeNotifier {
   bool barCodeScanOnNew=false;
   bool _isScanned = false;
   String? _code;
-  Barcode? barcode;
+  // Barcode? barcode;
 
 
   List<String> meterTypeOptions = [
@@ -300,23 +300,23 @@ class MeterChangeEntryScreenViewModel extends ChangeNotifier {
     );
   }
 
-  void getBarCode(BuildContext context, BarcodeCapture result) async {
-    final code = result.barcodes.first.rawValue;
-    if (code == null) return;
-
-    print('Scanned barcode: $code');
-
-    // Only assign to one field based on active scan
-    if (barCodeScanOnOld) {
-      oldMeterNoController.text = code;
-      barCodeScanOnOld = false;
-    } else if (barCodeScanOnNew) {
-      newMeterNoController.text = code;
-      barCodeScanOnNew = false;
-    }
-
-    notifyListeners();
-  }
+  // void getBarCode(BuildContext context, BarcodeCapture result) async {
+  //   final code = result.barcodes.first.rawValue;
+  //   if (code == null) return;
+  //
+  //   print('Scanned barcode: $code');
+  //
+  //   // Only assign to one field based on active scan
+  //   if (barCodeScanOnOld) {
+  //     oldMeterNoController.text = code;
+  //     barCodeScanOnOld = false;
+  //   } else if (barCodeScanOnNew) {
+  //     newMeterNoController.text = code;
+  //     barCodeScanOnNew = false;
+  //   }
+  //
+  //   notifyListeners();
+  // }
   void scanBarCode(BuildContext context) async {
     if (status!.isGranted) {
       barCodeScanOnNew = false;
@@ -515,58 +515,3 @@ class MeterChangeEntryScreenViewModel extends ChangeNotifier {
   }
 }
 
-
-//final structureJson = structure.toJson(imageUrls);
-//   final requestData = {
-//     "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
-//     "api": Apis.API_KEY,
-//     "dtrData": jsonEncode(structureJson),
-//   };
-//
-//
-//   final payload = {
-//     "path": "/saveDTRStructure",
-//     "apiVersion": "1.0",
-//     "method": "POST",
-//     "data": requestData,
-//   };
-//
-//   final response = await ApiProvider(baseUrl: Apis.CHECK_ROOT_URL)
-//       .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
-//
-//   if (context.mounted) {
-//     ProcessDialogHelper.closeDialog(context);
-//   }
-//
-//   if (response == null) {
-//     throw Exception("No response received from server");
-//   }
-//
-//   dynamic responseData = response.data;
-//   if (responseData is String) responseData = jsonDecode(responseData);
-//
-//   if (response.statusCode == 200) {
-//     if (responseData['taskSuccess'] == true) {
-//       return true;
-//     } else {
-//       throw Exception(responseData['message'] ?? "Structure creation failed");
-//     }
-//   } else {
-//     throw Exception(responseData['message'] ?? "Request failed with status ${response.statusCode}");
-//   }
-// } catch (e, stackTrace) {
-//   print("Error creating structure: $e\n$stackTrace");
-//   if (context.mounted) {
-//     ProcessDialogHelper.closeDialog(context);
-//     showAlertDialog(context, "Failed to create structure: ${e.toString()}");
-//   }
-//   return false;
-// } finally {
-//   _isLoading = false;
-//   notifyListeners();
-// }
-
-// // Update progress dialog
-// if (context.mounted) {
-//   ProcessDialogHelper.showProcessDialog(context, message: "Creating structure...");
-// }

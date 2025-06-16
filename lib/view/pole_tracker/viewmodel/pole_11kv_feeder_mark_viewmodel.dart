@@ -392,7 +392,6 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
                     'digitalPoleId': entity.id,
                     'voltage': entity.voltage,
                     'scheduleId': 0,
-                    // "dtrId":""
                   };
                   Navigation.instance.navigateTo(
                       Routes.pmiInspectionForm,
@@ -410,7 +409,6 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
                     'fc': feederCode,
                     'fn': feederName,
                     'digitalPoleId': entity.id,
-                    // "dtrId":""
                   };
                   Navigation.instance.navigateTo(
                       Routes.pmiList,

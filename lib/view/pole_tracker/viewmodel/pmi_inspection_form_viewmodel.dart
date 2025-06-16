@@ -13,6 +13,7 @@ import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
+import 'package:tsnpdcl_employee/widget/view_detailed_lc_head_widget.dart';
 
 import '../model/pmi_model.dart';
 
@@ -20,7 +21,7 @@ class PmiInspectionFormViewmodel extends ChangeNotifier {
    PmiInspectionFormViewmodel({required this.context, required this.args}){
     _handleLocation();
     print('Im in the constructure..!');
-    // loadFormUrl();
+    loadFormUrl();
   }
 
   final BuildContext context;
@@ -32,7 +33,7 @@ class PmiInspectionFormViewmodel extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
-  bool readOnly=false;
+  bool readOnly=isTrue;
 
    List<FormControl> formControls = [];
    List<RowItem> rowItems = [];
@@ -42,8 +43,8 @@ class PmiInspectionFormViewmodel extends ChangeNotifier {
    File? capturedImage;
 
 
-   List<String> poleNumList=["pole1","pole2","pole3"];
-   List<String> poleConditionList=["good","ok","bad"];
+   // List<String> poleNumList=["pole1","pole2","pole3"];
+   List<String> poleConditionList=[];
    List<String> lineSpanList=["span1","span2","span3"];
    List<String> linePassingList=["passing1","passing2","passing3"];
    List<String> cableOnPoleList=["cable1","cable2","cable3"];
@@ -88,6 +89,7 @@ class PmiInspectionFormViewmodel extends ChangeNotifier {
    String? selectedStatus;
 
    TextEditingController remarks=TextEditingController();
+   TextEditingController poleNumber=TextEditingController();
 
   void _handleLocation() async {
 
@@ -181,8 +183,8 @@ class PmiInspectionFormViewmodel extends ChangeNotifier {
      final requestData = {
        "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
        "api": Apis.API_KEY,
-       "voltage":"11KV",//args['voltage']
-       "digitalPoleId": 9752757,//args['digitalPoleId'],
+       "voltage":args['voltage'],
+       "digitalPoleId": args['digitalPoleId'],
        "scheduleId":0,
        "readOnly":false
      };
@@ -206,11 +208,20 @@ class PmiInspectionFormViewmodel extends ChangeNotifier {
            if(response.data['tokenValid'] == isTrue) {
              if (response.data['success'] == isTrue) {
                if(response.data['objectJson'] != null) {
-                 print('Success...!');
-                 // final objectJson = jsonDecode(response.data['objectJson']);
-                 // formControls = (objectJson as List).map((e) => FormControl.fromJson(e)).toList();
-                 // rowItems = (objectJson[0]['rowList'] as List).map<RowItem>((e) => RowItem.fromJson(e)).toList();
-                 // notifyListeners();
+                 formControls.clear();
+                 rowItems.clear();
+                 final data = jsonDecode(response.data['objectJson']); // should be a List
+                 if (data is List) {
+                   List<FormControl> formData = (data[0]['formControlList'] as List).map<FormControl>((e) => FormControl.fromJson(e)).toList();
+                   List<RowItem> rowData = (data[0]['rowList'] as List).map<RowItem>((e) => RowItem.fromJson(e)).toList();
+
+                   formControls.addAll(formData);
+                   rowItems.addAll(rowData);
+                   print('formControls : ${formControls.toString()}');
+                   notifyListeners();
+               } else {
+                   print("Error: Decoded objectJson is not a List or is empty");
+                 }
                }
              } else {
                showAlertDialog(context,response.data['message']);
@@ -239,65 +250,55 @@ class PmiInspectionFormViewmodel extends ChangeNotifier {
    }
 
 
-   Widget buildFormField(FormControl control) {
-     if (control.viewType == 'EDIT_TEXT') {
-       return TextFormField(
-         initialValue: control.text,
-         enabled: control.focusable,
-         decoration: InputDecoration(
-           labelText: control.label,
-           hintText: control.hint,
-           labelStyle: TextStyle(color: Colors.black),
-           hintStyle: TextStyle(color: hexToColor(control.hintTextColor)),
-         ),
-         style: TextStyle(color: hexToColor(control.textColor)),
-         maxLength: control.maxLength,
-         validator: (value) {
-           if (control.required && (value == null || value.isEmpty)) {
-             return '${control.label} is required';
-           }
-           if (value != null && value.length < control.minLength) {
-             return 'Minimum length is ${control.minLength}';
-           }
-           return null;
-         },
-       );
-     } else if (control.viewType == 'SPINNER' && control.items != null) {
-       return DropdownButtonFormField<String>(
-         value: control.text == 'null' ? null : control.text,
-         decoration: InputDecoration(
-           labelText: control.label,
-           labelStyle: TextStyle(color: Colors.black),
-         ),
-         items: control.items!.map((item) {
-           return DropdownMenuItem<String>(
-             value: item,
-             child: Text(item),
-           );
-         }).toList(),
-         onChanged: control.focusable ? (value) {
+   ///////////////////////////////Bhavana
+   Map<String, String?> selectedValues = {}; // label -> selected value map
 
-             control.text = value ?? '';
-           notifyListeners();
-         } : null,
-       );
-     } else if (control.viewType == 'LOCATION_PHOTO') {
-       return Column(
-         children: [
-           Text(control.headerBar?.label ?? 'Photo', style: TextStyle(color: hexToColor(control.headerBar?.labelColor ?? '#000000'))),
-           control.text.isNotEmpty
-               ? Image.network(control.text, height: double.infinity, fit: BoxFit.cover)
-               : ElevatedButton(
-             onPressed: () {
-               // Implement photo capture logic
-             },
-             child: Text('Capture Photo'),
+   void setSelectedValue(String label, String? value) {
+     selectedValues[label] = value;
+     notifyListeners();
+   }
+
+   String? getSelectedValue(String label) => selectedValues[label];
+
+   Widget entryForm(FormControl control, PmiInspectionFormViewmodel viewModel) {
+     if (control.viewType == 'SPINNER' && control.items != null) {
+       return Padding(
+         padding: const EdgeInsets.symmetric(vertical: 8.0),
+         child: Column(children: [
+           control.headerBar?.label!=null?ViewDetailedLcHeadWidget(title:control.headerBar?.label??""):Text(""),
+           Row(children: [
+         Expanded(child:Text(control.label??""),),
+           Expanded(child: DropdownButtonFormField<String>(
+           isExpanded: true,
+           decoration: InputDecoration(
+             labelText: control.label ?? "Select",
+             border: OutlineInputBorder(),
            ),
-         ],
+           value: viewModel.getSelectedValue(control.label ?? ""),
+           items: control.items!
+               .map((item) =>
+               DropdownMenuItem(
+                 value: item,
+                 child: Text(item),
+               ))
+               .toList(),
+           onChanged: (value) {
+             viewModel.setSelectedValue(control.label ?? "", value);
+           },
+         ),
+           ),
+         ]
+         ),
+         ]
+         ),
        );
      }
-     return SizedBox.shrink();
+     else{
+       return SizedBox.shrink();
+     }
    }
+
+   ///////////////////////////
 
    void changeReadOnlyStatus(){
     readOnly=!readOnly;

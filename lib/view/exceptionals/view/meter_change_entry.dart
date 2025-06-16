@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
+// import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
@@ -45,11 +45,12 @@ class MeterChangeEntryScreen extends StatelessWidget {
           body: viewModel.isLoading
               ? const Center(child: CircularProgressIndicator())
               : viewModel.barCodeScanOnOld || viewModel.barCodeScanOnNew
-                  ? MobileScanner(
-                      onDetect: (result) {
-                        viewModel.getBarCode(context, result);
-                      },
-                    )
+            ? Container()
+                  // ? MobileScanner(
+                  //     onDetect: (result) {
+                  //       viewModel.getBarCode(context, result);
+                  //     },
+                  //   )
                   : SingleChildScrollView(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
