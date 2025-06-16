@@ -74,7 +74,7 @@ class PmiInspectionForm extends StatelessWidget {
                           const Expanded(child: Text('9756486'))
                         ],
                       ),
-                      Divider(
+                      const Divider(
                         color: Colors.grey,
                         thickness: 1,
                       ),

@@ -41,6 +41,7 @@ class PmiInspectionFormViewmodel extends ChangeNotifier {
    late final ImagePicker _picker=ImagePicker();
    File? capturedImage;
 
+
    List<String> poleNumList=["pole1","pole2","pole3"];
    List<String> poleConditionList=["good","ok","bad"];
    List<String> lineSpanList=["span1","span2","span3"];
