@@ -251,17 +251,59 @@ class PmiInspectionFormViewmodel extends ChangeNotifier {
 
 
    ///////////////////////////////Bhavana
+   //DropDowns
    Map<String, String?> selectedValues = {}; // label -> selected value map
 
    void setSelectedValue(String label, String? value) {
      selectedValues[label] = value;
      notifyListeners();
    }
+   //TextEditingControllers
+   Map<String, TextEditingController> _textControllers = {};
+
+   TextEditingController getTextController(String label) {
+     return _textControllers.putIfAbsent(label, () => TextEditingController());
+   }
+
+   void setTextValue(String label, String value) {
+     if (_textControllers.containsKey(label)) {
+       _textControllers[label]?.text = value;
+     }
+   }
 
    String? getSelectedValue(String label) => selectedValues[label];
 
    Widget entryForm(FormControl control, PmiInspectionFormViewmodel viewModel) {
-     if (control.viewType == 'SPINNER' && control.items != null) {
+     if (control.viewType == 'EDIT_TEXT') {
+       final controller = viewModel.getTextController(control.label ?? "");
+       return Padding(
+         padding: const EdgeInsets.symmetric(vertical: 8.0),
+         child: Column(
+           children: [
+             control.headerBar?.label != null
+                 ? ViewDetailedLcHeadWidget(title: control.headerBar?.label ?? "")
+                 : SizedBox.shrink(),
+             Row(
+               children: [
+                 Expanded(child: Text(control.label ?? "")),
+                 Expanded(
+                   child: TextFormField(
+                     controller: controller,
+                     decoration: InputDecoration(
+                       labelText: control.label ?? "Enter Text",
+                       border: OutlineInputBorder(),
+                     ),
+                     onChanged: (value) {
+                       viewModel.setTextValue(control.label ?? "", value);
+                     },
+                   ),
+                 ),
+               ],
+             ),
+           ],
+         ),
+       );
+     }else if (control.viewType == 'SPINNER' && control.items != null) {
        return Padding(
          padding: const EdgeInsets.symmetric(vertical: 8.0),
          child: Column(children: [
