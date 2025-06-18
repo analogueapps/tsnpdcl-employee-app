@@ -83,6 +83,10 @@ class Apis{
   static const GET_EMPLOYEE_OF_SECTION_URL = "getEmployeesOfSection";
   static const ASSIGN_DTR_INSPECTION_URL = "assignDtrInspection";
 
+  ///DTR DEFECTS * Bhavana
+  //assignDtrMaintenance
+  static const ASSIGN_DTR_MAINTENANCE_URL = "assignDtrMaintenance";
+
   /// INTERRUPTIONS * SWETHA
   static const INTERRUPTIONS_END_POINT_BASE_URL = "$SERVER_IP:5656/NPFDAS/ep/interruptions/";
   /// 33KV BREAKDOWN ENTRY * DROPDOWN FIELDS

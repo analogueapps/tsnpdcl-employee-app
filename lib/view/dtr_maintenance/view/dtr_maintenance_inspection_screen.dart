@@ -64,21 +64,30 @@ class DtrMaintenanceInspectionScreen extends StatelessWidget {
                       itemCount: viewModel.groupsList.length,
                       itemBuilder: (context, index) {
                         final group = viewModel.groupsList[index];
+                        final isSelected = viewModel.selectedGroup == group;
+
+                        final bool showTick = viewModel.maintenanceCheckMap[group.optionId]?.call() ?? false;
                         return GestureDetector(
                           onTap: () {
                             viewModel.selectGroup(group);
                           },
                           child: Container(
                             padding: const EdgeInsets.all(doubleFifteen),
-                            color: viewModel.selectedGroup == group
-                                ? Colors.grey[300]
-                                : Colors.transparent,
-                            child: Text(group.optionName!,
-                                style: TextStyle(
-                                  fontWeight: viewModel.selectedGroup == group
-                                      ? FontWeight.w700
-                                      : FontWeight.w500,
-                                )),
+                            color: isSelected ? Colors.grey[300] : Colors.transparent,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    group.optionName!,
+                                    style: TextStyle(
+                                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                if (showTick) const Icon(Icons.check, color: Colors.green),
+                              ],
+                            ),
                           ),
                         );
                       },
@@ -95,7 +104,7 @@ class DtrMaintenanceInspectionScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       Flexible(
-                          flex: 1, child: DtrHtSideGroupControllerScreen()),
+                          flex: 1, child: DtrHtSideGroupControllerScreen(data: data,selectedOption:viewModel.selectedGroup!.optionId,)),
                     ],
                   ),
                 ),
@@ -107,14 +116,15 @@ class DtrMaintenanceInspectionScreen extends StatelessWidget {
                   text: "ASSIGN FOR MAINTENANCE".toUpperCase(),
                   fullWidth: isTrue,
                   onPressed: () {
-                    final htSideViewModel =
-                        Provider.of<DtrHtSideGroupControllerViewmodel>(context,
-                            listen: false);
-                    final result = htSideViewModel.methodToCallOnSubmitDtrHtSideGroupControllerScreen(context, isTrue);
-                    if(result) {
-                      htSideViewModel.getData();
+                    viewModel.getEmployeesOfSection(viewModel.dtrInspectionSheetEntity);
+                    // final htSideViewModel =
+                    //     Provider.of<DtrHtSideGroupControllerViewmodel>(context,
+                    //         listen: false);
+                    // final result = htSideViewModel.methodToCallOnSubmitDtrHtSideGroupControllerScreen(context, isTrue);
+                    // if(result) {
+                    //   htSideViewModel.getData();
                     }
-                  }),
+                  ),
             ),
           );
         },

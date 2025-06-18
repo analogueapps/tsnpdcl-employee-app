@@ -29,7 +29,7 @@ Future<void> main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => DtrHtSideGroupControllerViewmodel(),
+          create: (context) => DtrHtSideGroupControllerViewmodel(""),
         ),
       ],
       child: const MyApp(),
