@@ -32,6 +32,7 @@ class DtrInspectionListViewmodel extends ChangeNotifier {
   // Constructor to initialize the items
   DtrInspectionListViewmodel({required this.context, required this.type}) {
     _loadUser();
+    print("DtrInspectionListViewmodel Status: $type");
     getDtrInspections();
   }
 

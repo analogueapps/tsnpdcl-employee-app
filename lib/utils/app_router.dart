@@ -6,6 +6,7 @@ import 'package:tsnpdcl_employee/view/auth/view/corporate_login_screen.dart';
 import 'package:tsnpdcl_employee/view/auth/view/employee_id_login_screen.dart';
 import 'package:tsnpdcl_employee/view/auth/view/otp_verification_screen.dart';
 import 'package:tsnpdcl_employee/view/bs_udc_inspection/view/bs_udc_list.dart';
+import 'package:tsnpdcl_employee/view/category_pending_allotment/view/category_change_requests.dart';
 import 'package:tsnpdcl_employee/view/ccc/model/open_model.dart';
 import 'package:tsnpdcl_employee/view/ccc/view/ccc_complaint_track.dart';
 import 'package:tsnpdcl_employee/view/ccc/view/ccc_dashboard.dart';
@@ -39,6 +40,7 @@ import 'package:tsnpdcl_employee/view/dlist/view/range_wise_dlist_screen.dart';
 import 'package:tsnpdcl_employee/view/dtr_failure/view/dtr_failure_screen.dart';
 import 'package:tsnpdcl_employee/view/dtr_failure/view/dtr_view_rectified_reports.dart';
 import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_inspection_list_screen.dart';
+import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_maintenance_entry.dart';
 import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_maintenance_inspection_screen.dart';
 import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_maintenance_screen.dart';
 import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_master_list_screen.dart';
@@ -377,6 +379,10 @@ class AppRouter {
         return MaterialPageRoute(
             builder: (_) => DtrMaintenanceInspectionScreen(
                 data: settings.arguments as String));
+      case DtrMaintenanceEntry.id:
+        return MaterialPageRoute(
+            builder: (_) => DtrMaintenanceEntry(
+                data: settings.arguments as String));
 
     // Widgets
       case PinchZoomImageView.id:
@@ -613,6 +619,9 @@ class AppRouter {
         return MaterialPageRoute(builder: (_)=> ServicesAppListScreen(data: settings.arguments as Map<String, dynamic>,));
       case FormLoaderScreen.id:
         return MaterialPageRoute(builder: (_)=> FormLoaderScreen(data: settings.arguments as Map<String, dynamic>,));
+        //Meeseva * Bhavana
+        case CategoryChangeRequests.id:
+        return MaterialPageRoute(builder: (_)=> CategoryChangeRequests(data: settings.arguments as Map<String, dynamic>,));
 
     // DLIST * Surya
       case DlistMenuScreen.id:

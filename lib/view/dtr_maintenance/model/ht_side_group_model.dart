@@ -118,3 +118,4 @@ class HtSideGroupModel {
 enum Status { Good, Damaged,Ok,Replaced,Not_Rectified,Rectified }
 enum AbSwitch { Available, NotAvailable }
 enum AbSwitchType { Vertical, Horizontal }
+enum WireStatus{OK, NotOK}

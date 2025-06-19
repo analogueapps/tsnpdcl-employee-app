@@ -11,7 +11,7 @@ import 'package:tsnpdcl_employee/view/filter/model/filter_label_model_list.dart'
 
 class DtrHtSideGroupControllerViewmodel extends ChangeNotifier {
 
-   String data;
+    String? data;
 
   final bool _isLoading = isFalse;
   bool get isLoading => _isLoading;
@@ -52,8 +52,12 @@ class DtrHtSideGroupControllerViewmodel extends ChangeNotifier {
   OptionSpinner? spinnerHtBushRodsDamagedQty;
 
   // Constructor to initialize the items
-  DtrHtSideGroupControllerViewmodel( this.data) {
-    dtrInspectionSheetEntity = DtrInspectionSheetEntity.fromJson(jsonDecode(data));
+  DtrHtSideGroupControllerViewmodel();
+
+    void loadData(String newData) {
+      data = newData;
+    dtrInspectionSheetEntity = DtrInspectionSheetEntity.fromJson(jsonDecode(newData));
+    notifyListeners();
     // spinnerAbSwitchContactsDamaged = getNumberSpinnerAdapter(includeZero: true, maxValue: 3);
     // spinnerAbSwitchPigTailDamaged = getNumberSpinnerAdapter(includeZero: true, maxValue: 3);
     // spinnerAbSwitchNylonBushesDamaged = getNumberSpinnerAdapter(includeZero: true, maxValue: 3);

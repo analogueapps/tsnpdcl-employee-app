@@ -17,7 +17,11 @@ class DtrHtSideGroupControllerScreen extends StatelessWidget {
   Widget build(BuildContext context) {
    return Scaffold(
       body: ChangeNotifierProvider(
-       create: (_) => DtrHtSideGroupControllerViewmodel( data),
+       create: (_) {
+         final viewModel = DtrHtSideGroupControllerViewmodel();
+         viewModel.loadData(data); // 👈 Load data from constructor argument
+         return viewModel;
+       },
     child:Consumer<DtrHtSideGroupControllerViewmodel>(
           builder: (context, viewModel, child) {
             return SingleChildScrollView(
@@ -281,18 +285,3 @@ Widget _buildGroupSpecificWidgets(DtrInspectionSheetEntity? dtrInspectionSheetEn
 }
 
 
-//Column(children: [
-//                 ViewDetailedLcTileWidget(tileValue:"ab s/w available".toUpperCase() , tileKey:viewModel.dtrInspectionSheetEntity?.abSwitchAvailable=="Y"?"Available":"Not Available" ,),
-//                 ViewDetailedLcTileWidget(tileValue:"ab s/w type".toUpperCase() , tileKey:viewModel.dtrInspectionSheetEntity?.abSwitchType),
-//                 ViewDetailedLcTileWidget(tileValue:"ab s/w status".toUpperCase() , tileKey:viewModel.dtrInspectionSheetEntity?.abSwitchStatus),
-//                 ViewDetailedLcTileWidget(tileValue:"ab s/w contacts dama".toUpperCase() , tileKey:viewModel.dtrInspectionSheetEntity?.abSwitchStatus),
-//                 ViewDetailedLcTileWidget(tileValue:"ab s/w status".toUpperCase() , tileKey:viewModel.dtrInspectionSheetEntity?.abSwitchStatus),
-//                 ViewDetailedLcTileWidget(tileValue:"ab s/w status".toUpperCase() , tileKey:viewModel.dtrInspectionSheetEntity?.abSwitchStatus),
-//                 ViewDetailedLcTileWidget(tileValue:"ab s/w status".toUpperCase() , tileKey:viewModel.dtrInspectionSheetEntity?.abSwitchStatus),
-//                 ViewDetailedLcTileWidget(tileValue:"ab s/w status".toUpperCase() , tileKey:viewModel.dtrInspectionSheetEntity?.abSwitchStatus),
-//                 ViewDetailedLcTileWidget(tileValue:"ab s/w status".toUpperCase() , tileKey:viewModel.dtrInspectionSheetEntity?.abSwitchStatus),
-//                 ViewDetailedLcTileWidget(tileValue:"ab s/w status".toUpperCase() , tileKey:viewModel.dtrInspectionSheetEntity?.abSwitchStatus),
-//                 ViewDetailedLcTileWidget(tileValue:"ab s/w status".toUpperCase() , tileKey:viewModel.dtrInspectionSheetEntity?.abSwitchStatus),
-//                 ViewDetailedLcTileWidget(tileValue:"ab s/w status".toUpperCase() , tileKey:viewModel.dtrInspectionSheetEntity?.abSwitchStatus),
-//                 ViewDetailedLcTileWidget(tileValue:"ab s/w status".toUpperCase() , tileKey:viewModel.dtrInspectionSheetEntity?.abSwitchStatus),
-//               ],),

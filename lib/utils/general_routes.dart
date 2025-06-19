@@ -84,6 +84,7 @@ class Routes {
   static const String dtrMasterListScreen = "DtrMasterListScreen";
   static const String dtrInspectionListScreen = "DtrInspectionListScreen";
   static const String dtrMaintenanceInspectionScreen = "DtrMaintenanceInspectionScreen";
+  static const String dtrMaintenanceEntry = "DtrMaintenanceEntry";
 
   static const String ganeshPandalInformationScreen = 'ganesh_pandal_information_screen';
 
@@ -198,6 +199,9 @@ class Routes {
   static const String meeSevaAbstractScreen = "MeeSevaAbstractScreen";
   static const String servicesAppListScreen = "ServicesAppListScreen";
   static const String formLoaderScreen = "FormLoaderScreen";
+
+  //Meeseva *Bhavana
+  static const String categoryPendingAllotment = "CategoryChangeRequests";
 
   // Dlist * Surya
   static const String dlistMenuScreen = "DlistMenuScreen";

@@ -93,6 +93,11 @@ class MeesevaMenuViewModel extends ChangeNotifier {
           iconAsset: Icons.cancel_rounded,
           cardColor: Colors.red,
           routeName: routeName),
+      SubMenuGridItem(
+          title: GlobalConstants.categoryPendingAllotment,
+          iconAsset: Icons.group,
+          cardColor: Colors.blue,
+          routeName: routeName),
     ]);
 
     notifyListeners();
@@ -221,12 +226,11 @@ class MeesevaMenuViewModel extends ChangeNotifier {
         "ncflag": "M"
       };
       Navigation.instance.navigateTo(Routes.servicesAppListScreen, args: argument);
-    } else if (title == GlobalConstants.rejected) {
+    } else if (title == GlobalConstants.categoryPendingAllotment) {
       var argument = {
-        "s": ApplicationStatus.REJECTED,
-        "ncflag": "M"
+        "status": "VERIFIED"
       };
-      Navigation.instance.navigateTo(Routes.servicesAppListScreen, args: argument);
+      Navigation.instance.navigateTo(Routes.categoryPendingAllotment, args: argument);
     }
   }
 }

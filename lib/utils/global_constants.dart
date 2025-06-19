@@ -126,6 +126,7 @@ class GlobalConstants {
   static const String metersInstalledToBeReleasedByAe = "Meters Installed To Be Released By AE";
   static const String releasedByAe = "Release By AE";
   static const String rejected = "Rejected";
+  static const String categoryPendingAllotment = "Pending Allotment";
 
   // RFSS menu * swetha
   static const String rfssMenu = "RFSS MENU";

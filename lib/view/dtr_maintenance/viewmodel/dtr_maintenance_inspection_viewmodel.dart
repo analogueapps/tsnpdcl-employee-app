@@ -110,7 +110,7 @@ class DtrMaintenanceInspectionViewmodel extends ChangeNotifier {
   }
 
    void assignForMaintenance(DtrInspectionSheetEntity? item){
-     String? selectedItem;
+     EmployeeMasterEntity? selectedItem;
      DateTime? selectedDate;
 
      showDialog(
@@ -168,18 +168,14 @@ class DtrMaintenanceInspectionViewmodel extends ChangeNotifier {
                        ),
                      ),
                      const SizedBox(height: doubleFive,),
-                     DropdownButton<String>(
+                     DropdownButton<EmployeeMasterEntity>(
                        isExpanded: true,
                        hint: const Text("Select an item", style: TextStyle(fontSize: normalSize)),
-                       // 🛑 Ensure value only if it exists in list
-                       value: employeeMasterEntityList
-                           .any((e) => e.empId.toString() == selectedItem)
-                           ? selectedItem
-                           : null,
+                       value: selectedItem,
                        items: employeeMasterEntityList.map((emp) {
                          final empIdStr = emp.empId.toString();
-                         return DropdownMenuItem<String>(
-                           value: empIdStr,
+                         return DropdownMenuItem<EmployeeMasterEntity>(
+                           value: emp,
                            child: Row(
                              children: [
                                Image.asset(Assets.account, height: 30, width: 30),
@@ -198,9 +194,10 @@ class DtrMaintenanceInspectionViewmodel extends ChangeNotifier {
                            ),
                          );
                        }).toList(),
-                       onChanged: (String? newValue) {
+                       onChanged: (EmployeeMasterEntity? newValue) {
                          setState(() {
                            selectedItem = newValue;
+                           print("selectedEmp value:  ${selectedItem?.empId}");
                          });
                        },
                      ),
@@ -290,8 +287,8 @@ class DtrMaintenanceInspectionViewmodel extends ChangeNotifier {
                              } else if (selectedDate == null) {
                                showAlertDialog(context, "Please select schedule date of maintenance");
                              } else {
-                               print("assignDtrMaintenance api call");
-                               assignDtrMaintenance(item!.sheetId, selectedDate);
+                               print("assignDtrMaintenance api call: ${item!.sheetId} ${selectedItem!.empId}");
+                               assignDtrMaintenance(item.sheetId, selectedItem!.empId);
                              }
                            },
                            child: Text("Ok".toUpperCase(),
@@ -363,7 +360,7 @@ class DtrMaintenanceInspectionViewmodel extends ChangeNotifier {
     }
   }
 
-  Future<void> assignDtrMaintenance(num? sheetID, DateTime? selectedEmpId) async {
+  Future<void> assignDtrMaintenance(num? sheetID, String? selectedEmpId) async {
     ProcessDialogHelper.showProcessDialog(
       context,
       message: "Processing...",

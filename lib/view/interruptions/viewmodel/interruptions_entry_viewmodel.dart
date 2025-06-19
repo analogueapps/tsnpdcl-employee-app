@@ -345,7 +345,6 @@ class InterruptionsEntryViewmodel extends ChangeNotifier {
     selectedFeeders.clear();
     notifyListeners();
 
-    try {
       final requestData = {
         "authToken":
             SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
@@ -363,66 +362,57 @@ class InterruptionsEntryViewmodel extends ChangeNotifier {
       final response = await ApiProvider(baseUrl: Apis.ROOT_URL)
           .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
 
-      if (response == null) {
-        throw Exception("No response received from server");
-      }
+      try{
+        if (response != null) {
+          if (response.data is String) {
+            response.data = jsonDecode(response.data); // Parse string to JSON
+          }
+          if (response.statusCode == successResponseCode) {
+            if (response.data['tokenValid'] == isTrue) {
+              if (response.data['success'] == isTrue) {
+                if (response.data['objectJson'] != null) {
+                final jsonList = jsonDecode(
+                    response.data['objectJson']);
+                List<InterruptionsModel> dataList = [];
 
-      // Process response data
-      dynamic responseData = response.data;
-      if (responseData is String) {
-        responseData = jsonDecode(responseData);
-      }
+                if (jsonList is String) {
+                  // Clean and parse JSON string
+                  String cleanedJson = jsonList.replaceAll(r'\"', '"').trim();
 
-      // Validate response
-      if (responseData['success'] == true) {
-        AlertUtils.showSnackBar(context, responseData['message'], isFalse);
-        resetForm(); // Add this line to reset the form after successful submission
-      }
+                  if (cleanedJson.endsWith(',')) {
+                    cleanedJson = cleanedJson.substring(0, cleanedJson.length - 1);
+                  }
 
-      if (responseData['tokenValid'] != true) {
-        showSessionExpiredDialog(context);
-        return;
-      }
+                  if (!cleanedJson.startsWith('[')) {
+                    cleanedJson = '[$cleanedJson]';
+                  }
 
-      if (responseData['success'] != true) {
-        throw Exception(responseData['message'] ?? "Operation failed");
-      }
+                  dataList = (jsonDecode(cleanedJson) as List)
+                      .map((json) => InterruptionsModel.fromJson(json))
+                      .toList();
+                } else if (jsonList is List) {
+                  dataList =
+                      jsonList.map((json) => InterruptionsModel.fromJson(json)).toList();
+                }
 
-      // Process feeder data
-      if (responseData['objectJson'] == null) {
-        throw Exception("No feeder data received");
-      }
+              feeders.addAll(dataList);
+              print("Successfully loaded ${feeders.length} feeders");
 
-      final jsonList = responseData['objectJson'];
-      List<InterruptionsModel> dataList = [];
-
-      if (jsonList is String) {
-        // Clean and parse JSON string
-        String cleanedJson = jsonList.replaceAll(r'\"', '"').trim();
-
-        if (cleanedJson.endsWith(',')) {
-          cleanedJson = cleanedJson.substring(0, cleanedJson.length - 1);
+              // If ISF is selected, automatically select all feeders
+              if (selectedOption == "ISF") {
+                selectedFeeders = feeders.map((f) => f.optionCode).toList();
+              }
+                }
+              } else {
+                showAlertDialog(context, response.data['message']);
+              }
+            } else {
+              showSessionExpiredDialog(context);
+            }
+          } else {
+            showAlertDialog(context, response.data['message']);
+          }
         }
-
-        if (!cleanedJson.startsWith('[')) {
-          cleanedJson = '[$cleanedJson]';
-        }
-
-        dataList = (jsonDecode(cleanedJson) as List)
-            .map((json) => InterruptionsModel.fromJson(json))
-            .toList();
-      } else if (jsonList is List) {
-        dataList =
-            jsonList.map((json) => InterruptionsModel.fromJson(json)).toList();
-      }
-
-      feeders.addAll(dataList);
-      print("Successfully loaded ${feeders.length} feeders");
-
-      // If ISF is selected, automatically select all feeders
-      if (selectedOption == "ISF") {
-        selectedFeeders = feeders.map((f) => f.optionCode).toList();
-      }
     } catch (e, stackTrace) {
       print("Error fetching feeders: $e\n$stackTrace");
       showErrorDialog(context, "Failed to load feeders: ${e.toString()}");

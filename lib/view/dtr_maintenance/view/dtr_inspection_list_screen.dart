@@ -51,7 +51,13 @@ class DtrInspectionListScreen extends StatelessWidget {
 
                   return GestureDetector(
                     onTap: () {
-                      Navigation.instance.navigateTo(Routes.dtrMaintenanceInspectionScreen, args: jsonEncode(item));
+                      if(status=="inspectionDone") {
+                        Navigation.instance.navigateTo(Routes
+                            .dtrMaintenanceInspectionScreen, args: jsonEncode(
+                            item));
+                      } else if(status=="toBeMaintained"){
+                        Navigation.instance.navigateTo(Routes.dtrMaintenanceEntry, args: jsonEncode(item));
+                      }
                     },
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

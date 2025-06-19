@@ -173,5 +173,11 @@ class Apis{
   static String METER_CHANGE_COMPLETE_ROOT = "/NpdclEmployeeWebApi/npemp/api";
   static const METER_CHANGE_BASE_URL = "http://10.100.4.58:7000";
 
+  //Meeseva -> Category Change
+  static const CAT_CHANGE_ENDPOINT_URL = "$SERVER_IP:5656/NPFDAS/ep/cat-change/";
+  static const CAT_CHANGE_REQUESTS_OF_SECTION="getCatChangeRequestsOfSection";
+
+
+
 }
 
