@@ -1,4 +1,4 @@
-import 'package:intl/intl.dart';
+
 
 class CategoryChangeRequestModel {
   final int regId;
@@ -41,7 +41,7 @@ class CategoryChangeRequestModel {
   final dynamic oldSectionId;
   final dynamic reason;
   final dynamic dispatchNo;
-  final DateTime? dispatchDate;
+  final String? dispatchDate;
   final dynamic oldPresentLogin;
   final dynamic oldPrsLoginLocationCode;
   final dynamic presentLoad;
@@ -107,7 +107,7 @@ class CategoryChangeRequestModel {
   final dynamic deletedReason;
   final dynamic deletedBy;
   final dynamic deletedDate;
-  final DateTime? regDate;
+  final String? regDate;
   final int? totalCGst;
   final int? totalSGst;
   final int? totalGst;
@@ -399,4 +399,140 @@ class CategoryChangeRequestModel {
       testReportPath: json['testReportPath'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'regId': regId,
+      'regNum': regNum,
+      'scno': scno,
+      'consumerName': consumerName,
+      'existCat': existCat,
+      'existLoad': existLoad,
+      'distribution': distribution,
+      'sectionId': sectionId,
+      'informatName': informatName,
+      'serviceChangeType': serviceChangeType,
+      'doorNo': doorNo,
+      'street': street,
+      'area': area,
+      'town': town,
+      'mobile': mobile,
+      'phoneNo': phoneNo,
+      'email': email,
+      'reqCat': reqCat,
+      'reqLoad': reqLoad,
+      'applicationCharges': applicationCharges,
+      'developmentCharges': developmentCharges,
+      'securityDeposit': securityDeposit,
+      'supervisionCharges': supervisionCharges,
+      'totalAmount': totalAmount,
+      'isAmountPaid': isAmountPaid,
+      'idDocName': idDocName,
+      'idDocContentType': idDocContentType,
+      'presentLogin': presentLogin,
+      'presentLoginLocationCode': presentLoginLocationCode,
+      'regUser': regUser,
+      'status': status,
+      'regIp': regIp,
+      'insDate': insDate,
+      'ero': ero,
+      'idName': idName,
+      'eroName': eroName,
+      'paaCode': paaCode,
+      'oldSectionId': oldSectionId,
+      'reason': reason,
+      'dispatchNo': dispatchNo,
+      'dispatchDate': dispatchDate,
+      'oldPresentLogin': oldPresentLogin,
+      'oldPrsLoginLocationCode': oldPrsLoginLocationCode,
+      'presentLoad': presentLoad,
+      'discount': discount,
+      'pincode': pincode,
+      'district': district,
+      'isGstnAvail': isGstnAvail,
+      'gstnNo': gstnNo,
+      'entryFlag': entryFlag,
+      'subServiceType': subServiceType,
+      'consumerType': consumerType,
+      'consumerTypeOthers': consumerTypeOthers,
+      'purposeOfSupply': purposeOfSupply,
+      'purposeOfSupplyOthers': purposeOfSupplyOthers,
+      'surname': surname,
+      'fatherName': fatherName,
+      'socialGroup': socialGroup,
+      'socialGroupOthers': socialGroupOthers,
+      'categoryType': categoryType,
+      'changedCategoryType': changedCategoryType,
+      'aadhar': aadhar,
+      'rationcardNo': rationcardNo,
+      'pan': pan,
+      'infRelation': infRelation,
+      'locationType': locationType,
+      'locationName': locationName,
+      'ldistrict': ldistrict,
+      'lmandal': lmandal,
+      'lvillage': lvillage,
+      'cdistrict': cdistrict,
+      'cmandal': cmandal,
+      'cvillage': cvillage,
+      'lpincode': lpincode,
+      'cpincode': cpincode,
+      'deliveryType': deliveryType,
+      'existScno': existScno,
+      'changedSurname': changedSurname,
+      'changedConsumername': changedConsumername,
+      'changedFathername': changedFathername,
+      'changedSocialGrp': changedSocialGrp,
+      'changedSocialGrpOther': changedSocialGrpOther,
+      'changedMobileno': changedMobileno,
+      'reasonOfChange': reasonOfChange,
+      'infDistrict': infDistrict,
+      'infMandal': infMandal,
+      'infVillage': infVillage,
+      'infPincode': infPincode,
+      'infDoorno': infDoorno,
+      'userCharges': userCharges,
+      'serviceCharge': serviceCharge,
+      'challanAmount': challanAmount,
+      'postalCharge': postalCharge,
+      'inspectionCharge': inspectionCharge,
+      'acCGst': acCGst,
+      'acSGst': acSGst,
+      'acGst': acGst,
+      'dcCGst': dcCGst,
+      'dcSGst': dcSGst,
+      'dcGst': dcGst,
+      'inspCGst': inspCGst,
+      'inspSGst': inspSGst,
+      'inspGst': inspGst,
+      'deletedReason': deletedReason,
+      'deletedBy': deletedBy,
+      'deletedDate': deletedDate,
+      'regDate': regDate,
+      'totalCGst': totalCGst,
+      'totalSGst': totalSGst,
+      'totalGst': totalGst,
+      'infMobileNo': infMobileNo,
+      'uscno': uscno,
+      'ebsRemarks': ebsRemarks,
+      'ebsStatus': ebsStatus,
+      'ebsBy': ebsBy,
+      'ebsDate': ebsDate,
+      'rrDocNo': rrDocNo,
+      'ebsIp': ebsIp,
+      'noofdays': noofdays,
+      'estimateRequired': estimateRequired,
+      'prNo': prNo,
+      'prDate': prDate,
+      'statusDate': statusDate,
+      'aeEmpId': aeEmpId,
+      'lmEmpId': lmEmpId,
+      'meterMake': meterMake,
+      'meterCapacity': meterCapacity,
+      'meterSlNo': meterSlNo,
+      'meterFr': meterFr,
+      'testReportPath': testReportPath
+    };
+  }
+
 }

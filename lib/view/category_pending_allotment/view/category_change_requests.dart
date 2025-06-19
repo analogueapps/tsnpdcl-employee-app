@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -96,7 +98,8 @@ class CategoryChangeRequests extends StatelessWidget {
                             IconButton(
                               onPressed: () {
                                 Navigation.instance
-                                    .navigateTo(Routes.openDetail, args: data,);
+                                    .navigateTo(Routes.categoryChangeDetail, args: jsonEncode(
+                                    data.toJson()),);
                                 print("icon on tap: $data");
                               },
                               icon:

@@ -6,7 +6,9 @@ import 'package:tsnpdcl_employee/view/auth/view/corporate_login_screen.dart';
 import 'package:tsnpdcl_employee/view/auth/view/employee_id_login_screen.dart';
 import 'package:tsnpdcl_employee/view/auth/view/otp_verification_screen.dart';
 import 'package:tsnpdcl_employee/view/bs_udc_inspection/view/bs_udc_list.dart';
+import 'package:tsnpdcl_employee/view/category_pending_allotment/view/category_change_request_detail.dart';
 import 'package:tsnpdcl_employee/view/category_pending_allotment/view/category_change_requests.dart';
+import 'package:tsnpdcl_employee/view/category_pending_allotment/view/documents.dart';
 import 'package:tsnpdcl_employee/view/ccc/model/open_model.dart';
 import 'package:tsnpdcl_employee/view/ccc/view/ccc_complaint_track.dart';
 import 'package:tsnpdcl_employee/view/ccc/view/ccc_dashboard.dart';
@@ -622,6 +624,10 @@ class AppRouter {
         //Meeseva * Bhavana
         case CategoryChangeRequests.id:
         return MaterialPageRoute(builder: (_)=> CategoryChangeRequests(data: settings.arguments as Map<String, dynamic>,));
+        case CategoryChangeRequestDetail.id:
+        return MaterialPageRoute(builder: (_)=> CategoryChangeRequestDetail(data: settings.arguments as String,));
+        case Documents.id:
+        return MaterialPageRoute(builder: (_)=> Documents(data: settings.arguments as String,));
 
     // DLIST * Surya
       case DlistMenuScreen.id:

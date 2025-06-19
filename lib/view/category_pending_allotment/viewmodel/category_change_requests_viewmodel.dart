@@ -77,6 +77,7 @@ class CategoryChangeRequestsViewmodel extends ChangeNotifier {
          }
        }
      }catch(e){
+       showAlertDialog(context, e.toString());
        throw Exception("Exception Occurred while Authenticating");
      }finally{
        _isLoading=false;

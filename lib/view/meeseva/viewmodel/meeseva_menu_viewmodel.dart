@@ -98,6 +98,11 @@ class MeesevaMenuViewModel extends ChangeNotifier {
           iconAsset: Icons.group,
           cardColor: Colors.blue,
           routeName: routeName),
+      SubMenuGridItem(
+          title: GlobalConstants.underVerification,
+          iconAsset: Icons.find_in_page,
+          cardColor: Colors.blue,
+          routeName: routeName),
     ]);
 
     notifyListeners();
@@ -229,6 +234,11 @@ class MeesevaMenuViewModel extends ChangeNotifier {
     } else if (title == GlobalConstants.categoryPendingAllotment) {
       var argument = {
         "status": "VERIFIED"
+      };
+      Navigation.instance.navigateTo(Routes.categoryPendingAllotment, args: argument);
+    }else if (title == GlobalConstants.underVerification) {
+      var argument = {
+        "status": "F_ALLOT"
       };
       Navigation.instance.navigateTo(Routes.categoryPendingAllotment, args: argument);
     }

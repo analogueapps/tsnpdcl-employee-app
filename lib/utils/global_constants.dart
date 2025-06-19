@@ -127,6 +127,7 @@ class GlobalConstants {
   static const String releasedByAe = "Release By AE";
   static const String rejected = "Rejected";
   static const String categoryPendingAllotment = "Pending Allotment";
+  static const String underVerification = "Under Verification";
 
   // RFSS menu * swetha
   static const String rfssMenu = "RFSS MENU";
