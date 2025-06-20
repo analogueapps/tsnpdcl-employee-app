@@ -18,17 +18,21 @@ class CategoryChangeRequests extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return ChangeNotifierProvider(
+        create: (_) => CategoryChangeRequestsViewmodel(context: context,data:data),
+        child: Consumer<CategoryChangeRequestsViewmodel>(
+            builder: (context, viewModel, child) {
+              return Scaffold(
         appBar: AppBar(
         backgroundColor: CommonColors.colorPrimary,
-        title: const Column(
+        title:  Column(
             crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-           Text("Category Change Requests", style:  TextStyle(
+           const Text("Category Change Requests", style:  TextStyle(
         color: Colors.white,
         fontSize: titleSize,
         fontWeight: FontWeight.w700),),
-        Text("Pending Allotment",  style:  TextStyle(
+        Text(viewModel.getStatusText(data['status']),  style:  TextStyle(
           color: Colors.white,),),
     ]
         ),
@@ -36,11 +40,7 @@ class CategoryChangeRequests extends StatelessWidget {
     color: Colors.white,
     ),
     ),
-    body: ChangeNotifierProvider(
-    create: (_) => CategoryChangeRequestsViewmodel(context: context,data:data),
-    child: Consumer<CategoryChangeRequestsViewmodel>(
-    builder: (context, viewModel, child) {
-    return Stack(
+    body:  Stack(
         children:[
           ListView.builder(
               itemCount: viewModel.openList.length,
@@ -125,10 +125,10 @@ class CategoryChangeRequests extends StatelessWidget {
               ),
             ),
         ]
+              ),
     );
     }
-    )
-    ),
+        ),
     );
     }
   }

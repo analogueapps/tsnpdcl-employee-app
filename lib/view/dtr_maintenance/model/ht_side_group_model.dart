@@ -119,3 +119,12 @@ enum Status { Good, Damaged,Ok,Replaced,Not_Rectified,Rectified }
 enum AbSwitch { Available, NotAvailable }
 enum AbSwitchType { Vertical, Horizontal }
 enum WireStatus{OK, NotOK}
+enum FuseWire {Copper, Aluminium, Strands}
+enum OilLevel {Ok, Shortage}
+enum OilLeak {LeakedArrested, NotRectified}
+enum Gaskets {Rectified_Replaced, NotRectified, Rectified}
+enum EarthPits {one, two,three}
+enum EarthPipes {GIPipes, CIPipes}
+enum NoLooseLine{NoLooseLines, LooseLines}
+enum LTLineTreeCutting{NotRequired, Required}
+enum DTROverLoaded {NotOverLoaded, OverLoaded}

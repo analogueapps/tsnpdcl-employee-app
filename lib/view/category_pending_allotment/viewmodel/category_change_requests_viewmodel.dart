@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
 import 'package:tsnpdcl_employee/network/api_provider.dart';
 import 'package:tsnpdcl_employee/network/api_urls.dart';
@@ -23,6 +22,23 @@ class CategoryChangeRequestsViewmodel extends ChangeNotifier {
 
    final List<CategoryChangeRequestModel> _openList = [];
    List<CategoryChangeRequestModel> get openList => _openList;
+
+   String getStatusText(String status){
+     if (status=="verified".toUpperCase()) {
+       return "Pending Allotment";
+     } else if (status=="f_allot".toUpperCase()) {
+       return "Under Inspection by staff";
+     } else if (status=="lm_f".toUpperCase()) {
+       return "Accepted by staff";
+     } else if (status=="lm_nf".toUpperCase()) {
+       return "Rejected by staff";
+     } else if (status=="ae_f".toUpperCase()) {
+       return "Approved & Forward to ADE";
+     } else if (status=="ae_nf".toUpperCase()) {
+       return "Rejected";
+     }
+     return "Un know";
+   }
 
    Future<bool> getCatChangeRequests( String status) async {
      _openList.clear();

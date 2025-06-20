@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
+import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
@@ -116,15 +118,8 @@ class DtrMaintenanceEntry extends StatelessWidget {
                   text: "Submit".toUpperCase(),
                   fullWidth: isTrue,
                   onPressed: () {
-                    final htSideViewModel =
-                    Provider.of<DtrHtMaintenanceEntryViewmodel>(context,
-                        listen: false);
-                    final result = htSideViewModel
-                        .methodToCallOnSubmitDtrHtSideGroupControllerScreen(
-                        context, isTrue);
-                    if (result) {
-                      htSideViewModel.getData();
-                    }
+                     viewModel.handleLocationIconClick();
+                    imageDialog(context, viewModel);
                   }
               ),
             ),
@@ -133,5 +128,135 @@ class DtrMaintenanceEntry extends StatelessWidget {
       ),
     );
   }
+
 }
 
+void imageDialog(BuildContext context,DtrMaintenanceEntryViewmodel viewModel ) {
+  showDialog(
+    barrierDismissible: false,
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+          titlePadding: EdgeInsets.zero,
+          contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16.0, vertical: 12.0),
+          insetPadding: const EdgeInsets.symmetric(
+              horizontal: 24.0, vertical: 24.0),
+          title: Container(
+            width: double.infinity,
+            color: CommonColors.colorPrimary,
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            child: Text(
+              "Capture after maintenance DTR structure photo".toUpperCase(),
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+                fontSize: 16.0,
+              ),
+            ),
+          ),
+          content: Column(
+            // mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                margin: const EdgeInsets.all(20),
+                height: 180,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: viewModel.photoPath.isEmpty
+                    ? const Center(child: Icon(Icons.image, size: 50))
+                    : ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: SizedBox(
+                    height: 180,
+                    width: double.infinity,
+                    child: Image.network(
+                      Apis.NPDCL_STORAGE_SERVER_IP + viewModel.photoPath,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  viewModel.capturePhoto();
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.grey[200]),
+                ),
+                child: const Text(
+                  "CAPTURE IMAGE",
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("LC NO:"),
+                  Text(""), // Replace with actual LC No
+                ],
+              ),
+              const Divider(),
+              const SizedBox(height: 8),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("LAT:"),
+                  Text(""), // Replace with actual LAT
+                ],
+              ),
+              const Divider(),
+              const SizedBox(height: 8),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("LON:"),
+                  Text(""), // Replace with actual LON
+                ],
+              ),
+              const Divider(),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                // viewModel.longitude = "";
+                // viewModel.latitude = "";
+                // notifyListeners();
+                Navigator.pop(context);
+              },
+              style: TextButton.styleFrom(
+                backgroundColor: CommonColors.colorPrimary,
+              ),
+              child: const Text(
+                "CANCEL",
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                if (viewModel.latitude.isEmpty && viewModel.longitude.isEmpty) {
+                  showAlertDialog(context,
+                      "Please wait until we capture your location and please make sure you turn on your location.");
+                } else {
+                  print("In else block");
+                }
+              }, // Replace with logic
+              child: const Text(
+                "SUBMIT",
+                style: TextStyle(color: CommonColors.colorPrimary),
+              ),
+              style: TextButton.styleFrom(
+                  backgroundColor: Colors.grey[300]),
+            ),
+          ],
+        );
+      }
+  );
+}

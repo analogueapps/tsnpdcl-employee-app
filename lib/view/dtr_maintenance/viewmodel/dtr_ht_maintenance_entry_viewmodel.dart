@@ -142,10 +142,10 @@ class DtrHtMaintenanceEntryViewmodel extends ChangeNotifier {
   }
 
   //lt fuse wire
-  String? ltFuseWire;
+  FuseWire? ltFuseWire;
   bool isLtFuseWireDisabled = false;
 
-  void selectLtFuseWireStatus(String? value) {
+  void selectLtFuseWireStatus(FuseWire? value) {
     if (value == null) return;
     ltFuseWire= value;
     notifyListeners();
@@ -181,6 +181,174 @@ class DtrHtMaintenanceEntryViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
+  //OIL
+  OilLevel? oilLevelValue;
+  bool isOilLevelDisabled = false;
+
+  void selectOilLevelStatus(OilLevel? value) {
+    if (value == null) return;
+    oilLevelValue = value;
+    notifyListeners();
+  }
+
+  //Oil Leakage
+  OilLeak? oilLeakValue;
+  bool isOilLeakDisabled = false;
+
+  void selectOilLeakStatus(OilLeak? value) {
+    if (value == null) return;
+    oilLeakValue = value;
+    notifyListeners();
+  }
+
+  Gaskets? gasketsValue;
+  bool isGasketsDisabled = false;
+
+  void selectGasketsStatus(Gaskets? value) {
+    if (value == null) return;
+    gasketsValue = value;
+    notifyListeners();
+  }
+
+  Gaskets? diaphragm;
+  bool isDiaphragmDisabled = false;
+
+  void selectDiaphragm(Gaskets? value) {
+    if (value == null) return;
+    diaphragm = value;
+    notifyListeners();
+  }
+
+  Status? diaphragmStatus;
+  bool isDiaphragmStatusDisabled = false;
+
+  void selectDiaphragmStatus(Status? value) {
+    if (value == null) return;
+    diaphragmStatus = value;
+    notifyListeners();
+  }
+
+  //Earthing
+  //Earth Pits
+EarthPits? earthPits;
+  bool isEarthPitsDisabled = false;
+
+  void selectEarthPitsStatus(EarthPits? value) {
+    if (value == null) return;
+    earthPits = value;
+    notifyListeners();
+  }
+
+  //Earth PIpe Status
+  Gaskets? earthPipeStatus;
+  bool isEarthPipeStatusDisabled = false;
+
+  void selectEarthPipeStatusStatus(Gaskets? value) {
+    if (value == null) return;
+    earthPipeStatus = value;
+    notifyListeners();
+  }
+
+  //Earthing
+  Gaskets? earthing;
+  bool isEarthingDisabled = false;
+
+  void selectEarthingStatus(Gaskets? value) {
+    if (value == null) return;
+    earthing = value;
+    notifyListeners();
+  }
+
+  //Double earthing
+  AbSwitch? doubleEarthing;
+  bool isDoubleEarthingDisabled = false;
+
+  void selectDoubleEarthingStatus(AbSwitch? value) {
+    if (value == null) return;
+    doubleEarthing = value;
+    notifyListeners();
+  }
+
+  //earth Pipes
+  EarthPipes? earthPips;
+  bool isEarthPipsDisabled = false;
+
+  void selectEarthPipsStatus(EarthPipes? value) {
+    if (value == null) return;
+    earthPips = value;
+    notifyListeners();
+  }
+
+  //LT- Network
+  //Loose Lines on DTR
+  NoLooseLine? looseLinesONDtr;
+  bool isLooseLinesONDtrDisabled = false;
+
+  void selectLooseLinesONDtrStatus(NoLooseLine? value) {
+    if (value == null) return;
+    looseLinesONDtr = value;
+    notifyListeners();
+  }
+
+  //Line Tree Cutting
+  LTLineTreeCutting? linesTreeCutting;
+  bool isLinesTreeCuttingDisabled = false;
+
+  void selectLinesTreeCuttingStatus(LTLineTreeCutting? value) {
+    if (value == null) return;
+    linesTreeCutting = value;
+    notifyListeners();
+  }
+
+  //Line other rectifications
+  Gaskets? lineOtherRect;
+  bool isLineOtherRectDisabled = false;
+
+  void selectLineOtherRectStatus(Gaskets? value) {
+    if (value == null) return;
+    lineOtherRect = value;
+    notifyListeners();
+  }
+
+  //LA
+
+  //Lighting Arrestors
+  AbSwitch? lightingArrestors;
+  bool isLightingArrestorsDisabled = false;
+
+  void selectLightingArrestorsStatus(AbSwitch? value) {
+    if (value == null) return;
+    lightingArrestors = value;
+    notifyListeners();
+  }
+
+  //Lighting Arrestor Status
+  Gaskets? lightingArrStatus;
+  bool isLightingArrStatusDisabled = false;
+
+  void selectLightingArrStatus(Gaskets? value) {
+    if (value == null) return;
+    lightingArrStatus = value;
+    notifyListeners();
+  }
+
+  //DTR Loading
+  DTROverLoaded?  dtrOverLoaded;
+  bool isDtrOverLoadedDisabled = false;
+
+  void selectDtrOverLoadedStatus(DTROverLoaded? value) {
+    if (value == null) return;
+    dtrOverLoaded = value;
+    notifyListeners();
+  }
+
+  //Toong Tester
+  TextEditingController rPhase= TextEditingController();
+  TextEditingController yPhase= TextEditingController();
+  TextEditingController bPhase= TextEditingController();
+  TextEditingController neutral= TextEditingController();
+
+
 
   // Constructor to initialize the items
   DtrHtMaintenanceEntryViewmodel( this.data) {
@@ -207,9 +375,63 @@ void setData(){
     isKv11HgFuseSetDisabled=true;
     hgFuseStatus=dtrInspectionSheetEntity?.hG11KvFuseSetAvailable=="Y"?Status.Good: Status.Damaged;
     isHgFuseStatusDisabled=true;
-    htBushStatus=dtrInspectionSheetEntity?.ltBushesDamageCount==0?Status.Good: Status.Damaged;
-    // abSwitchType=dtrInspectionSheetEntity?.abSwitchAvailable=="Y"?AbSwitch.Available: AbSwitch.NotAvailable;
-    // abSwitchType=dtrInspectionSheetEntity?.abSwitchAvailable=="Y"?AbSwitch.Available: AbSwitch.NotAvailable;
+    //LT SIDE:
+    ltBushStatus=dtrInspectionSheetEntity?.ltBushesDamageCount==0?Status.Good: Status.Damaged;
+    isLtBushStatusDisabled=true;
+    ltBushRodStatus=dtrInspectionSheetEntity?.ltBushRodsDamCount==0?Status.Good: Status.Damaged;
+    isLtBushRodStatusDisabled=true;
+    ltBiMetalicClamps=dtrInspectionSheetEntity?.ltBiMetalClampsAvailable=="Y"?AbSwitch.Available: AbSwitch.NotAvailable;
+    isLtBiMetalicClampsDisabled=true;
+    clampsStatus=dtrInspectionSheetEntity?.ltBiMetalClampsDamCount==0?Status.Good: Status.Damaged;
+    isClampsStatusDisabled=true;
+    ltBreaker=dtrInspectionSheetEntity?.ltBreaker=="y"?AbSwitch.Available: AbSwitch.NotAvailable;
+    isLtBreakerDisabled=true;
+    ltBreakerStatus=dtrInspectionSheetEntity?.ltBreakerStatus=="GOOD"?Status.Good: Status.Damaged;
+    isLtBreakerStatusDisabled=true;
+    ltFuseSet=dtrInspectionSheetEntity?.ltFuseSetAvailable=="Y"?AbSwitch.Available: AbSwitch.NotAvailable;
+    isLtFuseSetDisabled=true;
+    ltFuseSetStatus=dtrInspectionSheetEntity?.ltFuseSetStatus=="GOOD"?Status.Good: Status.Damaged;
+    isLtFuseSetStatusDisabled=true;
+    ltFuseWire=dtrInspectionSheetEntity?.ltFuseWire=="COPPER_OK"?FuseWire.Copper: FuseWire.Aluminium;
+    isLtFuseWireDisabled=true;
+    // cfwStatus=dtrInspectionSheetEntity?.ltFuseWire.contains("OK")?WireStatus.OK: WireStatus.NotOK;
+    // isCfwStatusDisabled=true;
+    ltPvcCable=dtrInspectionSheetEntity?.ltPvcCable=="Y"?AbSwitch.Available: AbSwitch.NotAvailable;
+    isLtPvcCableDisabled=true;
+    ltPvcCableStatus=dtrInspectionSheetEntity?.ltPvcCableStatus=="GOOD"?Status.Good: Status.Damaged;
+    isLtPvcCableStatusDisabled=true;
+    ltFuseSetStatus=dtrInspectionSheetEntity?.ltFuseSetStatus=="GOOD"?Status.Good: Status.Damaged;
+    isLtFuseSetStatusDisabled=true;
+
+    //OIl
+    oilLevelValue=dtrInspectionSheetEntity?.oilShortageInLiters==0?OilLevel.Ok: OilLevel.Shortage;
+    isOilLevelDisabled=true;
+
+    //Earthing
+    earthPits=dtrInspectionSheetEntity?.earthPits==2?EarthPits.two: dtrInspectionSheetEntity?.earthPits==1?EarthPits.one:dtrInspectionSheetEntity?.earthPits==3?EarthPits.three: null;
+    isEarthPitsDisabled=true;
+    earthPips=dtrInspectionSheetEntity?.earthPipes.contains("GI")?EarthPipes.GIPipes: dtrInspectionSheetEntity?.earthPipes.contains("CI")?EarthPipes.CIPipes: null;
+    isEarthPipsDisabled=true;
+    doubleEarthing=dtrInspectionSheetEntity?.doubleEarthing=="Y"?AbSwitch.Available:dtrInspectionSheetEntity?.doubleEarthing=="N"? AbSwitch.NotAvailable: null;
+    isDoubleEarthingDisabled=true;
+
+    //LT Network
+    looseLinesONDtr=dtrInspectionSheetEntity?.noOfLooseLinesOnDtr==0?NoLooseLine.NoLooseLines:dtrInspectionSheetEntity?.noOfLooseLinesOnDtr!="0"? NoLooseLine.LooseLines: null;
+    isLooseLinesONDtrDisabled=true;
+    linesTreeCutting=dtrInspectionSheetEntity?.treeCuttingRequired==0?LTLineTreeCutting.NotRequired:dtrInspectionSheetEntity?.treeCuttingRequired!=0? LTLineTreeCutting.Required: null;
+    isLinesTreeCuttingDisabled=true;
+
+    doubleEarthing=dtrInspectionSheetEntity?.doubleEarthing=="Y"?AbSwitch.Available:dtrInspectionSheetEntity?.doubleEarthing=="N"? AbSwitch.NotAvailable: null;
+    isLineOtherRectDisabled=true;
+
+    //LA
+    lightingArrestors=dtrInspectionSheetEntity?.lightningArrestors=="Good"?AbSwitch.Available:dtrInspectionSheetEntity?.lightningArrestors=="BAD"? AbSwitch.NotAvailable: null;
+    isLightingArrestorsDisabled=true;
+
+    //DTR loading
+    dtrOverLoaded=dtrInspectionSheetEntity?.dtrAglLoadHp==0.0? DTROverLoaded.NotOverLoaded:dtrInspectionSheetEntity?.dtrAglLoadHp!=0.0? DTROverLoaded.OverLoaded: null;
+    isDtrOverLoadedDisabled=true;
+
   notifyListeners();
 
 }
