@@ -103,6 +103,26 @@ class MeesevaMenuViewModel extends ChangeNotifier {
           iconAsset: Icons.find_in_page,
           cardColor: Colors.blue,
           routeName: routeName),
+      SubMenuGridItem(
+          title: GlobalConstants.acceptedByStaff,
+          iconAsset: Icons.contact_page_outlined,
+          cardColor: Colors.blue,
+          routeName: routeName),
+      SubMenuGridItem(
+          title: GlobalConstants.rejectedByStaff,
+          iconAsset: Icons.error_outline,
+          cardColor: Colors.red,
+          routeName: routeName),
+      SubMenuGridItem(
+          title: GlobalConstants.approvedByMe,
+          iconAsset: Icons.check_circle,
+          cardColor: Colors.green,
+          routeName: routeName),
+      SubMenuGridItem(
+          title: GlobalConstants.rejectedByMe,
+          iconAsset: Icons.close_outlined,
+          cardColor: Colors.red,
+          routeName: routeName),
     ]);
 
     notifyListeners();
@@ -239,6 +259,26 @@ class MeesevaMenuViewModel extends ChangeNotifier {
     }else if (title == GlobalConstants.underVerification) {
       var argument = {
         "status": "F_ALLOT"
+      };
+      Navigation.instance.navigateTo(Routes.categoryPendingAllotment, args: argument);
+    }else if (title == GlobalConstants.acceptedByStaff) {
+      var argument = {
+        "status": "LM_F"
+      };
+      Navigation.instance.navigateTo(Routes.categoryPendingAllotment, args: argument);
+    }else if (title == GlobalConstants.rejectedByStaff) {
+      var argument = {
+        "status": "LM_NF"
+      };
+      Navigation.instance.navigateTo(Routes.categoryPendingAllotment, args: argument);
+    }else if (title == GlobalConstants.approvedByMe) {
+      var argument = {
+        "status": "AE_F"
+      };
+      Navigation.instance.navigateTo(Routes.categoryPendingAllotment, args: argument);
+    }else if (title == GlobalConstants.rejectedByMe) {
+      var argument = {
+        "status": "AE_NF"
       };
       Navigation.instance.navigateTo(Routes.categoryPendingAllotment, args: argument);
     }

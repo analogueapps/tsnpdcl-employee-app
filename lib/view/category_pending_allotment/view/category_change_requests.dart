@@ -12,14 +12,14 @@ import 'package:tsnpdcl_employee/view/category_pending_allotment/viewmodel/categ
 
 class CategoryChangeRequests extends StatelessWidget {
   static const id = Routes.categoryPendingAllotment;
-  const CategoryChangeRequests({super.key, required this.data});
+  const CategoryChangeRequests({super.key, required this.statusData});
 
-  final Map<String, dynamic> data;
+  final Map<String, dynamic> statusData;
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-        create: (_) => CategoryChangeRequestsViewmodel(context: context,data:data),
+        create: (_) => CategoryChangeRequestsViewmodel(context: context,data:statusData),
         child: Consumer<CategoryChangeRequestsViewmodel>(
             builder: (context, viewModel, child) {
               return Scaffold(
@@ -32,7 +32,7 @@ class CategoryChangeRequests extends StatelessWidget {
         color: Colors.white,
         fontSize: titleSize,
         fontWeight: FontWeight.w700),),
-        Text(viewModel.getStatusText(data['status']),  style:  TextStyle(
+        Text(viewModel.getStatusText(statusData['status']),  style:  TextStyle(
           color: Colors.white,),),
     ]
         ),
@@ -50,12 +50,7 @@ class CategoryChangeRequests extends StatelessWidget {
                     ?
                 const Center(child: Text("No data found")) :
 
-                GestureDetector(
-                  onTap: () {
-                    // Navigation.instance.navigateTo(Routes.openDetail,args: data,);
-                    print("passing data: $data");
-                  },
-                  child:
+
                   Container(
                     margin: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
@@ -97,9 +92,13 @@ class CategoryChangeRequests extends StatelessWidget {
                             // IconButton with no space between it and the text
                             IconButton(
                               onPressed: () {
+                                var arguments={
+                                  'status':statusData['status'],
+                                  'catData':jsonEncode(
+                                      data.toJson()),
+                                };
                                 Navigation.instance
-                                    .navigateTo(Routes.categoryChangeDetail, args: jsonEncode(
-                                    data.toJson()),);
+                                    .navigateTo(Routes.categoryChangeDetail, args: arguments);
                                 print("icon on tap: $data");
                               },
                               icon:
@@ -111,7 +110,6 @@ class CategoryChangeRequests extends StatelessWidget {
                         ),
                       ],
                     ),
-                  ),
                 );
               }
           ),

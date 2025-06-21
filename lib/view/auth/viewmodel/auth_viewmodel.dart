@@ -105,6 +105,7 @@ class AuthViewmodel extends ChangeNotifier {
                 await SharedPreferenceHelper.setStringValue(LoginSdkPrefs.designationCodeKey, user[0].designationCode.toString() ?? '',);
                 await SharedPreferenceHelper.setStringValue(LoginSdkPrefs.empNameKey, user[0].empName.toString() ?? '',);
                 await SharedPreferenceHelper.setStringValue(LoginSdkPrefs.eroId, user[0].secMasterEntity!.eroId ?? '',);
+                await SharedPreferenceHelper.setStringValue(LoginSdkPrefs.empType, user[0].empType ?? '',);
 
                 ///Saikiran
                 await SharedPreferenceHelper.setStringValue(LoginSdkPrefs.empWing, user[0].wing ?? '' ,);

@@ -625,9 +625,9 @@ class AppRouter {
         return MaterialPageRoute(builder: (_)=> FormLoaderScreen(data: settings.arguments as Map<String, dynamic>,));
         //Meeseva * Bhavana
         case CategoryChangeRequests.id:
-        return MaterialPageRoute(builder: (_)=> CategoryChangeRequests(data: settings.arguments as Map<String, dynamic>,));
+        return MaterialPageRoute(builder: (_)=> CategoryChangeRequests(statusData: settings.arguments as Map<String, dynamic>,));
         case CategoryChangeRequestDetail.id:
-        return MaterialPageRoute(builder: (_)=> CategoryChangeRequestDetail(data: settings.arguments as String,));
+        return MaterialPageRoute(builder: (_)=> CategoryChangeRequestDetail(data: settings.arguments as Map<String, dynamic>,));
         // case Documents.id:
         // return MaterialPageRoute(builder: (_)=> Documents(data: settings.arguments as String,));
 

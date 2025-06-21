@@ -128,6 +128,10 @@ class GlobalConstants {
   static const String rejected = "Rejected";
   static const String categoryPendingAllotment = "Pending Allotment";
   static const String underVerification = "Under Verification";
+  static const String acceptedByStaff = "Accepted by staff";
+  static const String rejectedByStaff = "Rejected by staff";
+  static const String approvedByMe = "Approved By Me";
+  static const String rejectedByMe = "Rejected By Me";
 
   // RFSS menu * swetha
   static const String rfssMenu = "RFSS MENU";

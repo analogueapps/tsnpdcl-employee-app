@@ -176,6 +176,8 @@ class Apis{
   //Meeseva -> Category Change
   static const CAT_CHANGE_ENDPOINT_URL = "$SERVER_IP:5656/NPFDAS/ep/cat-change/";
   static const CAT_CHANGE_REQUESTS_OF_SECTION="getCatChangeRequestsOfSection";
+  static const UPDATE_CAT_CHANGE="updateCatChangeApplication";
+  static const MAKE_CAPACITIES="getMakesAndCapacities";
   static const MEE_SEVA_MODIFY_SEVICE_DOCUMENTS_URL="http://210.212.223.83:7000/J2S/j2s//nc/Reports/MSDDocumentsView.jsp?xregNum=";
 
 

@@ -63,7 +63,7 @@ class CategoryChangeRequestsViewmodel extends ChangeNotifier {
              if (response.data['taskSuccess'] == isTrue) {
                final dataList = response.data['dataList'];
                if (dataList is List && dataList.isEmpty) {
-                 await showSuccessDialog(
+                 await showEmptyFolderDialog(
                    context,
                    response.data['message'],
                        () {
