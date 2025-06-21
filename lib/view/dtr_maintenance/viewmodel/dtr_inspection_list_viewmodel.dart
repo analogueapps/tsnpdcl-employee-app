@@ -34,6 +34,7 @@ class DtrInspectionListViewmodel extends ChangeNotifier {
     _loadUser();
     print("DtrInspectionListViewmodel Status: $type");
     getDtrInspections();
+
   }
 
   void _loadUser() {
