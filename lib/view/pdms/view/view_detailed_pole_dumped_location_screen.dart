@@ -92,11 +92,15 @@ class _ViewDetailedPoleDumpedLocationScreenState extends State<ViewDetailedPoleD
             const Divider(),
             ViewDetailedLcTileWidget(tileKey: "Verified Lon", tileValue: checkNull(poleDumpedLocationEntity.verifiedLon.toString())),
             const Divider(),
-            ViewDetailedLcTileWidget(tileKey: "Verified Date", tileValue: formatIsoDateForDiDetails(checkNull(poleDumpedLocationEntity.verifiedDate))),
+            ViewDetailedLcTileWidget(tileKey: "Verified Date", tileValue: poleDumpedLocationEntity.verifiedDate.toString()),//formatIsoDateForDiDetails(checkNull(poleDumpedLocationEntity.verifiedDate))
             const Divider(),
             ViewDetailedLcImageWidget(imageUrl: checkNull(poleDumpedLocationEntity.verifiedImageUrl)),
+            const Divider(),
+            ViewDetailedLcTileWidget(tileKey: "REMARK BY AE", tileValue: poleDumpedLocationEntity.remarks.toString() ),//checkNull(poleDumpedLocationEntity.remarks)
+            const Divider(),
+            ViewDetailedLcTileWidget(tileKey: "STATUS", tileValue: poleDumpedLocationEntity.status.toString() ),//checkNull(poleDumpedLocationEntity.status)
             Visibility(
-              visible: poleDumpedLocationEntity.employeeMasterEntityByVerifiedEmpId != null,
+              visible: true,//poleDumpedLocationEntity.employeeMasterEntityByVerifiedEmpId != null,
               child: Column(
                 children: [
                   Container(

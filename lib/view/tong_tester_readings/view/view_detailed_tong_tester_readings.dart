@@ -154,6 +154,12 @@ class ViewDetailedTongTesterReadings extends StatelessWidget {
                   ),
                 ),
                   ]),
+            floatingActionButton: FloatingActionButton(
+                onPressed: (){},
+              backgroundColor: Colors.green,
+              foregroundColor: Colors.white,
+              child: Icon(Icons.call),
+            ),
           );
         }));
   }

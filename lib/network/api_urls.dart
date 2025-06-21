@@ -180,5 +180,9 @@ class Apis{
 
 
 
+  ///Manage staff ->Saikiran
+  static const GET_EMPLOYEE_URL="/NpdclEmployeeWebApi/npemp/api";
+  static const SS_BASE_URL="http://210.212.223.88:5656";
+  static const SS_MAIN_URL="/NPFDAS/ep/ss/getSSMasterIndex";
 }
 

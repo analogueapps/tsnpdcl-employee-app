@@ -106,6 +106,12 @@ class AuthViewmodel extends ChangeNotifier {
                 await SharedPreferenceHelper.setStringValue(LoginSdkPrefs.empNameKey, user[0].empName.toString() ?? '',);
                 await SharedPreferenceHelper.setStringValue(LoginSdkPrefs.eroId, user[0].secMasterEntity!.eroId ?? '',);
 
+                ///Saikiran
+                await SharedPreferenceHelper.setStringValue(LoginSdkPrefs.empWing, user[0].wing ?? '' ,);
+                await SharedPreferenceHelper.setStringValue(LoginSdkPrefs.empOfcType, user[0].ofcType ?? '' ,);
+                await SharedPreferenceHelper.setStringValue(LoginSdkPrefs.empOfcCode, user[0].ofcCode ?? '' ,);
+
+
                 print("login responseee: ${response.data}");
                 //Bhavana
                 print("sectionnn: ${user[0].secMasterEntity!.section}");

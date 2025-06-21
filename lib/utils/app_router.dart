@@ -8,7 +8,6 @@ import 'package:tsnpdcl_employee/view/auth/view/otp_verification_screen.dart';
 import 'package:tsnpdcl_employee/view/bs_udc_inspection/view/bs_udc_list.dart';
 import 'package:tsnpdcl_employee/view/category_pending_allotment/view/category_change_request_detail.dart';
 import 'package:tsnpdcl_employee/view/category_pending_allotment/view/category_change_requests.dart';
-import 'package:tsnpdcl_employee/view/category_pending_allotment/view/documents.dart';
 import 'package:tsnpdcl_employee/view/ccc/model/open_model.dart';
 import 'package:tsnpdcl_employee/view/ccc/view/ccc_complaint_track.dart';
 import 'package:tsnpdcl_employee/view/ccc/view/ccc_dashboard.dart';
@@ -88,6 +87,7 @@ import 'package:tsnpdcl_employee/view/line_clearance/view/lc_master_ss_list_scre
 import 'package:tsnpdcl_employee/view/line_clearance/view/view_detailed_lc_screen.dart';
 import 'package:tsnpdcl_employee/view/ltmt/view/ltmt_menu.dart';
 import 'package:tsnpdcl_employee/view/ltmt/view/meters_stock.dart';
+import 'package:tsnpdcl_employee/view/manage_staff/view/add_employee_screen.dart';
 import 'package:tsnpdcl_employee/view/manage_staff/view/manage_staffs_screen.dart';
 import 'package:tsnpdcl_employee/view/measure_distance/view/measure_distance_screen.dart';
 import 'package:tsnpdcl_employee/view/meeseva/view/form_loader_screen.dart';
@@ -315,6 +315,8 @@ class AppRouter {
     // MANAGE STAFF
       case ManageStaffsScreen.id:
         return MaterialPageRoute(builder: (_) => const ManageStaffsScreen());
+      case AddEmployeeScreen.id :
+        return MaterialPageRoute(builder: (_)=> const AddEmployeeScreen());
 
     // PDMS
       case CreatePoleIndentsScreen.id:
@@ -626,8 +628,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_)=> CategoryChangeRequests(data: settings.arguments as Map<String, dynamic>,));
         case CategoryChangeRequestDetail.id:
         return MaterialPageRoute(builder: (_)=> CategoryChangeRequestDetail(data: settings.arguments as String,));
-        case Documents.id:
-        return MaterialPageRoute(builder: (_)=> Documents(data: settings.arguments as String,));
+        // case Documents.id:
+        // return MaterialPageRoute(builder: (_)=> Documents(data: settings.arguments as String,));
 
     // DLIST * Surya
       case DlistMenuScreen.id:
@@ -707,6 +709,7 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) =>  CheckMeasure11kvEdit(args: settings.arguments as Map<String, dynamic>));
       case MeterChangeEntryScreen.id:
         return MaterialPageRoute(builder: (_) =>  MeterChangeEntryScreen(args: settings.arguments as Map<String, dynamic>));
+
 
       default:
         return MaterialPageRoute(

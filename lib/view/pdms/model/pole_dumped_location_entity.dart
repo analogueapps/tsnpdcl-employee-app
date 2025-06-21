@@ -136,6 +136,10 @@ class PoleDumpedLocationEntity {
     }
     return map;
   }
+  @override
+  String toString() {
+    return 'PoleDumpedLocationEntity(dumpId: $dumpId, dumpedQty: $dumpedQty, transportId: $transportId, dumpDate: $dumpDate, status: $status)';
+  }
 }
 
 EmployeeMasterEntityByVerifiedEmpId employeeMasterEntityByVerifiedEmpIdFromJson(

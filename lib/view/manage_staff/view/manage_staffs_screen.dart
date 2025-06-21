@@ -64,10 +64,10 @@ class ManageStaffsScreen extends StatelessWidget {
                         child: Text(
                           checkNull(item.name),
                           style:  TextStyle(
-                            fontWeight: FontWeight.w900,
-                            fontSize:
-                            normalSize,
-                            color: Colors.grey[600]
+                              fontWeight: FontWeight.w900,
+                              fontSize:
+                              normalSize,
+                              color: Colors.grey[600]
                           ),
                         ),
                       ),
@@ -77,9 +77,9 @@ class ManageStaffsScreen extends StatelessWidget {
                         child: Text(
                           checkNull(item.personalPhone),
                           style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize:
-                            normalSize,
+                              fontWeight: FontWeight.w700,
+                              fontSize:
+                              normalSize,
                               color: Colors.grey[500]
                           ),
                         ),
@@ -125,7 +125,7 @@ class ManageStaffsScreen extends StatelessWidget {
                   text: "Add Staff".toUpperCase(),
                   fullWidth: isTrue,
                   onPressed: () {
-
+                    Navigation.instance.navigateTo(Routes.addEmployeeScreen);
                   }
               ),
             ),

@@ -58,6 +58,7 @@ class Routes {
 
   // MANAGE STAFF
   static const String manageStaffsScreen = "ManageStaffsScreen";
+  static const String addEmployeeScreen = "AddEmployeeScreen";
 
   // PDMS
   static const String createPoleIndentsScreen = "CreatePoleIndentsScreen";

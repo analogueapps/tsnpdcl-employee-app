@@ -85,14 +85,18 @@ class DtrInspectionListViewmodel extends ChangeNotifier {
               final List<DtrInspectionSheetEntity> dataList = jsonList.map((json) => DtrInspectionSheetEntity.fromJson(json)).toList();
               _dtrInspectionSheetEntityList.addAll(dataList);
               notifyListeners();
+            }else {
+              print('got the message :${response.data['message']}');
+              showAlertDialog(context,response.data['message']);
             }
+          } else {
+            //showSessionExpiredDialog(context);
+            showErrorDialog(context,response.data['message']);
           }
-          // } else {
-          //   showSessionExpiredDialog(context);
-          // }
-        } else {
-          showAlertDialog(context,response.data['message']);
         }
+        // else {
+        //   showAlertDialog(context,response.data['message']);
+        // }
       }
     } catch (e) {
       showErrorDialog(context,  "An error occurred. Please try again.");

@@ -21,6 +21,10 @@ class LoginSdkPrefs {
   static const String designationCodeKey="DESIGNATION_CODE_KEY";
   static const String empNameKey="EMP_NAME_KEY";
   static const String eroId="ERO_ID";
+  ///Saikiran
+  static const String empWing="EMP_WING";
+  static const String empOfcType="EMP_OFCTYPE";
+  static const String empOfcCode="EMP_OFCCODE";
 
 }
 
