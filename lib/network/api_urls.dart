@@ -180,7 +180,9 @@ class Apis{
   static const MAKE_CAPACITIES="getMakesAndCapacities";
   static const MEE_SEVA_MODIFY_SEVICE_DOCUMENTS_URL="http://210.212.223.83:7000/J2S/j2s//nc/Reports/MSDDocumentsView.jsp?xregNum=";
 
-
+  //Meeseva -> Load Change
+  static const LOAD_CHANGE_REQUEST_URL="$SERVER_IP:5656/NPFDAS/ep/load-change/";
+  static const LOAD_CHANGE_REQUEST_OF_SECTION="getLoadChangeRequestsOfSection";
 
   ///Manage staff ->Saikiran
   static const GET_EMPLOYEE_URL="/NpdclEmployeeWebApi/npemp/api";

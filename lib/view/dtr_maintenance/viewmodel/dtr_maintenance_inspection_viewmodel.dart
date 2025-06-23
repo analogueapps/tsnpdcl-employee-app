@@ -13,6 +13,7 @@ import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_assets.dart';
 import 'package:tsnpdcl_employee/view/dtr_maintenance/model/dtr_inspection_sheet_entity.dart';
+// import 'package:tsnpdcl_employee/view/dtr_maintenance/model/dtr_inspection_sheet_entity.dart';
 import 'package:tsnpdcl_employee/view/dtr_maintenance/model/employee_master_entity.dart';
 import 'package:tsnpdcl_employee/view/filter/model/filter_label_model_list.dart';
 import 'package:tsnpdcl_employee/widget/view_detailed_lc_tile_widget.dart';
@@ -74,39 +75,39 @@ class DtrMaintenanceInspectionViewmodel extends ChangeNotifier {
   };
 
   bool htIsMaintenanceRequired(){
-    return dtrInspectionSheetEntity?.abContactsDamaged>0 ||
-        dtrInspectionSheetEntity?.nylonBushDamaged>0||
-        dtrInspectionSheetEntity?.abBrassStripDamaged>0||
-        dtrInspectionSheetEntity?.hornsToBeReplaced>0||
-        (dtrInspectionSheetEntity?.gapIsNotCorrect!="Y") ||dtrInspectionSheetEntity?.hgFuseSetPostTypeInsulatorsCount>0 || dtrInspectionSheetEntity?.htBushesDamageCount>0 || dtrInspectionSheetEntity?.htBushRodsDamCount>0;
+    return dtrInspectionSheetEntity?.abContactsDamaged!=null&&(dtrInspectionSheetEntity!.abContactsDamaged>0 ||
+        dtrInspectionSheetEntity!.nylonBushDamaged>0||
+        dtrInspectionSheetEntity!.abBrassStripDamaged>0||
+        dtrInspectionSheetEntity!.hornsToBeReplaced>0||
+        (dtrInspectionSheetEntity!.gapIsNotCorrect!="Y") ||dtrInspectionSheetEntity!.hgFuseSetPostTypeInsulatorsCount>0 || dtrInspectionSheetEntity!.htBushesDamageCount>0 || dtrInspectionSheetEntity!.htBushRodsDamCount>0);
   }
 
   bool ltIsMaintenanceRequired(){
-    return dtrInspectionSheetEntity?.ltBushesDamageCount>0 || dtrInspectionSheetEntity?.ltBushRodsDamCount>0 || dtrInspectionSheetEntity?.ltBiMetalClampsDamCount>0 ||
-        (dtrInspectionSheetEntity?.ltBreakerStatus!="DAMAGED") || (dtrInspectionSheetEntity?.ltFuseSetStatus!="DAMAGED")
-        || dtrInspectionSheetEntity?.ltFuseWire!="COPPER_OK"|| (dtrInspectionSheetEntity?.ltPvcCableStatus!="DAMAGED");
+    return dtrInspectionSheetEntity!.ltBushesDamageCount>0 || dtrInspectionSheetEntity!.ltBushRodsDamCount>0 || dtrInspectionSheetEntity!.ltBiMetalClampsDamCount>0 ||
+        (dtrInspectionSheetEntity!.ltBreakerStatus!="DAMAGED") || (dtrInspectionSheetEntity!.ltFuseSetStatus!="DAMAGED")
+        || dtrInspectionSheetEntity!.ltFuseWire!="COPPER_OK"|| (dtrInspectionSheetEntity!.ltPvcCableStatus!="DAMAGED");
 
 
   }
 
   bool oilMaintenanceRequired(){
-    return  dtrInspectionSheetEntity?.oilShortageInLiters>0 || (dtrInspectionSheetEntity?.gasketsDamaged!="DAMAGED") || (dtrInspectionSheetEntity?.diaphragmStatus!="DAMAGED");
+    return  dtrInspectionSheetEntity!.oilShortageInLiters>0 || (dtrInspectionSheetEntity!.gasketsDamaged!="DAMAGED") || (dtrInspectionSheetEntity?.diaphragmStatus!="DAMAGED");
   }
 
   bool earthMaintenanceRequired(){
-    return  dtrInspectionSheetEntity?.earthPipesStatus!=null&&dtrInspectionSheetEntity?.earthPipesStatus.toLowerCase() == "damaged" ||
-        dtrInspectionSheetEntity?.earthing!=null && dtrInspectionSheetEntity?.earthing.toLowerCase() == "damaged";
+    return  dtrInspectionSheetEntity!.earthPipesStatus!=null&&dtrInspectionSheetEntity!.earthPipesStatus.toLowerCase() == "damaged" ||
+        dtrInspectionSheetEntity!.earthing!=null && dtrInspectionSheetEntity!.earthing.toLowerCase() == "damaged";
   }
 
   bool ltnMaintenanceRequired(){
-  return dtrInspectionSheetEntity?.noOfLooseLinesOnDtr>0 || dtrInspectionSheetEntity?.treeCuttingRequired>0 || (dtrInspectionSheetEntity?.otherObservationsByLm.toLowerCase() == "y");
+  return dtrInspectionSheetEntity!.noOfLooseLinesOnDtr>0 || dtrInspectionSheetEntity!.treeCuttingRequired>0 || (dtrInspectionSheetEntity?.otherObservationsByLm.toLowerCase() == "y");
   }
 
   bool laMaintenanceRequired(){
-  return dtrInspectionSheetEntity?.lightningArrestors!=null&&dtrInspectionSheetEntity?.lightningArrestors.toLowerCase() == "damaged";
+  return dtrInspectionSheetEntity!.lightningArrestors!=null&&dtrInspectionSheetEntity!.lightningArrestors.toLowerCase() == "damaged";
   }
   bool dtrMaintenanceRequired(){
-  return (dtrInspectionSheetEntity?.dtrAglLoadHp>0.0 || dtrInspectionSheetEntity?.domesticNonDomLoad >0.0 || dtrInspectionSheetEntity?.industrialLoadInHp>0.0 || dtrInspectionSheetEntity?.waterWorksLoadInHp>0.0 || dtrInspectionSheetEntity?.otherLoadInKw>0.0);
+  return (dtrInspectionSheetEntity!.dtrAglLoadHp>0.0 || dtrInspectionSheetEntity!.domesticNonDomLoad >0.0 || dtrInspectionSheetEntity!.industrialLoadInHp>0.0 || dtrInspectionSheetEntity!.waterWorksLoadInHp>0.0 || dtrInspectionSheetEntity!.otherLoadInKw>0.0);
   }
 
    void assignForMaintenance(DtrInspectionSheetEntity? item){
@@ -155,7 +156,7 @@ class DtrMaintenanceInspectionViewmodel extends ChangeNotifier {
                      ),
                      ViewDetailedLcTileWidget(
                          tileKey: "Inspection Date",
-                         tileValue: item?.reportSubmitDate),
+                         tileValue: item!.reportSubmitDate.toString()),
                      const Divider(
                        color: Colors.grey,
                        thickness: 1,

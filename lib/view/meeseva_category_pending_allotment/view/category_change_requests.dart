@@ -8,7 +8,7 @@ import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
-import 'package:tsnpdcl_employee/view/category_pending_allotment/viewmodel/category_change_requests_viewmodel.dart';
+import 'package:tsnpdcl_employee/view/meeseva_category_pending_allotment/viewmodel/category_change_requests_viewmodel.dart';
 
 class CategoryChangeRequests extends StatelessWidget {
   static const id = Routes.categoryPendingAllotment;
@@ -66,7 +66,7 @@ class CategoryChangeRequests extends StatelessWidget {
                         ),
                       ],
                     ),
-                    padding: const EdgeInsets.only(top: 10),
+                    padding: const EdgeInsets.all( 10),
                     child: Column(
                       children: [
                         Row(

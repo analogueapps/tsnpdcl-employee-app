@@ -11,11 +11,15 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
 import 'package:tsnpdcl_employee/dialogs/process_dialog.dart';
+import 'package:tsnpdcl_employee/network/api_provider.dart';
 import 'package:tsnpdcl_employee/network/api_urls.dart';
+import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/alerts.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
+import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/view/dtr_maintenance/model/dtr_inspection_sheet_entity.dart';
+import 'package:tsnpdcl_employee/view/dtr_maintenance/model/ht_side_group_model.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/viewmodel/image_upload.dart';
 import 'package:tsnpdcl_employee/view/filter/model/filter_label_model_list.dart';
 
@@ -35,6 +39,9 @@ class DtrMaintenanceEntryViewmodel extends ChangeNotifier {
    String get latitude=>_latitude;
    String _longitude="";
    String get longitude=>_longitude;
+
+   bool _isLoading = isFalse;
+   bool get isLoading => _isLoading;
 
    // Constructor to initialize the items
    DtrMaintenanceEntryViewmodel({required this.context, required this.jsonResponse}) {
@@ -116,134 +123,6 @@ class DtrMaintenanceEntryViewmodel extends ChangeNotifier {
    //   return (dtrInspectionSheetEntity?.dtrAglLoadHp>0.0 || dtrInspectionSheetEntity?.domesticNonDomLoad >0.0 || dtrInspectionSheetEntity?.industrialLoadInHp>0.0 || dtrInspectionSheetEntity?.waterWorksLoadInHp>0.0 || dtrInspectionSheetEntity?.otherLoadInKw>0.0);
    // }
 
-
-   // void imageDialog() {
-   //   showDialog(
-   //     barrierDismissible: false,
-   //     context: context,
-   //     builder: (BuildContext context) {
-   //       return AlertDialog(
-   //         titlePadding: EdgeInsets.zero,
-   //         contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-   //         insetPadding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
-   //         title: Container(
-   //           width: double.infinity,
-   //           color: CommonColors.colorPrimary,
-   //           padding: const EdgeInsets.symmetric(vertical: 16.0),
-   //           child: Text(
-   //             "Capture after maintenance DTR structure photo".toUpperCase(),
-   //             textAlign: TextAlign.center,
-   //             style: const TextStyle(
-   //               color: Colors.white,
-   //               fontWeight: FontWeight.w600,
-   //               fontSize: 16.0,
-   //             ),
-   //           ),
-   //         ),
-   //         content: Column(
-   //             // mainAxisSize: MainAxisSize.min,
-   //             children: [
-   //           Container(
-   //           margin: const EdgeInsets.all(20),
-   //           height: 180,
-   //           width: double.infinity,
-   //           decoration: BoxDecoration(
-   //             color: Colors.grey[200],
-   //             borderRadius: BorderRadius.circular(8),
-   //           ),
-   //             child: photoPath.isEmpty
-   //                 ? const Center(child: Icon(Icons.image, size: 50)):
-   //                 Text("DTr maintenence Image ${Apis.NPDCL_STORAGE_SERVER_IP + photoPath}"),
-   //             //     : ClipRRect(
-   //             //   borderRadius: BorderRadius.circular(8),
-   //             //   child: SizedBox(
-   //             //     height: 180,
-   //             //     width: double.infinity,
-   //             //     child: Image.network(
-   //             //       Apis.NPDCL_STORAGE_SERVER_IP + photoPath,
-   //             //       fit: BoxFit.cover,
-   //             //     ),
-   //             //   ),
-   //             // ),
-   //           ),
-   //               const SizedBox(height: 16),
-   //               ElevatedButton(
-   //                 onPressed: () {
-   //                   capturePhoto();
-   //                 },
-   //                 style: ButtonStyle(
-   //                   backgroundColor: MaterialStateProperty.all(Colors.grey[200]),
-   //                 ),
-   //                 child: const Text(
-   //                   "CAPTURE IMAGE",
-   //                   style: TextStyle(color: Colors.black),
-   //                 ),
-   //               ),
-   //               const SizedBox(height: 16),
-   //               const Row(
-   //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-   //                 children: [
-   //                   Text("LC NO:"),
-   //                   Text(""), // Replace with actual LC No
-   //                 ],
-   //               ),
-   //               const Divider(),
-   //               const SizedBox(height: 8),
-   //               const Row(
-   //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-   //                 children: [
-   //                   Text("LAT:"),
-   //                   Text(""), // Replace with actual LAT
-   //                 ],
-   //               ),
-   //               const Divider(),
-   //               const SizedBox(height: 8),
-   //               const Row(
-   //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-   //                 children: [
-   //                   Text("LON:"),
-   //                   Text(""), // Replace with actual LON
-   //                 ],
-   //               ),
-   //              const Divider(),
-   //             ],
-   //           ),
-   //         actions: [
-   //           TextButton(
-   //             onPressed: () {
-   //               _longitude="";
-   //               _latitude="";
-   //               notifyListeners();
-   //               Navigator.pop(context);},
-   //             style: TextButton.styleFrom(
-   //               backgroundColor: CommonColors.colorPrimary,
-   //             ),
-   //             child: const Text(
-   //               "CANCEL",
-   //               style: TextStyle(color: Colors.white),
-   //             ),
-   //           ),
-   //           TextButton(
-   //             onPressed: (){
-   //               if(_latitude.isEmpty&&_longitude.isEmpty){
-   //                 showAlertDialog(context, "Please wait until we capture your location and please make sure you turn on your location.");
-   //               }else{
-   //                 print("In else block");
-   //               }
-   //
-   //             }, // Replace with logic
-   //             child: const Text(
-   //               "SUBMIT",
-   //               style: TextStyle(color: CommonColors.colorPrimary),
-   //             ),
-   //             style: TextButton.styleFrom(
-   //       backgroundColor: Colors.grey[300]),
-   //           ),
-   //         ],
-   //       );
-   //     },
-   //   );
-   // }
 
    void handleLocationIconClick() async {
 
@@ -405,6 +284,57 @@ class DtrMaintenanceEntryViewmodel extends ChangeNotifier {
        if (context.mounted) showErrorDialog(context, "Error capturing photo");
      }
    }
+
+   Future<void> saveDtrMaintenance() async {
+     _isLoading = isTrue;
+     notifyListeners();
+
+
+     final payload = {
+       "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+       "appId": "in.tsnpdcl.npdclemployee",
+       "structureCode": dtrInspectionSheetEntity!.structureCode,
+       "data":"",
+       "sheetId":dtrInspectionSheetEntity!.sheetId,
+
+     };
+
+     var response = await ApiProvider(baseUrl: Apis.DTR_END_POINT_BASE_URL).postApiCall(context, Apis.GET_DTR_INSPECTIONS_URL, payload);
+     _isLoading = isFalse;
+
+     try {
+       if (response != null) {
+         if (response.data is String) {
+           response.data = jsonDecode(response.data); // Parse string to JSON
+         }
+         if (response.statusCode == successResponseCode) {
+           //if(response.data['sessionValid'] == isTrue) {
+           if (response.data['taskSuccess'] == isTrue) {
+             if(response.data['message'] != null) {
+               showSuccessDialog(context, response.data['message'], (){
+                 Navigator.pop(context);
+               });
+             }else {
+               print('got the message :${response.data['message']}');
+               showAlertDialog(context,response.data['message']);
+             }
+           } else {
+             //showSessionExpiredDialog(context);
+             showErrorDialog(context,response.data['message']);
+           }
+         }
+         else {
+           showAlertDialog(context,response.data['message']);
+         }
+       }
+     } catch (e) {
+       showErrorDialog(context,  "An error occurred. Please try again.");
+       rethrow;
+     }
+
+     notifyListeners();
+   }
+
 
 
 }

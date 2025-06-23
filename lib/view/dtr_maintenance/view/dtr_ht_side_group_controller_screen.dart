@@ -47,11 +47,11 @@ Widget _buildGroupSpecificWidgets(DtrInspectionSheetEntity? dtrInspectionSheetEn
         const Divider(),
         ViewDetailedLcTileWidget(
             tileKey: "ab s/w type".toUpperCase(),
-            tileValue: dtrInspectionSheetEntity?.abSwitchType),
+            tileValue: dtrInspectionSheetEntity!.abSwitchType),
         const Divider(),
         ViewDetailedLcTileWidget(
             tileKey: "ab s/w status".toUpperCase(),
-            tileValue: dtrInspectionSheetEntity?.abSwitchStatus),
+            tileValue: dtrInspectionSheetEntity.abSwitchStatus),
         const Divider(),
         ViewDetailedLcTileWidget(
             tileKey: "ab s/w contacts damaged".toUpperCase(),
@@ -239,14 +239,14 @@ Widget _buildGroupSpecificWidgets(DtrInspectionSheetEntity? dtrInspectionSheetEn
             tileKey: "Las available".toUpperCase(), tileValue:dtrInspectionSheetEntity?.lightningArrestors!=null?"Available":"Not Available"),
         const Divider(),
         ViewDetailedLcTileWidget(
-            tileKey: "las status".toUpperCase(), tileValue:dtrInspectionSheetEntity?.lightningArrestors),
+            tileKey: "las status".toUpperCase(), tileValue:dtrInspectionSheetEntity!.lightningArrestors),
         const Divider(),
       ]);
 
     case "DTR_LOADING":
       return Column(children: [
         ViewDetailedLcTileWidget(
-            tileKey: "dtr overloaded".toUpperCase(), tileValue: dtrInspectionSheetEntity?.diaphragmStatus),
+            tileKey: "dtr overloaded".toUpperCase(), tileValue: dtrInspectionSheetEntity!.diaphragmStatus),
         const Divider(),
         ViewDetailedLcTileWidget(
             tileKey: "agl load".toUpperCase(), tileValue: "${dtrInspectionSheetEntity?.dtrAglLoadHp}HP"),

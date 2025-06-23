@@ -6,8 +6,8 @@ import 'package:tsnpdcl_employee/view/auth/view/corporate_login_screen.dart';
 import 'package:tsnpdcl_employee/view/auth/view/employee_id_login_screen.dart';
 import 'package:tsnpdcl_employee/view/auth/view/otp_verification_screen.dart';
 import 'package:tsnpdcl_employee/view/bs_udc_inspection/view/bs_udc_list.dart';
-import 'package:tsnpdcl_employee/view/category_pending_allotment/view/category_change_request_detail.dart';
-import 'package:tsnpdcl_employee/view/category_pending_allotment/view/category_change_requests.dart';
+import 'package:tsnpdcl_employee/view/meeseva_category_pending_allotment/view/category_change_request_detail.dart';
+import 'package:tsnpdcl_employee/view/meeseva_category_pending_allotment/view/category_change_requests.dart';
 import 'package:tsnpdcl_employee/view/ccc/model/open_model.dart';
 import 'package:tsnpdcl_employee/view/ccc/view/ccc_complaint_track.dart';
 import 'package:tsnpdcl_employee/view/ccc/view/ccc_dashboard.dart';
@@ -95,6 +95,8 @@ import 'package:tsnpdcl_employee/view/meeseva/view/mee_seva_abstract_screen.dart
 import 'package:tsnpdcl_employee/view/meeseva/view/meeseva_menu_screen.dart';
 import 'package:tsnpdcl_employee/view/meeseva/view/section_screen.dart';
 import 'package:tsnpdcl_employee/view/meeseva/view/services_app_list_screen.dart';
+import 'package:tsnpdcl_employee/view/meeseva_load_change/view/load_change_detail.dart';
+import 'package:tsnpdcl_employee/view/meeseva_load_change/view/load_change_requests.dart';
 import 'package:tsnpdcl_employee/view/middle_poles/view/middle_pole_11kv.dart';
 import 'package:tsnpdcl_employee/view/middle_poles/view/middle_pole_33kv.dart';
 import 'package:tsnpdcl_employee/view/middle_poles/view/middle_poles_screen.dart';
@@ -628,8 +630,10 @@ class AppRouter {
         return MaterialPageRoute(builder: (_)=> CategoryChangeRequests(statusData: settings.arguments as Map<String, dynamic>,));
         case CategoryChangeRequestDetail.id:
         return MaterialPageRoute(builder: (_)=> CategoryChangeRequestDetail(data: settings.arguments as Map<String, dynamic>,));
-        // case Documents.id:
-        // return MaterialPageRoute(builder: (_)=> Documents(data: settings.arguments as String,));
+        case LoadChangeRequests.id:
+        return MaterialPageRoute(builder: (_)=> LoadChangeRequests(statusData: settings.arguments as Map<String, dynamic>,));
+        case LoadChangeDetail.id:
+        return MaterialPageRoute(builder: (_)=> LoadChangeDetail(data: settings.arguments as Map<String, dynamic>,));
 
     // DLIST * Surya
       case DlistMenuScreen.id:

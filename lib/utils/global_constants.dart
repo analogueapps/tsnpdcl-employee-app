@@ -133,6 +133,13 @@ class GlobalConstants {
   static const String approvedByMe = "Approved By Me";
   static const String rejectedByMe = "Rejected By Me";
 
+  static const String loadChangePendingAllotment = "Load Pending Allotment";
+  static const String loadUnderVerification = "Load Under Verification";
+  static const String loadAcceptedByStaff = "Load Accepted by staff";
+  static const String loadRejectedByStaff = "Load Rejected by staff";
+  static const String loadApprovedByMe = "Load Approved By Me";
+  static const String loadRejectedByMe = "Load Rejected By Me";
+
   // RFSS menu * swetha
   static const String rfssMenu = "RFSS MENU";
   static const String mappingOfServices = "Mapping Of Services";

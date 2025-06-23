@@ -8,7 +8,7 @@ import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
-import 'package:tsnpdcl_employee/view/category_pending_allotment/model/category_change_request_model.dart';
+import 'package:tsnpdcl_employee/view/meeseva_category_pending_allotment/model/category_change_request_model.dart';
 class CategoryChangeRequestsViewmodel extends ChangeNotifier {
    CategoryChangeRequestsViewmodel({required this.context, required this.data}){
      getCatChangeRequests(data['status']);

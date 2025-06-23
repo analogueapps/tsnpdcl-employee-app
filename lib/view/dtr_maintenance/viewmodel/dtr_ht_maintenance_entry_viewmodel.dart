@@ -410,7 +410,7 @@ void setData(){
     //Earthing
     earthPits=dtrInspectionSheetEntity?.earthPits==2?EarthPits.two: dtrInspectionSheetEntity?.earthPits==1?EarthPits.one:dtrInspectionSheetEntity?.earthPits==3?EarthPits.three: null;
     isEarthPitsDisabled=true;
-    earthPips=dtrInspectionSheetEntity?.earthPipes.contains("GI")?EarthPipes.GIPipes: dtrInspectionSheetEntity?.earthPipes.contains("CI")?EarthPipes.CIPipes: null;
+    earthPips=dtrInspectionSheetEntity!.earthPipes.contains("GI")?EarthPipes.GIPipes: dtrInspectionSheetEntity!.earthPipes.contains("CI")?EarthPipes.CIPipes: null;
     isEarthPipsDisabled=true;
     doubleEarthing=dtrInspectionSheetEntity?.doubleEarthing=="Y"?AbSwitch.Available:dtrInspectionSheetEntity?.doubleEarthing=="N"? AbSwitch.NotAvailable: null;
     isDoubleEarthingDisabled=true;

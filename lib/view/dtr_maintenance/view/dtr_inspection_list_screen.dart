@@ -95,7 +95,7 @@ class DtrInspectionListScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    "Date: ${formatIsoDateForDtrInspectionDetails(item.insertDate ?? "")}",
+                                    "Date: ${formatIsoDateForDtrInspectionDetails(item.insertDate)}",
                                     style: const TextStyle(
                                         color: Colors.green,
                                         fontSize: regularTextSize,

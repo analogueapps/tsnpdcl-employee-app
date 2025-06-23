@@ -204,7 +204,8 @@ class Routes {
   //Meeseva *Bhavana
   static const String categoryPendingAllotment = "CategoryChangeRequests";
   static const String categoryChangeDetail="CategoryChangeRequestDetail";
-  static const String documents="Documents";
+  static const String loadChangeDetail="LoadChangeDetail";
+  static const String loadChangeRequests="LoadChangeRequests";
 
   // Dlist * Surya
   static const String dlistMenuScreen = "DlistMenuScreen";

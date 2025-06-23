@@ -7,7 +7,7 @@ import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
-import 'package:tsnpdcl_employee/view/category_pending_allotment/viewmodel/category_change_detail_viewmodel.dart';
+import 'package:tsnpdcl_employee/view/meeseva_category_pending_allotment/viewmodel/category_change_detail_viewmodel.dart';
 import 'package:tsnpdcl_employee/widget/primary_button.dart';
 import 'package:tsnpdcl_employee/widget/view_detailed_lc_head_widget.dart';
 import 'package:tsnpdcl_employee/widget/view_detailed_lc_image_widget.dart';
@@ -126,7 +126,7 @@ class CategoryChangeRequestDetail extends StatelessWidget {
                                   tileKey: "phone".toUpperCase(),
                                   tileValue: viewModel.categoryChange.phoneNo??"null"),
                               ViewDetailedLcTileWidget(
-                                  tileKey: "emial".toUpperCase(),
+                                  tileKey: "email".toUpperCase(),
                                   tileValue: viewModel.categoryChange.email??"null"),
                               const ViewDetailedLcHeadWidget(title: "Staff Details",),
                               ViewDetailedLcTileWidget(

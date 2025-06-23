@@ -12,26 +12,26 @@ import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_assets.dart';
-import 'package:tsnpdcl_employee/view/category_pending_allotment/model/category_change_request_model.dart';
-import 'package:tsnpdcl_employee/view/category_pending_allotment/model/make_capacity_model.dart';
+import 'package:tsnpdcl_employee/view/meeseva_category_pending_allotment/model/category_change_request_model.dart';
+import 'package:tsnpdcl_employee/view/meeseva_category_pending_allotment/model/make_capacity_model.dart';
 import 'package:tsnpdcl_employee/view/check_readings/model/ero_model.dart';
 import 'package:tsnpdcl_employee/view/dtr_maintenance/model/dtr_inspection_sheet_entity.dart';
 import 'package:tsnpdcl_employee/view/dtr_maintenance/model/employee_master_entity.dart';
 import 'package:tsnpdcl_employee/widget/view_detailed_lc_tile_widget.dart';
 
-class CategoryChangeDetailViewmodel extends ChangeNotifier {
-  CategoryChangeDetailViewmodel({
+class LoadChangeDetailViewmodel extends ChangeNotifier {
+  LoadChangeDetailViewmodel({
     required this.data,
     required this.context,
   }) {
-    categoryChange = CategoryChangeRequestModel.fromJson(jsonDecode(data['catData']));
+    loadChange = CategoryChangeRequestModel.fromJson(jsonDecode(data['catData']));
     print("CategoryChangeDetailViewmodel: ${data['status']}");
   }
 
   final BuildContext context;
   final Map<String, dynamic> data;
 
-  late final CategoryChangeRequestModel categoryChange;
+  late final CategoryChangeRequestModel loadChange;
 
   bool _isLoading = isFalse;
 
@@ -72,7 +72,8 @@ class CategoryChangeDetailViewmodel extends ChangeNotifier {
   bool isEditMeterChecked = false;
 
   TextEditingController serialNo= TextEditingController();
-  TextEditingController finalReading= TextEditingController();
+  TextEditingController finalReadingKWH= TextEditingController();
+  TextEditingController finalReadingKVAH= TextEditingController();
 
 
   // Accept Staff
@@ -149,7 +150,7 @@ class CategoryChangeDetailViewmodel extends ChangeNotifier {
                     color: CommonColors.colorPrimary,
                     padding: const EdgeInsets.symmetric(vertical: doubleFifteen),
                     child: Text(
-                      "Assign DTR Inspection".toUpperCase(),
+                      "Assign for Inspection".toUpperCase(),
                       textAlign: TextAlign.center, // Center align the text
                       style: const TextStyle(
                         color: Colors.white, // Text color
@@ -168,16 +169,16 @@ class CategoryChangeDetailViewmodel extends ChangeNotifier {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         ViewDetailedLcTileWidget(
-                            tileKey: "Registration No",
-                            tileValue: item?.regNum ?? "N/A",valueColor: Colors.green,),
+                          tileKey: "Registration No",
+                          tileValue: item?.regNum ?? "N/A",valueColor: Colors.green,),
                         const Divider(
                           color: Colors.grey,
                           thickness: 1,
                         ),
                         ViewDetailedLcTileWidget(
-                            tileKey: "Registration Date",
-                            tileValue: DateFormat('dd/MM/yyyy').format(DateTime.parse(item!.regDate??""),
-                            ),
+                          tileKey: "Registration Date",
+                          tileValue: DateFormat('dd/MM/yyyy').format(DateTime.parse(item!.regDate??""),
+                          ),
                           valueColor:Colors.green,
                         ),
                         const Divider(
@@ -191,7 +192,7 @@ class CategoryChangeDetailViewmodel extends ChangeNotifier {
                           thickness: 1,
                         ), ViewDetailedLcTileWidget(
                             tileKey: "Service Request Type",
-                            tileValue: item.existCat??""),
+                            tileValue: "${item.existCat} to ${item.reqCat}"??""),
                         const Divider(
                           color: Colors.grey,
                           thickness: 1,
@@ -276,8 +277,8 @@ class CategoryChangeDetailViewmodel extends ChangeNotifier {
                               if (selectedItem == null) {
                                 showAlertDialog(context, "Please select staff");
                               }  else {
-                                print("assignDtrMaintenance api call: ${item!.regId} ${selectedItem!.empId}");
-                                assignDtrMaintenance(item.regId, selectedItem!.empId);
+                                print("assignMaintenance api call: ${item!.regId} ${selectedItem!.empId}");
+                                updateLoadChange(item.regId, selectedItem!.empId);
                               }
                             },
                             child: Text("Ok".toUpperCase(),
@@ -294,7 +295,7 @@ class CategoryChangeDetailViewmodel extends ChangeNotifier {
     );
   }
 
-  Future<void> assignDtrMaintenance(num regID, String? selectedEmpId) async {
+  Future<void> updateLoadChange(num regID, String? selectedEmpId) async {
     ProcessDialogHelper.showProcessDialog(
       context,
       message: "Processing...",
@@ -345,7 +346,7 @@ class CategoryChangeDetailViewmodel extends ChangeNotifier {
   }
 
   //ACCEPT/REJECT
- final  List<MeterMakeAndCapacityModel> makeCapacity=[];
+  final  List<MeterMakeAndCapacityModel> makeCapacity=[];
   Future<void> getMeterMakesAndCapacities() async {
     ProcessDialogHelper.showProcessDialog(
       context,
@@ -400,10 +401,10 @@ class CategoryChangeDetailViewmodel extends ChangeNotifier {
   }
 
   void acceptRejectDialog(){
-    serialNo.text=categoryChange.meterSlNo;
-    finalReading.text=categoryChange.meterFr.toString();
-    selectedMAke=categoryChange.meterMake;
-    selectedCapacity=categoryChange.meterCapacity;
+    serialNo.text=loadChange.meterSlNo;
+    // finalReading.text=loadChange.meterFr.toString();
+    selectedMAke=loadChange.meterMake;
+    selectedCapacity=loadChange.meterCapacity;
 
 
     showDialog(
@@ -412,229 +413,233 @@ class CategoryChangeDetailViewmodel extends ChangeNotifier {
       builder: (BuildContext context) {
         return
           WillPopScope( onWillPop: () async => false,
-        child:StatefulBuilder(
-              builder: (context, setState) {
-                return AlertDialog(
-                  // contentPadding: EdgeInsets.zero,
-                  titlePadding: EdgeInsets.zero,
-                  content: SizedBox(
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width * pointEight, // 80% of screen width
-                    child: SingleChildScrollView(child:Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                       const Text("CHOOSE THE OPTION", style: TextStyle(color: Colors.redAccent),),
+            child:StatefulBuilder(
+                builder: (context, setState) {
+                  return AlertDialog(
+                    // contentPadding: EdgeInsets.zero,
+                    titlePadding: EdgeInsets.zero,
+                    content: SizedBox(
+                      width: MediaQuery
+                          .of(context)
+                          .size
+                          .width * pointEight, // 80% of screen width
+                      child: SingleChildScrollView(child:Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text("CHOOSE THE OPTION", style: TextStyle(color: Colors.redAccent),),
 
-                        Row(
-                          children: [
-                            Radio<String>(
-                              value: "Accept",
-                              groupValue: selectedOption,
-                              onChanged: (value) {
-                                setState((){
-                                  selectedOption = value;
-                                });
-                                print("$selectedOption :choose option");
-                              },
-                            ),
-                            const SizedBox(width: 4),
-                            const Text(
-                              "Accept",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-
-                    Row(
-                      children: [
-                        Radio<String>(
-                          value: "Reject",
-                          groupValue: selectedOption,
-                          onChanged: (value){
-                            setState((){
-                              selectedOption = value;
-                            });
-                            print("$selectedOption :choose option");
-                          }
-                        ),
-                        const SizedBox(width: 4),
-                        const Text(
-                          "Reject",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                        const SizedBox(height: doubleFive,),
-                        Visibility(
-                            visible: selectedOption=="Reject",
-                            child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                          Text("Select Reason:"),
-                          DropdownButtonFormField<EroModel>(
-                            value:reason,
-                            hint: Text("Select"),
-                            isExpanded: true,
-                            items: reasonList.map((EroModel value) {
-                              return DropdownMenuItem<EroModel>(
-                                value: value,
-                                child: Text(value.optionName),
-                              );
-                            }).toList(),
-                            onChanged: (newValue) {
-                             setState((){
-                               reason = newValue;
-                               selectedReason=newValue!.optionId;
-                               // print("selectedReason: $reason selected and optionID: $selectedReason");
-                             });
-                            },
-
-                          ),
-                        ],),),
-                        Visibility(visible:selectedOption=="Accept",
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          Row(
                             children: [
-                            Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Checkbox(
-                                value: isEditMeterChecked,
-                                onChanged: (bool? newValue) {
+                              Radio<String>(
+                                value: "Accept",
+                                groupValue: selectedOption,
+                                onChanged: (value) {
                                   setState((){
-                                    isEditMeterChecked=newValue??false;
+                                    selectedOption = value;
                                   });
-                                    if (isEditMeterChecked) {
-                                      print("$isEditMeterChecked Edit Meter Particulars");
-                                    } // Update ViewModel
+                                  print("$selectedOption :choose option");
                                 },
                               ),
-                              const Text("Edit Meter Particulars"),
+                              const SizedBox(width: 4),
+                              const Text(
+                                "Accept",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
                             ],
                           ),
-                           const Text("METER PARTICULARS", style: TextStyle(color: Colors.blue),),
-                            const SizedBox(height: doubleTen,),
-                            Text("Make"),
-                            DropdownButtonFormField<EroModel>(
-                              value:make,
-                              hint: Text(categoryChange.meterMake,style: TextStyle(color:isEditMeterChecked?Colors.black:null ))??Text("Select"),
-                              isExpanded: true,
-                              items: makeList.map((EroModel value) {
-                                return DropdownMenuItem<EroModel>(
-                                  value: value,
-                                  child: Text(value.optionName),
-                                );
-                              }).toList(),
-                              onChanged: isEditMeterChecked
-                                  ? (newValue) {
-                                setState(() {
-                                  make = newValue;
-                                  selectedMAke = newValue!.optionId;
-                                });
-                              }
-                                  : null,
 
-                            ),
-                            const SizedBox(height: doubleTen,),
-                           const Text("Capacity"),
-                            DropdownButtonFormField<EroModel>(
-                              value:capacity,
-                              hint: Text(categoryChange.meterCapacity, style: TextStyle(color:isEditMeterChecked?Colors.black:null ),) ?? Text("Select"),
-                              isExpanded: true,
-                              items: capacityList.map((EroModel value) {
-                                return DropdownMenuItem<EroModel>(
-                                  value: value,
-                                  child: Text(value.optionName),
-                                );
-                              }).toList(),
-                              onChanged: isEditMeterChecked
-                                  ? (newValue) {
+                          Row(
+                            children: [
+                              Radio<String>(
+                                  value: "Reject",
+                                  groupValue: selectedOption,
+                                  onChanged: (value){
+                                    setState((){
+                                      selectedOption = value;
+                                    });
+                                    print("$selectedOption :choose option");
+                                  }
+                              ),
+                              const SizedBox(width: 4),
+                              const Text(
+                                "Reject",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: doubleFive,),
+                          Visibility(
+                            visible: selectedOption=="Reject",
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Select Reason:"),
+                                DropdownButtonFormField<EroModel>(
+                                  value:reason,
+                                  hint: Text("Select"),
+                                  isExpanded: true,
+                                  items: reasonList.map((EroModel value) {
+                                    return DropdownMenuItem<EroModel>(
+                                      value: value,
+                                      child: Text(value.optionName),
+                                    );
+                                  }).toList(),
+                                  onChanged: (newValue) {
+                                    setState((){
+                                      reason = newValue;
+                                      selectedReason=newValue!.optionId;
+                                      // print("selectedReason: $reason selected and optionID: $selectedReason");
+                                    });
+                                  },
+
+                                ),
+                              ],),),
+                          Visibility(visible:selectedOption=="Accept",
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Checkbox(
+                                      value: isEditMeterChecked,
+                                      onChanged: (bool? newValue) {
+                                        setState((){
+                                          isEditMeterChecked=newValue??false;
+                                        });
+                                        if (isEditMeterChecked) {
+                                          print("$isEditMeterChecked Edit Meter Particulars");
+                                        } // Update ViewModel
+                                      },
+                                    ),
+                                    const Text("Edit Meter Particulars"),
+                                  ],
+                                ),
+                                const Text("METER PARTICULARS", style: TextStyle(color: Colors.blue),),
+                                const SizedBox(height: doubleTen,),
+                                Text("Make"),
+                                DropdownButtonFormField<EroModel>(
+                                  value:make,
+                                  hint: Text(loadChange.meterMake,style: TextStyle(color:isEditMeterChecked?Colors.black:null ))??Text("Select"),
+                                  isExpanded: true,
+                                  items: makeList.map((EroModel value) {
+                                    return DropdownMenuItem<EroModel>(
+                                      value: value,
+                                      child: Text(value.optionName),
+                                    );
+                                  }).toList(),
+                                  onChanged: isEditMeterChecked
+                                      ? (newValue) {
+                                    setState(() {
+                                      make = newValue;
+                                      selectedMAke = newValue!.optionId;
+                                    });
+                                  }
+                                      : null,
+
+                                ),
+                                const SizedBox(height: doubleTen,),
+                                const Text("Capacity"),
+                                DropdownButtonFormField<EroModel>(
+                                  value:capacity,
+                                  hint: Text(loadChange.meterCapacity, style: TextStyle(color:isEditMeterChecked?Colors.black:null ),) ?? Text("Select"),
+                                  isExpanded: true,
+                                  items: capacityList.map((EroModel value) {
+                                    return DropdownMenuItem<EroModel>(
+                                      value: value,
+                                      child: Text(value.optionName),
+                                    );
+                                  }).toList(),
+                                  onChanged: isEditMeterChecked
+                                      ? (newValue) {
+                                    setState((){
+                                      capacity = newValue;
+                                      selectedCapacity=newValue!.optionId;
+                                      // print("selectedReason: $reason selected and optionID: $selectedReason");
+                                    });
+                                  }:null,
+
+                                ),
+                                const Text("Serial No"),
+                                TextFormField(controller: serialNo,),
+                                const Text("Final Reading(KWH)"),
+                                TextFormField(controller: finalReadingKWH,),
+                                const Text("Final Reading(KVAH)"),
+                                TextFormField(controller: finalReadingKVAH,),
+                              ],),),
+                        ],
+                      ),
+                      ),
+                    ),
+                    actions: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.grey,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(doubleFive),
+                                ),
+                              ),
+                              onPressed: () {
                                 setState((){
-                                  capacity = newValue;
-                                  selectedCapacity=newValue!.optionId;
-                                  // print("selectedReason: $reason selected and optionID: $selectedReason");
+                                  reason=null;
+                                  selectedOption=null;
+                                  selectedReason=null;
+                                  isEditMeterChecked=false;
                                 });
-                              }:null,
-
+                                Navigator.of(context).pop();
+                              },
+                              child: Text("Cancel".toUpperCase(),
+                                  style: const TextStyle(fontSize: extraRegularSize, color: Colors.white)),
                             ),
-                            const Text("Serial No"),
-                            TextFormField(controller: serialNo,),
-                            const Text("Final Reading"),
-                            TextFormField(controller: finalReading,),
-                        ],),),
-                  ],
-                ),
-                    ),
-                  ),
-                  actions: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.grey,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(doubleFive),
-                              ),
-                            ),
-                            onPressed: () {
-                              setState((){
-                                reason=null;
-                                selectedOption=null;
-                                selectedReason=null;
-                                isEditMeterChecked=false;
-                              });
-                              Navigator.of(context).pop();
-                            },
-                            child: Text("Cancel".toUpperCase(),
-                                style: const TextStyle(fontSize: extraRegularSize, color: Colors.white)),
                           ),
-                        ),
-                        const SizedBox(width: doubleTen),
-                        Expanded(
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: CommonColors.successGreen,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(doubleFive),
+                          const SizedBox(width: doubleTen),
+                          Expanded(
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: CommonColors.successGreen,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(doubleFive),
+                                ),
                               ),
+                              onPressed: () async {
+                                if(selectedOption=="Accept"&&serialNo.text==""){
+                                  showAlertDialog(context, "Please enter SerialNo");
+                                }else if(selectedOption=="Accept"&&finalReadingKWH.text==""){
+                                  showAlertDialog(context, "Please enter Final Reading");
+                                }else if(selectedOption=="Accept"&&finalReadingKVAH.text==""){
+                                  showAlertDialog(context, "Please enter Final Reading");
+                                }else if(selectedOption=="Accept"&&selectedMAke!.isEmpty){
+                                  showAlertDialog(context, "Please choose Make");
+                                }else if(selectedOption=="Accept"&&selectedCapacity!.isEmpty){
+                                  showAlertDialog(context, "Please choose Capacity");
+                                }else if(selectedOption=="Reject"&&selectedReason==null){
+                                  showAlertDialog(context, "Please select a Reason");
+                                }else {
+                                  updateCatChangeApplication(
+                                      loadChange.regId, "",
+                                      loadChange.testReportPath);
+                                }
+                              },
+                              child: Text("submit".toUpperCase(),
+                                  style: const TextStyle(fontSize: extraRegularSize, color: Colors.white)),
                             ),
-                            onPressed: () async {
-                              if(selectedOption=="Accept"&&serialNo.text==""){
-                                showAlertDialog(context, "Please enter SerialNo");
-                              }else if(selectedOption=="Accept"&&finalReading.text==""){
-                                showAlertDialog(context, "Please enter Final Reading");
-                              }else if(selectedOption=="Accept"&&selectedMAke!.isEmpty){
-                                showAlertDialog(context, "Please choose Make");
-                              }else if(selectedOption=="Accept"&&selectedCapacity!.isEmpty){
-                                showAlertDialog(context, "Please choose Capacity");
-                              }else if(selectedOption=="Reject"&&selectedReason==null){
-                                showAlertDialog(context, "Please select a Reason");
-                              }else {
-                                updateCatChangeApplication(
-                                    categoryChange.regId, "",
-                                    categoryChange.testReportPath);
-                              }
-                            },
-                            child: Text("submit".toUpperCase(),
-                                style: const TextStyle(fontSize: extraRegularSize, color: Colors.white)),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                );
-              }
-        ),
+                        ],
+                      ),
+                    ],
+                  );
+                }
+            ),
           );
       },
     );
@@ -643,7 +648,7 @@ class CategoryChangeDetailViewmodel extends ChangeNotifier {
   void buttonCreated(){
     String? code=SharedPreferenceHelper.getStringValue(LoginSdkPrefs.designationCodeKey);
     if(code==155||code==150){
-      if(categoryChange.status=="VERIFIED"){
+      if(loadChange.status=="VERIFIED"){
 
       }
 
@@ -678,7 +683,7 @@ class CategoryChangeDetailViewmodel extends ChangeNotifier {
         "make":selectedMAke,
         "capacity":selectedCapacity,
         "meterSerial":serialNo.text,
-        "finalReading":finalReading.text,
+        // "finalReading":finalReading.text,
       }else...{
         "reason":selectedReason,
       }
