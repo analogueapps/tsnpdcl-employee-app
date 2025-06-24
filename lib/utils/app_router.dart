@@ -6,6 +6,7 @@ import 'package:tsnpdcl_employee/view/auth/view/corporate_login_screen.dart';
 import 'package:tsnpdcl_employee/view/auth/view/employee_id_login_screen.dart';
 import 'package:tsnpdcl_employee/view/auth/view/otp_verification_screen.dart';
 import 'package:tsnpdcl_employee/view/bs_udc_inspection/view/bs_udc_list.dart';
+import 'package:tsnpdcl_employee/view/daily_nil_report/view/daily_nil.dart';
 import 'package:tsnpdcl_employee/view/meeseva_category_pending_allotment/view/category_change_request_detail.dart';
 import 'package:tsnpdcl_employee/view/meeseva_category_pending_allotment/view/category_change_requests.dart';
 import 'package:tsnpdcl_employee/view/ccc/model/open_model.dart';
@@ -134,6 +135,8 @@ import 'package:tsnpdcl_employee/view/ptr_feeder_loaders/view/ptr_freeder_screen
 import 'package:tsnpdcl_employee/view/reports/view/reports_screen.dart';
 import 'package:tsnpdcl_employee/view/rfss/view/download_structures_screen.dart';
 import 'package:tsnpdcl_employee/view/rfss/view/rfss_screen.dart';
+import 'package:tsnpdcl_employee/view/routed_from_ccc/view/ccc_complaints.dart';
+import 'package:tsnpdcl_employee/view/routed_from_ccc/view/dismantle_of_services.dart';
 import 'package:tsnpdcl_employee/view/schedules/models/view_schedule_model.dart';
 import 'package:tsnpdcl_employee/view/schedules/view/33kv_screen.dart';
 import 'package:tsnpdcl_employee/view/schedules/view/schedule.dart';
@@ -713,6 +716,17 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) =>  CheckMeasure11kvEdit(args: settings.arguments as Map<String, dynamic>));
       case MeterChangeEntryScreen.id:
         return MaterialPageRoute(builder: (_) =>  MeterChangeEntryScreen(args: settings.arguments as Map<String, dynamic>));
+
+        //PART - 2
+        //Daily Nil Report
+        case DailyNil.id:
+        return MaterialPageRoute(builder: (_) =>  const DailyNil());
+
+        //Routed From CCC
+        case CccComplaints.id:
+        return MaterialPageRoute(builder: (_) =>  const CccComplaints());
+        case DismantleOfServices.id:
+        return MaterialPageRoute(builder: (_) =>   DismantleOfServices(args: settings.arguments as Map<String, dynamic>));
 
 
       default:

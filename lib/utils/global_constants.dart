@@ -60,6 +60,7 @@ class GlobalConstants {
   static const String accountTitle = "Account";
   static const String logoutTitle = "Logout";
   static const String ptrFeederLoaders="PTR & FEEDER LOADERS";
+  static const String dailyNilReportTitle="Daily Nil Report";
 
   // CGM P&MM Menu
   static const String viewSuppliersTitle = "View suppliers";
@@ -196,6 +197,14 @@ class GlobalConstants {
 
   // Accounts * swetha
   static const String account = "Account";
+
+  //ERO Correspondence * Bhavana
+  static const String eroCorrespondence = "Ero Correspondence";
+  static const String routedFromCCC = "Routed From CCC(ero)";
+  static const String nameAndAddressCorrection = "Name & Address correction";
+  static const String revokingOfServices = "Revoking of Services";
+  static const String wrongBilling = "Wrong billing";
+  static const String dismantleOfService = "Dismantle of service";
 
 }
 

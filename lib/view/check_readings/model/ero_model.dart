@@ -25,4 +25,9 @@ class EroModel {
     'optionId': optionId,
     'optionName': optionName,
   };
+
+  @override
+  String toString() {
+    return 'EroModel(optionId: $optionId, optionName: $optionName)';
+  }
 }

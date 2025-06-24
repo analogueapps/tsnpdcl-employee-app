@@ -83,6 +83,16 @@ class Assets {
   static const String check11KvLeft='assets/images/check_11kv_left_tap.png';
   static const String check11KvRight='assets/images/check_11kv_right_tap.png';
 
+  //Nil Report
+  static const String dailyNilReportIcon='assets/images/nil_report.png';
+
+  //ERO Correspondence
+  static const String eroCorrespondenceIcon='assets/images/ero_correspondence.png';
+  static const String routedFromCCCIcon='assets/images/routed_from_ccc(ero).png';
+  static const String nameAndAddressCorrectionIcon='assets/images/name_address_correction.png';
+  static const String dismantleOfServiceIcon='assets/images/dismantle_of_service.png';
+  static const String wrongBillingIcon='assets/images/wrong_billing.png';
+
   static OutlineInputBorder squareInputBorder(){ //return type is OutlineInputBorder
     return const OutlineInputBorder( //Outline border type for TextFiled
         borderRadius: BorderRadius.all(Radius.circular(5)),

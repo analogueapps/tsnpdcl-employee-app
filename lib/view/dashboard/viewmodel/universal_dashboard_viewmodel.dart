@@ -63,8 +63,18 @@ class UniversalDashboardViewModel extends ChangeNotifier {
         routeName: Routes.cccDashboard,
       ),
       UniversalDashboardItem(
+        title: GlobalConstants.dailyNilReportTitle,
+        imageAsset: Assets.dailyNilReportIcon,
+        routeName: Routes.nilReport,
+      ),
+      UniversalDashboardItem(
         title: GlobalConstants.consumerRelatedTitle,
         imageAsset: Assets.searchConsumer,
+        routeName: routeName,
+      ),
+      UniversalDashboardItem(
+        title: GlobalConstants.eroCorrespondence,
+        imageAsset: Assets.eroCorrespondenceIcon,
         routeName: routeName,
       ),
       UniversalDashboardItem(
@@ -243,6 +253,59 @@ class UniversalDashboardViewModel extends ChangeNotifier {
           routeName: Routes.webViewScreen,
           imageAsset: Assets.uscNo,
         ),
+      ]);
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
+        ),
+        builder: (_) => CustomBottomSheet(
+          title: title,
+          items: globalListDialogItem,
+          onItemSelected: (item) {
+            if (item.title == GlobalConstants.uscNoTitle) {
+              var argument = {
+                'title': GlobalConstants.uscNoTitle,
+                'url': UrlConstants.onlineLTConsCheckUrl,
+              };
+              Navigation.instance.navigateTo(Routes.webViewScreen, args: argument);
+            } else {
+              Navigation.instance.navigateTo(item.routeName);
+            }
+          },
+        ),
+      );
+    }
+    else if(title == GlobalConstants.eroCorrespondence) {
+      List<GlobalListDialogItem> globalListDialogItem = [];
+      globalListDialogItem.addAll([
+        GlobalListDialogItem(
+          title: GlobalConstants.routedFromCCC,
+          routeName: Routes.routeCCC,
+          imageAsset: Assets.routedFromCCCIcon,
+        ),
+        GlobalListDialogItem(
+          title: GlobalConstants.nameAndAddressCorrection,
+          routeName: Routes.consumerDetailsScreen,
+          imageAsset: Assets.nameAndAddressCorrectionIcon,
+        ),
+        GlobalListDialogItem(
+          title: GlobalConstants.revokingOfServices,
+          routeName: "",
+          imageAsset: Assets.electricMeter,
+        ),
+        GlobalListDialogItem(
+          title: GlobalConstants.wrongBilling,
+          routeName: "",
+          imageAsset: Assets.wrongBillingIcon,
+        ),
+        GlobalListDialogItem(
+          title: GlobalConstants.dismantleOfService,
+          routeName: "",
+          imageAsset: Assets.dismantleOfServiceIcon,
+        ),
+
       ]);
       showModalBottomSheet(
         context: context,

@@ -248,6 +248,13 @@ class Routes {
   static const String exceptionalsScreen = "ExceptionalsScreen";
   static const String scanBarCoder = "BarCodeScannerScreen";
 
+  //DAILY NIL REPORT
+  static const String nilReport = "DailyNil";
+
+  //ROUTED FROM CCC
+  static const String routeCCC = "CccComplaints";
+  static const String dismantleOfServices = "DismantleOfServices";
+
 
 
 
