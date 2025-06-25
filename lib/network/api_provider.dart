@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -97,4 +98,53 @@ class ApiProvider {
     }
     return null;
   }
+
+  Future<Response?> postApiCallWithFile(
+     BuildContext context,
+     String endpoint,
+     Map<String, dynamic> payload,
+     String fileFieldName,
+     File file,
+    String? fileName,
+  {String mimeType = 'application/pdf'}
+  ) async {
+    try {
+      if (!(await NetworkUtils.isNetworkAvailable())) {
+        if (context.mounted) {
+          AlertUtils.showSnackBar(context, noInternetMessage, isTrue);
+        }
+        return null;
+      }
+
+      Dio dio = _apiClient.dio;
+
+      FormData formData = FormData.fromMap({
+        ...payload,
+        fileFieldName: await MultipartFile.fromFile(
+          file.path,
+          filename: fileName ?? file.path.split('/').last,
+        ),
+      });
+
+      final response = await dio.post(
+        endpoint,
+        data: formData,
+        options: Options(
+          contentType: 'multipart/form-data',
+        ),
+      );
+
+      return response;
+    } on DioException catch (e) {
+      if (context.mounted) {
+        return await handleDioException(context, e);
+      }
+    } catch (e) {
+      if (context.mounted) {
+        AlertUtils.showSnackBar(context, resSomethingMessage, isTrue);
+      }
+    }
+    return null;
+  }
+
 }

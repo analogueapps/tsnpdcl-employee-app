@@ -136,7 +136,10 @@ import 'package:tsnpdcl_employee/view/reports/view/reports_screen.dart';
 import 'package:tsnpdcl_employee/view/rfss/view/download_structures_screen.dart';
 import 'package:tsnpdcl_employee/view/rfss/view/rfss_screen.dart';
 import 'package:tsnpdcl_employee/view/routed_from_ccc/view/ccc_complaints.dart';
+import 'package:tsnpdcl_employee/view/routed_from_ccc/view/complaint_track.dart';
 import 'package:tsnpdcl_employee/view/routed_from_ccc/view/dismantle_of_services.dart';
+import 'package:tsnpdcl_employee/view/routed_from_ccc/view/revoke_of_services.dart';
+import 'package:tsnpdcl_employee/view/routed_from_ccc/view/view_detail_complaint.dart';
 import 'package:tsnpdcl_employee/view/schedules/models/view_schedule_model.dart';
 import 'package:tsnpdcl_employee/view/schedules/view/33kv_screen.dart';
 import 'package:tsnpdcl_employee/view/schedules/view/schedule.dart';
@@ -727,6 +730,12 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) =>  const CccComplaints());
         case DismantleOfServices.id:
         return MaterialPageRoute(builder: (_) =>   DismantleOfServices(args: settings.arguments as Map<String, dynamic>));
+        case RevokeOfServices.id:
+        return MaterialPageRoute(builder: (_) =>   RevokeOfServices(args: settings.arguments as Map<String, dynamic>));
+        case ViewDetailComplaint.id:
+        return MaterialPageRoute(builder: (_) =>   ViewDetailComplaint(args: settings.arguments as Map<String, dynamic>));
+        case DetailComplaintTrack.id:
+        return MaterialPageRoute(builder: (_) =>   DetailComplaintTrack(arg: settings.arguments as String));
 
 
       default:

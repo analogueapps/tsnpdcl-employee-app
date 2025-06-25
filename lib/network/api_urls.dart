@@ -197,5 +197,8 @@ class Apis{
  ///ROUTE FROM CCC
   static const ERO_CORRESPONDENCE_URL="$SERVER_IP:5656/NPFDAS/ep/eroCorrespondence/";
   static const CCC_COMPLAINTS_URL="getCCCDivertedComplaints";
+  static const GET_USCNO_SERVICE_OF_SECTION="getUscnoServiceOfSection";
+  static const CREATE_DISMANTLE="createDismantleService";
+  static const GET_DETAILED_TICKET="getDetailedTicket";
 }
 

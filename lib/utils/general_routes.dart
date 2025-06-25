@@ -254,6 +254,9 @@ class Routes {
   //ROUTED FROM CCC
   static const String routeCCC = "CccComplaints";
   static const String dismantleOfServices = "DismantleOfServices";
+  static const String revokeOfServices = "RevokeOfServices";
+  static const String viewDetailComplaint = "ViewDetailComplaint";
+  static const String detailComplaintTrack = "DetailComplaintTrack";
 
 
 

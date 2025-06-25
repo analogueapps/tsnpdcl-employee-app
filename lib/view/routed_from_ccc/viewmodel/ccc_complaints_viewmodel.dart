@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
 import 'package:tsnpdcl_employee/network/api_provider.dart';
 import 'package:tsnpdcl_employee/network/api_urls.dart';
@@ -117,12 +116,15 @@ class CccComplaintsViewmodel extends ChangeNotifier {
                           switch (subtypeKey) {
                             case "REVOKE_OF_SERVICES":
                               print("Redirected to REVOKE_OF_SERVICES");
-                              // Navigation.instance
-                              //     .navigateTo(Routes.openDetail, args: arguments,);
+                              Navigator.of(context).pop();
+                              Navigation.instance
+                                  .navigateTo(Routes.revokeOfServices, args: arguments,);
                               break;
                             case "WRONG_BILLING":
                               print("Redirected to WRONG_BILLING");
-                              // Navigator.pushNamed(context, '/wrong_billing', arguments: arguments);
+                              Navigator.of(context).pop();
+                              // Navigation.instance
+                              //     .navigateTo(Routes.revokeOfServices, args: arguments,);
                               break;
                             case "DISMANTLE_OF_SERVICES":
                               print("Redirected to DISMANTLE_OF_SERVICES");
@@ -139,8 +141,18 @@ class CccComplaintsViewmodel extends ChangeNotifier {
                           );
                         }
 
-                      }, child: Text("Create Ero Correspondence", style: TextStyle(color:Colors.black),)),
-                      TextButton(onPressed: null, child: Text("View Detail Complaint", style: TextStyle(color:Colors.black),))
+                      }, child:const Text("Create Ero Correspondence", style: TextStyle(color:Colors.black),)),
+                      TextButton(
+                          onPressed: (){
+                            final arguments = {
+                              "hideButton": true,
+                              "ticketId": complaintId,
+                            };
+                            Navigator.pop(context);
+                            Navigation.instance
+                                .navigateTo(Routes.viewDetailComplaint, args: arguments,);
+                          },
+                          child: const Text("View Detail Complaint", style: TextStyle(color:Colors.black),))
                     ],
                   ) ,
           actions: [

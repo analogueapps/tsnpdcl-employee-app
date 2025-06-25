@@ -75,7 +75,7 @@ class CccComplaintTrack extends StatelessWidget {
 
                       ViewDetailedLcTileWidget(
                           tileKey: "UPDATED BY",
-                          tileValue: "${data.userName}${data.userId}" ?? "NULL"),
+                          tileValue: "${data.userName}(${data.userId})" ?? "NULL"),
                       ViewDetailedLcTileWidget(
                           tileKey: "UPDATED ON",
                           tileValue: data.statusUpdatedOn ?? ""),

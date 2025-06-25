@@ -14,5 +14,6 @@ class CommonColors {
 
   // * Bhavana
   static const pink= Color(0xffe64980);
+  static const lightGrey= Color(0xffE0E0E0);
   static const textFieldColor = Color.fromRGBO(245, 245, 245, 1);
 }
