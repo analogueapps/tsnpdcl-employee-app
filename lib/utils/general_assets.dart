@@ -92,6 +92,7 @@ class Assets {
   static const String nameAndAddressCorrectionIcon='assets/images/name_address_correction.png';
   static const String dismantleOfServiceIcon='assets/images/dismantle_of_service.png';
   static const String wrongBillingIcon='assets/images/wrong_billing.png';
+  static const String electricMeter2='assets/images/electric_meter_2_outline.png';
 
   static OutlineInputBorder squareInputBorder(){ //return type is OutlineInputBorder
     return const OutlineInputBorder( //Outline border type for TextFiled

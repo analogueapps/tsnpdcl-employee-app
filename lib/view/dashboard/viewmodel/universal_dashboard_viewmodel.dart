@@ -287,7 +287,7 @@ class UniversalDashboardViewModel extends ChangeNotifier {
         ),
         GlobalListDialogItem(
           title: GlobalConstants.nameAndAddressCorrection,
-          routeName: Routes.consumerDetailsScreen,
+          routeName: Routes.nameAndAddressScreen,
           imageAsset: Assets.nameAndAddressCorrectionIcon,
         ),
         GlobalListDialogItem(

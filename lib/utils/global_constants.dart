@@ -205,6 +205,10 @@ class GlobalConstants {
   static const String revokingOfServices = "Revoking of Services";
   static const String wrongBilling = "Wrong billing";
   static const String dismantleOfService = "Dismantle of service";
+  static const String createCorrespondence = "Create Correspondence";
+  static const String pendingAtEro = "Pending At ERO";
+  static const String completed = "Completed";
+  static const String rejectedByERO = "Rejected By ERO";
 
 }
 

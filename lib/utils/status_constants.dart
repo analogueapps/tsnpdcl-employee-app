@@ -117,4 +117,25 @@ class StatusConstants {
         return "N/A";
     }
   }
+
+  //Name and Address
+  static const  TYPE_CREATE_NAME_CORR = "create_name_correspondence";
+  static const  TYPE_PENDING_ERO = "PENDING_AT_ERO";
+  static const  TYPE_REJECTED_ERO = "REJECTED";
+  static const TYPE_COMPLETED=  "FINISHED";
+
+  static String getNameAddressScreenTitle(String status) {
+    switch (status) {
+      case TYPE_CREATE_NAME_CORR:
+        return "Create Correspondence";
+      case TYPE_PENDING_ERO:
+        return "PENDING_AT_ERO";
+      case TYPE_REJECTED_ERO:
+        return "REJECTED";
+        case TYPE_COMPLETED:
+        return "FINISHED";
+      default:
+        return "N/A";
+    }
+  }
 }

@@ -200,5 +200,7 @@ class Apis{
   static const GET_USCNO_SERVICE_OF_SECTION="getUscnoServiceOfSection";
   static const CREATE_DISMANTLE="createDismantleService";
   static const GET_DETAILED_TICKET="getDetailedTicket";
+  static const SAVE_REVOKE_SERVICES="saveRevokeOfService";
+  static const NAME_AND_ADDRESS_CORRECTION_REQUEST="getNameAndAddressCorrectionRequests";
 }
 

@@ -104,6 +104,9 @@ import 'package:tsnpdcl_employee/view/middle_poles/view/middle_poles_screen.dart
 import 'package:tsnpdcl_employee/view/middle_poles/view/pending_list_floating_button.dart';
 import 'package:tsnpdcl_employee/view/middle_poles/view/pending_list_screen.dart';
 import 'package:tsnpdcl_employee/view/middle_poles/view/view_detailed_pending_list_screen.dart';
+import 'package:tsnpdcl_employee/view/name_address_correction/view/name_and_address_change_request_list.dart';
+import 'package:tsnpdcl_employee/view/name_address_correction/view/name_and_address_menu_screen.dart';
+import 'package:tsnpdcl_employee/view/name_address_correction/view/name_create_correspondence.dart';
 import 'package:tsnpdcl_employee/view/online_pr_menu/view/issue_duplicate_receipt.dart';
 import 'package:tsnpdcl_employee/view/online_pr_menu/view/online_collection.dart';
 import 'package:tsnpdcl_employee/view/online_pr_menu/view/online_pr_menu_screen.dart';
@@ -736,6 +739,12 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) =>   ViewDetailComplaint(args: settings.arguments as Map<String, dynamic>));
         case DetailComplaintTrack.id:
         return MaterialPageRoute(builder: (_) =>   DetailComplaintTrack(arg: settings.arguments as String));
+        case NameCreateCorrespondence.id:
+        return MaterialPageRoute(builder: (_) =>   const NameCreateCorrespondence());
+        case NameAndAddressMenuScreen.id:
+        return MaterialPageRoute(builder: (_) =>   const NameAndAddressMenuScreen());
+        case NameAndAddressChangeRequestList.id:
+        return MaterialPageRoute(builder: (_) =>   NameAndAddressChangeRequestList(args: settings.arguments as String));
 
 
       default:

@@ -17,29 +17,41 @@ import 'package:tsnpdcl_employee/view/check_readings/model/ero_model.dart';
 import 'package:tsnpdcl_employee/view/routed_from_ccc/model/consumer_uscno_model.dart';
 import 'package:tsnpdcl_employee/widget/pdf_platform_to_temporary.dart';
 
-class RevokeOfServicesViewmodel extends ChangeNotifier {
-  RevokeOfServicesViewmodel({required this.context, required this.args}) {
-    uscNo.text = args['uscno'];
-  }
+class NameCreateCorrespondenceViewmodel extends ChangeNotifier {
+  NameCreateCorrespondenceViewmodel({required this.context}) ;
 
   final BuildContext context;
-  final Map<String, dynamic> args;
 
   bool _isLoading = false;
 
   bool get isLoading => _isLoading;
 
   bool fetchDetailsClicked = false;
+  String titleOfUpload="";
 
-  bool _meterAvailableSwitch = false;
+  //Name
+  bool _nameSwitch = false;
 
-  bool get meterAvailableSwitch => _meterAvailableSwitch;
+  bool get nameSwitch => _nameSwitch;
 
-  set meterAvailable(bool value) {
-    _meterAvailableSwitch = value;
-    print("_meterAvailableSwitch: $_meterAvailableSwitch");
-    if(_meterAvailableSwitch==isTrue){
-      _loadMeterMake();
+  set nameAvailable(bool value) {
+    _nameSwitch = value;
+    print("__nameSwitch: $_nameSwitch");
+    if(_nameSwitch==isFalse){
+      _addressSwitch=isTrue;
+      notifyListeners();
+    }
+    notifyListeners();
+  }
+
+  //Address
+  bool _addressSwitch = false;
+  bool get addressSwitch => _addressSwitch;
+
+  set addressAvailable(bool value) {
+    _addressSwitch = value;
+    print("__nameSwitch: $_addressSwitch");
+    if(_addressSwitch==isTrue){
     }
     notifyListeners();
   }
@@ -53,18 +65,15 @@ class RevokeOfServicesViewmodel extends ChangeNotifier {
   TextEditingController addressLine2= TextEditingController();
   TextEditingController addressLine3= TextEditingController();
   TextEditingController addressLine4= TextEditingController();
-  TextEditingController serialNo= TextEditingController();
-  TextEditingController capacity= TextEditingController();
-  TextEditingController kwh= TextEditingController();
-  TextEditingController kvah= TextEditingController();
-  TextEditingController prDate= TextEditingController();
-  TextEditingController prNo= TextEditingController();
-  TextEditingController amount= TextEditingController();
-
-  void setDate(String date) {
-    prDate.text = date;
-    notifyListeners();
-  }
+  TextEditingController editAddressLine1= TextEditingController();
+  TextEditingController editAddressLine2= TextEditingController();
+  TextEditingController editAddressLine3= TextEditingController();
+  TextEditingController editAddressLine4= TextEditingController();
+  TextEditingController pinCode= TextEditingController();
+  TextEditingController surname= TextEditingController();
+  TextEditingController name= TextEditingController();
+  TextEditingController fatherNameOrWO= TextEditingController();
+  
 
   String? selectedOption = "";
 
@@ -92,6 +101,8 @@ class RevokeOfServicesViewmodel extends ChangeNotifier {
         // Convert to temp file
         selectedFile = await PdfPlatformToTemp.createTempFileFromPlatformFile(platformFile);
         fileName = PdfPlatformToTemp.getFileName(platformFile);
+        print("Selected fileName: $fileName");
+        print("Selected file: $selectedFile");
 
         notifyListeners(); // Notify UI of changes
       } catch (e) {
@@ -101,14 +112,6 @@ class RevokeOfServicesViewmodel extends ChangeNotifier {
     }
   }
 
-  String? meterMakeName;
-  List<EroModel> meterMakesMap = [];
-
-  void updateOldMeterMake(String name) {
-    meterMakeName = name;
-    print("selected make: $meterMakeName");
-    notifyListeners();
-  }
 
   List<ConsumerUscnoModel> _consumerUSCNOData=[];
   List<ConsumerUscnoModel> get consumerUSCNOData=>_consumerUSCNOData;
@@ -126,7 +129,6 @@ class RevokeOfServicesViewmodel extends ChangeNotifier {
       "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
       "uscno":uscNo,
-      "allowOnlyBillStop": true
     };
 
     var response = await ApiProvider(baseUrl: Apis.ERO_CORRESPONDENCE_URL)
@@ -157,7 +159,7 @@ class RevokeOfServicesViewmodel extends ChangeNotifier {
                 jsonList.map((json) => ConsumerUscnoModel.fromJson(json)).toList();
 
                 _consumerUSCNOData.addAll(dataList);
-                 storeConsumerDetails();
+                storeConsumerDetails();
                 notifyListeners();
                 print("data is there in getConsumerWithUscNo");
               }
@@ -180,6 +182,14 @@ class RevokeOfServicesViewmodel extends ChangeNotifier {
   }
 
   void storeConsumerDetails(){
+    if (consumerUSCNOData[0].cat=="1")
+    {
+      titleOfUpload="UPLOAD AADHAR";
+      notifyListeners();
+    }else {
+      titleOfUpload="UPLOAD MUNICIPALITY RECEIPT";
+      notifyListeners();
+    }
     consumerWithUscNo.text= consumerUSCNOData[0].uscNo;
     consumerName.text= consumerUSCNOData[0].consumerName;
     addressLine1.text= consumerUSCNOData[0].address1??"";
@@ -187,68 +197,27 @@ class RevokeOfServicesViewmodel extends ChangeNotifier {
     addressLine3.text= consumerUSCNOData[0].address3??"";
     addressLine4.text= consumerUSCNOData[0].address4??"";
     scNoCat.text= "${consumerUSCNOData[0].scNo}/${consumerUSCNOData[0].cat}";
+    name.text= consumerUSCNOData[0].consumerName;
+    fatherNameOrWO.text= consumerUSCNOData[0].fatherName??"";
+    editAddressLine1.text=consumerUSCNOData[0].address1??"";
+    editAddressLine2.text=consumerUSCNOData[0].address2??"";
+    editAddressLine3.text=consumerUSCNOData[0].address3??"";
+    editAddressLine4.text=consumerUSCNOData[0].address4??"";
+    pinCode.text=consumerUSCNOData[0].pinCode??"";
     notifyListeners();
   }
 
-  void _loadMeterMake() async {
-    _isLoading = true;
-    notifyListeners();
-
-    final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
-      "api": Apis.API_KEY,
-    };
-
-    final payload = {
-      "path": "/load/meterMakes",
-      "method": "POST",
-      "apiVersion": "1.0",
-      "data": jsonEncode(requestData),
-    };
-
-    var response = await ApiProvider(baseUrl: Apis.CHECK_BS_UDC_IP_PORT)
-        .postApiCall(context, Apis.METER_MAKE, payload);
-    print('Meter make response : $response');
-    _isLoading = false;
-    notifyListeners();
-
-    try {
-      if (response != null) {
-        if (response.data is String) {
-          response.data = jsonDecode(response.data); // Convert string to Map
-        }
-
-        if (response.statusCode == successResponseCode) {
-          final data = response.data;
-
-          if (data['tokenValid'] == true) {
-            if (data['success'] == true) {
-              if (data['objectJson'] != null) {
-                final List<dynamic> rawList = jsonDecode(data['objectJson']);
-                final List<EroModel> listData = rawList
-                    .map((json) => EroModel.fromJson(json))
-                    .toList();
-                meterMakesMap.addAll(listData);
-              } else {
-                showAlertDialog(context, "No Data Found");
-              }
-            } else {
-              showAlertDialog(context, data['message'] ?? "Task Failed");
-            }
-          } else {
-            showSessionExpiredDialog(context);
-          }
-        } else {
-          showAlertDialog(context,
-              response.data['message'] ?? "Unexpected server response");
-        }
-      }
-    } catch (e) {
-      print("Error: $e");
-      showErrorDialog(context, "An error occurred. Please try again.");
-      rethrow;
+   String getCorrectionType(){
+    if (nameSwitch==isTrue && addressSwitch==isFalse)
+    {
+      return "NAME";
+    }else if (nameSwitch==isFalse&&addressSwitch==isTrue)
+    {
+      return "ADDRESS";
+    }else
+    {
+      return "NAME & ADDRESS";
     }
-    notifyListeners();
   }
 
   Future<void> submitForm() async {
@@ -265,56 +234,47 @@ class RevokeOfServicesViewmodel extends ChangeNotifier {
     }
   }
   bool validateForm() {
-    if (uscNo.text.isEmpty || uscNo.text.isEmpty || consumerWithUscNo.text.isEmpty) {
+    if (_consumerUSCNOData.isEmpty) {
       AlertUtils.showSnackBar(
-          context, "Please Enter USCNO and fetch consumer details first", isTrue);
+          context, "Please fetch consumer details first", isTrue);
       return false;
     }
-    if (meterAvailableSwitch == isTrue &&(serialNo.text.isEmpty)) {
+    if (nameSwitch == isTrue &&(surname.text.isEmpty)) {
       AlertUtils.showSnackBar(
-          context, "Please Enter meter serial number",
+          context, "Please enter Surname of the consumer",
           isTrue);
       return false;
     }
-    else if (meterAvailableSwitch == isTrue && capacity.text.isEmpty) {
+    else if (_nameSwitch == isTrue && name.text.isEmpty) {
       AlertUtils.showSnackBar(
-          context, "Please Enter meter capacity",
+          context, "Please enter Name of the consumer",
           isTrue);
       return false;
-    }else if (meterAvailableSwitch == isTrue && kwh.text.isEmpty) {
+    }
+    else if (_addressSwitch == isTrue  && editAddressLine1.text.isEmpty) {
       AlertUtils.showSnackBar(
-          context, "Please Enter KWH reading",
+          context, "Please enter address line 1",
           isTrue);
       return false;
-    }else if (meterAvailableSwitch == isTrue  && _consumerUSCNOData[0].trivectorFlag== "1"&&kvah.text.isEmpty) {
+    }else if (_addressSwitch == isTrue  && editAddressLine2.text.isEmpty) {
+      AlertUtils.showSnackBar(
+          context, "Please enter address line 2",
+          isTrue);
+      return false;
+    }else if (_addressSwitch == isTrue  && pinCode.text.isEmpty) {
       AlertUtils.showSnackBar(
           context, "Please Enter KVAH reading",
           isTrue);
       return false;
-    }else if ( prNo.text.isEmpty) {
-      AlertUtils.showSnackBar(
-          context, "Please Enter PR. NO",
-          isTrue);
-      return false;
-    }else if ( prDate.text.isEmpty) {
-      AlertUtils.showSnackBar(
-          context, "Please select PR date",
-          isTrue);
-      return false;
-    }else if (amount.text.isEmpty) {
-      AlertUtils.showSnackBar(
-          context, "Please Enter PR. Amount",
-          isTrue);
-      return false;
     }else if (selectedOption=="") {
       AlertUtils.showSnackBar(
-          context, "Please select line available?",
+          context, "Please select document proof type",
           isTrue);
       return false;
     }
     if(fileName==""){
       AlertUtils.showSnackBar(
-          context, "Please upload consumer representation",
+          context, "Please upload Name or Address proof document",
           isTrue);
       return false;
     }
@@ -328,18 +288,31 @@ class RevokeOfServicesViewmodel extends ChangeNotifier {
     final payload = {
       "token": SharedPreferenceHelper.getStringValue(
           LoginSdkPrefs.tokenPrefKey),
-      "deviceId": await getDeviceId(),
-      "consumer": jsonEncode(_consumerUSCNOData), //should get data from getConsumerWithUscNo
-      "kwh": meterAvailableSwitch == isTrue ? kwh.text : "-",
-      "KvAh": meterAvailableSwitch == isTrue ? kvah.text : "",
-      "meterCap":meterAvailableSwitch == isTrue ? capacity.text:"",
-      "meterMake":meterAvailableSwitch == isTrue ? meterMakeName:"", //make optionCode here
-      "meterSlNo":serialNo.text??"",
-      "cccComplaintId":args['cccComplaintId'],
-      "paidPrNo":prNo.text,
-      "paidDate":prDate.text,
-      "prAmount":amount,
-      "lineAvailable":selectedOption=="AVAILABLE"?"Y":"N"
+      "areaName": consumerUSCNOData[0].areaName,
+      "areaCode":consumerUSCNOData[0].areaCode,
+      "cat":consumerUSCNOData[0].cat,
+      "uscNo":consumerUSCNOData[0].uscNo,
+      "scNo":consumerUSCNOData[0].scNo,
+      "existConsumerName":consumerUSCNOData[0].consumerName,
+      "existFatherName":consumerUSCNOData[0].fatherName,
+      "existSurname":consumerUSCNOData[0].surname??"",
+      "existAdd1":consumerUSCNOData[0].address1,
+      "existAdd2":consumerUSCNOData[0].address2,
+      "existAdd3":consumerUSCNOData[0].address3,
+      "existAdd4":consumerUSCNOData[0].address4,
+      "changedFatherName":fatherNameOrWO.text,
+      "changedSurname":surname.text,
+      "changedAdd1":editAddressLine1.text,
+      "changedAdd2":editAddressLine2.text,
+      "changedAdd3":editAddressLine3.text,
+      "changedAdd4":editAddressLine4.text,
+      "changedConsumerName":name.text,
+      "correctionType":getCorrectionType(),
+      "deviceId":await getDeviceId(),
+      "documentType":selectedOption=="AADHAR"?"AADHAR":"MUNICIPAL TAX RECEIPT",
+      "eroCode":consumerUSCNOData[0].eroCode,
+      "existPinCode":consumerUSCNOData[0].pinCode,
+      "changedPinCode": pinCode.text,
     };
 
     var response = await ApiProvider(baseUrl: Apis.ERO_CORRESPONDENCE_URL)
@@ -391,15 +364,17 @@ class RevokeOfServicesViewmodel extends ChangeNotifier {
     addressLine3.clear();
     addressLine4.clear();
     scNoCat.clear();
-    kwh.clear();
-    kvah.clear();
-    capacity.clear();
-    serialNo.clear();
-    prNo.clear();
-    prDate.clear();
-    amount.clear();
+    name.clear();
+    fatherNameOrWO.clear();
+    surname.clear();
+    editAddressLine1.clear();
+    editAddressLine2.clear();
+    editAddressLine3.clear();
+    editAddressLine4.clear();
+    pinCode.clear();
     selectedOption = "";
-
+    fileName=null;
+    selectedFile=null;
     notifyListeners();
   }
 }

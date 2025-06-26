@@ -257,6 +257,9 @@ class Routes {
   static const String revokeOfServices = "RevokeOfServices";
   static const String viewDetailComplaint = "ViewDetailComplaint";
   static const String detailComplaintTrack = "DetailComplaintTrack";
+  static const String nameCreateCorrespondence = "NameCreateCorrespondence";
+  static const String nameAndAddressScreen= "NameAndAddressMenuScreen";
+  static const String nameAndAddressChangeRequestList= "NameAndAddressChangeRequestList";
 
 
 

@@ -88,10 +88,12 @@ class RevokeOfServices extends StatelessWidget {
                                   child: Text('USCNO'),
                                 ),
                               ),
-                              TextField(
-                                controller: viewModel.consumerWithUscNo,
-                                readOnly: true,
-                                style: const TextStyle(color: Colors.red),
+                              Padding(
+                                padding: const EdgeInsets.only(left: doubleEight),
+                                child: TextField(
+                                  controller: viewModel.consumerWithUscNo,
+                                  readOnly: true,
+                                ),
                               ),
                             ],
                           ),TableRow(
@@ -103,10 +105,12 @@ class RevokeOfServices extends StatelessWidget {
                                   child: Text('SCNO/CAT'),
                                 ),
                               ),
-                              TextField(
-                                controller: viewModel.consumerWithUscNo,
-                                readOnly: true,
-                                style: const TextStyle(color: Colors.red),
+                              Padding(
+                                padding: const EdgeInsets.only(left: doubleEight),
+                                child: TextField(
+                                  controller: viewModel.scNoCat,
+                                  readOnly: true,
+                                ),
                               ),
                             ],
                           ),TableRow(
@@ -118,10 +122,12 @@ class RevokeOfServices extends StatelessWidget {
                                   child: Text('CONSUMER NAME'),
                                 ),
                               ),
-                              TextField(
-                                controller: viewModel.consumerWithUscNo,
-                                readOnly: true,
-                                style: const TextStyle(color: Colors.red),
+                              Padding(
+                                padding: const EdgeInsets.only(left: doubleEight),
+                                child: TextField(
+                                  controller: viewModel.consumerName,
+                                  readOnly: true,
+                                ),
                               ),
                             ],
                           ),TableRow(
@@ -133,10 +139,12 @@ class RevokeOfServices extends StatelessWidget {
                                   child: Text('ADDRESS LINE 1'),
                                 ),
                               ),
-                              TextField(
-                                controller: viewModel.consumerWithUscNo,
-                                readOnly: true,
-                                style: const TextStyle(color: Colors.red),
+                              Padding(
+                                padding: const EdgeInsets.only(left: doubleEight),
+                                child: TextField(
+                                  controller: viewModel.addressLine1,
+                                  readOnly: true,
+                                ),
                               ),
                             ],
                           ),TableRow(
@@ -148,10 +156,12 @@ class RevokeOfServices extends StatelessWidget {
                                   child: Text('ADDRESS LINE 2'),
                                 ),
                               ),
-                              TextField(
-                                controller: viewModel.consumerWithUscNo,
-                                readOnly: true,
-                                style: const TextStyle(color: Colors.red),
+                              Padding(
+                                padding: const EdgeInsets.only(left: doubleEight),
+                                child: TextField(
+                                  controller: viewModel.addressLine2,
+                                  readOnly: true,
+                                ),
                               ),
                             ],
                           ),TableRow(
@@ -163,10 +173,12 @@ class RevokeOfServices extends StatelessWidget {
                                   child: Text('ADDRESS LINE 3'),
                                 ),
                               ),
-                              TextField(
-                                controller: viewModel.consumerWithUscNo,
-                                readOnly: true,
-                                style: const TextStyle(color: Colors.red),
+                              Padding(
+                                padding: const EdgeInsets.only(left: doubleEight),
+                                child: TextField(
+                                  controller: viewModel.addressLine3,
+                                  readOnly: true,
+                                ),
                               ),
                             ],
                           ),TableRow(
@@ -183,10 +195,12 @@ class RevokeOfServices extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              TextField(
-                                controller: viewModel.consumerWithUscNo,
-                                readOnly: true,
-                                style: const TextStyle(color: Colors.red),
+                              Padding(
+                                padding:const EdgeInsets.only(left: doubleEight),
+                                child: TextField(
+                                  controller: viewModel.addressLine4,
+                                  readOnly: true,
+                                ),
                               ),
                             ],
                           ),
@@ -220,14 +234,14 @@ class RevokeOfServices extends StatelessWidget {
                             const Text("MAKE",style: TextStyle(color:  Color(0xff5ba55e)),),
                             DropdownButtonFormField<String>(
                               value: viewModel.meterMakeName,
-                              hint:  Text(viewModel.optionNames.isEmpty?"":"SELECT"),
+                              hint:  viewModel.meterMakesMap.isNotEmpty?const Text("Select an option"): const Text(""),
                               isExpanded: true,
-                              items: viewModel.optionNames.map((String name) {
-                                return DropdownMenuItem<String>(
-                                  value: name,
-                                  child: Text(name),
-                                );
-                              }).toList(),
+                              items: viewModel.meterMakesMap.map((item) =>
+                                  DropdownMenuItem<String>(
+                                    value: item.optionId,
+                                    child: Text(item.optionName!),
+                                  ))
+                                  .toList(),
                               decoration: const InputDecoration(
                                   border: OutlineInputBorder(
                                     borderSide:
@@ -240,7 +254,7 @@ class RevokeOfServices extends StatelessWidget {
                             const SizedBox(height: doubleTen,),
                             FillTextFormField(controller: viewModel.serialNo, labelText: "SERIAL NO", keyboardType: TextInputType.number),
                             const SizedBox(height: doubleTen,),
-                            FillTextFormField(controller: viewModel.capacity, labelText: "CAPACITY", keyboardType: TextInputType.number),
+                            FillTextFormField(controller: viewModel.capacity, labelText: "CAPACITY", keyboardType: TextInputType.text),
                             const SizedBox(height: doubleTen,),
                             Row(children: [
                               Expanded(child: FillTextFormField(controller: viewModel.kwh, labelText: "KWH", keyboardType: TextInputType.number)),
@@ -250,9 +264,19 @@ class RevokeOfServices extends StatelessWidget {
                             ]
                             ),
                             const Divider(),
-                            const Text("Disconnection DATE", style: TextStyle(color:  Color(0xff5ba55e)),),
+                            Container(
+                              width: double.infinity,
+                              height: 40,
+                              color: Colors.blueGrey[50],
+                              alignment: Alignment.centerLeft,
+                              child:const Text("PAYMENT DETAILS", style: TextStyle(color: CommonColors.deepBlue),),
+                            ),
+                            const SizedBox(height: doubleTen,),
+                            FillTextFormField(controller: viewModel.prNo, labelText: "P.R NO", keyboardType: TextInputType.text),
+                            const Divider(),
+                            const Text("P.R DATE", style: TextStyle(color:  Color(0xff5ba55e)),),
                             TextField(
-                              controller: viewModel.disconnectionDate,
+                              controller: viewModel.prDate,
                               onTap: () async {
                                 DateTime? pickedDate = await showDatePicker(
                                   context: context,
@@ -274,6 +298,49 @@ class RevokeOfServices extends StatelessWidget {
                               ),
                             ),
                             const Divider(),
+                            const SizedBox(height: doubleTen,),
+                            FillTextFormField(controller: viewModel.amount, labelText: "Amount", keyboardType: TextInputType.number),
+                            const SizedBox(height: doubleTen,),
+                            const Text("LINE AVAILABLE?",style: TextStyle(color:  Color(0xff5ba55e)),),
+                            Row(
+                              children: [
+                                Radio<String>(
+                                    value: "AVAILABLE",
+                                    groupValue: viewModel.selectedOption,
+                                    onChanged: (value){
+                                      viewModel.toggleOption(value!);
+                                    }
+                                ),
+                                const SizedBox(width: 4),
+                                const Text(
+                                  "AVAILABLE",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Radio<String>(
+                                    value: "NOT AVAILABLE",
+                                    groupValue: viewModel.selectedOption,
+                                    onChanged: (value){
+                                      viewModel.toggleOption(value!);
+                                    }
+                                ),
+                                const SizedBox(width: 4),
+                                const Text(
+                                  "NOT AVAILABLE",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+
                           ]
                       ),
                     ),

@@ -216,7 +216,7 @@ class DismantleOfServicesViewmodel extends ChangeNotifier {
       if (!validateForm()) {
         return;
       }else{
-        // confirmServiceData(circleId, ero, sc, usc);
+        confirmServiceData();
         print("in else block");
       }
     }
@@ -264,8 +264,7 @@ class DismantleOfServicesViewmodel extends ChangeNotifier {
   }
 
 
-  Future<void> confirmServiceData(String circleId, String ero,
-      String sc, String usc) async {
+  Future<void> confirmServiceData() async {
     ProcessDialogHelper.showProcessDialog(context, message: "Loading...");
 
     final payload = {
@@ -276,14 +275,14 @@ class DismantleOfServicesViewmodel extends ChangeNotifier {
       "kwh": meterAvailableSwitch == isTrue ? kwh.text : "-",
       "KvAh": meterAvailableSwitch == isTrue ? kvah.text : "",
       "meterCap":meterAvailableSwitch == isTrue ? capacity.text:"",
-      "meterMake":meterAvailableSwitch == isTrue ? "":"",
+      "meterMake":meterAvailableSwitch == isTrue ? meterMakeName:"", //make optionCode here
       "meterSlNo":serialNo.text??"",
       "cccComplaintId":args['cccComplaintId'],
       "disconnectionDate":disconnectionDate
     };
 
       var response = await ApiProvider(baseUrl: Apis.ERO_CORRESPONDENCE_URL)
-          .postApiCallWithFile(context, Apis.CREATE_DISMANTLE, payload, 'consumerRepresentation',selectedFile!, fileName );
+          .postApiCallWithFile(context, Apis.CREATE_DISMANTLE, payload, 'consumer_representation',selectedFile!, fileName );
 
       if (context.mounted) ProcessDialogHelper.closeDialog(context);
 

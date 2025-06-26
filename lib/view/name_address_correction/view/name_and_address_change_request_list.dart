@@ -1,0 +1,83 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tsnpdcl_employee/utils/alerts.dart';
+import 'package:tsnpdcl_employee/utils/app_constants.dart';
+import 'package:tsnpdcl_employee/utils/common_colors.dart';
+import 'package:tsnpdcl_employee/utils/general_assets.dart';
+import 'package:tsnpdcl_employee/utils/general_routes.dart';
+import 'package:tsnpdcl_employee/utils/navigation_service.dart';
+import 'package:tsnpdcl_employee/view/name_address_correction/viewmodel/name_and_address_change_list_viewmodel.dart';
+import 'package:tsnpdcl_employee/widget/month_year_selector.dart';
+
+class NameAndAddressChangeRequestList extends StatelessWidget {
+  const NameAndAddressChangeRequestList({super.key, required this.args});
+
+  static const id = Routes.nameAndAddressChangeRequestList;
+  final String args;
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => NameAndAddressChangeListViewmodel(context: context, status: args),
+      child: Consumer<NameAndAddressChangeListViewmodel>(
+          builder: (context, viewModel, child) {
+            return Scaffold(
+        appBar: AppBar(
+        backgroundColor: CommonColors.colorPrimary,
+        title:  Text(
+        "name and address correction".toUpperCase(),
+    style: const TextStyle(
+    color: Colors.white,
+    fontSize: titleSize,
+    fontWeight: FontWeight.w500,
+    ),
+    ),
+    actions: [
+      TextButton(
+        onPressed: () async {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const MonthYearSelector(),
+            ),
+          );
+          if (result != null && result is Map) {
+            viewModel.setSelectedMonthYear(
+              result['month'] as String,
+              result['year'] as int,
+              context,
+            );
+          }
+        },
+        child: Text(
+          viewModel.selectedMonthYear != null
+              ? '${viewModel.selectedMonthYear!['month']} ${viewModel.selectedMonthYear!['year']}'
+              : 'SELECT MONTH/YEAR',
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
+    ],
+    iconTheme: const IconThemeData(
+    color: Colors.white,
+    ),
+    ),
+    body:viewModel.isLoading?const CircularProgressIndicator():SizedBox.shrink(),
+              floatingActionButton: FloatingActionButton(onPressed: (){
+                Navigation.instance
+                    .navigateTo(Routes.nameCreateCorrespondence);
+              }, child: Image.asset(Assets.electricMeter2,
+                height: 30.0,
+                width: 30.0,),
+              ),
+            );
+    }
+    ),
+    );
+
+  }
+}
