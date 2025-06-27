@@ -27,7 +27,7 @@ final BuildContext context;
 bool _isLoading = false;
 bool get isLoading => _isLoading;
 
-   final TextEditingController registeredNumber= TextEditingController();
+   final TextEditingController registeredNumber= TextEditingController();//mobileNo
 
 final List<DetailTicketModel> _complaintDetailsList = [];
 List<DetailTicketModel> get complaintDetailsList => _complaintDetailsList;
@@ -88,6 +88,9 @@ List<DetailTicketModel> get complaintDetailsList => _complaintDetailsList;
   }
 
    void call() {
+    registeredNumber.text=complaintDetailsList[0].mobileNo??"";
+    notifyListeners();
+
      showDialog(
        context: context,
        builder: (BuildContext dialogContext) {
@@ -109,7 +112,7 @@ List<DetailTicketModel> get complaintDetailsList => _complaintDetailsList;
                          children: [
                            ViewDetailedLcTileWidget(
                                tileKey: "CONSUMER NO",
-                               tileValue: complaintDetailsList[0].mobileNo??""),
+                               tileValue: complaintDetailsList[0].registeredMobileNumber??"",valueColor: Colors.redAccent,),
 
                            _buildTextField("YOUR NUMBER",registeredNumber, ),
 

@@ -136,6 +136,8 @@ import 'package:tsnpdcl_employee/view/pole_tracker/view/view_digital_sketch_scre
 import 'package:tsnpdcl_employee/view/pole_tracker/view/view_offline_feeders_screen.dart';
 import 'package:tsnpdcl_employee/view/ptr_feeder_loaders/view/ptr_freeder_screen.dart';
 import 'package:tsnpdcl_employee/view/reports/view/reports_screen.dart';
+import 'package:tsnpdcl_employee/view/revoking_of_services/view/revoking_of_services_menu_screen.dart';
+import 'package:tsnpdcl_employee/view/revoking_of_services/view/revoking_of_services_request_list.dart';
 import 'package:tsnpdcl_employee/view/rfss/view/download_structures_screen.dart';
 import 'package:tsnpdcl_employee/view/rfss/view/rfss_screen.dart';
 import 'package:tsnpdcl_employee/view/routed_from_ccc/view/ccc_complaints.dart';
@@ -161,6 +163,8 @@ import 'package:tsnpdcl_employee/view/verify_wrong_category/view/areaWiseAbstrac
 import 'package:tsnpdcl_employee/view/verify_wrong_category/view/inspect_services.dart';
 import 'package:tsnpdcl_employee/view/verify_wrong_category/view/wrong_cal_confirmation.dart';
 import 'package:tsnpdcl_employee/view/web_view/view/web_view_screen.dart';
+import 'package:tsnpdcl_employee/view/wrong_billing/view/app_billing_components.dart';
+import 'package:tsnpdcl_employee/view/wrong_billing/view/wrong_billing_menu_screen.dart';
 import 'package:tsnpdcl_employee/widget/month_year_selector.dart';
 import 'package:tsnpdcl_employee/widget/pinch_zoom_imageview.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/view/create_dtr_offline.dart';
@@ -734,7 +738,7 @@ class AppRouter {
         case DismantleOfServices.id:
         return MaterialPageRoute(builder: (_) =>   DismantleOfServices(args: settings.arguments as Map<String, dynamic>));
         case RevokeOfServices.id:
-        return MaterialPageRoute(builder: (_) =>   RevokeOfServices(args: settings.arguments as Map<String, dynamic>));
+        return MaterialPageRoute(builder: (_) =>   RevokeOfServices(args:settings.arguments is Map<String, dynamic> ? settings.arguments as Map<String, dynamic> : null));
         case ViewDetailComplaint.id:
         return MaterialPageRoute(builder: (_) =>   ViewDetailComplaint(args: settings.arguments as Map<String, dynamic>));
         case DetailComplaintTrack.id:
@@ -745,6 +749,16 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) =>   const NameAndAddressMenuScreen());
         case NameAndAddressChangeRequestList.id:
         return MaterialPageRoute(builder: (_) =>   NameAndAddressChangeRequestList(args: settings.arguments as String));
+        //REVOKING OF SERVICES
+        case RevokingOfServicesMenuScreen.id:
+        return MaterialPageRoute(builder: (_) =>   const RevokingOfServicesMenuScreen());
+        case RevokingOfServicesRequestList.id:
+        return MaterialPageRoute(builder: (_) =>    RevokingOfServicesRequestList(args: settings.arguments as String));
+        //WRONG BILLING
+      case WrongBillingMenuScreen.id:
+        return MaterialPageRoute(builder: (_) =>   const WrongBillingMenuScreen());
+        case AppBillingComponents.id:
+        return MaterialPageRoute(builder: (_) =>   const AppBillingComponents());
 
 
       default:

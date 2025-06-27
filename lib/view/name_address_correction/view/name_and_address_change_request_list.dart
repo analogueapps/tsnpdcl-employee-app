@@ -66,7 +66,7 @@ class NameAndAddressChangeRequestList extends StatelessWidget {
     color: Colors.white,
     ),
     ),
-    body:viewModel.isLoading?const CircularProgressIndicator():SizedBox.shrink(),
+    body:viewModel.isLoading?const Center(child:CircularProgressIndicator()):SizedBox.shrink(),
               floatingActionButton: FloatingActionButton(onPressed: (){
                 Navigation.instance
                     .navigateTo(Routes.nameCreateCorrespondence);

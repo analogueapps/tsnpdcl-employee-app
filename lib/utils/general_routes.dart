@@ -257,9 +257,19 @@ class Routes {
   static const String revokeOfServices = "RevokeOfServices";
   static const String viewDetailComplaint = "ViewDetailComplaint";
   static const String detailComplaintTrack = "DetailComplaintTrack";
+
+  //NAME AND ADDRESS
   static const String nameCreateCorrespondence = "NameCreateCorrespondence";
   static const String nameAndAddressScreen= "NameAndAddressMenuScreen";
   static const String nameAndAddressChangeRequestList= "NameAndAddressChangeRequestList";
+
+  //REVOKING OF SERVICES
+  static const String revokeOfServicesChangeRequestList= "RevokingOfServicesRequestList";
+  static const String revokingOfServicesScreen= "RevokingOfServicesMenuScreen";
+
+  //WRONG BILLING
+  static const String wrongBillingMenuScreen= "WrongBillingMenuScreen";
+  static const String appBillingScreen= "AppBillingComponents";
 
 
 

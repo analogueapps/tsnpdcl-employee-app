@@ -202,5 +202,8 @@ class Apis{
   static const GET_DETAILED_TICKET="getDetailedTicket";
   static const SAVE_REVOKE_SERVICES="saveRevokeOfService";
   static const NAME_AND_ADDRESS_CORRECTION_REQUEST="getNameAndAddressCorrectionRequests";
+  static const REVOKE_OF_SERVICE_REQUEST="getRevokeOfServicesRequests";
+  static const DISMANTLE_OF_SERVICE_REQUEST="getDismantleOfServicesRequests";
+  static const SAVE_APP_BILLING_COMPLAINT="saveAppBillingComplaint";
 }
 

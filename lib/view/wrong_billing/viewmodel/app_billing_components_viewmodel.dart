@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
 import 'package:tsnpdcl_employee/dialogs/process_dialog.dart';
 import 'package:tsnpdcl_employee/network/api_provider.dart';
@@ -17,14 +16,15 @@ import 'package:tsnpdcl_employee/view/check_readings/model/ero_model.dart';
 import 'package:tsnpdcl_employee/view/routed_from_ccc/model/consumer_uscno_model.dart';
 import 'package:tsnpdcl_employee/widget/pdf_platform_to_temporary.dart';
 
-class RevokeOfServicesViewmodel extends ChangeNotifier {
-  RevokeOfServicesViewmodel({required this.context,  this.args}) {
+class AppBillingComponentsViewmodel extends ChangeNotifier {
+  AppBillingComponentsViewmodel({required this.context, this.args}){
     if(args!=null && args!['uscno'] != null) {
       uscNo.text = args?['uscno'];
     }else{
       uscnoReadOnly=isFalse;
       notifyListeners();
     }
+    addToMeterList();
   }
 
   final BuildContext context;
@@ -41,6 +41,18 @@ class RevokeOfServicesViewmodel extends ChangeNotifier {
   bool get meterAvailableSwitch => _meterAvailableSwitch;
 
   bool uscnoReadOnly=isTrue;
+
+  String? selectedCheckboxId;
+  bool isSelected(String id) => selectedCheckboxId == id;
+
+  void selectCheckbox(String id) {
+    if (selectedCheckboxId == id) {
+      selectedCheckboxId = null; // Uncheck if the same checkbox is clicked
+    } else {
+      selectedCheckboxId = id;
+    }
+    notifyListeners(); // Notify the view about the change
+  }
 
   set meterAvailable(bool value) {
     _meterAvailableSwitch = value;
@@ -64,12 +76,16 @@ class RevokeOfServicesViewmodel extends ChangeNotifier {
   TextEditingController capacity= TextEditingController();
   TextEditingController kwh= TextEditingController();
   TextEditingController kvah= TextEditingController();
-  TextEditingController prDate= TextEditingController();
-  TextEditingController prNo= TextEditingController();
-  TextEditingController amount= TextEditingController();
+  TextEditingController fromDate= TextEditingController();
+  TextEditingController toDate= TextEditingController();
+  TextEditingController proposedAvg= TextEditingController();
 
-  void setDate(String date) {
-    prDate.text = date;
+  void setFromDate(String date) {
+    fromDate.text = date;
+    notifyListeners();
+  }
+  void setToDate(String date) {
+    toDate.text = date;
     notifyListeners();
   }
 
@@ -133,7 +149,6 @@ class RevokeOfServicesViewmodel extends ChangeNotifier {
       "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
       "uscno":uscNo,
-      "allowOnlyBillStop": true
     };
 
     var response = await ApiProvider(baseUrl: Apis.ERO_CORRESPONDENCE_URL)
@@ -164,7 +179,7 @@ class RevokeOfServicesViewmodel extends ChangeNotifier {
                 jsonList.map((json) => ConsumerUscnoModel.fromJson(json)).toList();
 
                 _consumerUSCNOData.addAll(dataList);
-                 storeConsumerDetails();
+                storeConsumerDetails();
                 notifyListeners();
                 print("data is there in getConsumerWithUscNo");
               }
@@ -186,6 +201,35 @@ class RevokeOfServicesViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
+  String? meterStatusName;
+  void updateMeterStatus(String name) {
+    meterStatusName = name;
+    print("selected make status: $meterStatusName");
+    notifyListeners();
+  }
+
+  List<EroModel> meterStatus=[];
+
+  void addToMeterList() {
+    meterStatus.add(
+        EroModel(optionId: "01", optionName: "LIVE(01)"));
+    meterStatus.add(EroModel(optionId: "02", optionName: "STUCKUP(02)"));
+    meterStatus.add(
+        EroModel(optionId: "03", optionName: "UDC(03)"));
+    meterStatus.add(
+        EroModel(optionId: "05", optionName: "DOOR-LOCK(05)"));
+    meterStatus.add(
+        EroModel(optionId: "06", optionName: "METER NOT EXIST(06)"));
+    meterStatus.add(
+        EroModel(optionId: "07", optionName: "ROUND COMPLETE(07)"));
+    meterStatus.add(
+        EroModel(optionId: "9", optionName: "NIL CONSUMPTION(09)"));
+    meterStatus.add(EroModel(
+        optionId: "11", optionName: "BURNT(11)"));
+    meterStatus.add(EroModel(optionId: "12", optionName: "SLUGGISH(12)"));
+    meterStatus.add(EroModel(optionId: "13", optionName: "OTHERS(13)"));
+  }
+  
   void storeConsumerDetails(){
     consumerWithUscNo.text= consumerUSCNOData[0].uscNo;
     consumerName.text= consumerUSCNOData[0].consumerName;
@@ -298,24 +342,24 @@ class RevokeOfServicesViewmodel extends ChangeNotifier {
           context, "Please Enter KVAH reading",
           isTrue);
       return false;
-    }else if ( prNo.text.isEmpty) {
+    }else if ( toDate.text.isEmpty) {
       AlertUtils.showSnackBar(
-          context, "Please Enter PR. NO",
+          context, "Please select Revision to date",
           isTrue);
       return false;
-    }else if ( prDate.text.isEmpty) {
+    }else if ( fromDate.text.isEmpty) {
       AlertUtils.showSnackBar(
-          context, "Please select PR date",
+          context, "Please select Revision from date",
           isTrue);
       return false;
-    }else if (amount.text.isEmpty) {
+    }else if (selectedCheckboxId=="EXCESS AVG. BILLED DURING METER DEFECTIVE PERIOD"&&proposedAvg.text.isEmpty) {
       AlertUtils.showSnackBar(
-          context, "Please Enter PR. Amount",
+          context, "Please Enter proposed average units",
           isTrue);
       return false;
-    }else if (selectedOption=="") {
+    }else if (selectedCheckboxId=="") {
       AlertUtils.showSnackBar(
-          context, "Please select line available?",
+          context, "Please select complaint type",
           isTrue);
       return false;
     }
@@ -336,21 +380,22 @@ class RevokeOfServicesViewmodel extends ChangeNotifier {
       "token": SharedPreferenceHelper.getStringValue(
           LoginSdkPrefs.tokenPrefKey),
       "deviceId": await getDeviceId(),
-      "consumer": jsonEncode(_consumerUSCNOData), //should get data from getConsumerWithUscNo
+      "consumer": jsonEncode(_consumerUSCNOData),
       "kwh": meterAvailableSwitch == isTrue ? kwh.text : "-",
       "KvAh": meterAvailableSwitch == isTrue ? kvah.text : "",
       "meterCap":meterAvailableSwitch == isTrue ? capacity.text:"",
-      "meterMake":meterAvailableSwitch == isTrue ? meterMakeName:"", //make optionCode here
-      "meterSlNo":serialNo.text??"",
-      "cccComplaintId":args?['cccComplaintId'],
-      "paidPrNo":prNo.text,
-      "paidDate":prDate.text,
-      "prAmount":amount,
-      "lineAvailable":selectedOption=="AVAILABLE"?"Y":"N"
+      "meterMake":meterAvailableSwitch == isTrue ? meterMakeName:"",
+      "meterSerialNo":serialNo.text??"",
+      "averageProposedUnits":selectedCheckboxId=="EXCESS AVG. BILLED DURING METER DEFECTIVE PERIOD"?proposedAvg.text.isEmpty:null,
+      "billRevisionFromDate":fromDate.text,
+      "billRevisionToDate":toDate.text,
+      "complaintType":meterAvailableSwitch == isTrue ?selectedCheckboxId:"06",
+      "fieldStatus":meterStatusName,
+      "cccComplaintId":""
     };
 
     var response = await ApiProvider(baseUrl: Apis.ERO_CORRESPONDENCE_URL)
-        .postApiCallWithFile(context, Apis.SAVE_REVOKE_SERVICES, payload, 'consumer_representation',selectedFile!, fileName );
+        .postApiCallWithFile(context, Apis.SAVE_APP_BILLING_COMPLAINT, payload, 'consumer_representation',selectedFile!, fileName );
 
     if (context.mounted) ProcessDialogHelper.closeDialog(context);
 
@@ -402,9 +447,9 @@ class RevokeOfServicesViewmodel extends ChangeNotifier {
     kvah.clear();
     capacity.clear();
     serialNo.clear();
-    prNo.clear();
-    prDate.clear();
-    amount.clear();
+    toDate.clear();
+    fromDate.clear();
+    proposedAvg.clear();
     selectedOption = "";
 
     notifyListeners();

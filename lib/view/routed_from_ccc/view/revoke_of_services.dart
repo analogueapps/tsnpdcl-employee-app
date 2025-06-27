@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:tsnpdcl_employee/utils/alerts.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
@@ -12,9 +14,9 @@ import 'package:tsnpdcl_employee/widget/primary_button.dart';
 class RevokeOfServices extends StatelessWidget {
   static const id = Routes.revokeOfServices;
 
-  const RevokeOfServices({super.key, required this.args});
+  const RevokeOfServices({super.key, this.args});
 
-  final Map<String, dynamic> args;
+  final Map<String, dynamic>? args;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +36,7 @@ class RevokeOfServices extends StatelessWidget {
         ),
       ),
       body: ChangeNotifierProvider(
-    create: (_) => RevokeOfServicesViewmodel(context: context, args: args),
+    create: (_) => RevokeOfServicesViewmodel(context: context, args: args??null),
     child: Consumer<RevokeOfServicesViewmodel>(
     builder: (context, viewModel, child) {
     return Stack(
@@ -47,14 +49,31 @@ class RevokeOfServices extends StatelessWidget {
                 child:Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    FillTextFormField(controller: viewModel.uscNo,
-                        labelText: "USCNO",
-                        isReadOnly: isTrue,
-                        keyboardType: TextInputType.number),
+                    Text("USCNO",style: const TextStyle(color:  Color(0xff5ba55e) ), ),
+                    TextField(
+                      controller: viewModel.uscNo,
+                      maxLength: 8,
+                      readOnly:viewModel.uscnoReadOnly ,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      decoration: const InputDecoration(
+                        counterText: "",
+                        hintText: "USCNO",
+                        border: OutlineInputBorder(),
+                        contentPadding:
+                        EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                      ),),
                     Align(
                       alignment: Alignment.bottomRight,
                       child: TextButton(onPressed:() {
-                        viewModel.getConsumerWithUscNo(args['uscno']);
+                        if(viewModel.uscnoReadOnly==isFalse && viewModel.uscNo.text.length<8){
+                          AlertUtils.showSnackBar(
+                              context, "Please enter valid USCNO",
+                              isTrue);
+                        }else {
+                          viewModel.getConsumerWithUscNo(
+                              args?['uscno'] ?? viewModel.uscNo.text);
+                        }
                       }, child: Text("Fetch Details", style: TextStyle(color:Colors.indigo),),),
                     ),
                     Container(
@@ -66,7 +85,6 @@ class RevokeOfServices extends StatelessWidget {
                     ),
                     const SizedBox(height: doubleTen,),
                     Table(
-                      // border:TableBorder.all(width: 1.5,color:CommonColors.lightGrey),
                         border: const TableBorder.symmetric(
                           inside: BorderSide(
                             width: 1.5,
@@ -75,8 +93,8 @@ class RevokeOfServices extends StatelessWidget {
 
                         ),
                         columnWidths: const {
-                          0: FlexColumnWidth(0.4), // 40% of the width
-                          1: FlexColumnWidth(0.6), // 60% of the width
+                          0: FlexColumnWidth(0.4),
+                          1: FlexColumnWidth(0.6),
                         },
                         children: [
                           TableRow(
@@ -87,7 +105,7 @@ class RevokeOfServices extends StatelessWidget {
                                   padding: EdgeInsets.only(top: 20),
                                   child: Text('USCNO'),
                                 ),
-                              ),
+                              ), 
                               Padding(
                                 padding: const EdgeInsets.only(left: doubleEight),
                                 child: TextField(
@@ -99,7 +117,7 @@ class RevokeOfServices extends StatelessWidget {
                           ),TableRow(
                             children: [
                               Visibility(
-                                visible:viewModel.fetchDetailsClicked==isTrue ,
+                                visible:viewModel.fetchDetailsClicked==isTrue   ,
                                 child: const Padding(
                                   padding: EdgeInsets.only(top: 20),
                                   child: Text('SCNO/CAT'),
@@ -116,7 +134,7 @@ class RevokeOfServices extends StatelessWidget {
                           ),TableRow(
                             children: [
                               Visibility(
-                                visible:viewModel.fetchDetailsClicked==isTrue ,
+                                visible:viewModel.fetchDetailsClicked==isTrue  ,
                                 child: const Padding(
                                   padding: EdgeInsets.only(top: 20),
                                   child: Text('CONSUMER NAME'),
@@ -150,7 +168,7 @@ class RevokeOfServices extends StatelessWidget {
                           ),TableRow(
                             children: [
                               Visibility(
-                                visible:viewModel.fetchDetailsClicked==isTrue ,
+                                visible:viewModel.fetchDetailsClicked==isTrue  ,
                                 child:const Padding(
                                   padding: EdgeInsets.only(top: 20),
                                   child: Text('ADDRESS LINE 2'),
@@ -252,17 +270,77 @@ class RevokeOfServices extends StatelessWidget {
                               },
                             ),
                             const SizedBox(height: doubleTen,),
-                            FillTextFormField(controller: viewModel.serialNo, labelText: "SERIAL NO", keyboardType: TextInputType.number),
+                            const Text("SERIAL NO", style: TextStyle(color:  Color(
+                                0xff5ba55e)),),
+                            TextField(
+                              controller: viewModel.serialNo,
+                              maxLength: 30,
+                              keyboardType: TextInputType.text,
+                              decoration: const InputDecoration(
+                                counterText: "",
+                                border: OutlineInputBorder(),
+                                contentPadding:
+                                EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                              ),
+                            ),
                             const SizedBox(height: doubleTen,),
-                            FillTextFormField(controller: viewModel.capacity, labelText: "CAPACITY", keyboardType: TextInputType.text),
+                            Text("capacity".toUpperCase(), style: TextStyle(color:  Color(
+                                0xff5ba55e)),),
+                            TextField(
+                              controller: viewModel.capacity,
+                              maxLength: 15,
+                              keyboardType: TextInputType.text,
+                              decoration: const InputDecoration(
+                                counterText: "",
+                                border: OutlineInputBorder(),
+                                contentPadding:
+                                EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                              ),
+                            ),
                             const SizedBox(height: doubleTen,),
                             Row(children: [
-                              Expanded(child: FillTextFormField(controller: viewModel.kwh, labelText: "KWH", keyboardType: TextInputType.number)),
+                              Expanded(child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text("KWH", style: TextStyle(color:  Color(
+                                      0xff5ba55e)),),
+                                  TextField(
+                                    controller: viewModel.kwh,
+                                    maxLength: 16,
+                                    keyboardType: TextInputType.text,
+                                    decoration: const InputDecoration(
+                                      counterText: "",
+                                      border: OutlineInputBorder(),
+                                      contentPadding:
+                                      EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                                    ),
+                                  ),
+                                ],)),
                               const SizedBox(width: doubleTen,),
-                              Expanded(child: FillTextFormField(controller: viewModel.kvah, labelText: "KVAH", keyboardType: TextInputType.number)),
+                              Expanded(child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text("KVAH", style: TextStyle(color:  Color(
+                                      0xff5ba55e)),),
+                                  TextField(
+                                    controller: viewModel.kvah,
+                                    maxLength: 20,
+                                    keyboardType: TextInputType.text,
+                                    decoration: const InputDecoration(
+                                      counterText: "",
+                                      border: OutlineInputBorder(),
+                                      contentPadding:
+                                      EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                                    ),
+                                  ),
+                                ],
+                              )),
                               // SizedBox(height: doubleTen,),
                             ]
                             ),
+                          ]
+                      ),
+                    ),
                             const Divider(),
                             Container(
                               width: double.infinity,
@@ -341,9 +419,6 @@ class RevokeOfServices extends StatelessWidget {
                               ],
                             ),
 
-                          ]
-                      ),
-                    ),
                     const SizedBox(height: doubleTen,),
                     const Text("UPLOAD CONSUMER REPRESENTATION", style: TextStyle(color:  Color(
                         0xff5ba55e)),),

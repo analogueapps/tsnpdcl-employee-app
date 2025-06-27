@@ -292,12 +292,12 @@ class UniversalDashboardViewModel extends ChangeNotifier {
         ),
         GlobalListDialogItem(
           title: GlobalConstants.revokingOfServices,
-          routeName: "",
+          routeName:Routes.revokingOfServicesScreen,
           imageAsset: Assets.electricMeter,
         ),
         GlobalListDialogItem(
           title: GlobalConstants.wrongBilling,
-          routeName: "",
+          routeName:  Routes.wrongBillingMenuScreen,
           imageAsset: Assets.wrongBillingIcon,
         ),
         GlobalListDialogItem(
