@@ -28,11 +28,13 @@ class CreateFirmViewmodel extends ChangeNotifier {
   CreateFirmViewmodel({required this.context, required this.data}) {
     if(data != "new") {
       poleManufacturingFirmEntity = PoleManufacturingFirmEntity.fromJson(jsonDecode(data));
-      supplierNameController.text = poleManufacturingFirmEntity!.supplierName!;
-      firmNameController.text = poleManufacturingFirmEntity!.firmName!;
-      phoneController.text = poleManufacturingFirmEntity!.mobileNo!;
-      sapVendorNoController.text = poleManufacturingFirmEntity!.sapVendorId!;
-      emailAddressController.text = poleManufacturingFirmEntity!.email!;
+      if (poleManufacturingFirmEntity != null) {
+        supplierNameController.text = poleManufacturingFirmEntity?.supplierName ?? '';
+        firmNameController.text = poleManufacturingFirmEntity?.firmName ?? '';
+        phoneController.text = poleManufacturingFirmEntity?.mobileNo ?? '';
+        sapVendorNoController.text = poleManufacturingFirmEntity?.sapVendorId ?? '';
+        emailAddressController.text = poleManufacturingFirmEntity?.email ?? '';
+      }
       //licenseNoController.text = poleManufacturingFirmEntity!.licenseNo!;
     }
     notifyListeners();

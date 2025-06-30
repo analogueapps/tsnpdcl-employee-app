@@ -45,107 +45,103 @@ class ChangePasswordScreen extends StatelessWidget {
               backgroundColor: Colors.transparent,
               elevation: 0,
             ),
-            body: SingleChildScrollView(
-              child: SafeArea(
-                child: Consumer<ChangePassViewmodel>(
-                  builder: (context, viewModel, child) {
-                    return Padding(
-                      padding: const EdgeInsets.all(doubleSixteen),
-                      child: Form(
-                        key: viewModel.employeeFormKey,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            SvgPicture.asset(
-                              Assets.appLogo,
-                              height: doubleHundred,
-                              width: doubleHundred,
-                            ),
-                            Card(
-                              color: Colors.white54,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(doubleTen),
-                              ),
-                              elevation: doubleFour,
-                              child: Padding(
-                                padding: const EdgeInsets.all(doubleSixteen),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(
-                                      height: doubleTen,
-                                    ),
-                                    FillTextFormField(
-                                      controller: viewModel.empIdController,
-                                      labelText: 'Employee ID',
-                                      keyboardType: TextInputType.number,
-                                      isReadOnly: isTrue,
-                                      prefixIcon: const Icon(Icons.person_rounded),
-                                      validator: (value) {
-                                        if (value == null || value.isEmpty) {
-                                          return "Employee id cannot be left blank";
-                                        } else if (value.length < 5) {
-                                          return "Please enter valid employee Id";
-                                        }
-                                        return null;
-                                      },
-                                    ),
-                                    const SizedBox(
-                                      height: doubleTwenty,
-                                    ),
-                                    FillTextFormField(
-                                      controller: viewModel.empPassController,
-                                      labelText: 'Password',
-                                      keyboardType: TextInputType.visiblePassword,
-                                      prefixIcon: const Icon(Icons.lock_rounded),
-                                      isObscure: isTrue,
-                                      validator: (value) {
-                                        if (value == null || value.isEmpty) {
-                                          return "Password cannot be left blank";
-                                        }
-                                        return null;
-                                      },
-                                    ),
-                                    const SizedBox(
-                                      height: doubleTwenty,
-                                    ),
-                                    FillTextFormField(
-                                      controller: viewModel.empConPassController,
-                                      labelText: 'Confirm Password',
-                                      keyboardType: TextInputType.visiblePassword,
-                                      prefixIcon: const Icon(Icons.lock_rounded),
-                                      isObscure: isTrue,
-                                      validator: (value) {
-                                        if (value == null || value.isEmpty) {
-                                          return "Password cannot be left blank";
-                                        } else if (value != viewModel.empPassController.text) {
-                                          return "Password does not match";
-                                        }
-                                        return null;
-                                      },
-                                    ),
-                                    const SizedBox(height: doubleSixteen),
-                                    Center(
-                                      child: PrimaryButton(
-                                        fullWidth: true,
-                                          text: 'change password',
-                                          onPressed: () {
-                                            viewModel.authenticateEmployee();
-                                          }
-                                      ),
-                                    ),
-                                    const SizedBox(height: doubleSixteen),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
+            body: Consumer<ChangePassViewmodel>(
+              builder: (context, viewModel, child) {
+                return Padding(
+                  padding: const EdgeInsets.all(doubleSixteen),
+                  child: Form(
+                    key: viewModel.employeeFormKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        SvgPicture.asset(
+                          Assets.appLogo,
+                          height: doubleHundred,
+                          width: doubleHundred,
                         ),
-                      ),
-                    );
-                  },
-                ),
-              ),
+                        Card(
+                          color: Colors.white54,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(doubleTen),
+                          ),
+                          elevation: doubleFour,
+                          child: Padding(
+                            padding: const EdgeInsets.all(doubleSixteen),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(
+                                  height: doubleTen,
+                                ),
+                                FillTextFormField(
+                                  controller: viewModel.empIdController,
+                                  labelText: 'Employee ID',
+                                  keyboardType: TextInputType.number,
+                                  isReadOnly: isTrue,
+                                  prefixIcon: const Icon(Icons.person_rounded),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "Employee id cannot be left blank";
+                                    } else if (value.length < 5) {
+                                      return "Please enter valid employee Id";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(
+                                  height: doubleTwenty,
+                                ),
+                                FillTextFormField(
+                                  controller: viewModel.empPassController,
+                                  labelText: 'Password',
+                                  keyboardType: TextInputType.visiblePassword,
+                                  prefixIcon: const Icon(Icons.lock_rounded),
+                                  isObscure: isTrue,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "Password cannot be left blank";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(
+                                  height: doubleTwenty,
+                                ),
+                                FillTextFormField(
+                                  controller: viewModel.empConPassController,
+                                  labelText: 'Confirm Password',
+                                  keyboardType: TextInputType.visiblePassword,
+                                  prefixIcon: const Icon(Icons.lock_rounded),
+                                  isObscure: isTrue,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "Password cannot be left blank";
+                                    } else if (value != viewModel.empPassController.text) {
+                                      return "Password does not match";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(height: doubleSixteen),
+                                Center(
+                                  child: PrimaryButton(
+                                      fullWidth: true,
+                                      text: 'change password',
+                                      onPressed: () {
+                                        viewModel.authenticateEmployee();
+                                      }
+                                  ),
+                                ),
+                                const SizedBox(height: doubleSixteen),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
             ),
             bottomNavigationBar: Consumer<ChangePassViewmodel>(
               builder: (context, viewModel, child) {

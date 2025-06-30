@@ -36,7 +36,7 @@ class CreateFirmScreen extends StatelessWidget {
             appBar: AppBar(
               backgroundColor: CommonColors.colorPrimary,
               title: Text(
-                "Create Supplier".toUpperCase(),
+                data == "new" ? "Create Supplier".toUpperCase() : "Update Supplier".toUpperCase(),
                 style: const TextStyle(
                     color: Colors.white,
                     fontSize: titleSize,

@@ -72,162 +72,158 @@ class OtpVerificationScreen extends StatelessWidget {
                 backgroundColor: Colors.transparent,
                 elevation: 0,
               ),
-              body: SingleChildScrollView(
-                child: SafeArea(
-                  child: Consumer<OtpVerifyViewmodel>(
-                    builder: (context, viewModel, child) {
-                      return Padding(
-                        padding: const EdgeInsets.all(doubleSixteen),
-                        child: Form(
-                          key: viewModel.employeeFormKey,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              SvgPicture.asset(
-                                Assets.appLogo,
-                                height: doubleHundred,
-                                width: doubleHundred,
-                              ),
-                              Card(
-                                color: Colors.white54,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(doubleTen),
-                                ),
-                                elevation: doubleFour,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(doubleSixteen),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const SizedBox(
-                                        height: doubleTen,
-                                      ),
-                                      FillTextFormField(
-                                        controller: viewModel.empPhoneController,
-                                        labelText: 'Mobile Number',
-                                        keyboardType: TextInputType.number,
-                                        isReadOnly: isTrue,
-                                        prefixIcon: const Icon(Icons.phone),
-                                        validator: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return "Phone number cannot be left blank";
-                                          } else if (value.length < 10) {
-                                            return "Please enter a valid phone number";
-                                          }
-                                          return null;
-                                        },
-                                      ),
-                                      const SizedBox(
-                                        height: doubleTwenty,
-                                      ),
-                                      const Text(
-                                        'OTP',
-                                        style: TextStyle(
-                                          fontSize: normalSize,
-                                          fontWeight: FontWeight.w500,),
-                                        textAlign:
-                                        TextAlign.start,
-                                      ),
-                                      const SizedBox(
-                                        height: doubleTen,
-                                      ),
-                                      Pinput(
-                                        pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
-                                        showCursor: isTrue,
-                                        length: numSix,
-                                        defaultPinTheme: PinTheme(
-                                          width: doubleFiftySix,
-                                          height: doubleSixtyFour,
-                                          decoration: BoxDecoration(
-                                            color: CommonColors.textFieldColor,
-                                            borderRadius: BorderRadius.circular(doubleTen),
-                                          ),
-                                          textStyle: const TextStyle(
-                                            fontSize: titleSize,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                        onChanged: (value) {
-                                          viewModel.otp = value;
-                                        },
-                                        onCompleted: (value) {
-                                          viewModel.otp = value;
-                                        },
-                                      ),
-                                      const SizedBox(height: doubleSixteen),
-                                      Visibility(
-                                        visible: false,
-                                        child: Center(
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              const Flexible(
-                                                child: Text(
-                                                  'Didn\'t receive the OTP ? ',
-                                                  style: TextStyle(
-                                                      fontSize: normalSize,
-                                                      fontWeight:
-                                                      FontWeight.w500),
-                                                  textAlign:
-                                                  TextAlign.center,
-                                                ),
-                                              ),
-                                              viewModel.resendOtp == isTrue
-                                                  ? GestureDetector(
-                                                onTap: () {
-                                                  //viewModel.resendOtpFromServer(context);
-                                                },
-                                                child: const Text(
-                                                  'Resend OTP',
-                                                  style: TextStyle(
-                                                      fontSize: normalSize,
-                                                      fontWeight:
-                                                      FontWeight
-                                                          .w500,
-                                                      color: CommonColors
-                                                          .colorPrimary),
-                                                  textAlign:
-                                                  TextAlign
-                                                      .start,
-                                                ),
-                                              )
-                                                  : Flexible(child: Text(
-                                                'Resend OTP in ${viewModel.secondsRemaining} sec',
-                                                style: const TextStyle(
-                                                    fontSize: normalSize,
-                                                    fontWeight:
-                                                    FontWeight
-                                                        .w500,
-                                                    color: CommonColors
-                                                        .colorPrimary),
-                                                textAlign:
-                                                TextAlign.start,
-                                              )),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(height: doubleTwenty),
-                                      Center(
-                                        child: PrimaryButton(
-                                            text: 'Verify',
-                                            onPressed: () {
-                                              viewModel.authenticateEmployee();
-                                            }
-                                        ),
-                                      ),
-                                      const SizedBox(height: doubleSixteen),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
+              body: Consumer<OtpVerifyViewmodel>(
+                builder: (context, viewModel, child) {
+                  return Padding(
+                    padding: const EdgeInsets.all(doubleSixteen),
+                    child: Form(
+                      key: viewModel.employeeFormKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          SvgPicture.asset(
+                            Assets.appLogo,
+                            height: doubleHundred,
+                            width: doubleHundred,
                           ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
+                          Card(
+                            color: Colors.white54,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(doubleTen),
+                            ),
+                            elevation: doubleFour,
+                            child: Padding(
+                              padding: const EdgeInsets.all(doubleSixteen),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(
+                                    height: doubleTen,
+                                  ),
+                                  FillTextFormField(
+                                    controller: viewModel.empPhoneController,
+                                    labelText: 'Mobile Number',
+                                    keyboardType: TextInputType.number,
+                                    isReadOnly: isTrue,
+                                    prefixIcon: const Icon(Icons.phone),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return "Phone number cannot be left blank";
+                                      } else if (value.length < 10) {
+                                        return "Please enter a valid phone number";
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                  const SizedBox(
+                                    height: doubleTwenty,
+                                  ),
+                                  const Text(
+                                    'OTP',
+                                    style: TextStyle(
+                                      fontSize: normalSize,
+                                      fontWeight: FontWeight.w500,),
+                                    textAlign:
+                                    TextAlign.start,
+                                  ),
+                                  const SizedBox(
+                                    height: doubleTen,
+                                  ),
+                                  Pinput(
+                                    pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
+                                    showCursor: isTrue,
+                                    length: numSix,
+                                    defaultPinTheme: PinTheme(
+                                      width: doubleFiftySix,
+                                      height: doubleSixtyFour,
+                                      decoration: BoxDecoration(
+                                        color: CommonColors.textFieldColor,
+                                        borderRadius: BorderRadius.circular(doubleTen),
+                                      ),
+                                      textStyle: const TextStyle(
+                                        fontSize: titleSize,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    onChanged: (value) {
+                                      viewModel.otp = value;
+                                    },
+                                    onCompleted: (value) {
+                                      viewModel.otp = value;
+                                    },
+                                  ),
+                                  const SizedBox(height: doubleSixteen),
+                                  Visibility(
+                                    visible: false,
+                                    child: Center(
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          const Flexible(
+                                            child: Text(
+                                              'Didn\'t receive the OTP ? ',
+                                              style: TextStyle(
+                                                  fontSize: normalSize,
+                                                  fontWeight:
+                                                  FontWeight.w500),
+                                              textAlign:
+                                              TextAlign.center,
+                                            ),
+                                          ),
+                                          viewModel.resendOtp == isTrue
+                                              ? GestureDetector(
+                                            onTap: () {
+                                              //viewModel.resendOtpFromServer(context);
+                                            },
+                                            child: const Text(
+                                              'Resend OTP',
+                                              style: TextStyle(
+                                                  fontSize: normalSize,
+                                                  fontWeight:
+                                                  FontWeight
+                                                      .w500,
+                                                  color: CommonColors
+                                                      .colorPrimary),
+                                              textAlign:
+                                              TextAlign
+                                                  .start,
+                                            ),
+                                          )
+                                              : Flexible(child: Text(
+                                            'Resend OTP in ${viewModel.secondsRemaining} sec',
+                                            style: const TextStyle(
+                                                fontSize: normalSize,
+                                                fontWeight:
+                                                FontWeight
+                                                    .w500,
+                                                color: CommonColors
+                                                    .colorPrimary),
+                                            textAlign:
+                                            TextAlign.start,
+                                          )),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: doubleTwenty),
+                                  Center(
+                                    child: PrimaryButton(
+                                        text: 'Verify',
+                                        onPressed: () {
+                                          viewModel.authenticateEmployee();
+                                        }
+                                    ),
+                                  ),
+                                  const SizedBox(height: doubleSixteen),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
               ),
               bottomNavigationBar: Consumer<OtpVerifyViewmodel>(
                 builder: (context, viewModel, child) {

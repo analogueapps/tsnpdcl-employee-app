@@ -14,9 +14,7 @@ class FillTextFormField extends StatefulWidget {
   final Icon? prefixIcon;
   final Icon? suffixIcon;
   final String? Function(String?)? validator;
-  final String? Function(String?)? onChange;
   final VoidCallback? onFieldSubmitted;
-  final VoidCallback? onTap;
 
   const FillTextFormField({
     super.key,
@@ -29,9 +27,7 @@ class FillTextFormField extends StatefulWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.validator,
-    this.onChange,
     this.onFieldSubmitted,
-    this.onTap,
   });
 
   @override
@@ -57,7 +53,8 @@ class _FillTextFormFieldState extends State<FillTextFormField> {
       controller: widget.controller,
       keyboardType: widget.keyboardType,
       obscureText: _isObscure,
-      readOnly: _isReadOnly,
+      readOnly: widget.isReadOnly,
+      enableInteractiveSelection: false, // Prevents the long-press selection behavior
       style: const TextStyle(
         fontSize: titleSize,
         fontFamily: appFontFamily,
@@ -88,8 +85,6 @@ class _FillTextFormFieldState extends State<FillTextFormField> {
             : widget.suffixIcon,
       ),
       validator: widget.validator,
-      onChanged: widget.onChange,
-      onTap: widget.onTap,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       onFieldSubmitted: widget.onFieldSubmitted != null
           ? (value) => widget.onFieldSubmitted!()
