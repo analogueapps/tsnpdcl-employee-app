@@ -39,10 +39,11 @@ class MiddlePoles33kv extends StatelessWidget {
                   ),
                   const Spacer(),
                   IconButton(
-                    icon: const Icon(Icons.save_outlined),
-                    color: Colors.white,
-                    onPressed: () {viewModel.submitForm();}
-                  ),
+                      icon: const Icon(Icons.save_outlined),
+                      color: Colors.white,
+                      onPressed: () {
+                        viewModel.submitForm();
+                      }),
                   IconButton(
                     icon: const Icon(Icons.folder_outlined),
                     color: Colors.white,
@@ -60,75 +61,93 @@ class MiddlePoles33kv extends StatelessWidget {
             ),
             body: SingleChildScrollView(
               child: Form(
-          key: viewModel.formKey,
-          child:Column(
-                children: [
-                  _reusableLabel("33KV MIDDLE POLES"),
-                  _reusableLastRow(
-                      label: "33KV FEEDER", controller: viewModel.feederController, value:isFalse),
-                  _reusableLastRow(
-                      label: "WORK DESCRIPTION",
-                      controller: viewModel.workDescriptionController, value:isFalse),
-                  _reusableLastRow(
-                      label: "SANCTION NO.",
-                      controller: viewModel.sanctionNoController, value:isFalse),
-                  const SizedBox(height: 7),
-                  _buildPoleSection(
-                    title: "POLE A DETAILS",
-                    photoPath:viewModel.poleAPhotoPath!=""? Apis.NPDCL_STORAGE_SERVER_IP +viewModel.poleAPhotoPath:"",
-                    onCapturePressed: () {
-                      viewModel.capturePoleAPhoto();
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  _reusableLastRow(
-                      label: "POLE - A LATITUDE",
-                      controller: viewModel.latPoleA, value:isTrue),
-                  _reusableLastRow(
-                      label: "POLE - A LONGITUDE",
-                      controller: viewModel.logPoleA, value: isTrue),
-                  const SizedBox(height: 10,),
-                  _buildPoleSection(
-                    title: "POLE B DETAILS",
-                    photoPath:viewModel.poleBPhotoPath!=""? Apis.NPDCL_STORAGE_SERVER_IP +viewModel.poleBPhotoPath:"",
-                    onCapturePressed: () {
-                      viewModel.capturePoleBPhoto();
-                    },
-                  ),
-                  _reusableLastRow(
-                      label: "POLE-B LATITUDE",
-                      controller: viewModel.latPoleB, value: isTrue),
-                  _reusableLastRow(
-                      label: "POLE-B LONGITUDE",
-                      controller: viewModel.logPoleB, value: isTrue),
-                  // ElevatedButton(onPressed: (){
-                  //   viewModel.capturePoleLocation("poleA", double.parse(viewModel.latPoleA.text), double.parse(viewModel.logPoleA.text));
-                  //   viewModel.capturePoleLocation("poleB", double.parse(viewModel.latPoleB.text), double.parse(viewModel.logPoleB.text));
-                  // }, child: const Text("Calculate")),
-                  _reusableLastRow(
-                      label: "DISTANCE B/W A&B",
-                      controller: viewModel.distanceController, value: isTrue),
-                  const SizedBox(height: 10),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8, bottom: 20, left: 20, right: 20),
-                    child: TextFormField(
-                      controller: viewModel.remarksController,
-                      // keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        labelText: 'REMARKS(If Any)',
-                        border: UnderlineInputBorder(),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.blue),
+                key: viewModel.formKey,
+                child: Column(
+                  children: [
+                    _reusableLabel("33KV MIDDLE POLES"),
+                    _reusableLastRow(
+                        label: "33KV FEEDER",
+                        controller: viewModel.feederController,
+                        value: isFalse),
+                    _reusableLastRow(
+                        label: "WORK DESCRIPTION",
+                        controller: viewModel.workDescriptionController,
+                        value: isFalse),
+                    _reusableLastRow(
+                        label: "SANCTION NO.",
+                        controller: viewModel.sanctionNoController,
+                        value: isFalse),
+                    const SizedBox(height: 7),
+                    _buildPoleSection(
+                      title: "POLE A DETAILS",
+                      photoPath: viewModel.poleAPhotoPath != ""
+                          ? Apis.NPDCL_STORAGE_SERVER_IP +
+                              viewModel.poleAPhotoPath
+                          : "",
+                      onCapturePressed: () {
+                        viewModel.capturePoleAPhoto();
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    _reusableLastRow(
+                        label: "POLE - A LATITUDE",
+                        controller: viewModel.latPoleA,
+                        value: isTrue),
+                    _reusableLastRow(
+                        label: "POLE - A LONGITUDE",
+                        controller: viewModel.logPoleA,
+                        value: isTrue),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    _buildPoleSection(
+                      title: "POLE B DETAILS",
+                      photoPath: viewModel.poleBPhotoPath != ""
+                          ? Apis.NPDCL_STORAGE_SERVER_IP +
+                              viewModel.poleBPhotoPath
+                          : "",
+                      onCapturePressed: () {
+                        viewModel.capturePoleBPhoto();
+                      },
+                    ),
+                    _reusableLastRow(
+                        label: "POLE-B LATITUDE",
+                        controller: viewModel.latPoleB,
+                        value: isTrue),
+                    _reusableLastRow(
+                        label: "POLE-B LONGITUDE",
+                        controller: viewModel.logPoleB,
+                        value: isTrue),
+                    // ElevatedButton(onPressed: (){
+                    //   viewModel.capturePoleLocation("poleA", double.parse(viewModel.latPoleA.text), double.parse(viewModel.logPoleA.text));
+                    //   viewModel.capturePoleLocation("poleB", double.parse(viewModel.latPoleB.text), double.parse(viewModel.logPoleB.text));
+                    // }, child: const Text("Calculate")),
+                    _reusableLastRow(
+                        label: "DISTANCE B/W A&B",
+                        controller: viewModel.distanceController,
+                        value: isTrue),
+                    const SizedBox(height: 10),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          top: 8, bottom: 20, left: 20, right: 20),
+                      child: TextFormField(
+                        controller: viewModel.remarksController,
+                        // keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          labelText: 'REMARKS(If Any)',
+                          border: UnderlineInputBorder(),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.blue),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
             ),
           );
         },
@@ -147,11 +166,12 @@ class MiddlePoles33kv extends StatelessWidget {
       ),
       child: photoPath.isEmpty
           ? const Icon(Icons.image, size: 50)
-          : Image.network( photoPath,
-        fit: BoxFit.cover,
-        height: 180,
-        width: double.infinity,
-      ),
+          : Image.network(
+              photoPath,
+              fit: BoxFit.cover,
+              height: 180,
+              width: double.infinity,
+            ),
     );
   }
 
@@ -160,15 +180,15 @@ class MiddlePoles33kv extends StatelessWidget {
       padding: const EdgeInsets.only(top: 15.0, bottom: 15.0, left: 8),
       color: Colors.grey[200],
       width: double.infinity,
-      child: Text(label.toUpperCase(), style: const TextStyle(fontWeight: FontWeight.w700)),
+      child: Text(label.toUpperCase(),
+          style: const TextStyle(fontWeight: FontWeight.w700)),
     );
   }
 
-  Widget _reusableLastRow({
-    required String label,
-    required TextEditingController controller,
-    required bool value
-  }) {
+  Widget _reusableLastRow(
+      {required String label,
+      required TextEditingController controller,
+      required bool value}) {
     return Container(
       padding: const EdgeInsets.only(top: 15.0, left: 10),
       child: Row(
@@ -188,7 +208,8 @@ class MiddlePoles33kv extends StatelessWidget {
               decoration: InputDecoration(
                 hintText: label,
                 hintStyle: TextStyle(color: Colors.grey[200]),
-                contentPadding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                contentPadding:
+                    const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               ),
             ),
           ),
@@ -211,7 +232,8 @@ class MiddlePoles33kv extends StatelessWidget {
           padding: const EdgeInsets.only(left: 8),
           child: SizedBox(
             width: double.infinity,
-            child: Text("$title PHOTO", style: const TextStyle(fontWeight: FontWeight.w700)),
+            child: Text("$title PHOTO",
+                style: const TextStyle(fontWeight: FontWeight.w700)),
           ),
         ),
         Padding(
@@ -231,10 +253,12 @@ class MiddlePoles33kv extends StatelessWidget {
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.deepOrangeAccent,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5)),
               ),
-              child: Text("CAPTURE $title PHOTO", style: const TextStyle(color: Colors.white)),
               onPressed: onCapturePressed,
+              child: Text("CAPTURE $title PHOTO",
+                  style: const TextStyle(color: Colors.white)),
             ),
           ),
         ),

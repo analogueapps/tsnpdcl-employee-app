@@ -34,7 +34,8 @@ class ImageUploader {
 
       final compressed = img.encodeJpg(decodedImage, quality: quality);
       final tempDir = Directory.systemTemp;
-      final compressedFile = File('${tempDir.path}/${file.uri.pathSegments.last}.compressed.jpg');
+      final compressedFile =
+          File('${tempDir.path}/${file.uri.pathSegments.last}.compressed.jpg');
       await compressedFile.writeAsBytes(compressed);
       return compressedFile;
     } catch (_) {
@@ -45,10 +46,10 @@ class ImageUploader {
   Future<String?> uploadImage(BuildContext context, File imageFile) async {
     print("Uploading image: ${imageFile.path}");
 
-
     if (!(await isNetworkAvailable())) {
       if (context.mounted) {
-        AlertUtils.showSnackBar(context, "Please check your internet connection!", true);
+        AlertUtils.showSnackBar(
+            context, "Please check your internet connection!", true);
       }
       return null;
     }
@@ -56,7 +57,9 @@ class ImageUploader {
     try {
       final compressedFile = await compressImage(imageFile);
 
-      final authToken = SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ?? '';
+      final authToken =
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ??
+              '';
       const apkName = 'in.tsnpdcl.npdclemployee';
       const apiKey = Apis.API_KEY;
 
@@ -92,11 +95,14 @@ class ImageUploader {
           jsonResponse = response.data;
         }
 
-        if (jsonResponse is Map<String, dynamic> && jsonResponse.containsKey('success')) {
-          if (jsonResponse['success'] == true && jsonResponse['tokenValid'] == true) {
+        if (jsonResponse is Map<String, dynamic> &&
+            jsonResponse.containsKey('success')) {
+          if (jsonResponse['success'] == true &&
+              jsonResponse['tokenValid'] == true) {
             print(jsonResponse['message']);
             print("Upload success");
-            AlertUtils.showSnackBar(context, 'Image upload successfully', false);
+            AlertUtils.showSnackBar(
+                context, 'Image upload successfully', false);
           } else {
             print("failed to upload image");
           }
@@ -115,8 +121,6 @@ class ImageUploader {
       }
       return null;
     }
+    return null;
   }
 }
-
-
-

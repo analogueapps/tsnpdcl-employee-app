@@ -27,7 +27,7 @@ class MeterChangeEntryScreen extends StatelessWidget {
           MeterChangeEntryScreenViewModel(context: context, args: args),
       child: Consumer<MeterChangeEntryScreenViewModel>(
           builder: (context, viewModel, child) {
-            print('Read only value : ${viewModel.unableToScanOldMeterNo} ');
+        print('Read only value : ${viewModel.unableToScanOldMeterNo} ');
         return Scaffold(
           appBar: AppBar(
             title: const Text(
@@ -45,7 +45,7 @@ class MeterChangeEntryScreen extends StatelessWidget {
           body: viewModel.isLoading
               ? const Center(child: CircularProgressIndicator())
               : viewModel.barCodeScanOnOld || viewModel.barCodeScanOnNew
-            ? Container()
+                  ? Container()
                   // ? MobileScanner(
                   //     onDetect: (result) {
                   //       viewModel.getBarCode(context, result);
@@ -159,7 +159,7 @@ class MeterChangeEntryScreen extends StatelessWidget {
                                     ),
                                     Expanded(
                                         flex: 1,
-                                        child: Container(
+                                        child: SizedBox(
                                           height: 55,
                                           child: ElevatedButton(
                                               style: ElevatedButton.styleFrom(
@@ -365,7 +365,7 @@ class MeterChangeEntryScreen extends StatelessWidget {
                                     ),
                                     Expanded(
                                         flex: 1,
-                                        child: Container(
+                                        child: SizedBox(
                                           height: 55,
                                           child: ElevatedButton(
                                             style: ElevatedButton.styleFrom(

@@ -8,22 +8,14 @@ import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/utils/designation_helper.dart';
-import 'package:tsnpdcl_employee/utils/designation_utils.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
-import 'package:tsnpdcl_employee/utils/status_codes.dart';
 import 'package:tsnpdcl_employee/view/auth/model/npdcl_user.dart';
 import 'package:tsnpdcl_employee/view/dtr_maintenance/model/employee_master_entity.dart';
 import 'package:tsnpdcl_employee/view/filter/model/filter_label_model_list.dart';
 import 'package:tsnpdcl_employee/view/pdms/helper/approve_close_ticket_page.dart';
 import 'package:tsnpdcl_employee/view/pdms/helper/assign_inspection_officer_page.dart';
 import 'package:tsnpdcl_employee/view/pdms/model/inspection_ticket_entity.dart';
-import 'package:tsnpdcl_employee/view/pdms/model/pole_request_indent_entity.dart';
-import 'package:tsnpdcl_employee/utils/common_colors.dart';
-import 'package:tsnpdcl_employee/view/pdms/view/forward_or_reject_indent_dialog.dart';
-import 'package:tsnpdcl_employee/view/pdms/view/otp_request_and_validate_dialog.dart';
-import 'package:tsnpdcl_employee/widget/fill_text_form_field.dart';
-import 'package:tsnpdcl_employee/widget/primary_button.dart';
 
 class ViewDetailedInspectionTicketViewmodel extends ChangeNotifier {
   final BuildContext context;
@@ -39,22 +31,26 @@ class ViewDetailedInspectionTicketViewmodel extends ChangeNotifier {
   // Employee master
   final List<EmployeeMasterEntity> employeeMasterEntityList = [];
 
-  ViewDetailedInspectionTicketViewmodel({required this.context, required this.data}) {
+  ViewDetailedInspectionTicketViewmodel(
+      {required this.context, required this.data}) {
     inspectionTicketEntity = InspectionTicketEntity.fromJson(jsonDecode(data));
     _loadUser();
   }
 
   void _loadUser() {
-    String? prefJson = SharedPreferenceHelper.getStringValue(LoginSdkPrefs.npdclUserPrefKey);
+    String? prefJson =
+        SharedPreferenceHelper.getStringValue(LoginSdkPrefs.npdclUserPrefKey);
     final List<dynamic> jsonList = jsonDecode(prefJson);
-    final List<NpdclUser> user = jsonList.map((json) => NpdclUser.fromJson(json)).toList();
+    final List<NpdclUser> user =
+        jsonList.map((json) => NpdclUser.fromJson(json)).toList();
     npdclUser = user[0];
     notifyListeners();
     _updateButtonState();
   }
 
   void _updateButtonState() {
-    if (npdclUser.designationCode == CGM_DESIGNATION_CODE && npdclUser.wing?.toLowerCase() == "pmm") {
+    if (npdclUser.designationCode == CGM_DESIGNATION_CODE &&
+        npdclUser.wing?.toLowerCase() == "pmm") {
       isButtonVisible = true;
       buttonText = "Forward/Reject";
     } else {
@@ -63,15 +59,14 @@ class ViewDetailedInspectionTicketViewmodel extends ChangeNotifier {
 
     if (npdclUser.designationCode == EE_CIVIL_DESIGNATION_CODE &&
         npdclUser.wing?.toLowerCase() == "civil" &&
-        npdclUser.empId?.toLowerCase() == inspectionTicketEntity.empId?.toLowerCase() &&
+        npdclUser.empId?.toLowerCase() ==
+            inspectionTicketEntity.empId?.toLowerCase() &&
         inspectionTicketEntity.ticketStatus?.toLowerCase() == "assigned") {
-
       isButtonVisible = true;
       buttonText = "SUBMIT INSPECTION REPORT";
       buttonAction = _submitInspectionReport;
     } else if (npdclUser.designationCode == CGM_DESIGNATION_CODE &&
         npdclUser.wing?.toLowerCase() == "pmm") {
-
       final status = inspectionTicketEntity.ticketStatus?.toLowerCase();
 
       if (status == "open") {
@@ -91,11 +86,10 @@ class ViewDetailedInspectionTicketViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-  _submitInspectionReport() {
-  }
+  _submitInspectionReport() {}
 
   _forwardRejectMethod() {
-    if(employeeMasterEntityList.isNotEmpty) {
+    if (employeeMasterEntityList.isNotEmpty) {
       showAssignDialog();
     } else {
       getEmployeesOfSection();
@@ -109,11 +103,13 @@ class ViewDetailedInspectionTicketViewmodel extends ChangeNotifier {
     );
 
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee"
     };
 
-    var response = await ApiProvider(baseUrl: Apis.PDMS_END_POINT_BASE_URL).postApiCall(context, Apis.GET_INSPECTION_OFFICERS_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.PDMS_END_POINT_BASE_URL)
+        .postApiCall(context, Apis.GET_INSPECTION_OFFICERS_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -125,7 +121,7 @@ class ViewDetailedInspectionTicketViewmodel extends ChangeNotifier {
         }
         if (response.statusCode == successResponseCode) {
           if (response.data['taskSuccess'] == isTrue) {
-            if(response.data['dataList'] != null) {
+            if (response.data['dataList'] != null) {
               // final List<dynamic> jsonList = jsonDecode(response.data['dataList']);
               List<dynamic> jsonList;
 
@@ -135,9 +131,12 @@ class ViewDetailedInspectionTicketViewmodel extends ChangeNotifier {
               } else if (response.data['dataList'] is List) {
                 jsonList = response.data['dataList'];
               } else {
-                jsonList = [];  // Fallback to empty list if the type is unexpected
+                jsonList =
+                    []; // Fallback to empty list if the type is unexpected
               }
-              final List<EmployeeMasterEntity> dataList = jsonList.map((json) => EmployeeMasterEntity.fromJson(json)).toList();
+              final List<EmployeeMasterEntity> dataList = jsonList
+                  .map((json) => EmployeeMasterEntity.fromJson(json))
+                  .toList();
               employeeMasterEntityList.addAll(dataList);
               notifyListeners();
               showAssignDialog();
@@ -146,19 +145,21 @@ class ViewDetailedInspectionTicketViewmodel extends ChangeNotifier {
             showAlertDialog(context, response.data['message']);
           }
         } else {
-          showAlertDialog(context,response.data['message']);
+          showAlertDialog(context, response.data['message']);
         }
       }
     } catch (e) {
-      showErrorDialog(context,  "An error occurred. Please try again.");
+      showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
     }
   }
 
   Future<void> showAssignDialog() async {
-    List<OptionList> inspectionOfficers = employeeMasterEntityList.map((e) =>
-        OptionList(optionId: e.empId, optionName: '${e.empName},${e.designation},${e.wing}')
-    ).toList();
+    List<OptionList> inspectionOfficers = employeeMasterEntityList
+        .map((e) => OptionList(
+            optionId: e.empId,
+            optionName: '${e.empName},${e.designation},${e.wing}'))
+        .toList();
     final result = await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -168,7 +169,9 @@ class ViewDetailedInspectionTicketViewmodel extends ChangeNotifier {
           ),
           child: Container(
             constraints: const BoxConstraints(maxHeight: 600, maxWidth: 500),
-            child: AssignInspectionOfficerPage(inspectionTicketEntity: inspectionTicketEntity, inspectionOfficers: inspectionOfficers),
+            child: AssignInspectionOfficerPage(
+                inspectionTicketEntity: inspectionTicketEntity,
+                inspectionOfficers: inspectionOfficers),
           ),
         );
       },
@@ -187,14 +190,16 @@ class ViewDetailedInspectionTicketViewmodel extends ChangeNotifier {
     );
 
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
       "ticketId": inspectionTicketEntity.ticketId,
       "empId": result["empId"],
       "scheduleDate": result["scheduleDate"]
     };
 
-    var response = await ApiProvider(baseUrl: Apis.PDMS_END_POINT_BASE_URL).postApiCall(context, Apis.ASSIGN_TICKET_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.PDMS_END_POINT_BASE_URL)
+        .postApiCall(context, Apis.ASSIGN_TICKET_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -207,17 +212,18 @@ class ViewDetailedInspectionTicketViewmodel extends ChangeNotifier {
         if (response.statusCode == successResponseCode) {
           if (response.data['taskSuccess'] == isTrue) {
             showSuccessDialog(context, response.data['message'], () {
-              Navigation.instance.pushAndRemoveUntil(Routes.universalDashboardScreen);
+              Navigation.instance
+                  .pushAndRemoveUntil(Routes.universalDashboardScreen);
             });
           } else {
             showAlertDialog(context, response.data['message']);
           }
         } else {
-          showAlertDialog(context,response.data['message']);
+          showAlertDialog(context, response.data['message']);
         }
       }
     } catch (e) {
-      showErrorDialog(context,  "An error occurred. Please try again.");
+      showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
     }
   }
@@ -225,7 +231,9 @@ class ViewDetailedInspectionTicketViewmodel extends ChangeNotifier {
   _approveQtyAndCloseTicket() async {
     final result = await showDialog(
       context: context,
-      builder: (context) => ApproveCloseTicketPage(inspectionTicketEntity: inspectionTicketEntity,),
+      builder: (context) => ApproveCloseTicketPage(
+        inspectionTicketEntity: inspectionTicketEntity,
+      ),
     );
 
     if (result != null) {
@@ -240,13 +248,15 @@ class ViewDetailedInspectionTicketViewmodel extends ChangeNotifier {
     );
 
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
       "ticketId": inspectionTicketEntity.ticketId,
       "approvedQty": result
     };
 
-    var response = await ApiProvider(baseUrl: Apis.PDMS_END_POINT_BASE_URL).postApiCall(context, Apis.CLOSE_TICKET_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.PDMS_END_POINT_BASE_URL)
+        .postApiCall(context, Apis.CLOSE_TICKET_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -259,17 +269,18 @@ class ViewDetailedInspectionTicketViewmodel extends ChangeNotifier {
         if (response.statusCode == successResponseCode) {
           if (response.data['taskSuccess'] == isTrue) {
             showSuccessDialog(context, response.data['message'], () {
-              Navigation.instance.pushAndRemoveUntil(Routes.universalDashboardScreen);
+              Navigation.instance
+                  .pushAndRemoveUntil(Routes.universalDashboardScreen);
             });
           } else {
             showAlertDialog(context, response.data['message']);
           }
         } else {
-          showAlertDialog(context,response.data['message']);
+          showAlertDialog(context, response.data['message']);
         }
       }
     } catch (e) {
-      showErrorDialog(context,  "An error occurred. Please try again.");
+      showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
     }
   }

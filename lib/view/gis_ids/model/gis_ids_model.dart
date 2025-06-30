@@ -24,7 +24,9 @@ class GisIdsModel {
 
   GisIdsModel.fromJson(dynamic json) {
     try {
-      gisId = json['gisId'] is int ? json['gisId'] as int : int.tryParse(json['gisId']?.toString() ?? '') ?? 0;
+      gisId = json['gisId'] is int
+          ? json['gisId'] as int
+          : int.tryParse(json['gisId']?.toString() ?? '') ?? 0;
       regNum = json['regNum']?.toString() ?? '';
       regDate = json['regDate']?.toString() ?? '';
       feederCode = json['feederCode']?.toString() ?? '';
@@ -40,7 +42,7 @@ class GisIdsModel {
       sapUpDate = json['sapUpDate']?.toString() ?? '';
     } catch (e) {
       print("Error parsing GisId: $e");
-      throw FormatException("Invalid GIS ID data format");
+      throw const FormatException("Invalid GIS ID data format");
     }
   }
 

@@ -18,8 +18,8 @@ class ConsumerDetailsScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: CommonColors.colorPrimary,
         title: const Text(
-         "Enter Service No",
-          style: const TextStyle(
+          "Enter Service No",
+          style: TextStyle(
               color: Colors.white,
               fontSize: toolbarTitleSize,
               fontWeight: FontWeight.w700),
@@ -97,8 +97,7 @@ class ConsumerDetailsScreen extends StatelessWidget {
                           text: 'FETCH DETAILS',
                           onPressed: () {
                             viewModel.fetchDetails();
-                          }
-                      ),
+                          }),
                     )
                   ],
                 ),

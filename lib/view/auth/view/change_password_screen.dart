@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/general_assets.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
-import 'package:tsnpdcl_employee/utils/navigation_service.dart';
-import 'package:tsnpdcl_employee/view/auth/viewmodel/auth_viewmodel.dart';
 import 'package:tsnpdcl_employee/view/auth/viewmodel/change_pass_viewmodel.dart';
 import 'package:tsnpdcl_employee/widget/fill_text_form_field.dart';
 import 'package:tsnpdcl_employee/widget/primary_button.dart';
@@ -116,7 +113,8 @@ class ChangePasswordScreen extends StatelessWidget {
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
                                       return "Password cannot be left blank";
-                                    } else if (value != viewModel.empPassController.text) {
+                                    } else if (value !=
+                                        viewModel.empPassController.text) {
                                       return "Password does not match";
                                     }
                                     return null;
@@ -129,8 +127,7 @@ class ChangePasswordScreen extends StatelessWidget {
                                       text: 'change password',
                                       onPressed: () {
                                         viewModel.authenticateEmployee();
-                                      }
-                                  ),
+                                      }),
                                 ),
                                 const SizedBox(height: doubleSixteen),
                               ],
@@ -148,13 +145,14 @@ class ChangePasswordScreen extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.all(doubleSixteen),
                   child: Text(
-                    viewModel.appVersion != "Unknown" ? "Version : ${viewModel.appVersion}" : "",
+                    viewModel.appVersion != "Unknown"
+                        ? "Version : ${viewModel.appVersion}"
+                        : "",
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                         color: Colors.white,
                         fontSize: regularTextSize,
-                        fontWeight: FontWeight.w400
-                    ),
+                        fontWeight: FontWeight.w400),
                   ),
                 );
               },

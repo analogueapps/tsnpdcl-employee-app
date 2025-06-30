@@ -138,7 +138,7 @@ class LoadApplicationsList {
   String? regUser;
   String? photoUrl;
   RegistrationDate? registrationDate;
-  dynamic? registrationDateAsLong;
+  dynamic registrationDateAsLong;
   String? registrationNumber;
   String? scheme;
   String? sectionId;
@@ -183,7 +183,7 @@ class LoadApplicationsList {
     String? regUser,
     String? photoUrl,
     RegistrationDate? registrationDate,
-    dynamic? registrationDateAsLong,
+    dynamic registrationDateAsLong,
     String? registrationNumber,
     String? scheme,
     String? sectionId,

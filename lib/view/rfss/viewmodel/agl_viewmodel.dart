@@ -22,15 +22,13 @@ import 'package:tsnpdcl_employee/view/rfss/model/save_mapped_model.dart';
 
 import '../database/mapping_agl_db/agl_databases/distribution_db.dart';
 
-
-
 class AglViewModel extends ChangeNotifier {
   final BuildContext context;
 
   AglViewModel({required this.context});
 
-  String latitude="";
-  String longitude="";
+  String latitude = "";
+  String longitude = "";
 
   void initialize() {
     Future.delayed(Duration.zero, () {
@@ -44,7 +42,6 @@ class AglViewModel extends ChangeNotifier {
   final TextEditingController farmerName = TextEditingController();
   final TextEditingController connectedLoad = TextEditingController();
   final TextEditingController uscno = TextEditingController();
-
 
   void _handleLocationIconClick() async {
     bool isLocationEnabled = await Geolocator.isLocationServiceEnabled();
@@ -84,17 +81,17 @@ class AglViewModel extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text("Location Permission Required"),
-            content: Text(
+            title: const Text("Location Permission Required"),
+            content: const Text(
                 "Location permissions are permanently denied. Please enable them in the app settings."),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
-                child: Text("Cancel"),
+                child: const Text("Cancel"),
               ),
               TextButton(
                 onPressed: () => Navigator.of(context).pop(true),
-                child: Text("Open Settings"),
+                child: const Text("Open Settings"),
               ),
             ],
           );
@@ -124,14 +121,13 @@ class AglViewModel extends ChangeNotifier {
     }
   }
 
-
   void downloadDistributions() {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) {
         return WillPopScope(
-            onWillPop: () async => false,
+          onWillPop: () async => false,
           child: AlertDialog(
             title: const Text("Download Distributions ?"),
             content: const Text(
@@ -167,8 +163,10 @@ class AglViewModel extends ChangeNotifier {
         return WillPopScope(
           onWillPop: () async => false,
           child: AlertDialog(
-            title: const Text("Download Neighbor section structure codes?",
-              style: TextStyle(fontSize: doubleEighteen),),
+            title: const Text(
+              "Download Neighbor section structure codes?",
+              style: TextStyle(fontSize: doubleEighteen),
+            ),
             content: const Text(
                 "Do you want to download neighbor section structure codes also?"),
             actions: [
@@ -203,8 +201,7 @@ class AglViewModel extends ChangeNotifier {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
             final filteredDistributions = listDistributionItem
-                .where((distribution) =>
-                distribution.optionName!
+                .where((distribution) => distribution.optionName
                     .toLowerCase()
                     .contains(searchQuery.toLowerCase()))
                 .toList();
@@ -238,20 +235,22 @@ class AglViewModel extends ChangeNotifier {
                       child: filteredDistributions.isEmpty
                           ? const Center(child: Text('No distributions found'))
                           : ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: filteredDistributions.length,
-                        itemBuilder: (context, index) {
-                          final distribution = filteredDistributions[index];
-                          return ListTile(
-                            title: Text(distribution.optionName ?? 'Unknown'),
-                            onTap: () {
-                              onListDistributionValueChange(
-                                  distribution.optionCode);
-                              Navigator.pop(dialogContext);
-                            },
-                          );
-                        },
-                      ),
+                              shrinkWrap: true,
+                              itemCount: filteredDistributions.length,
+                              itemBuilder: (context, index) {
+                                final distribution =
+                                    filteredDistributions[index];
+                                return ListTile(
+                                  title: Text(
+                                      distribution.optionName ?? 'Unknown'),
+                                  onTap: () {
+                                    onListDistributionValueChange(
+                                        distribution.optionCode);
+                                    Navigator.pop(dialogContext);
+                                  },
+                                );
+                              },
+                            ),
                     ),
                   ],
                 ),
@@ -275,8 +274,8 @@ class AglViewModel extends ChangeNotifier {
     );
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(
-          LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "sc": SharedPreferenceHelper.getStringValue(
           LoginSdkPrefs.sectionCodePrefKey),
@@ -289,8 +288,8 @@ class AglViewModel extends ChangeNotifier {
       "data": jsonEncode(requestData),
     };
 
-    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(
-        context, Apis.NPDCL_EMP_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -304,10 +303,11 @@ class AglViewModel extends ChangeNotifier {
           if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
               if (response.data['objectJson'] != null) {
-                final List<dynamic> jsonList = jsonDecode(
-                    response.data['objectJson']);
-                final List<SubstationModel> listData = jsonList.map((json) =>
-                    SubstationModel.fromJson(json)).toList();
+                final List<dynamic> jsonList =
+                    jsonDecode(response.data['objectJson']);
+                final List<SubstationModel> listData = jsonList
+                    .map((json) => SubstationModel.fromJson(json))
+                    .toList();
                 deleteAllUnMappedServices();
                 listDistributionItem.addAll(listData);
                 getStructuresOfSection();
@@ -341,10 +341,10 @@ class AglViewModel extends ChangeNotifier {
   Future<void> loadOfflineDistributions() async {
     try {
       // Fetch data from database
-      final List<SubstationModel> dbData = await DatabaseHelper.instance
-          .getSubstations();
-      final List<String> dbstructuredata = await StructureDatabaseHelper
-          .instance.getAllStructureCodes();
+      final List<SubstationModel> dbData =
+          await DatabaseHelper.instance.getSubstations();
+      final List<String> dbstructuredata =
+          await StructureDatabaseHelper.instance.getAllStructureCodes();
 
       deleteAllUnMappedServices();
       listDistributionItem.clear();
@@ -360,7 +360,6 @@ class AglViewModel extends ChangeNotifier {
           ? listDistributionItem.first.optionCode
           : null;
 
-
       notifyListeners();
     } catch (e) {
       showErrorDialog(context, "Failed to load offline data: $e");
@@ -373,14 +372,11 @@ class AglViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-
   String? _selectedStructure;
 
-  String? get selectedStructure=> _selectedStructure;
+  String? get selectedStructure => _selectedStructure;
 
-
-
-  List<String> _structure = [];
+  final List<String> _structure = [];
 
   List get struct => _structure;
 
@@ -391,10 +387,9 @@ class AglViewModel extends ChangeNotifier {
     );
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(
-          LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
-
     };
 
     final payload = {
@@ -404,8 +399,8 @@ class AglViewModel extends ChangeNotifier {
       "data": jsonEncode(requestData),
     };
 
-    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(
-        context, Apis.NPDCL_EMP_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -419,8 +414,8 @@ class AglViewModel extends ChangeNotifier {
           if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
               if (response.data['message'] != "[]") {
-                final List<dynamic> structures = jsonDecode(
-                    response.data['message']);
+                final List<dynamic> structures =
+                    jsonDecode(response.data['message']);
                 final dbHelper = StructureDatabaseHelper.instance;
                 for (var structure in structures) {
                   final structureCode = DTRStructureEntity.fromJson(structure);
@@ -431,7 +426,6 @@ class AglViewModel extends ChangeNotifier {
                         "Added successfully in both db and list in agl_viewmodel");
                   }
                 }
-
               }
             } else {
               showAlertDialog(context, response.data['message']);
@@ -476,40 +470,40 @@ class AglViewModel extends ChangeNotifier {
 
   Future<void> fetchServicesFromDb() async {
     final dbHelper = AGLUnMappedDatabaseHelper();
-    final List<UploadMappedService> dbServices = await dbHelper
-        .getUnMappedServices();
+    final List<UploadMappedService> dbServices =
+        await dbHelper.getUnMappedServices();
 
-    _services = dbServices.map((service) =>
-    {
-      'scno': service.scno,
-      'name': service.name,
-      'areaCode': service.areaCode,
-      'uscno':service.uscno
-    }).toList();
+    _services = dbServices
+        .map((service) => {
+              'scno': service.scno,
+              'name': service.name,
+              'areaCode': service.areaCode,
+              'uscno': service.uscno
+            })
+        .toList();
 
     notifyListeners();
   }
 
   // Get display items for dropdown (scno + name)
   List<String> get serviceDisplayItems {
-    return _services.map((service) =>
-    '${service['scno']} - ${service['name']}'
-    ).toList();
+    return _services
+        .map((service) => '${service['scno']} - ${service['name']}')
+        .toList();
   }
 
   void onServiceSelected(String? displayValue) {
     if (displayValue == null) return;
 
     final selectedService = _services.firstWhere(
-          (service) =>
-      displayValue == '${service['scno']} - ${service['name']}',
+      (service) => displayValue == '${service['scno']} - ${service['name']}',
       orElse: () => {},
     );
 
     if (selectedService.isNotEmpty) {
       _selectedServiceNo = selectedService['scno'];
       _selectedAreaCode = selectedService['areaCode'];
-      _selectedUSCNO=selectedService['uscno']??uscno.text;
+      _selectedUSCNO = selectedService['uscno'] ?? uscno.text;
       print(
           "Slected Service no and $_selectedServiceNo, area:$_selectedAreaCode , uscon: $_selectedUSCNO");
       notifyListeners();
@@ -523,8 +517,8 @@ class AglViewModel extends ChangeNotifier {
     );
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(
-          LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "dc": distributionCode,
       "agl": true,
@@ -538,8 +532,8 @@ class AglViewModel extends ChangeNotifier {
       "data": jsonEncode(requestData),
     };
 
-    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(
-        context, Apis.NPDCL_EMP_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -555,15 +549,16 @@ class AglViewModel extends ChangeNotifier {
               if (response.data['message'] != null) {
                 showSuccessDialog(context, response.data['message'], () {});
                 if (response.data['objectJson'] != null) {
-                  final List<dynamic> jsonList = jsonDecode(
-                      response.data['objectJson']);
-                  final List<UploadMappedService> listData = jsonList.map((json) =>
-                      UploadMappedService.fromJson(json)).toList();
-                  await AGLUnMappedDatabaseHelper().insertUnMappedServices(
-                      listData.toSet().toList());
+                  final List<dynamic> jsonList =
+                      jsonDecode(response.data['objectJson']);
+                  final List<UploadMappedService> listData = jsonList
+                      .map((json) => UploadMappedService.fromJson(json))
+                      .toList();
+                  await AGLUnMappedDatabaseHelper()
+                      .insertUnMappedServices(listData.toSet().toList());
                   print("Store data in SQLite in Unmmaped in AGL");
-                  final storedServices = await AGLUnMappedDatabaseHelper()
-                      .getUnMappedServices();
+                  final storedServices =
+                      await AGLUnMappedDatabaseHelper().getUnMappedServices();
                   await fetchServicesFromDb();
                   debugPrint('Stored ${storedServices.length} services');
                 }
@@ -604,7 +599,6 @@ class AglViewModel extends ChangeNotifier {
     }
   }
 
-
   ///choose option
   String? selectedOption = "";
 
@@ -614,21 +608,19 @@ class AglViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-
   //UPLOAD Data API
   Future<void> submitForm() async {
+    formKey.currentState!.save();
+    notifyListeners();
 
-      formKey.currentState!.save();
-      notifyListeners();
-
-      if (!validateForm()) {
-        return;
-      }else{
-        addService();
-        savedMappedServices(usersData);
-      }
-
+    if (!validateForm()) {
+      return;
+    } else {
+      addService();
+      savedMappedServices(usersData);
+    }
   }
+
   bool validateForm() {
     String usCNO = uscno.text.trim();
     String load = connectedLoad.text.trim();
@@ -638,43 +630,49 @@ class AglViewModel extends ChangeNotifier {
       _handleLocationIconClick();
       return false;
     } else if (selectedOption == "") {
-      AlertUtils.showSnackBar(context, "Please select service authorised or not", isTrue);
+      AlertUtils.showSnackBar(
+          context, "Please select service authorised or not", isTrue);
       return false;
     } else if (selectedOption == "A" && selectedAreaCode == "") {
-      AlertUtils.showSnackBar(context, "Please select service, you want to map", isTrue);
+      AlertUtils.showSnackBar(
+          context, "Please select service, you want to map", isTrue);
       return false;
     } else if (selectedOption == "U" && load.isEmpty) {
-      AlertUtils.showSnackBar(context, "Please specify unauthorised service load in HP", isTrue);
+      AlertUtils.showSnackBar(
+          context, "Please specify unauthorised service load in HP", isTrue);
       return false;
     } else if (selectedOption == "M" && usCNO.length < 8) {
       AlertUtils.showSnackBar(context, "USCNO should be 8 characters", isTrue);
       return false;
     } else if (services.isEmpty) {
-      AlertUtils.showSnackBar(context, "No mapped services found, to upload", isTrue);
+      AlertUtils.showSnackBar(
+          context, "No mapped services found, to upload", isTrue);
       return false;
     } else if (selectedOption == "M" && usCNO.isEmpty) {
-      AlertUtils.showSnackBar(context, "Please specify valid non agl service number", isTrue);
+      AlertUtils.showSnackBar(
+          context, "Please specify valid non agl service number", isTrue);
       return false;
     }
     return true;
   }
+
   List<SaveAglDataModel> usersData = [];
 
   void addService() {
     usersData.add(SaveAglDataModel(
-      uscno: selectedUSCNO!,
-      digitalDtrStructureCode: selectedStructure,
-      latitude: latitude,
-      longitude: longitude,
-      unAuthorisedLoadInHp: connectedLoad.text==""?"000":connectedLoad.text,
-      areaCode: selectedAreaCode,
-      authorisationFlag: selectedOption,
-      farmerName:farmerName.text!=""?farmerName.text:""
-    ));
+        uscno: selectedUSCNO!,
+        digitalDtrStructureCode: selectedStructure,
+        latitude: latitude,
+        longitude: longitude,
+        unAuthorisedLoadInHp:
+            connectedLoad.text == "" ? "000" : connectedLoad.text,
+        areaCode: selectedAreaCode,
+        authorisationFlag: selectedOption,
+        farmerName: farmerName.text != "" ? farmerName.text : ""));
   }
 
-
-  Future<void> savedMappedServices(List<SaveAglDataModel> uploadServices) async {
+  Future<void> savedMappedServices(
+      List<SaveAglDataModel> uploadServices) async {
     ProcessDialogHelper.showProcessDialog(
       context,
       message: "Loading...",
@@ -694,11 +692,10 @@ class AglViewModel extends ChangeNotifier {
     }).toList();
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(
-          LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
-      "data":servicesData,
-
+      "data": servicesData,
     };
 
     final payload = {
@@ -708,8 +705,8 @@ class AglViewModel extends ChangeNotifier {
       "data": jsonEncode(requestData),
     };
 
-    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(
-        context, Apis.NPDCL_EMP_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -723,7 +720,9 @@ class AglViewModel extends ChangeNotifier {
           if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
               if (response.data['message'] != null) {
-                showSuccessDialog(context, response.data['message'], (){Navigation.instance.pushBack();});
+                showSuccessDialog(context, response.data['message'], () {
+                  Navigation.instance.pushBack();
+                });
                 usersData.clear();
                 clearData();
               }
@@ -745,16 +744,15 @@ class AglViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void clearData(){
+  void clearData() {
     formKey.currentState!.reset();
     uscno.clear();
     farmerName.clear();
-    _selectedUSCNO=null;
-    selectedOption=null;
-    _selectedAreaCode=null;
-    _selectedServiceNo=null;
-    _selectedStructure=null;
+    _selectedUSCNO = null;
+    selectedOption = null;
+    _selectedAreaCode = null;
+    _selectedServiceNo = null;
+    _selectedStructure = null;
     deleteAllUnMappedServices();
-
   }
 }

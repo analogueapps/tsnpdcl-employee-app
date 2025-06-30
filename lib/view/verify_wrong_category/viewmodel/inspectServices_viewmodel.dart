@@ -10,7 +10,7 @@ import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/view/verify_wrong_category/model/areaWiseAbstract_model.dart';
 
 class InspectServicesViewmodel extends ChangeNotifier {
-  InspectServicesViewmodel( {required this.context, required this.args}) {
+  InspectServicesViewmodel({required this.context, required this.args}) {
     print(" args: $args");
     _loadAbstractBasedOnMonthYear(args);
   }
@@ -22,17 +22,13 @@ class InspectServicesViewmodel extends ChangeNotifier {
 
   Map<String, dynamic>? _selectedMonthYear;
 
-
-  bool _isLoading=false;
-  bool get isLoading=>_isLoading;
-
-
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
 
   Map<String, dynamic>? get selectedMonthYear => _selectedMonthYear;
 
-  List<FetchAllAbstract> _inspectService=[];
-  List<FetchAllAbstract> get inspectService=>_inspectService;
-
+  final List<FetchAllAbstract> _inspectService = [];
+  List<FetchAllAbstract> get inspectService => _inspectService;
 
   void setSelectedMonthYear(String month, int year, BuildContext context) {
     _selectedMonthYear = {
@@ -62,20 +58,22 @@ class InspectServicesViewmodel extends ChangeNotifier {
   //   return monthNames[month - 1];
   // }
 
-  Future<void> _loadAbstractBasedOnMonthYear(Map<String, dynamic>? dateMonth,) async {
-    _isLoading=true;
+  Future<void> _loadAbstractBasedOnMonthYear(
+    Map<String, dynamic>? dateMonth,
+  ) async {
+    _isLoading = true;
     notifyListeners();
 
-
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
-      "monthYear":dateMonth != null
+      "monthYear": dateMonth != null
           ? '${dateMonth['month']}${dateMonth['year']}'
           : DateFormat('MMMyyyy').format(DateTime.now()),
     };
 
-    try{
+    try {
       final response = await ApiProvider(baseUrl: Apis.VERIFY_WRONG_CONFIRM_URL)
           .postApiCall(context, Apis.GET_VERIFY_ABSTRACT, payload);
       if (response != null) {
@@ -97,8 +95,9 @@ class InspectServicesViewmodel extends ChangeNotifier {
                   jsonList = [];
                 }
 
-                final List<FetchAllAbstract> dataList =
-                jsonList.map((json) => FetchAllAbstract.fromJson(json)).toList();
+                final List<FetchAllAbstract> dataList = jsonList
+                    .map((json) => FetchAllAbstract.fromJson(json))
+                    .toList();
 
                 _inspectService.clear();
                 _inspectService.addAll(dataList);
@@ -112,15 +111,17 @@ class InspectServicesViewmodel extends ChangeNotifier {
             showSessionExpiredDialog(context);
           }
         } else {
-          showAlertDialog(context, response.data['message'] ??
-              'Request failed with status: ${response.statusCode}');
+          showAlertDialog(
+              context,
+              response.data['message'] ??
+                  'Request failed with status: ${response.statusCode}');
         }
       }
     } catch (e, stacktrace) {
       print("Exception in fetchAllAbstract: $e\n$stacktrace"); // Log error
       showErrorDialog(context, "An error occurred. Please try again.");
-    }finally{
-      _isLoading=false;
+    } finally {
+      _isLoading = false;
       notifyListeners();
     }
   }

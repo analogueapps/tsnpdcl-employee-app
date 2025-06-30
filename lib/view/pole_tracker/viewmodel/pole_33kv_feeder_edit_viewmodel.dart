@@ -26,8 +26,7 @@ import 'package:tsnpdcl_employee/view/rfss/database/mapping_agl_db/agl_databases
 import '../../check_measurement_lines/model/structure_capacity_model.dart';
 
 class Pole33kvFeederEditViewmodel extends ChangeNotifier {
-  Pole33kvFeederEditViewmodel(
-      {required this.context, required this.args}) {
+  Pole33kvFeederEditViewmodel({required this.context, required this.args}) {
     startListening();
     _handleLocation();
     _initializeCameraPosition();
@@ -57,15 +56,17 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
   final TextEditingController poleNumber = TextEditingController();
   final TextEditingController particularsOfCrossing = TextEditingController();
 
-  String empName=SharedPreferenceHelper.getStringValue(LoginSdkPrefs.empNameKey);
-  String empDesignation=SharedPreferenceHelper.getStringValue(LoginSdkPrefs.designationCodeKey);
+  String empName =
+      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.empNameKey);
+  String empDesignation =
+      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.designationCodeKey);
 
   List<int> undoStack = [];
   List<PoleFeederEntity> digitalFeederEntityList = [];
   final int UNDO_STACK_SIZE = 10;
   PoleFeederEntity? poleData;
 
-  bool deleteOrEdit= isFalse;
+  bool deleteOrEdit = isFalse;
 
   bool serverCheck = false;
   bool deviceCheck = false;
@@ -87,7 +88,7 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
   CameraPosition? _cameraPosition;
 
   LatLng get currentLocation => _currentLocation;
-  LatLng humanLocation= const LatLng(0, 0);
+  LatLng humanLocation = const LatLng(0, 0);
 
   // Update to nullable getter and setter
   CameraPosition? get cameraPosition => _cameraPosition;
@@ -120,7 +121,7 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
   Future<void> _addHumanMarker() async {
     final humanIcon = await _bitmapDescriptorFromAsset(Assets.human);
     markers.add(Marker(
-      markerId:  MarkerId("$empName($empDesignation)"),
+      markerId: MarkerId("$empName($empDesignation)"),
       position: humanLocation,
       icon: humanIcon,
       infoWindow: InfoWindow(
@@ -131,7 +132,7 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
 
   Future<void> processMapData(bool drawHuman) async {
     if (poleFeederList.isEmpty) return;
-    if(followSwitch && humanLocation!= null){
+    if (followSwitch) {
       await _addHumanMarker();
       mapController?.animateCamera(CameraUpdate.newCameraPosition(
         CameraPosition(target: humanLocation, zoom: 18),
@@ -140,16 +141,21 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
 
     for (int i = 0; i < poleFeederList.length; i++) {
       final entity = poleFeederList[i];
-      maxId=max(poleFeederList[i].id,maxId);
+      maxId = max(poleFeederList[i].id, maxId);
       if (entity.sourceLat != null && entity.sourceLon != null) {
         final polyline = Polyline(
           polylineId: PolylineId('polyline_$i'),
           points: [
-            LatLng(double.parse(entity.sourceLat!), double.parse(entity.sourceLon!)),
+            LatLng(double.parse(entity.sourceLat!),
+                double.parse(entity.sourceLon!)),
             LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
           ],
           width: 4,
-          color: entity.tempSeries != null ? Colors.blue : entity.newProposalId != null ? Colors.red : Colors.black,
+          color: entity.tempSeries != null
+              ? Colors.blue
+              : entity.newProposalId != null
+                  ? Colors.red
+                  : Colors.black,
         );
         polylines.add(polyline);
 
@@ -180,12 +186,10 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
         addMarkerWithEntity(entity);
       }
 
-      if(!drawHuman){
+      if (!drawHuman) {
         _addSpecialMarkers(entity);
-
       }
       if (i == poleFeederList.length - 1) {
-
         _cameraPosition = CameraPosition(
           target: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
           zoom: 14.0,
@@ -208,7 +212,9 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
       markers.add(Marker(
         markerId: MarkerId('sourceType_${entity.id}'),
         position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
-        icon: entity.feederVolt == "33KV" ? await _bitmapDescriptorFromAsset(Assets.ss132Kv) : await _bitmapDescriptorFromAsset(Assets.ss33Kv),
+        icon: entity.feederVolt == "33KV"
+            ? await _bitmapDescriptorFromAsset(Assets.ss132Kv)
+            : await _bitmapDescriptorFromAsset(Assets.ss33Kv),
       ));
     }
 
@@ -217,21 +223,24 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
         case 'ss':
           markers.add(Marker(
             markerId: MarkerId('loadType_ss_${entity.id}'),
-            position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+            position:
+                LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
             icon: await _bitmapDescriptorFromAsset(Assets.ss33Kv),
           ));
           break;
         case 'dtr':
           markers.add(Marker(
             markerId: MarkerId('loadType_dtr_${entity.id}'),
-            position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+            position:
+                LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
             icon: await _bitmapDescriptorFromAsset(Assets.dtr),
           ));
           break;
         case 'ht':
           markers.add(Marker(
             markerId: MarkerId('loadType_ht_${entity.id}'),
-            position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+            position:
+                LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
             icon: await _bitmapDescriptorFromAsset(Assets.htService),
           ));
           break;
@@ -250,7 +259,6 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
         ),
       ),
       textDirection: ui.TextDirection.ltr,
-
     );
     textPainter.layout(minWidth: 0, maxWidth: double.infinity);
 
@@ -264,7 +272,7 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
     );
 
     // Center the text
-    textPainter.paint(canvas, Offset(0, 0)); // Adjust if necessary
+    textPainter.paint(canvas, const Offset(0, 0)); // Adjust if necessary
 
     final picture = recorder.endRecording();
     final img = await picture.toImage(
@@ -272,7 +280,8 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
       textPainter.height.toInt(),
     );
 
-    final ByteData? byteData = await img.toByteData(format: ui.ImageByteFormat.png);
+    final ByteData? byteData =
+        await img.toByteData(format: ui.ImageByteFormat.png);
     if (byteData != null) {
       final Uint8List uint8List = byteData.buffer.asUint8List();
       final bitmapDescriptor = BitmapDescriptor.fromBytes(uint8List);
@@ -290,7 +299,8 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
     }
   }
 
-  LatLng _calculateMidpoint(double lat1, double lon1, double lat2, double lon2) {
+  LatLng _calculateMidpoint(
+      double lat1, double lon1, double lat2, double lon2) {
     double midLat = (lat1 + lat2) / 2;
     double midLon = (lon1 + lon2) / 2;
     return LatLng(midLat, midLon);
@@ -303,9 +313,13 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
 
   Future<Uint8List> _getBytesFromAsset(String path, int width) async {
     ByteData byteData = await rootBundle.load(path);
-    ui.Codec codec = await ui.instantiateImageCodec(byteData.buffer.asUint8List());
+    ui.Codec codec =
+        await ui.instantiateImageCodec(byteData.buffer.asUint8List());
     ui.FrameInfo fi = await codec.getNextFrame();
-    final Uint8List resizedData = (await fi.image.toByteData(format: ui.ImageByteFormat.png))!.buffer.asUint8List();
+    final Uint8List resizedData =
+        (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
+            .buffer
+            .asUint8List();
     return resizedData;
   }
 
@@ -332,7 +346,7 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
       icon: await _bitmapDescriptorFromAsset(Assets.horizontalPole),
       onTap: () {
         onClickOfMap();
-        poleData=entity;
+        poleData = entity;
       },
     );
 
@@ -343,7 +357,7 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
 
   PoleFeederEntity? sourcePoleTag;
 
-  void onClickOfMap(){
+  void onClickOfMap() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -361,7 +375,7 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                deleteOrEdit=isTrue;
+                deleteOrEdit = isTrue;
                 notifyListeners();
                 showAlertDialog(context,
                     "Please choose Source Pole Num or check Source pole not mapped or origin Pole");
@@ -369,7 +383,9 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
               child: const Text("EDIT THIS POLE DATA"),
             ),
             TextButton(
-              onPressed: (){ Navigator.pop(context);},
+              onPressed: () {
+                Navigator.pop(context);
+              },
               child: const Text("CANCEL"),
             ),
           ],
@@ -384,7 +400,7 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text("Delete Pole?"),
-          content:  const Text(
+          content: const Text(
             "Delete 0000 pole? \n You can revert this action!",
           ),
           actions: [
@@ -404,8 +420,8 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
       },
     );
   }
-  void _handleLocation() async {
 
+  void _handleLocation() async {
     bool isLocationEnabled = await Geolocator.isLocationServiceEnabled();
     if (!isLocationEnabled) {
       // Show a dialog to enable location services
@@ -417,7 +433,8 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
             onWillPop: () async => false,
             child: AlertDialog(
               title: const Text("Location Service Disabled"),
-              content: const Text("Please enable location services to use this feature."),
+              content: const Text(
+                  "Please enable location services to use this feature."),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
@@ -441,7 +458,7 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text("Location permissions are denied."),
           ),
         );
@@ -454,16 +471,17 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text("Location Permission Required"),
-            content: Text("Location permissions are permanently denied. Please enable them in the app settings."),
+            title: const Text("Location Permission Required"),
+            content: const Text(
+                "Location permissions are permanently denied. Please enable them in the app settings."),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
-                child: Text("Cancel"),
+                child: const Text("Cancel"),
               ),
               TextButton(
                 onPressed: () => Navigator.of(context).pop(true),
-                child: Text("Open Settings"),
+                child: const Text("Open Settings"),
               ),
             ],
           );
@@ -476,16 +494,16 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
       }
     }
 
-    if (permission != LocationPermission.whileInUse && permission != LocationPermission.always) {
+    if (permission != LocationPermission.whileInUse &&
+        permission != LocationPermission.always) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text("Location permissions are still denied."),
         ),
       );
       return;
     }
     await startListening();
-
   }
 
   StreamSubscription<Position>? _positionStream;
@@ -499,12 +517,12 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
     }
 
     _positionStream = Geolocator.getPositionStream(
-      locationSettings: LocationSettings(accuracy: LocationAccuracy.high),
+      locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
     ).listen((Position position) {
       latitude = position.latitude;
       longitude = position.longitude;
       totalAccuracy = position.accuracy; // <-- This is in meters
-      humanLocation=  LatLng(latitude!, longitude!);
+      humanLocation = LatLng(latitude!, longitude!);
       notifyListeners();
 
       // if (_selectedPole == "" || _selectedPole == null) {
@@ -544,7 +562,6 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
 
   double _degToRad(double deg) => deg * pi / 180;
 
-
   List<PoleFeederEntity> poleFeederList = [];
   String? poleFeederSelected;
   String? poleID;
@@ -576,7 +593,7 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
 
     final requestData = {
       "authToken":
-      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "ssc": args["ssc"],
       "fc": args["fc"],
@@ -603,7 +620,7 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
             if (response.data['success'] == isTrue) {
               if (response.data['objectJson'] != null) {
                 final List<dynamic> jsonList =
-                jsonDecode(response.data['objectJson']);
+                    jsonDecode(response.data['objectJson']);
                 final List<PoleFeederEntity> listData = jsonList
                     .map((json) => PoleFeederEntity.fromJson(json))
                     .toList();
@@ -646,7 +663,7 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
 
       final requestData = {
         "authToken":
-        SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+            SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
         "api": Apis.API_KEY,
         "ssc": args["ssc"],
         "fc": args["fc"],
@@ -722,8 +739,6 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-
-
   String? _selectedPole;
 
   String? get selectedPole => _selectedPole;
@@ -742,10 +757,10 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
                 searchQuery = query;
                 filteredList = poleFeederList.where((item) {
                   final displayText =
-                  (item.tempSeries != null && item.tempSeries!.isNotEmpty
-                      ? '${item.tempSeries}-${item.poleNum}'
-                      : item.poleNum ?? '')
-                      .toLowerCase();
+                      (item.tempSeries != null && item.tempSeries!.isNotEmpty
+                              ? '${item.tempSeries}-${item.poleNum}'
+                              : item.poleNum ?? '')
+                          .toLowerCase();
                   return displayText.contains(query.toLowerCase());
                 }).toList();
               });
@@ -772,7 +787,7 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
                       itemBuilder: (context, index) {
                         final item = filteredList[index];
                         final displayText = item.tempSeries != null &&
-                            item.tempSeries!.isNotEmpty
+                                item.tempSeries!.isNotEmpty
                             ? '${item.tempSeries}-${item.poleNum}'
                             : item.poleNum ?? '';
 
@@ -809,15 +824,13 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-
-
   void setPoleNum() {
-    if(selectedTappingPole=="Is Extension Pole?"){
-      poleNumber.text = (series != null ? "$series-$poleNum (EP)" : "$poleNum(EP)" )!;
+    if (selectedTappingPole == "Is Extension Pole?") {
+      poleNumber.text =
+          (series != null ? "$series-$poleNum (EP)" : "$poleNum(EP)");
     }
     poleNumber.text = (series != null ? "$series-$poleNum" : poleNum)!;
   }
-
 
   //Tapping from previous pole
   String? _selectedTappingPole;
@@ -828,7 +841,7 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
     _selectedTappingPole = title;
     notifyListeners();
     print("$_selectedTappingPole:  tap selected");
-    if(_selectedTappingPole!=null && _selectedTappingPole!.isNotEmpty){
+    if (_selectedTappingPole != null && _selectedTappingPole!.isNotEmpty) {
       generatePoleNum(serverCheck);
     }
   }
@@ -872,7 +885,7 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
         selectedFirstGroup.clear();
       }
 
-      final limit = 2;
+      const limit = 2;
 
       if (selectedSecondGroup.length < limit) {
         selectedSecondGroup.add(val);
@@ -886,7 +899,6 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
   }
 
   bool get isSecondGroupEnabled => true;
-
 
   //Pole Height
   List<String> poleHeightData = [
@@ -954,10 +966,9 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
   void setSelectedConnected(String title) {
     _selectedConnected = title;
     print("$_selectedConnected: Connected  selected");
-    if(_selectedConnected=="Sub Station"){
+    if (_selectedConnected == "Sub Station") {
       load33KvssList();
-    }
-    else if (_selectedConnected == "HT Service") {
+    } else if (_selectedConnected == "HT Service") {
       showCircleDialog();
     }
     print("$_selectedConnected: Connected  selected");
@@ -981,7 +992,8 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
     );
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
     };
 
@@ -992,7 +1004,8 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
       "data": jsonEncode(requestData),
     };
 
-    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -1003,25 +1016,27 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
           response.data = jsonDecode(response.data); // Parse string to JSON
         }
         if (response.statusCode == successResponseCode) {
-          if(response.data['tokenValid'] == isTrue) {
+          if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
-              if(response.data['objectJson'] != null) {
-                final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
-                final List<SpinnerList> listData = jsonList.map((json) => SpinnerList.fromJson(json)).toList();
+              if (response.data['objectJson'] != null) {
+                final List<dynamic> jsonList =
+                    jsonDecode(response.data['objectJson']);
+                final List<SpinnerList> listData =
+                    jsonList.map((json) => SpinnerList.fromJson(json)).toList();
                 listSubStationItem.addAll(listData);
               }
             } else {
-              showAlertDialog(context,response.data['message']);
+              showAlertDialog(context, response.data['message']);
             }
           } else {
             showSessionExpiredDialog(context);
           }
         } else {
-          showAlertDialog(context,response.data['message']);
+          showAlertDialog(context, response.data['message']);
         }
       }
     } catch (e) {
-      showErrorDialog(context,  "An error occurred. Please try again.");
+      showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
     }
 
@@ -1052,8 +1067,8 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Choose Circle'),
-          content: Container(
+          title: const Text('Choose Circle'),
+          content: SizedBox(
             width: double.maxFinite,
             child: ListView.builder(
               shrinkWrap: true,
@@ -1074,7 +1089,6 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
     );
   }
 
-
   //HT Serivce
   List<EroModel> htServiceList = [];
   String? selectedHtServiceName;
@@ -1090,7 +1104,7 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
 
     final requestData = {
       "authToken":
-      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "cc": circleCode,
     };
@@ -1115,18 +1129,17 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
           if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
               if (response.data['objectJson'] != null) {
-                final  List<dynamic> objectJson = jsonDecode(response.data['objectJson']);
-                final List<EroModel> listData = objectJson
-                    .map((json) => EroModel.fromJson(json))
-                    .toList();
+                final List<dynamic> objectJson =
+                    jsonDecode(response.data['objectJson']);
+                final List<EroModel> listData =
+                    objectJson.map((json) => EroModel.fromJson(json)).toList();
                 htServiceList.addAll(listData);
                 notifyListeners();
               } else {
                 showAlertDialog(context, "No  HT Services found!");
               }
             } else {
-              showAlertDialog(context,
-                  response.data['objectJson']);
+              showAlertDialog(context, response.data['objectJson']);
             }
           } else {
             showSessionExpiredDialog(context);
@@ -1142,7 +1155,6 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
 
     notifyListeners();
   }
-
 
   //Any Crossings:
   List<String> selectedCrossings = [];
@@ -1165,7 +1177,6 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
   List<String> selectedPoleStatus = [];
 
   void setSelectedPoleStatus(String title) {
-
     if (selectedPoleStatus.contains(title)) {
       selectedPoleStatus.remove(title);
     } else {
@@ -1188,19 +1199,17 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
   Option? selectedCode;
   String? selectedCapacity;
 
-
-
   Future<void> loadStructureCodes() async {
-    final structures = await StructureDatabaseHelper.instance.getAllStructures();
+    final structures =
+        await StructureDatabaseHelper.instance.getAllStructures();
     structureCodes = structures
-        .where((e) => e.structureCode != null && e.capacity != null)
+        .where((e) => e.capacity != null)
         .map((e) => Option(
-      code: e.structureCode!,
-      capacity: e.capacity!,
-    ))
+              code: e.structureCode,
+              capacity: e.capacity,
+            ))
         .toList();
     print("Done loading data from DB Structure");
-
   }
 
   void setSelectedDtr(Option title) {
@@ -1209,9 +1218,6 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
     print("${selectedCode?.capacity}: selectedCode capacity");
     notifyListeners();
   }
-
-
-
 
   String? _selectedConductor;
 
@@ -1223,12 +1229,10 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-
   //Conductor Status
   List<String> selectedConductorStatus = [];
 
   void setSelectedConductorStatus(String title) {
-
     if (selectedConductorStatus.contains(title)) {
       selectedConductorStatus.remove(title);
     } else {
@@ -1237,17 +1241,18 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
     print("selectedConductorStatus: $selectedConductorStatus");
     notifyListeners();
   }
+
   //Undo Pole
-  Future<void>  deletePole(int id)async{
+  Future<void> deletePole(int id) async {
     _isLoading = isTrue;
     notifyListeners();
     final requestData = {
       "authToken":
-      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "fc": args["fc"],
       "ssc": args["ssc"],
-      "poleId":""
+      "poleId": ""
     };
     final payload = {
       "path": "/undoPole",
@@ -1283,7 +1288,7 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
                     .map((json) => PoleFeederEntity.fromJson(json))
                     .toList();
                 int timeLapse = DateTime.now().millisecondsSinceEpoch;
-                if (listData != null && listData.isNotEmpty) {
+                if (listData.isNotEmpty) {
                   digitalFeederEntityList = [];
                   digitalFeederEntityList.addAll(listData);
                 }
@@ -1300,7 +1305,9 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
                 if (digitalFeederEntityList.isNotEmpty) {
                   final lastItem = digitalFeederEntityList.last;
 
-                  if (lastItem.createdBy == SharedPreferenceHelper.getStringValue(LoginSdkPrefs.userIdPrefKey) ){
+                  if (lastItem.createdBy ==
+                      SharedPreferenceHelper.getStringValue(
+                          LoginSdkPrefs.userIdPrefKey)) {
                     if (undoStack.length > UNDO_STACK_SIZE) {
                       undoStack.removeLast();
                     }
@@ -1311,7 +1318,7 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
                   showSuccessDialog(
                     context,
                     response.data["message"], //Missing mandatory params
-                        () {
+                    () {
                       Navigator.pop(context);
                     },
                   );
@@ -1320,8 +1327,7 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
                 showAlertDialog(context, "Unable to process your request!");
               }
             } else {
-              showAlertDialog(context,
-                  response.data['message']);
+              showAlertDialog(context, response.data['message']);
             }
           } else {
             showSessionExpiredDialog(context);
@@ -1339,7 +1345,6 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
 
     notifyListeners();
   }
-
 
   Future<void> submitCheck11KVForm() async {
     if (formKey.currentState!.validate()) {
@@ -1366,7 +1371,7 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
       "loadLatestDataOnly": true,
       "maxId": maxId,
       "authToken":
-      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "fc": args["fc"],
       "ssc": args["ssc"],
@@ -1377,8 +1382,8 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
       "tap": selectedTappingPole == "Straight Tapping"
           ? "s"
           : selectedTappingPole == "Left Tapping"
-          ? "l"
-          : "r",
+              ? "l"
+              : "r",
       "pt": selectedSecondGroup.isNotEmpty
           ? selectedSecondGroup[0]
           : (selectedFirstGroup.isNotEmpty ? selectedFirstGroup[0] : null),
@@ -1388,24 +1393,26 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
       "typeOfPoint": selectedTypePoint,
       "polenum": poleNumber.text.isEmpty ? "0000" : poleNumber.text.trim(),
       "series": poleData!.tempSeries,
-
       if (selectedPole == "" || selectedPole == null) ...{
         "sid": poleID,
         "slat": poleLat,
         "slon": poleLon,
       },
       "cross": buildCrossingString(),
-      "connLoad": selectedConnected == "No Load" ? "N" : selectedConnected=="HT Service"?"HT":"SS",
+      "connLoad": selectedConnected == "No Load"
+          ? "N"
+          : selectedConnected == "HT Service"
+              ? "HT"
+              : "SS",
       "cs": selectedConductor,
-      if(selectedConnected=="Sub Station")...{
+      if (selectedConnected == "Sub Station") ...{
         "ss": listSubStationSelect ?? ""
-      }
-      else if(selectedConnected=="HT Service")...{
+      } else if (selectedConnected == "HT Service") ...{
         "ht": selectedHtServiceName ?? ""
       },
       "lat": poleData!.lat.toString(),
       "lon": poleData!.lon.toString(),
-      "digitalID":poleData!.id,
+      "digitalID": poleData!.id,
     };
 
     print("requestData: $requestData");
@@ -1457,7 +1464,9 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
                 if (digitalFeederEntityList.isNotEmpty) {
                   final lastItem = digitalFeederEntityList.last;
 
-                  if (lastItem.createdBy == SharedPreferenceHelper.getStringValue(LoginSdkPrefs.userIdPrefKey) ){
+                  if (lastItem.createdBy ==
+                      SharedPreferenceHelper.getStringValue(
+                          LoginSdkPrefs.userIdPrefKey)) {
                     if (undoStack.length > UNDO_STACK_SIZE) {
                       undoStack.removeLast();
                     }
@@ -1470,7 +1479,7 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
                   showSuccessDialog(
                     context,
                     response.data["message"], //Missing mandatory params
-                        () {
+                    () {
                       Navigator.pop(context);
                     },
                   );
@@ -1479,8 +1488,7 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
                 showAlertDialog(context, "Unable to process your request!");
               }
             } else {
-              showAlertDialog(context,
-                  response.data['message']);
+              showAlertDialog(context, response.data['message']);
             }
           } else {
             showSessionExpiredDialog(context);
@@ -1500,10 +1508,12 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
   }
 
   bool validateForm() {
-    if ((selectedPole == "" || selectedPole == null) &&(poleFeederSelected==null||poleFeederSelected=="")) {
-      AlertUtils.showSnackBar(context, "Please select the source pole to the current pole", isTrue);
+    if ((selectedPole == "" || selectedPole == null) &&
+        (poleFeederSelected == null || poleFeederSelected == "")) {
+      AlertUtils.showSnackBar(
+          context, "Please select the source pole to the current pole", isTrue);
       return false;
-    } else if (poleNumber.text == "" ) {
+    } else if (poleNumber.text == "") {
       AlertUtils.showSnackBar(context, "Please enter Pole Number", isTrue);
       return false;
     } else if (selectedTappingPole == "" || selectedTappingPole == null) {
@@ -1532,18 +1542,16 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
           "Please select the type of point (Cut Point/End Point/Pin Point)",
           isTrue);
       return false;
-    }else if (selectedCrossings.isEmpty || selectedCrossings == null) {
+    } else if (selectedCrossings.isEmpty) {
       AlertUtils.showSnackBar(context, "Please select any crossing", isTrue);
       return false;
     } else if (selectedConnected == "Sub Station" &&
         (listSubStationSelect == "" || listSubStationSelect == null)) {
-      AlertUtils.showSnackBar(
-          context, "Please choose the SubStation ", isTrue);
+      AlertUtils.showSnackBar(context, "Please choose the SubStation ", isTrue);
       return false;
     } else if (selectedConnected == "HT Service" &&
         (selectedHtServiceName == "" || selectedHtServiceName == null)) {
-      AlertUtils.showSnackBar(
-          context, "Please choose the Service ", isTrue);
+      AlertUtils.showSnackBar(context, "Please choose the Service ", isTrue);
       return false;
     } else if (_selectedConductor == "" || _selectedConductor == null) {
       AlertUtils.showSnackBar(
@@ -1551,11 +1559,12 @@ class Pole33kvFeederEditViewmodel extends ChangeNotifier {
           "Please select the conductor size from previous pole to this pole",
           isTrue);
       return false;
-    }
-    else if ((latitude == "" && longitude == "") ||
+    } else if ((latitude == "" && longitude == "") ||
         (latitude == null && longitude == null)) {
       AlertUtils.showSnackBar(
-          context, "Please wait until we capture your location. Please make sure you have turned on your location", isTrue);
+          context,
+          "Please wait until we capture your location. Please make sure you have turned on your location",
+          isTrue);
       return false;
     }
     return true;

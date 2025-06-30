@@ -6,13 +6,11 @@ import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/network/api_provider.dart';
 import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
-import 'package:tsnpdcl_employee/utils/alerts.dart';
-import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/view/ccc/model/complaint_track_model.dart';
 
 class CccComplaintTrackViewmodel extends ChangeNotifier {
-  CccComplaintTrackViewmodel({required this.context, required this.ticketId}){
+  CccComplaintTrackViewmodel({required this.context, required this.ticketId}) {
     complaintTrack();
   }
 
@@ -30,9 +28,10 @@ class CccComplaintTrackViewmodel extends ChangeNotifier {
     notifyListeners();
 
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
-      "ticketId":ticketId,
+      "ticketId": ticketId,
     };
     var response = await ApiProvider(baseUrl: Apis.CCC_END_POINT_BASE_URL)
         .postApiCall(context, Apis.COMPLAINT_STATUS, payload);
@@ -75,13 +74,11 @@ class CccComplaintTrackViewmodel extends ChangeNotifier {
           showAlertDialog(context, response.data['message']);
         }
       }
-    }catch(e){
+    } catch (e) {
       throw Exception("Exception Occurred while Authenticating");
-    }finally{
-      _isLoading=false;
+    } finally {
+      _isLoading = false;
       notifyListeners();
     }
   }
-
-
 }

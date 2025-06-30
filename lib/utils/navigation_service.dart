@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tsnpdcl_employee/view/dtr_master/model/dtr_feedet_distribution_model.dart';
 
 class Navigation {
   late GlobalKey<NavigatorState> navigationKey;
@@ -20,14 +19,18 @@ class Navigation {
         .pushNamedAndRemoveUntil(routeName, (route) => false, arguments: args));
   }
 
-  Future<dynamic> navigateTo(String routeName,  {Object? args, Function(dynamic)? onReturn, }) {
+  Future<dynamic> navigateTo(
+    String routeName, {
+    Object? args,
+    Function(dynamic)? onReturn,
+  }) {
     return _safeNavigation(() => navigationKey.currentState!
-        .pushNamed(routeName, arguments: args)
-        .then((result) {
-      if (onReturn != null) {
-        onReturn(result);
-      }
-    }));
+            .pushNamed(routeName, arguments: args)
+            .then((result) {
+          if (onReturn != null) {
+            onReturn(result);
+          }
+        }));
   }
 
   Future<dynamic> navigateToRoute(MaterialPageRoute routeName) {
@@ -47,7 +50,8 @@ class Navigation {
   // Helper method to safely execute navigation methods
   Future<dynamic> _safeNavigation(Future<dynamic> Function() action) async {
     if (navigationKey.currentState == null) {
-      throw Exception("Navigation state is null. Ensure the navigator key is properly initialized.");
+      throw Exception(
+          "Navigation state is null. Ensure the navigator key is properly initialized.");
     }
     return await action();
   }

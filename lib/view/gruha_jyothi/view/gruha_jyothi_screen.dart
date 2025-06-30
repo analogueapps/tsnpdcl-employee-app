@@ -5,13 +5,7 @@ import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
-import 'package:tsnpdcl_employee/view/consumer_details/viewmodel/consumer_details_viewmodel.dart';
-import 'package:tsnpdcl_employee/view/ctpt_menu/viewmodel/ctpt_menu_viewmodel.dart';
-import 'package:tsnpdcl_employee/view/dtr_failure/viewmodel/dtr_failure_viewmodel.dart';
-import 'package:tsnpdcl_employee/view/dtr_maintenance/viewmodel/dtr_maintenance_viewmodel.dart';
-import 'package:tsnpdcl_employee/view/failure_dtr_inspection/viewmodel/failure_dtr_inspection_viewmodel.dart';
 import 'package:tsnpdcl_employee/view/gruha_jyothi/viewmodel/gruha_jyothi_viewmodel.dart';
-import 'package:tsnpdcl_employee/view/online_pr_menu/viewmodel/online_pr_menu_viewmodel.dart';
 import 'package:tsnpdcl_employee/widget/fill_text_form_field.dart';
 import 'package:tsnpdcl_employee/widget/primary_button.dart';
 
@@ -90,8 +84,7 @@ class GruhaJyothiScreen extends StatelessWidget {
                             text: 'Search',
                             onPressed: () {
                               viewModel.fetchDetails();
-                            }
-                        ),
+                            }),
                       ),
                     ),
                     Visibility(
@@ -102,8 +95,7 @@ class GruhaJyothiScreen extends StatelessWidget {
                             buttonColor: CommonColors.colorSecondary,
                             onPressed: () {
                               viewModel.clearDetails();
-                            }
-                        ),
+                            }),
                       ),
                     ),
                     const SizedBox(height: doubleTwenty),
@@ -123,7 +115,8 @@ class GruhaJyothiScreen extends StatelessWidget {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(left: doubleFive, bottom: doubleFive),
+                                padding: const EdgeInsets.only(
+                                    left: doubleFive, bottom: doubleFive),
                                 child: Text(
                                   checkNull(viewModel.gruhaJyothiStatus?.uscno),
                                   style: const TextStyle(
@@ -133,7 +126,14 @@ class GruhaJyothiScreen extends StatelessWidget {
                               ),
                             ],
                           ),
-                          const TableRow(children: [SizedBox(height: doubleFive,),SizedBox(height: doubleFive,)]),
+                          const TableRow(children: [
+                            SizedBox(
+                              height: doubleFive,
+                            ),
+                            SizedBox(
+                              height: doubleFive,
+                            )
+                          ]),
                           TableRow(
                             children: [
                               const Text(
@@ -145,9 +145,11 @@ class GruhaJyothiScreen extends StatelessWidget {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(left: doubleFive, bottom: doubleFive),
+                                padding: const EdgeInsets.only(
+                                    left: doubleFive, bottom: doubleFive),
                                 child: Text(
-                                  checkNull(viewModel.gruhaJyothiStatus?.rationNo),
+                                  checkNull(
+                                      viewModel.gruhaJyothiStatus?.rationNo),
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -155,7 +157,14 @@ class GruhaJyothiScreen extends StatelessWidget {
                               ),
                             ],
                           ),
-                          const TableRow(children: [SizedBox(height: doubleFive,),SizedBox(height: doubleFive,)]),
+                          const TableRow(children: [
+                            SizedBox(
+                              height: doubleFive,
+                            ),
+                            SizedBox(
+                              height: doubleFive,
+                            )
+                          ]),
                           TableRow(
                             children: [
                               const Text(
@@ -167,9 +176,11 @@ class GruhaJyothiScreen extends StatelessWidget {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(left: doubleFive, bottom: doubleFive),
+                                padding: const EdgeInsets.only(
+                                    left: doubleFive, bottom: doubleFive),
                                 child: Text(
-                                  checkNull(viewModel.gruhaJyothiStatus?.aadharNo),
+                                  checkNull(
+                                      viewModel.gruhaJyothiStatus?.aadharNo),
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -177,7 +188,14 @@ class GruhaJyothiScreen extends StatelessWidget {
                               ),
                             ],
                           ),
-                          const TableRow(children: [SizedBox(height: doubleFive,),SizedBox(height: doubleFive,)]),
+                          const TableRow(children: [
+                            SizedBox(
+                              height: doubleFive,
+                            ),
+                            SizedBox(
+                              height: doubleFive,
+                            )
+                          ]),
                           TableRow(
                             children: [
                               const Text(
@@ -189,9 +207,11 @@ class GruhaJyothiScreen extends StatelessWidget {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(left: doubleFive, bottom: doubleFive),
+                                padding: const EdgeInsets.only(
+                                    left: doubleFive, bottom: doubleFive),
                                 child: Text(
-                                  checkNull(viewModel.gruhaJyothiStatus?.mobileNo),
+                                  checkNull(
+                                      viewModel.gruhaJyothiStatus?.mobileNo),
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -199,7 +219,14 @@ class GruhaJyothiScreen extends StatelessWidget {
                               ),
                             ],
                           ),
-                          const TableRow(children: [SizedBox(height: doubleFive,),SizedBox(height: doubleFive,)]),
+                          const TableRow(children: [
+                            SizedBox(
+                              height: doubleFive,
+                            ),
+                            SizedBox(
+                              height: doubleFive,
+                            )
+                          ]),
                           TableRow(
                             children: [
                               const Text(
@@ -211,9 +238,11 @@ class GruhaJyothiScreen extends StatelessWidget {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(left: doubleFive, bottom: doubleFive),
+                                padding: const EdgeInsets.only(
+                                    left: doubleFive, bottom: doubleFive),
                                 child: Text(
-                                  checkNull(viewModel.gruhaJyothiStatus?.status),
+                                  checkNull(
+                                      viewModel.gruhaJyothiStatus?.status),
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w500,
                                     color: Colors.green,
@@ -222,7 +251,14 @@ class GruhaJyothiScreen extends StatelessWidget {
                               ),
                             ],
                           ),
-                          const TableRow(children: [SizedBox(height: doubleFive,),SizedBox(height: doubleFive,)]),
+                          const TableRow(children: [
+                            SizedBox(
+                              height: doubleFive,
+                            ),
+                            SizedBox(
+                              height: doubleFive,
+                            )
+                          ]),
                         ],
                       ),
                     )

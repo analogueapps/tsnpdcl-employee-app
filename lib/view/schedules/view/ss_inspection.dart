@@ -5,23 +5,21 @@ import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/view/schedules/viewmodel/ss_inspetion_viewmodel.dart';
 
-
 class SsInspection extends StatelessWidget {
   static const id = Routes.ssInspect;
   const SsInspection({super.key, required this.args});
   final Map<String, dynamic> args;
 
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => SsInspetionViewmodel(context:context, data:args),
+      create: (_) => SsInspetionViewmodel(context: context, data: args),
       child: Consumer<SsInspetionViewmodel>(
         builder: (context, viewModel, child) {
           return Scaffold(
             backgroundColor: Colors.grey.shade200,
             appBar: AppBar(
-              title:  Column(
+              title: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
@@ -32,19 +30,22 @@ class SsInspection extends StatelessWidget {
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                  Text(args['ssCode'], style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 10,
-                    fontWeight: FontWeight.w200,
-                  ),),
+                  Text(
+                    args['ssCode'],
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w200,
+                    ),
+                  ),
                 ],
               ),
-              backgroundColor:CommonColors.colorPrimary,
+              backgroundColor: CommonColors.colorPrimary,
               iconTheme: const IconThemeData(color: Colors.white),
             ),
             body: SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.all(11),
+                padding: const EdgeInsets.all(11),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -56,7 +57,7 @@ class SsInspection extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             ClipRRect(
-                              borderRadius: BorderRadius.only(
+                              borderRadius: const BorderRadius.only(
                                 topRight: Radius.circular(11),
                                 topLeft: Radius.circular(11),
                               ),
@@ -65,7 +66,7 @@ class SsInspection extends StatelessWidget {
                                 height: 51,
                                 child: Container(
                                   color: Colors.grey.shade300,
-                                  child: Center(
+                                  child: const Center(
                                     child: Text(
                                       '33KV SIDE',
                                       style: TextStyle(
@@ -76,8 +77,8 @@ class SsInspection extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Text(
+                            const SizedBox(height: 11),
+                            const Text(
                               '33KV AB SWITCH',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
@@ -105,22 +106,25 @@ class SsInspection extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Divider(color: Colors.grey, thickness: 1),
-                            SizedBox(height: 11),
-                            Text(
+                            const SizedBox(height: 11),
+                            const Divider(color: Colors.grey, thickness: 1),
+                            const SizedBox(height: 11),
+                            const Text(
                               '33KV BUS BAR CONNECTOR',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             SizedBox(
-                              height: viewModel.busBarConnectorItems.length * 48.0,
+                              height:
+                                  viewModel.busBarConnectorItems.length * 48.0,
                               // Approximate height per item
                               child: ListView.builder(
                                 physics: const NeverScrollableScrollPhysics(),
                                 // Disable inner scrolling
-                                itemCount: viewModel.busBarConnectorItems.length,
+                                itemCount:
+                                    viewModel.busBarConnectorItems.length,
                                 itemBuilder: (context, index) {
-                                  final item = viewModel.busBarConnectorItems[index];
+                                  final item =
+                                      viewModel.busBarConnectorItems[index];
                                   return Row(
                                     children: [
                                       Checkbox(
@@ -138,10 +142,10 @@ class SsInspection extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Divider(color: Colors.grey, thickness: 1),
-                            SizedBox(height: 11),
-                            Text(
+                            const SizedBox(height: 11),
+                            const Divider(color: Colors.grey, thickness: 1),
+                            const SizedBox(height: 11),
+                            const Text(
                               '33KV BUS COUPLER',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
@@ -171,10 +175,13 @@ class SsInspection extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Divider(color: Colors.grey, thickness: 1),
-                            SizedBox(height: 11),
-                            Text('33KV LA(S)', style: TextStyle(fontWeight: FontWeight.bold),),
+                            const SizedBox(height: 11),
+                            const Divider(color: Colors.grey, thickness: 1),
+                            const SizedBox(height: 11),
+                            const Text(
+                              '33KV LA(S)',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                             SizedBox(
                               height: viewModel.laItems.length * 48.0,
                               // Approximate height per item
@@ -201,10 +208,13 @@ class SsInspection extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Divider(color: Colors.grey, thickness: 1),
-                            SizedBox(height: 11),
-                            Text('33KV VCB', style: TextStyle(fontWeight: FontWeight.bold),),
+                            const SizedBox(height: 11),
+                            const Divider(color: Colors.grey, thickness: 1),
+                            const SizedBox(height: 11),
+                            const Text(
+                              '33KV VCB',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                             SizedBox(
                               height: viewModel.vcbItems.length * 48.0,
                               // Approximate height per item
@@ -231,10 +241,13 @@ class SsInspection extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Divider(color: Colors.grey, thickness: 1),
-                            SizedBox(height: 11),
-                            Text('33KV CT(S)', style: TextStyle(fontWeight: FontWeight.bold),),
+                            const SizedBox(height: 11),
+                            const Divider(color: Colors.grey, thickness: 1),
+                            const SizedBox(height: 11),
+                            const Text(
+                              '33KV CT(S)',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                             SizedBox(
                               height: viewModel.ctsItems.length * 48.0,
                               // Approximate height per item
@@ -261,10 +274,13 @@ class SsInspection extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Divider(color: Colors.grey, thickness: 1),
-                            SizedBox(height: 11),
-                            Text('33KV POST TYPE INSULATOR', style: TextStyle(fontWeight: FontWeight.bold),),
+                            const SizedBox(height: 11),
+                            const Divider(color: Colors.grey, thickness: 1),
+                            const SizedBox(height: 11),
+                            const Text(
+                              '33KV POST TYPE INSULATOR',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                             SizedBox(
                               height: viewModel.postTypeItems.length * 48.0,
                               // Approximate height per item
@@ -291,10 +307,13 @@ class SsInspection extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Divider(color: Colors.grey, thickness: 1),
-                            SizedBox(height: 11),
-                            Text('33KV HG FUSE SETS', style: TextStyle(fontWeight: FontWeight.bold),),
+                            const SizedBox(height: 11),
+                            const Divider(color: Colors.grey, thickness: 1),
+                            const SizedBox(height: 11),
+                            const Text(
+                              '33KV HG FUSE SETS',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                             SizedBox(
                               height: viewModel.hgFuseItems.length * 48.0,
                               // Approximate height per item
@@ -321,10 +340,13 @@ class SsInspection extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Divider(color: Colors.grey, thickness: 1),
-                            SizedBox(height: 11),
-                            Text('33KV FUSE WIRE', style: TextStyle(fontWeight: FontWeight.bold),),
+                            const SizedBox(height: 11),
+                            const Divider(color: Colors.grey, thickness: 1),
+                            const SizedBox(height: 11),
+                            const Text(
+                              '33KV FUSE WIRE',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                             SizedBox(
                               height: viewModel.fuseWireItems.length * 48.0,
                               // Approximate height per item
@@ -351,10 +373,13 @@ class SsInspection extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Divider(color: Colors.grey, thickness: 1),
-                            SizedBox(height: 11),
-                            Text('33KV PT(S)', style: TextStyle(fontWeight: FontWeight.bold),),
+                            const SizedBox(height: 11),
+                            const Divider(color: Colors.grey, thickness: 1),
+                            const SizedBox(height: 11),
+                            const Text(
+                              '33KV PT(S)',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                             SizedBox(
                               height: viewModel.ptsItems.length * 48.0,
                               // Approximate height per item
@@ -385,7 +410,7 @@ class SsInspection extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Card(
                       elevation: 5,
                       child: Padding(
@@ -394,7 +419,7 @@ class SsInspection extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             ClipRRect(
-                              borderRadius: BorderRadius.only(
+                              borderRadius: const BorderRadius.only(
                                 topRight: Radius.circular(11),
                                 topLeft: Radius.circular(11),
                               ),
@@ -403,7 +428,7 @@ class SsInspection extends StatelessWidget {
                                 height: 51,
                                 child: Container(
                                   color: Colors.grey.shade300,
-                                  child: Center(
+                                  child: const Center(
                                     child: Text(
                                       'PTR SIDE',
                                       style: TextStyle(
@@ -414,8 +439,11 @@ class SsInspection extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Text('PTR', style: TextStyle(fontWeight: FontWeight.bold),),
+                            const SizedBox(height: 11),
+                            const Text(
+                              'PTR',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                             SizedBox(
                               height: viewModel.ptrItems.length * 48.0,
                               // Approximate height per item
@@ -442,10 +470,13 @@ class SsInspection extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Divider(color: Colors.grey, thickness: 1),
-                            SizedBox(height: 11),
-                            Text('GROUP VCB(S)', style: TextStyle(fontWeight: FontWeight.bold),),
+                            const SizedBox(height: 11),
+                            const Divider(color: Colors.grey, thickness: 1),
+                            const SizedBox(height: 11),
+                            const Text(
+                              'GROUP VCB(S)',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                             SizedBox(
                               height: viewModel.groupVcbItems.length * 48.0,
                               // Approximate height per item
@@ -472,25 +503,33 @@ class SsInspection extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Divider(color: Colors.grey, thickness: 1),
-                            SizedBox(height: 11),
-                            Text('11KV GROUP AB SWITCH', style: TextStyle(fontWeight: FontWeight.bold),),
+                            const SizedBox(height: 11),
+                            const Divider(color: Colors.grey, thickness: 1),
+                            const SizedBox(height: 11),
+                            const Text(
+                              '11KV GROUP AB SWITCH',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                             Column(
                               children: [
                                 SizedBox(
-                                  height: viewModel.groupABSwitchItems.length * 48.0,
+                                  height: viewModel.groupABSwitchItems.length *
+                                      48.0,
                                   child: ListView.builder(
-                                    physics: const NeverScrollableScrollPhysics(),
-                                    itemCount: viewModel.groupABSwitchItems.length,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemCount:
+                                        viewModel.groupABSwitchItems.length,
                                     itemBuilder: (context, index) {
-                                      final item = viewModel.groupABSwitchItems[index];
+                                      final item =
+                                          viewModel.groupABSwitchItems[index];
                                       return Row(
                                         children: [
                                           Checkbox(
                                             value: item.isChecked,
                                             onChanged: (bool? value) {
-                                              viewModel.handleGroupABSwitchCheck(
+                                              viewModel
+                                                  .handleGroupABSwitchCheck(
                                                 index,
                                                 value,
                                               );
@@ -502,16 +541,19 @@ class SsInspection extends StatelessWidget {
                                     },
                                   ),
                                 ),
-                                Divider(color: Colors.grey, thickness: 1),
-                                SizedBox(height: 11),
-                                Align(
+                                const Divider(color: Colors.grey, thickness: 1),
+                                const SizedBox(height: 11),
+                                const Align(
                                   alignment: Alignment.centerLeft,
-                                  child: Text('BODY CURRENT', style: TextStyle(fontWeight: FontWeight.bold),
+                                  child: Text(
+                                    'BODY CURRENT',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                 ),
-                                SizedBox(height: 11),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                const SizedBox(height: 11),
+                                const Padding(
+                                  padding: EdgeInsets.all(8.0),
                                   child: TextField(
                                     decoration: InputDecoration(
                                       label: Text('NEUTRAL GROUP CURRENT'),
@@ -519,9 +561,9 @@ class SsInspection extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: 11),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                const SizedBox(height: 11),
+                                const Padding(
+                                  padding: EdgeInsets.all(8.0),
                                   child: TextField(
                                     decoration: InputDecoration(
                                       label: Text('BODY GROUND CURRENT'),
@@ -535,7 +577,7 @@ class SsInspection extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Card(
                       elevation: 5,
                       child: Padding(
@@ -544,7 +586,7 @@ class SsInspection extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             ClipRRect(
-                              borderRadius: BorderRadius.only(
+                              borderRadius: const BorderRadius.only(
                                 topRight: Radius.circular(11),
                                 topLeft: Radius.circular(11),
                               ),
@@ -553,7 +595,7 @@ class SsInspection extends StatelessWidget {
                                 height: 51,
                                 child: Container(
                                   color: Colors.grey.shade300,
-                                  child: Center(
+                                  child: const Center(
                                     child: Text(
                                       '11KV SIDE',
                                       style: TextStyle(
@@ -564,17 +606,22 @@ class SsInspection extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Text('11KV BUS COUPLER', style: TextStyle(fontWeight: FontWeight.bold),),
+                            const SizedBox(height: 11),
+                            const Text(
+                              '11KV BUS COUPLER',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                             SizedBox(
-                              height: viewModel.KV11busCouplerItems.length * 48.0,
+                              height:
+                                  viewModel.KV11busCouplerItems.length * 48.0,
                               // Approximate height per item
                               child: ListView.builder(
                                 physics: const NeverScrollableScrollPhysics(),
                                 // Disable inner scrolling
                                 itemCount: viewModel.KV11busCouplerItems.length,
                                 itemBuilder: (context, index) {
-                                  final item = viewModel.KV11busCouplerItems[index];
+                                  final item =
+                                      viewModel.KV11busCouplerItems[index];
                                   return Row(
                                     children: [
                                       Checkbox(
@@ -592,19 +639,25 @@ class SsInspection extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Divider(color: Colors.grey, thickness: 1),
-                            SizedBox(height: 11),
-                            Text('11KV BUS BAR CONNECTORS TO FDR VCB', style: TextStyle(fontWeight: FontWeight.bold),),
+                            const SizedBox(height: 11),
+                            const Divider(color: Colors.grey, thickness: 1),
+                            const SizedBox(height: 11),
+                            const Text(
+                              '11KV BUS BAR CONNECTORS TO FDR VCB',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                             SizedBox(
-                              height: viewModel.busBarConnectorsItems.length * 48.0,
+                              height:
+                                  viewModel.busBarConnectorsItems.length * 48.0,
                               // Approximate height per item
                               child: ListView.builder(
                                 physics: const NeverScrollableScrollPhysics(),
                                 // Disable inner scrolling
-                                itemCount: viewModel.busBarConnectorsItems.length,
+                                itemCount:
+                                    viewModel.busBarConnectorsItems.length,
                                 itemBuilder: (context, index) {
-                                  final item = viewModel.busBarConnectorsItems[index];
+                                  final item =
+                                      viewModel.busBarConnectorsItems[index];
                                   return Row(
                                     children: [
                                       Checkbox(
@@ -622,10 +675,13 @@ class SsInspection extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Divider(color: Colors.grey, thickness: 1),
-                            SizedBox(height: 11),
-                            Text('11KV CT(S)', style: TextStyle(fontWeight: FontWeight.bold),),
+                            const SizedBox(height: 11),
+                            const Divider(color: Colors.grey, thickness: 1),
+                            const SizedBox(height: 11),
+                            const Text(
+                              '11KV CT(S)',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                             SizedBox(
                               height: viewModel.KV11ctsItems.length * 48.0,
                               // Approximate height per item
@@ -652,10 +708,13 @@ class SsInspection extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Divider(color: Colors.grey, thickness: 1),
-                            SizedBox(height: 11),
-                            Text('11KV VCB', style: TextStyle(fontWeight: FontWeight.bold),),
+                            const SizedBox(height: 11),
+                            const Divider(color: Colors.grey, thickness: 1),
+                            const SizedBox(height: 11),
+                            const Text(
+                              '11KV VCB',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                             SizedBox(
                               height: viewModel.KV11vcbItems.length * 48.0,
                               // Approximate height per item
@@ -682,10 +741,13 @@ class SsInspection extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Divider(color: Colors.grey, thickness: 1),
-                            SizedBox(height: 11),
-                            Text('11KV FDR AB SWITCH',style: TextStyle(fontWeight: FontWeight.bold),),
+                            const SizedBox(height: 11),
+                            const Divider(color: Colors.grey, thickness: 1),
+                            const SizedBox(height: 11),
+                            const Text(
+                              '11KV FDR AB SWITCH',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                             SizedBox(
                               height: viewModel.fdrABSwitchItems.length * 48.0,
                               // Approximate height per item
@@ -694,7 +756,8 @@ class SsInspection extends StatelessWidget {
                                 // Disable inner scrolling
                                 itemCount: viewModel.fdrABSwitchItems.length,
                                 itemBuilder: (context, index) {
-                                  final item = viewModel.fdrABSwitchItems[index];
+                                  final item =
+                                      viewModel.fdrABSwitchItems[index];
                                   return Row(
                                     children: [
                                       Checkbox(
@@ -712,10 +775,13 @@ class SsInspection extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Divider(color: Colors.grey, thickness: 1),
-                            SizedBox(height: 11),
-                            Text('11KV PT(S)', style: TextStyle(fontWeight: FontWeight.bold),),
+                            const SizedBox(height: 11),
+                            const Divider(color: Colors.grey, thickness: 1),
+                            const SizedBox(height: 11),
+                            const Text(
+                              '11KV PT(S)',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                             SizedBox(
                               height: viewModel.KV11ptsItems.length * 48.0,
                               // Approximate height per item
@@ -746,7 +812,7 @@ class SsInspection extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Card(
                       elevation: 5,
                       child: Padding(
@@ -755,7 +821,7 @@ class SsInspection extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             ClipRRect(
-                              borderRadius: BorderRadius.only(
+                              borderRadius: const BorderRadius.only(
                                 topRight: Radius.circular(11),
                                 topLeft: Radius.circular(11),
                               ),
@@ -764,7 +830,7 @@ class SsInspection extends StatelessWidget {
                                 height: 51,
                                 child: Container(
                                   color: Colors.grey.shade300,
-                                  child: Center(
+                                  child: const Center(
                                     child: Text(
                                       'OTHERS',
                                       style: TextStyle(
@@ -775,17 +841,22 @@ class SsInspection extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Text('CAPACITOR BANK', style: TextStyle(fontWeight: FontWeight.bold),),
+                            const SizedBox(height: 11),
+                            const Text(
+                              'CAPACITOR BANK',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                             SizedBox(
-                              height: viewModel.capacitorBankItems.length * 48.0,
+                              height:
+                                  viewModel.capacitorBankItems.length * 48.0,
                               // Approximate height per item
                               child: ListView.builder(
                                 physics: const NeverScrollableScrollPhysics(),
                                 // Disable inner scrolling
                                 itemCount: viewModel.capacitorBankItems.length,
                                 itemBuilder: (context, index) {
-                                  final item = viewModel.capacitorBankItems[index];
+                                  final item =
+                                      viewModel.capacitorBankItems[index];
                                   return Row(
                                     children: [
                                       Checkbox(
@@ -803,10 +874,13 @@ class SsInspection extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Divider(color: Colors.grey, thickness: 1),
-                            SizedBox(height: 11),
-                            Text('STATION DTR', style: TextStyle(fontWeight: FontWeight.bold),),
+                            const SizedBox(height: 11),
+                            const Divider(color: Colors.grey, thickness: 1),
+                            const SizedBox(height: 11),
+                            const Text(
+                              'STATION DTR',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                             SizedBox(
                               height: viewModel.stationDtrItems.length * 48.0,
                               // Approximate height per item
@@ -833,10 +907,13 @@ class SsInspection extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Divider(color: Colors.grey, thickness: 1),
-                            SizedBox(height: 11),
-                            Text('SS EARTHING', style: TextStyle(fontWeight: FontWeight.bold),),
+                            const SizedBox(height: 11),
+                            const Divider(color: Colors.grey, thickness: 1),
+                            const SizedBox(height: 11),
+                            const Text(
+                              'SS EARTHING',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                             SizedBox(
                               height: viewModel.ssEarthingItems.length * 48.0,
                               // Approximate height per item
@@ -863,10 +940,13 @@ class SsInspection extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Divider(color: Colors.grey, thickness: 1),
-                            SizedBox(height: 11),
-                            Text('YARD LIGHTS', style: TextStyle(fontWeight: FontWeight.bold),),
+                            const SizedBox(height: 11),
+                            const Divider(color: Colors.grey, thickness: 1),
+                            const SizedBox(height: 11),
+                            const Text(
+                              'YARD LIGHTS',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                             SizedBox(
                               height: viewModel.yardLightingItems.length * 48.0,
                               // Approximate height per item
@@ -875,7 +955,8 @@ class SsInspection extends StatelessWidget {
                                 // Disable inner scrolling
                                 itemCount: viewModel.yardLightingItems.length,
                                 itemBuilder: (context, index) {
-                                  final item = viewModel.yardLightingItems[index];
+                                  final item =
+                                      viewModel.yardLightingItems[index];
                                   return Row(
                                     children: [
                                       Checkbox(
@@ -893,10 +974,13 @@ class SsInspection extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: 11),
-                            Divider(color: Colors.grey, thickness: 1),
-                            SizedBox(height: 11),
-                            Text('RED HOTS', style: TextStyle(fontWeight: FontWeight.bold),),
+                            const SizedBox(height: 11),
+                            const Divider(color: Colors.grey, thickness: 1),
+                            const SizedBox(height: 11),
+                            const Text(
+                              'RED HOTS',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                             SizedBox(
                               height: viewModel.redHotsItems.length * 48.0,
                               // Approximate height per item
@@ -927,7 +1011,6 @@ class SsInspection extends StatelessWidget {
                         ),
                       ),
                     ),
-
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
@@ -935,30 +1018,87 @@ class SsInspection extends StatelessWidget {
                           backgroundColor: Colors.blue,
                         ),
                         onPressed: () {
-                          if (!viewModel.validateSection(viewModel.abSwitchItems, "33KV AB Switch",context)) return;
-                          if (!viewModel.validateSection(viewModel.busBarConnectorItems, "33KV Bus Bar Connector",context)) return;
-                          if (!viewModel.validateSection(viewModel.busCouplerItems, "33KV Bus Coupler",context)) return;
-                          if (!viewModel.validateSection(viewModel.laItems, "33KV LA(S)",context)) return;
-                          if (!viewModel.validateSection(viewModel.vcbItems, "33KV VCB",context)) return;
-                          if (!viewModel.validateSection(viewModel.ctsItems, "33KV CT(S)",context)) return;
-                          if (!viewModel.validateSection(viewModel.postTypeItems, "33KV Post Type Insulator",context)) return;
-                          if (!viewModel.validateSection(viewModel.hgFuseItems, "33KV HG Fuse Sets",context)) return;
-                          if (!viewModel.validateSection(viewModel.fuseWireItems, "33KV Fuse Wire",context)) return;
-                          if (!viewModel.validateSection(viewModel.ptsItems, "33KV PT(S)",context)) return;
-                          if (!viewModel.validateSection(viewModel.ptrItems, "PTR",context)) return;
-                          if (!viewModel.validateSection(viewModel.groupVcbItems, "Group VCB(S)",context)) return;
-                          if (!viewModel.validateSection(viewModel.groupABSwitchItems, "11KV Group AB Switch",context)) return;
-                          if (!viewModel.validateSection(viewModel.KV11busCouplerItems, "11KV Bus Coupler",context)) return;
-                          if (!viewModel.validateSection(viewModel.busBarConnectorsItems, "11KV Bus Bar Connectors",context)) return;
-                          if (!viewModel.validateSection(viewModel.KV11ctsItems, "11KV CT(S)",context)) return;
-                          if (!viewModel.validateSection(viewModel.KV11vcbItems, "11KV VCB",context)) return;
-                          if (!viewModel.validateSection(viewModel.fdrABSwitchItems, "11KV FDR AB Switch",context)) return;
-                          if (!viewModel.validateSection(viewModel.KV11ptsItems, "11KV PT(S)",context)) return;
-                          if (!viewModel.validateSection(viewModel.capacitorBankItems, "Capacitor Bank",context)) return;
-                          if (!viewModel.validateSection(viewModel.stationDtrItems, "Station DTR",context)) return;
-                          if (!viewModel.validateSection(viewModel.ssEarthingItems, "SS Earthing",context)) return;
-                          if (!viewModel.validateSection(viewModel.yardLightingItems, "Yard Lights",context)) return;
-                          if (!viewModel.validateSection(viewModel.redHotsItems, "Red Hots",context)) return;
+                          if (!viewModel.validateSection(
+                              viewModel.abSwitchItems,
+                              "33KV AB Switch",
+                              context)) return;
+                          if (!viewModel.validateSection(
+                              viewModel.busBarConnectorItems,
+                              "33KV Bus Bar Connector",
+                              context)) return;
+                          if (!viewModel.validateSection(
+                              viewModel.busCouplerItems,
+                              "33KV Bus Coupler",
+                              context)) return;
+                          if (!viewModel.validateSection(
+                              viewModel.laItems, "33KV LA(S)", context)) return;
+                          if (!viewModel.validateSection(
+                              viewModel.vcbItems, "33KV VCB", context)) return;
+                          if (!viewModel.validateSection(
+                              viewModel.ctsItems, "33KV CT(S)", context))
+                            return;
+                          if (!viewModel.validateSection(
+                              viewModel.postTypeItems,
+                              "33KV Post Type Insulator",
+                              context)) return;
+                          if (!viewModel.validateSection(viewModel.hgFuseItems,
+                              "33KV HG Fuse Sets", context)) return;
+                          if (!viewModel.validateSection(
+                              viewModel.fuseWireItems,
+                              "33KV Fuse Wire",
+                              context)) return;
+                          if (!viewModel.validateSection(
+                              viewModel.ptsItems, "33KV PT(S)", context))
+                            return;
+                          if (!viewModel.validateSection(
+                              viewModel.ptrItems, "PTR", context)) return;
+                          if (!viewModel.validateSection(
+                              viewModel.groupVcbItems, "Group VCB(S)", context))
+                            return;
+                          if (!viewModel.validateSection(
+                              viewModel.groupABSwitchItems,
+                              "11KV Group AB Switch",
+                              context)) return;
+                          if (!viewModel.validateSection(
+                              viewModel.KV11busCouplerItems,
+                              "11KV Bus Coupler",
+                              context)) return;
+                          if (!viewModel.validateSection(
+                              viewModel.busBarConnectorsItems,
+                              "11KV Bus Bar Connectors",
+                              context)) return;
+                          if (!viewModel.validateSection(
+                              viewModel.KV11ctsItems, "11KV CT(S)", context))
+                            return;
+                          if (!viewModel.validateSection(
+                              viewModel.KV11vcbItems, "11KV VCB", context))
+                            return;
+                          if (!viewModel.validateSection(
+                              viewModel.fdrABSwitchItems,
+                              "11KV FDR AB Switch",
+                              context)) return;
+                          if (!viewModel.validateSection(
+                              viewModel.KV11ptsItems, "11KV PT(S)", context))
+                            return;
+                          if (!viewModel.validateSection(
+                              viewModel.capacitorBankItems,
+                              "Capacitor Bank",
+                              context)) return;
+                          if (!viewModel.validateSection(
+                              viewModel.stationDtrItems,
+                              "Station DTR",
+                              context)) return;
+                          if (!viewModel.validateSection(
+                              viewModel.ssEarthingItems,
+                              "SS Earthing",
+                              context)) return;
+                          if (!viewModel.validateSection(
+                              viewModel.yardLightingItems,
+                              "Yard Lights",
+                              context)) return;
+                          if (!viewModel.validateSection(
+                              viewModel.redHotsItems, "Red Hots", context))
+                            return;
 
                           // If all validations pass, proceed with submission
                           viewModel.submit(context);

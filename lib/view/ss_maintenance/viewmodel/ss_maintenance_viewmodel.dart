@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
-import 'package:tsnpdcl_employee/utils/status_constants.dart';
 import 'package:tsnpdcl_employee/view/ss_maintenance/model/ss_maintenance_grid_item.dart';
 
 class SsMaintenanceViewModel extends ChangeNotifier {
   final BuildContext context;
   final List<SsMaintenanceGridItem> _ssMaintenanceMenuItems = [];
 
-  List<SsMaintenanceGridItem> get ssMaintenanceMenuItems => _ssMaintenanceMenuItems;
+  List<SsMaintenanceGridItem> get ssMaintenanceMenuItems =>
+      _ssMaintenanceMenuItems;
 
   // Constructor to initialize the items
   SsMaintenanceViewModel({required this.context}) {
@@ -46,15 +46,11 @@ class SsMaintenanceViewModel extends ChangeNotifier {
     // Navigate to the specified route
     if (routeName == Routes.maintenanceDueScreen) {
       Navigation.instance.navigateTo(routeName);
-    }
-    else if (routeName == Routes.maintenanceFinishedScreen) {
+    } else if (routeName == Routes.maintenanceFinishedScreen) {
       Navigation.instance.navigateTo(routeName);
-    }
-    else {
+    } else {
       // Handle cases where routeName might be empty (optional fallback)
       print('No route defined for $title');
     }
   }
 }
-
-

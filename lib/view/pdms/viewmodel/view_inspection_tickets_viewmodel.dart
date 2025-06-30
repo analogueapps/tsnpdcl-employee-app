@@ -13,7 +13,6 @@ import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/view/auth/model/npdcl_user.dart';
 import 'package:tsnpdcl_employee/view/filter/model/filter_label_model_list.dart';
 import 'package:tsnpdcl_employee/view/pdms/model/inspection_ticket_entity.dart';
-import 'package:tsnpdcl_employee/view/pdms/model/pole_manufacturing_firm_entity.dart';
 
 class ViewInspectionTicketsViewmodel extends ChangeNotifier {
   // Current View Context
@@ -24,7 +23,8 @@ class ViewInspectionTicketsViewmodel extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   final List<InspectionTicketEntity> _inspectionTicketEntityList = [];
-  List<InspectionTicketEntity> get inspectionTicketEntityList => _inspectionTicketEntityList;
+  List<InspectionTicketEntity> get inspectionTicketEntityList =>
+      _inspectionTicketEntityList;
 
   // Filter list
   final List<FilterLabelModelList> filterLabelModelList = [];
@@ -36,9 +36,11 @@ class ViewInspectionTicketsViewmodel extends ChangeNotifier {
   }
 
   void _loadUser() {
-    String? prefJson = SharedPreferenceHelper.getStringValue(LoginSdkPrefs.npdclUserPrefKey);
+    String? prefJson =
+        SharedPreferenceHelper.getStringValue(LoginSdkPrefs.npdclUserPrefKey);
     final List<dynamic> jsonList = jsonDecode(prefJson);
-    final List<NpdclUser> user = jsonList.map((json) => NpdclUser.fromJson(json)).toList();
+    final List<NpdclUser> user =
+        jsonList.map((json) => NpdclUser.fromJson(json)).toList();
     npdclUser = user[0];
   }
 
@@ -47,23 +49,27 @@ class ViewInspectionTicketsViewmodel extends ChangeNotifier {
     _isLoading = isTrue;
     notifyListeners();
 
-    String? prefJson = SharedPreferenceHelper.getStringValue(LoginSdkPrefs.npdclUserPrefKey);
+    String? prefJson =
+        SharedPreferenceHelper.getStringValue(LoginSdkPrefs.npdclUserPrefKey);
     final List<dynamic> jsonList = jsonDecode(prefJson);
-    final List<NpdclUser> user = jsonList.map((json) => NpdclUser.fromJson(json)).toList();
+    final List<NpdclUser> user =
+        jsonList.map((json) => NpdclUser.fromJson(json)).toList();
     NpdclUser npdclUser = user[0];
 
     final status = npdclUser.designationCode == 111 ? "ASSIGNED" : null;
 
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
     };
 
-    if(status != null) {
+    if (status != null) {
       payload['status'] = status;
     }
 
-    var response = await ApiProvider(baseUrl: Apis.PDMS_END_POINT_BASE_URL).postApiCall(context, Apis.GET_TICKETS_OF_STATUS_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.PDMS_END_POINT_BASE_URL)
+        .postApiCall(context, Apis.GET_TICKETS_OF_STATUS_URL, payload);
     _isLoading = isFalse;
 
     try {
@@ -74,7 +80,7 @@ class ViewInspectionTicketsViewmodel extends ChangeNotifier {
         if (response.statusCode == successResponseCode) {
           //if(response.data['sessionValid'] == isTrue) {
           if (response.data['taskSuccess'] == isTrue) {
-            if(response.data['dataList'] != null) {
+            if (response.data['dataList'] != null) {
               // final List<dynamic> jsonList = jsonDecode(response.data['dataList']);
               List<dynamic> jsonList;
 
@@ -84,9 +90,12 @@ class ViewInspectionTicketsViewmodel extends ChangeNotifier {
               } else if (response.data['dataList'] is List) {
                 jsonList = response.data['dataList'];
               } else {
-                jsonList = [];  // Fallback to empty list if the type is unexpected
+                jsonList =
+                    []; // Fallback to empty list if the type is unexpected
               }
-              final List<InspectionTicketEntity> dataList = jsonList.map((json) => InspectionTicketEntity.fromJson(json)).toList();
+              final List<InspectionTicketEntity> dataList = jsonList
+                  .map((json) => InspectionTicketEntity.fromJson(json))
+                  .toList();
               _inspectionTicketEntityList.addAll(dataList);
               notifyListeners();
             }
@@ -95,11 +104,11 @@ class ViewInspectionTicketsViewmodel extends ChangeNotifier {
           //   showSessionExpiredDialog(context);
           // }
         } else {
-          showAlertDialog(context,response.data['message']);
+          showAlertDialog(context, response.data['message']);
         }
       }
     } catch (e) {
-      showErrorDialog(context,  "An error occurred. Please try again.");
+      showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
     }
 
@@ -107,7 +116,7 @@ class ViewInspectionTicketsViewmodel extends ChangeNotifier {
   }
 
   void filterFabClicked() {
-    if(filterLabelModelList.isNotEmpty) {
+    if (filterLabelModelList.isNotEmpty) {
       moveToFilterScreen();
     } else {
       getFilterData();
@@ -121,11 +130,13 @@ class ViewInspectionTicketsViewmodel extends ChangeNotifier {
     );
 
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee"
     };
 
-    var response = await ApiProvider(baseUrl: Apis.PDMS_END_POINT_BASE_URL).postApiCall(context, Apis.GET_TICKETS_FILTER_DATA_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.PDMS_END_POINT_BASE_URL)
+        .postApiCall(context, Apis.GET_TICKETS_FILTER_DATA_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -137,7 +148,7 @@ class ViewInspectionTicketsViewmodel extends ChangeNotifier {
         }
         if (response.statusCode == successResponseCode) {
           if (response.data['taskSuccess'] == isTrue) {
-            if(response.data['dataList'] != null) {
+            if (response.data['dataList'] != null) {
               // final List<dynamic> jsonList = jsonDecode(response.data['dataList']);
               List<dynamic> jsonList;
 
@@ -147,9 +158,12 @@ class ViewInspectionTicketsViewmodel extends ChangeNotifier {
               } else if (response.data['dataList'] is List) {
                 jsonList = response.data['dataList'];
               } else {
-                jsonList = [];  // Fallback to empty list if the type is unexpected
+                jsonList =
+                    []; // Fallback to empty list if the type is unexpected
               }
-              final List<FilterLabelModelList> dataList = jsonList.map((json) => FilterLabelModelList.fromJson(json)).toList();
+              final List<FilterLabelModelList> dataList = jsonList
+                  .map((json) => FilterLabelModelList.fromJson(json))
+                  .toList();
               filterLabelModelList.addAll(dataList);
               notifyListeners();
               moveToFilterScreen();
@@ -158,18 +172,19 @@ class ViewInspectionTicketsViewmodel extends ChangeNotifier {
             showAlertDialog(context, response.data['message']);
           }
         } else {
-          showAlertDialog(context,response.data['message']);
+          showAlertDialog(context, response.data['message']);
         }
       }
     } catch (e) {
-      showErrorDialog(context,  "An error occurred. Please try again.");
+      showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
     }
   }
 
   void moveToFilterScreen() {
-    Navigation.instance.navigateTo(Routes.filterScreen, args: jsonEncode(filterLabelModelList),onReturn: (result) {
-      if(result != null) {
+    Navigation.instance.navigateTo(Routes.filterScreen,
+        args: jsonEncode(filterLabelModelList), onReturn: (result) {
+      if (result != null) {
         getTicketsWithOpenStatusWithFilter(result);
       }
     });
@@ -180,18 +195,22 @@ class ViewInspectionTicketsViewmodel extends ChangeNotifier {
     _isLoading = isTrue;
     notifyListeners();
 
-    String? prefJson = SharedPreferenceHelper.getStringValue(LoginSdkPrefs.npdclUserPrefKey);
+    String? prefJson =
+        SharedPreferenceHelper.getStringValue(LoginSdkPrefs.npdclUserPrefKey);
     final List<dynamic> jsonList = jsonDecode(prefJson);
-    final List<NpdclUser> user = jsonList.map((json) => NpdclUser.fromJson(json)).toList();
+    final List<NpdclUser> user =
+        jsonList.map((json) => NpdclUser.fromJson(json)).toList();
     NpdclUser npdclUser = user[0];
 
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
       "query": jsonEncode(result),
     };
 
-    var response = await ApiProvider(baseUrl: Apis.PDMS_END_POINT_BASE_URL).postApiCall(context, Apis.GET_FILTERED_TICKETS_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.PDMS_END_POINT_BASE_URL)
+        .postApiCall(context, Apis.GET_FILTERED_TICKETS_URL, payload);
     _isLoading = isFalse;
 
     try {
@@ -202,7 +221,7 @@ class ViewInspectionTicketsViewmodel extends ChangeNotifier {
         if (response.statusCode == successResponseCode) {
           //if(response.data['sessionValid'] == isTrue) {
           if (response.data['taskSuccess'] == isTrue) {
-            if(response.data['dataList'] != null) {
+            if (response.data['dataList'] != null) {
               // final List<dynamic> jsonList = jsonDecode(response.data['dataList']);
               List<dynamic> jsonList;
 
@@ -212,9 +231,12 @@ class ViewInspectionTicketsViewmodel extends ChangeNotifier {
               } else if (response.data['dataList'] is List) {
                 jsonList = response.data['dataList'];
               } else {
-                jsonList = [];  // Fallback to empty list if the type is unexpected
+                jsonList =
+                    []; // Fallback to empty list if the type is unexpected
               }
-              final List<InspectionTicketEntity> dataList = jsonList.map((json) => InspectionTicketEntity.fromJson(json)).toList();
+              final List<InspectionTicketEntity> dataList = jsonList
+                  .map((json) => InspectionTicketEntity.fromJson(json))
+                  .toList();
               _inspectionTicketEntityList.addAll(dataList);
               notifyListeners();
             }
@@ -223,16 +245,14 @@ class ViewInspectionTicketsViewmodel extends ChangeNotifier {
           //   showSessionExpiredDialog(context);
           // }
         } else {
-          showAlertDialog(context,response.data['message']);
+          showAlertDialog(context, response.data['message']);
         }
       }
     } catch (e) {
-      showErrorDialog(context,  "An error occurred. Please try again.");
+      showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
     }
 
     notifyListeners();
   }
-
-
 }

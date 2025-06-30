@@ -15,7 +15,6 @@ import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/utils/general_assets.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/model/digital_feeder_entity.dart';
 
-
 class ViewDigitalSketchViewModel extends ChangeNotifier {
   final BuildContext context;
   final Map<String, dynamic> args;
@@ -49,8 +48,9 @@ class ViewDigitalSketchViewModel extends ChangeNotifier {
 
   bool showPoles = false;
 
-  List<DigitalFeederEntity> _digitalFeederEntityList = [];
-  List<DigitalFeederEntity> get digitalFeederEntityList => _digitalFeederEntityList;
+  final List<DigitalFeederEntity> _digitalFeederEntityList = [];
+  List<DigitalFeederEntity> get digitalFeederEntityList =>
+      _digitalFeederEntityList;
 
   // Constructor to initialize the items
   ViewDigitalSketchViewModel({required this.context, required this.args}) {
@@ -71,7 +71,8 @@ class ViewDigitalSketchViewModel extends ChangeNotifier {
     notifyListeners();
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "ssc": args['ssc'],
       "fc": args['fc'],
@@ -84,7 +85,8 @@ class ViewDigitalSketchViewModel extends ChangeNotifier {
       "data": jsonEncode(requestData),
     };
 
-    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
     _isLoading = isFalse;
     notifyListeners();
 
@@ -94,27 +96,30 @@ class ViewDigitalSketchViewModel extends ChangeNotifier {
           response.data = jsonDecode(response.data); // Parse string to JSON
         }
         if (response.statusCode == successResponseCode) {
-          if(response.data['tokenValid'] == isTrue) {
+          if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
-              if(response.data['objectJson'] != null) {
-                final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
-                final List<DigitalFeederEntity> dataList = jsonList.map((json) => DigitalFeederEntity.fromJson(json)).toList();
+              if (response.data['objectJson'] != null) {
+                final List<dynamic> jsonList =
+                    jsonDecode(response.data['objectJson']);
+                final List<DigitalFeederEntity> dataList = jsonList
+                    .map((json) => DigitalFeederEntity.fromJson(json))
+                    .toList();
                 _digitalFeederEntityList.addAll(dataList);
                 processMapData();
                 notifyListeners();
               }
             } else {
-              showAlertDialog(context,response.data['message']);
+              showAlertDialog(context, response.data['message']);
             }
           } else {
             showSessionExpiredDialog(context);
           }
         } else {
-          showAlertDialog(context,response.data['message']);
+          showAlertDialog(context, response.data['message']);
         }
       }
     } catch (e) {
-      showErrorDialog(context,  "An error occurred. Please try again.");
+      showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
     }
 
@@ -131,11 +136,16 @@ class ViewDigitalSketchViewModel extends ChangeNotifier {
         final polyline = Polyline(
           polylineId: PolylineId('polyline_$i'),
           points: [
-            LatLng(double.parse(entity.sourceLat!), double.parse(entity.sourceLon!)),
+            LatLng(double.parse(entity.sourceLat!),
+                double.parse(entity.sourceLon!)),
             LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
           ],
           width: 4,
-          color: entity.tempSeries != null ? Colors.blue : entity.newProposalId != null ? Colors.red : Colors.black,
+          color: entity.tempSeries != null
+              ? Colors.blue
+              : entity.newProposalId != null
+                  ? Colors.red
+                  : Colors.black,
         );
         polylines.add(polyline);
 
@@ -148,9 +158,9 @@ class ViewDigitalSketchViewModel extends ChangeNotifier {
           // );
           double distance = Geolocator.distanceBetween(
             double.parse(entity.sourceLat!),
-              double.parse(entity.sourceLon!),
-              double.parse(entity.lat!),
-              double.parse(entity.lon!),
+            double.parse(entity.sourceLon!),
+            double.parse(entity.lat!),
+            double.parse(entity.lon!),
           );
           final midpoint = _calculateMidpoint(
             double.parse(entity.sourceLat!),
@@ -165,8 +175,10 @@ class ViewDigitalSketchViewModel extends ChangeNotifier {
       if (showPoles) {
         final marker = Marker(
           markerId: MarkerId('marker_$i'),
-          position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
-          icon: entity.poleType != null && entity.poleType!.toLowerCase().contains('tower')
+          position:
+              LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+          icon: entity.poleType != null &&
+                  entity.poleType!.toLowerCase().contains('tower')
               ? await _bitmapDescriptorFromAsset(Assets.towerPole)
               : await _bitmapDescriptorFromAsset(Assets.horizontalPole),
         );
@@ -174,7 +186,6 @@ class ViewDigitalSketchViewModel extends ChangeNotifier {
       }
       _addSpecialMarkers(entity);
       if (i == digitalFeederEntityList.length - 1) {
-
         _cameraPosition = CameraPosition(
           target: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
           zoom: 14.0,
@@ -197,7 +208,9 @@ class ViewDigitalSketchViewModel extends ChangeNotifier {
       markers.add(Marker(
         markerId: MarkerId('sourceType_${entity.id}'),
         position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
-        icon: entity.feederVolt == "33KV" ? await _bitmapDescriptorFromAsset(Assets.ss132Kv) : await _bitmapDescriptorFromAsset(Assets.ss33Kv),
+        icon: entity.feederVolt == "33KV"
+            ? await _bitmapDescriptorFromAsset(Assets.ss132Kv)
+            : await _bitmapDescriptorFromAsset(Assets.ss33Kv),
       ));
     }
     if (entity.loadType != null) {
@@ -205,21 +218,24 @@ class ViewDigitalSketchViewModel extends ChangeNotifier {
         case 'ss':
           markers.add(Marker(
             markerId: MarkerId('loadType_ss_${entity.id}'),
-            position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+            position:
+                LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
             icon: await _bitmapDescriptorFromAsset(Assets.ss33Kv),
           ));
           break;
         case 'dtr':
           markers.add(Marker(
             markerId: MarkerId('loadType_dtr_${entity.id}'),
-            position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+            position:
+                LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
             icon: await _bitmapDescriptorFromAsset(Assets.dtr),
           ));
           break;
         case 'ht':
           markers.add(Marker(
             markerId: MarkerId('loadType_ht_${entity.id}'),
-            position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+            position:
+                LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
             icon: await _bitmapDescriptorFromAsset(Assets.htService),
           ));
           break;
@@ -251,7 +267,7 @@ class ViewDigitalSketchViewModel extends ChangeNotifier {
     );
 
     // Center the text
-    textPainter.paint(canvas, Offset(0, 0)); // Adjust if necessary
+    textPainter.paint(canvas, const Offset(0, 0)); // Adjust if necessary
 
     final picture = recorder.endRecording();
     final img = await picture.toImage(
@@ -259,7 +275,8 @@ class ViewDigitalSketchViewModel extends ChangeNotifier {
       textPainter.height.toInt(),
     );
 
-    final ByteData? byteData = await img.toByteData(format: ui.ImageByteFormat.png);
+    final ByteData? byteData =
+        await img.toByteData(format: ui.ImageByteFormat.png);
     if (byteData != null) {
       final Uint8List uint8List = byteData.buffer.asUint8List();
       final bitmapDescriptor = BitmapDescriptor.fromBytes(uint8List);
@@ -277,7 +294,8 @@ class ViewDigitalSketchViewModel extends ChangeNotifier {
     }
   }
 
-  LatLng _calculateMidpoint(double lat1, double lon1, double lat2, double lon2) {
+  LatLng _calculateMidpoint(
+      double lat1, double lon1, double lat2, double lon2) {
     double midLat = (lat1 + lat2) / 2;
     double midLon = (lon1 + lon2) / 2;
     return LatLng(midLat, midLon);
@@ -290,9 +308,13 @@ class ViewDigitalSketchViewModel extends ChangeNotifier {
 
   Future<Uint8List> _getBytesFromAsset(String path, int width) async {
     ByteData byteData = await rootBundle.load(path);
-    ui.Codec codec = await ui.instantiateImageCodec(byteData.buffer.asUint8List());
+    ui.Codec codec =
+        await ui.instantiateImageCodec(byteData.buffer.asUint8List());
     ui.FrameInfo fi = await codec.getNextFrame();
-    final Uint8List resizedData = (await fi.image.toByteData(format: ui.ImageByteFormat.png))!.buffer.asUint8List();
+    final Uint8List resizedData =
+        (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
+            .buffer
+            .asUint8List();
     return resizedData;
   }
 
@@ -315,5 +337,4 @@ class ViewDigitalSketchViewModel extends ChangeNotifier {
     notifyListeners();
     processMapData();
   }
-
 }

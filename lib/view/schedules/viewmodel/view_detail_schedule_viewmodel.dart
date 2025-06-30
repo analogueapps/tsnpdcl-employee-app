@@ -31,7 +31,8 @@ class ViewDetailScheduleViewmodel extends ChangeNotifier {
     notifyListeners();
 
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
       "status": status,
       "tre": false,
@@ -77,7 +78,6 @@ class ViewDetailScheduleViewmodel extends ChangeNotifier {
                   'ssCode': data.itemCode,
                   'ssName': data.itemName,
                   'scheduleId': data.tourId,
-
                 });
                 return;
               }
@@ -120,21 +120,32 @@ class ViewDetailScheduleViewmodel extends ChangeNotifier {
                                 _isLoading = true;
                                 notifyListeners();
 
-                                await Future.delayed(Duration(seconds: 1));
+                                await Future.delayed(
+                                    const Duration(seconds: 1));
 
-                                if (firstItem.ssMaintenanceAttributesEntitiesByMid?.isNotEmpty == true) {
-                                  String maintenanceId = firstItem.ssMaintenanceAttributesEntitiesByMid.first.maintenanceId.toString();
-                                  String encodedId = base64.encode(utf8.encode(maintenanceId));
+                                if (firstItem
+                                        .ssMaintenanceAttributesEntitiesByMid
+                                        .isNotEmpty ==
+                                    true) {
+                                  String maintenanceId = firstItem
+                                      .ssMaintenanceAttributesEntitiesByMid
+                                      .first
+                                      .maintenanceId
+                                      .toString();
+                                  String encodedId =
+                                      base64.encode(utf8.encode(maintenanceId));
 
                                   Navigation.instance.navigateTo(
                                     Routes.webViewScreen,
                                     args: {
                                       'title': "SS MAINTENANCE",
-                                      'url': "${UrlConstants.contextUrl}SSMaintenanceView?iid=$encodedId",
+                                      'url':
+                                          "${UrlConstants.contextUrl}SSMaintenanceView?iid=$encodedId",
                                     },
                                   );
                                 } else {
-                                  showErrorDialog(context, "No inspection report found.");
+                                  showErrorDialog(
+                                      context, "No inspection report found.");
                                 }
 
                                 _isLoading = false;
@@ -154,15 +165,19 @@ class ViewDetailScheduleViewmodel extends ChangeNotifier {
                   },
                 );
               } else if (firstItem.status == "FINISHED") {
-                if (firstItem.ssMaintenanceAttributesEntitiesByMid?.isNotEmpty == true) {
-                  String maintenanceId = firstItem.ssMaintenanceAttributesEntitiesByMid.first.maintenanceId.toString();
+                if (firstItem.ssMaintenanceAttributesEntitiesByMid.isNotEmpty ==
+                    true) {
+                  String maintenanceId = firstItem
+                      .ssMaintenanceAttributesEntitiesByMid.first.maintenanceId
+                      .toString();
                   String encodedId = base64.encode(utf8.encode(maintenanceId));
 
                   Navigation.instance.navigateTo(
                     Routes.webViewScreen,
                     args: {
                       'title': "SS MAINTENANCE",
-                      'url': "${UrlConstants.contextUrl}SSMaintenanceView?iid=$encodedId",
+                      'url':
+                          "${UrlConstants.contextUrl}SSMaintenanceView?iid=$encodedId",
                     },
                   );
                 } else {
@@ -194,7 +209,8 @@ class ViewDetailScheduleViewmodel extends ChangeNotifier {
         } else {
           showAlertDialog(
             context,
-            response.data['message'] ?? 'Request failed with status: ${response.statusCode}',
+            response.data['message'] ??
+                'Request failed with status: ${response.statusCode}',
           );
         }
       }
@@ -203,12 +219,11 @@ class ViewDetailScheduleViewmodel extends ChangeNotifier {
       print("Stacktrace: $stack");
       showErrorDialog(context, "An error occurred.Please try again later");
       rethrow;
-    }finally {
+    } finally {
       _isLoading = false;
       notifyListeners();
     }
   }
-
 
   // Future<void> attend(String status, int scheID) async {
   //   _isLoading = true;

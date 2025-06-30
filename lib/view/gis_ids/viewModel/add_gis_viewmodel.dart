@@ -22,10 +22,15 @@ import 'package:tsnpdcl_employee/view/gis_ids/model/gis_individual_model.dart';
 class AddGisPointViewModel extends ChangeNotifier {
   final BuildContext context;
 
-  AddGisPointViewModel( {required this.context,  required this.gisId, required this.gisReg,required this.gis,required this.t}) {
+  AddGisPointViewModel(
+      {required this.context,
+      required this.gisId,
+      required this.gisReg,
+      required this.gis,
+      required this.t}) {
     remarksFocusNode = FocusNode();
     _handleLocationIconClick();
-    if(gisId!=[]){
+    if (gisId != []) {
       init();
     }
     print("add gisID viewmodel: $gisId, $gisReg, $gis, $t ");
@@ -41,7 +46,8 @@ class AddGisPointViewModel extends ChangeNotifier {
   final TextEditingController gisRegController = TextEditingController();
   final TextEditingController gisIdController = TextEditingController();
   final TextEditingController feederController = TextEditingController();
-  final TextEditingController workDescriptionController = TextEditingController();
+  final TextEditingController workDescriptionController =
+      TextEditingController();
   final TextEditingController longitudeController = TextEditingController();
   final TextEditingController latitudeController = TextEditingController();
   final TextEditingController remarksController = TextEditingController();
@@ -53,11 +59,12 @@ class AddGisPointViewModel extends ChangeNotifier {
   String? _latitude;
   String? _longitude;
 
-  void init(){
-    gisRegController.text=gisReg;
-    gisIdController.text=gisId .toString();
+  void init() {
+    gisRegController.text = gisReg;
+    gisIdController.text = gisId.toString();
     getLoadMaintenanceForm(gis, gisId, gisReg, t);
   }
+
   // Focus node
   late FocusNode remarksFocusNode;
 
@@ -96,7 +103,6 @@ class AddGisPointViewModel extends ChangeNotifier {
     'OTHERS'
   ];
 
-
   // Dropdown change handlers
   void setVoltageLevel(String? newValue) {
     voltageLevel = newValue;
@@ -112,7 +118,6 @@ class AddGisPointViewModel extends ChangeNotifier {
   void requestRemarksFocus() {
     remarksFocusNode.requestFocus();
   }
-
 
   void openFolder() {
     print("Folder action triggered");
@@ -130,7 +135,8 @@ class AddGisPointViewModel extends ChangeNotifier {
             onWillPop: () async => false,
             child: AlertDialog(
               title: const Text("Location Service Disabled"),
-              content: const Text("Please enable location services to use this feature."),
+              content: const Text(
+                  "Please enable location services to use this feature."),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
@@ -187,16 +193,17 @@ class AddGisPointViewModel extends ChangeNotifier {
       }
     }
 
-    if (permission != LocationPermission.whileInUse && permission != LocationPermission.always) {
+    if (permission != LocationPermission.whileInUse &&
+        permission != LocationPermission.always) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Location permissions are still denied.")),
       );
       return;
     }
-
   }
 
-  Future<void> getLoadMaintenanceForm(bool gis, int gisId, String gisReg, String t) async {
+  Future<void> getLoadMaintenanceForm(
+      bool gis, int gisId, String gisReg, String t) async {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       if (context.mounted) {
         ProcessDialogHelper.showProcessDialog(
@@ -207,21 +214,24 @@ class AddGisPointViewModel extends ChangeNotifier {
     });
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "gis": gis,
-      "gisId":gisId. toInt()??0,
-      "gisReg":gisReg
+      "gisId": gisId.toInt() ?? 0,
+      "gisReg": gisReg
     };
 
     final payload = {
-      "path": t=="11KV"?"/load11KVmaintenanceForm":"/load33KVmaintenanceForm",
+      "path":
+          t == "11KV" ? "/load11KVmaintenanceForm" : "/load33KVmaintenanceForm",
       "apiVersion": "1.0",
       "method": "POST",
       "data": jsonEncode(requestData),
     };
 
-    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
     try {
       if (response != null) {
         if (response.data is String) {
@@ -229,11 +239,13 @@ class AddGisPointViewModel extends ChangeNotifier {
           if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
               if (response.data['objectJson'] != null) {
-                final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
+                final List<dynamic> jsonList =
+                    jsonDecode(response.data['objectJson']);
                 print("/load11KVmaintenanceForm data: $jsonList");
                 final firstItem = jsonList[0];
                 feederController.text = firstItem['feederCode11kv'] ?? '';
-                workDescriptionController.text=firstItem['workDescription']??"";
+                workDescriptionController.text =
+                    firstItem['workDescription'] ?? "";
                 notifyListeners();
               }
             } else {
@@ -249,8 +261,7 @@ class AddGisPointViewModel extends ChangeNotifier {
     } catch (e) {
       showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
-    }
-    finally {
+    } finally {
       if (context.mounted) {
         ProcessDialogHelper.closeDialog(context);
       }
@@ -259,11 +270,8 @@ class AddGisPointViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-
-
-
   //capture image
-  String _capturedImage="";
+  String _capturedImage = "";
   String get capturedImage => _capturedImage;
   final ImageUploader _imageUploader = ImageUploader();
 
@@ -279,7 +287,8 @@ class AddGisPointViewModel extends ChangeNotifier {
                 ? 'Camera permission permanently denied. Enable in settings.'
                 : 'Camera permission denied'),
             action: status.isPermanentlyDenied
-                ? SnackBarAction(label: 'Settings', onPressed: openAppSettings)
+                ? const SnackBarAction(
+                    label: 'Settings', onPressed: openAppSettings)
                 : null,
           ),
         );
@@ -303,12 +312,14 @@ class AddGisPointViewModel extends ChangeNotifier {
       }
 
       // Upload photo if captured
-        ProcessDialogHelper.showProcessDialog(context, message: "Uploading images...");
+      ProcessDialogHelper.showProcessDialog(context,
+          message: "Uploading images...");
       notifyListeners();
-      final imageUrl = await _imageUploader.uploadImage(context, File(photo.path));
+      final imageUrl =
+          await _imageUploader.uploadImage(context, File(photo.path));
       print("add gis $imageUrl");
       if (imageUrl != null) {
-        _capturedImage=imageUrl;
+        _capturedImage = imageUrl;
         notifyListeners();
         print("Image uploaded successfully: $imageUrl");
         await _getCurrentLocation();
@@ -326,7 +337,6 @@ class AddGisPointViewModel extends ChangeNotifier {
     }
   }
 
-
   Future<void> _getCurrentLocation() async {
     try {
       Position position = await Geolocator.getCurrentPosition(
@@ -335,11 +345,9 @@ class AddGisPointViewModel extends ChangeNotifier {
 
       _latitude = position.latitude.toString();
       _longitude = position.longitude.toString();
-      if(_capturedImage!=null) {
-        latitudeController.text = _latitude!;
-        longitudeController.text = _longitude!;
-        notifyListeners();
-      }
+      latitudeController.text = _latitude!;
+      longitudeController.text = _longitude!;
+      notifyListeners();
       notifyListeners();
     } catch (e) {
       print("Error fetching location: $e");
@@ -353,67 +361,54 @@ class AddGisPointViewModel extends ChangeNotifier {
 
       if (!validateForm()) {
         return;
-      }else{
+      } else {
         submitData();
         print("in else block");
       }
     }
   }
+
   bool validateForm() {
-    if (_capturedImage==null||_capturedImage=="") {
-      AlertUtils.showSnackBar(
-          context, "Please capture the image",
-          isTrue);
+    if (_capturedImage == "") {
+      AlertUtils.showSnackBar(context, "Please capture the image", isTrue);
       return false;
     }
-    if ((_latitude==''||_latitude==null)&&(_longitude==''||_longitude==null)) {
-      AlertUtils.showSnackBar(context, "Please wait until we capture your location", isTrue);
-      return false;
-    }else if (voltageLevel==null) {
+    if ((_latitude == '' || _latitude == null) &&
+        (_longitude == '' || _longitude == null)) {
       AlertUtils.showSnackBar(
-          context, "Please select voltage level",
-          isTrue);
+          context, "Please wait until we capture your location", isTrue);
       return false;
-    }
-    else if (lineType==null) {
-      AlertUtils.showSnackBar(
-          context, "Please select point type ",
-          isTrue);
+    } else if (voltageLevel == null) {
+      AlertUtils.showSnackBar(context, "Please select voltage level", isTrue);
       return false;
-    }
-    else if (gisRegController.text=="") {
-      AlertUtils.showSnackBar(
-          context, "Please enter GIS REG ",
-          isTrue);
+    } else if (lineType == null) {
+      AlertUtils.showSnackBar(context, "Please select point type ", isTrue);
       return false;
-    }
-    else if (gisIdController.text=="") {
-      AlertUtils.showSnackBar(
-          context, "Please enter GIS ID ",
-          isTrue);
+    } else if (gisRegController.text == "") {
+      AlertUtils.showSnackBar(context, "Please enter GIS REG ", isTrue);
       return false;
-    }else if (workDescriptionController.text=="") {
-      AlertUtils.showSnackBar(
-          context, "Please enter Work Description ",
-          isTrue);
+    } else if (gisIdController.text == "") {
+      AlertUtils.showSnackBar(context, "Please enter GIS ID ", isTrue);
       return false;
-    }else if (feederController.text=="") {
+    } else if (workDescriptionController.text == "") {
       AlertUtils.showSnackBar(
-          context, "Please enter 11KV Feeder ",
-          isTrue);
+          context, "Please enter Work Description ", isTrue);
+      return false;
+    } else if (feederController.text == "") {
+      AlertUtils.showSnackBar(context, "Please enter 11KV Feeder ", isTrue);
       return false;
     }
     return true;
   }
 
-  Map<String, dynamic>   getUpdateData() {
+  Map<String, dynamic> getUpdateData() {
     return {
       "gisId": gisId,
-      "remarksBySurveyor":remarksController.text,
-      "gisReg":gisReg,
-      "beforeLat":_latitude,
+      "remarksBySurveyor": remarksController.text,
+      "gisReg": gisReg,
+      "beforeLat": _latitude,
       "pointVoltage": voltageLevel,
-      "lineType":lineType,
+      "lineType": lineType,
       "pbeforeLon": _longitude,
       "workDescription": workDescriptionController.text,
       "feederNameCodeGis": feederController.text,
@@ -424,12 +419,11 @@ class AddGisPointViewModel extends ChangeNotifier {
   Future<void> submitData() async {
     print("${jsonEncode(getUpdateData())}:JsoonEncode data");
 
-
     final requestData = {
       "authToken":
-      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
-      "updateDataJson":jsonEncode(getUpdateData()),
+      "updateDataJson": jsonEncode(getUpdateData()),
     };
 
     final payload = {
@@ -461,7 +455,8 @@ class AddGisPointViewModel extends ChangeNotifier {
           if (responseData['tokenValid'] == true) {
             if (responseData['success'] == true) {
               if (responseData['message'] != null) {
-                AlertUtils.showSnackBar(context,responseData['message'] , isFalse);
+                AlertUtils.showSnackBar(
+                    context, responseData['message'], isFalse);
                 Navigation.instance.navigateTo(
                   Routes.gisIndividual,
                 );
@@ -474,8 +469,8 @@ class AddGisPointViewModel extends ChangeNotifier {
             showSessionExpiredDialog(context);
           }
         } else {
-          showErrorDialog(context,
-              "Request failed with status: ${response.statusCode}");
+          showErrorDialog(
+              context, "Request failed with status: ${response.statusCode}");
         }
       }
     } catch (e) {
@@ -483,8 +478,6 @@ class AddGisPointViewModel extends ChangeNotifier {
       showErrorDialog(context, "An error occurred. Please try again.");
     }
   }
-
-
 
   @override
   void dispose() {

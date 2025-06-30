@@ -26,7 +26,9 @@ class AccountScreenViewmodel with ChangeNotifier {
 
     try {
       final payload = {
-        "authToken": await SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ?? '',
+        "authToken":
+            SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ??
+                '',
         "api": Apis.API_KEY,
       };
 
@@ -63,7 +65,8 @@ class AccountScreenViewmodel with ChangeNotifier {
               _accountData = response.data;
             }
           } else {
-            showAlertDialog(context, response.data['message'] ?? "Failed to load account");
+            showAlertDialog(
+                context, response.data['message'] ?? "Failed to load account");
           }
         } else {
           _showSessionExpiredDialog(context);
@@ -78,7 +81,7 @@ class AccountScreenViewmodel with ChangeNotifier {
       notifyListeners();
     }
   }
-  
+
   void _showSessionExpiredDialog(BuildContext context) {
     if (context.mounted) {
       showDialog(

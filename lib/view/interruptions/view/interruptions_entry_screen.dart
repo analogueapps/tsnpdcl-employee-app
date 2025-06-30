@@ -156,30 +156,26 @@ class InterruptionsEntryScreen extends StatelessWidget {
                   const SizedBox(height: 20),
 
                   /// Feeders Selection
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text("SELECT 11KV FEEDERS",
-                            style: TextStyle(fontSize: 16)),
-                        const SizedBox(height: 8),
-                        ...viewModel.feeders
-                            .map((feeder) => CheckboxListTile(
-                                  controlAffinity:
-                                      ListTileControlAffinity.leading,
-                                  title: Text(feeder.optionName),
-                                  value: viewModel.selectedFeeders
-                                      .contains(feeder.optionCode),
-                                  enabled: viewModel.selectedOption != "ISF",
-                                  onChanged: (value) {
-                                    viewModel.toggleFeederSelection(
-                                        feeder.optionCode);
-                                  },
-                                  contentPadding:
-                                      const EdgeInsets.only(left: 8),
-                                ))
-                            .toList(),
-                      ],
-                    ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text("SELECT 11KV FEEDERS",
+                          style: TextStyle(fontSize: 16)),
+                      const SizedBox(height: 8),
+                      ...viewModel.feeders.map((feeder) => CheckboxListTile(
+                            controlAffinity: ListTileControlAffinity.leading,
+                            title: Text(feeder.optionName),
+                            value: viewModel.selectedFeeders
+                                .contains(feeder.optionCode),
+                            enabled: viewModel.selectedOption != "ISF",
+                            onChanged: (value) {
+                              viewModel
+                                  .toggleFeederSelection(feeder.optionCode);
+                            },
+                            contentPadding: const EdgeInsets.only(left: 8),
+                          )),
+                    ],
+                  ),
 
                   /// LV Selection
                   Visibility(

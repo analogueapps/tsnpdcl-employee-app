@@ -3,7 +3,8 @@ import 'dart:convert';
 FailureReportModel failureReportFromJson(String str) =>
     FailureReportModel.fromJson(json.decode(str));
 
-String failureReportToJson(FailureReportModel data) => json.encode(data.toJson());
+String failureReportToJson(FailureReportModel data) =>
+    json.encode(data.toJson());
 
 class FailureReportModel {
   FailureReportModel({
@@ -36,7 +37,7 @@ class FailureReportModel {
       );
     } catch (e) {
       print("Error parsing FailureReport: $e");
-      throw FormatException("Invalid failure report data format");
+      throw const FormatException("Invalid failure report data format");
     }
   }
 

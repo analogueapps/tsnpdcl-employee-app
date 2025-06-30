@@ -10,14 +10,12 @@ import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/alerts.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
-import 'package:tsnpdcl_employee/utils/designation_helper.dart';
 import 'package:tsnpdcl_employee/utils/general_assets.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/utils/url_constants.dart';
 import 'package:tsnpdcl_employee/view/auth/model/npdcl_user.dart';
-import 'package:tsnpdcl_employee/view/dashboard/model/drawer_section.dart';
 import 'package:tsnpdcl_employee/view/dashboard/model/global_list_dialog_item.dart';
 import 'package:tsnpdcl_employee/view/dashboard/model/universal_dashboard_item.dart';
 import 'package:tsnpdcl_employee/widget/month_year_selector.dart';
@@ -46,9 +44,11 @@ class AdeopNaviViewmodel extends ChangeNotifier {
   }
 
   void _initializeData() {
-    String? prefJson = SharedPreferenceHelper.getStringValue(LoginSdkPrefs.npdclUserPrefKey);
+    String? prefJson =
+        SharedPreferenceHelper.getStringValue(LoginSdkPrefs.npdclUserPrefKey);
     final List<dynamic> jsonList = jsonDecode(prefJson);
-    final List<NpdclUser> user = jsonList.map((json) => NpdclUser.fromJson(json)).toList();
+    final List<NpdclUser> user =
+        jsonList.map((json) => NpdclUser.fromJson(json)).toList();
     _npdclUser = user[0];
     notifyListeners();
   }
@@ -156,7 +156,8 @@ class AdeopNaviViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> menuItemClicked(BuildContext context, String title, String routeName) async {
+  Future<void> menuItemClicked(
+      BuildContext context, String title, String routeName) async {
     if (title == GlobalConstants.logoutTitle) {
       showLogoutDialog(context);
     }
@@ -177,7 +178,7 @@ class AdeopNaviViewmodel extends ChangeNotifier {
     //     Navigation.instance.navigateTo(routeName, args: argument);
     //   }
     // }
-    else if(title == GlobalConstants.usefulLinksTitle) {
+    else if (title == GlobalConstants.usefulLinksTitle) {
       List<GlobalListDialogItem> globalListDialogItem = [];
       globalListDialogItem.addAll([
         GlobalListDialogItem(
@@ -218,14 +219,15 @@ class AdeopNaviViewmodel extends ChangeNotifier {
                 'title': item.title,
                 'url': urlMapping[item.title],
               };
-              Navigation.instance.navigateTo(Routes.webViewScreen, args: argument);
+              Navigation.instance
+                  .navigateTo(Routes.webViewScreen, args: argument);
             } else {
               AlertUtils.showSnackBar(context, anErrorOccurred, isTrue);
             }
           },
         ),
       );
-    } else if(title == GlobalConstants.consumerRelatedTitle) {
+    } else if (title == GlobalConstants.consumerRelatedTitle) {
       List<GlobalListDialogItem> globalListDialogItem = [];
       globalListDialogItem.addAll([
         GlobalListDialogItem(
@@ -259,14 +261,15 @@ class AdeopNaviViewmodel extends ChangeNotifier {
                 'title': GlobalConstants.uscNoTitle,
                 'url': UrlConstants.onlineLTConsCheckUrl,
               };
-              Navigation.instance.navigateTo(Routes.webViewScreen, args: argument);
+              Navigation.instance
+                  .navigateTo(Routes.webViewScreen, args: argument);
             } else {
               Navigation.instance.navigateTo(item.routeName);
             }
           },
         ),
       );
-    } else if(title == GlobalConstants.lineRelatedTitle) {
+    } else if (title == GlobalConstants.lineRelatedTitle) {
       List<GlobalListDialogItem> globalListDialogItem = [];
       globalListDialogItem.addAll([
         GlobalListDialogItem(
@@ -290,7 +293,7 @@ class AdeopNaviViewmodel extends ChangeNotifier {
           title: title,
           items: globalListDialogItem,
           onItemSelected: (item) {
-            if(item.title == GlobalConstants.poleTrackerTitle) {
+            if (item.title == GlobalConstants.poleTrackerTitle) {
               List<GlobalListDialogItem> globalListDialogItem = [];
               globalListDialogItem.addAll([
                 GlobalListDialogItem(
@@ -322,7 +325,7 @@ class AdeopNaviViewmodel extends ChangeNotifier {
           },
         ),
       );
-    } else if(title == GlobalConstants.billingRelatedTitle) {
+    } else if (title == GlobalConstants.billingRelatedTitle) {
       List<GlobalListDialogItem> globalListDialogItem = [];
       globalListDialogItem.addAll([
         // GlobalListDialogItem(
@@ -381,24 +384,22 @@ class AdeopNaviViewmodel extends ChangeNotifier {
           title: title,
           items: globalListDialogItem,
           onItemSelected: (item) {
-            if(item.title == GlobalConstants.dListReportTitle) {
+            if (item.title == GlobalConstants.dListReportTitle) {
               var argument = {
                 'title': GlobalConstants.dListReportTitle,
                 'url': UrlConstants.dListReportUrl,
               };
-              Navigation.instance.navigateTo(Routes.webViewScreen, args: argument);
-            }else if(item.title == GlobalConstants.verifyWrongCatConfirmed) {
+              Navigation.instance
+                  .navigateTo(Routes.webViewScreen, args: argument);
+            } else if (item.title == GlobalConstants.verifyWrongCatConfirmed) {
               List<GlobalListDialogItem> globalListDialogItem = [];
               globalListDialogItem.addAll([
                 GlobalListDialogItem(
                     title: "View Area Wise Abstract",
-                    routeName: Routes.areaWiseAbstract
-                ),
+                    routeName: Routes.areaWiseAbstract),
                 GlobalListDialogItem(
                     title: "Inspect services",
-                    routeName: Routes.monthYearSelector
-                ),
-
+                    routeName: Routes.monthYearSelector),
               ]);
               showCupertinoDialog(
                 context: context,
@@ -419,20 +420,20 @@ class AdeopNaviViewmodel extends ChangeNotifier {
                       );
 
                       if (result != null && result is Map) {
-                        setSelectedMonthYear(result['month']as String, result['year'] as int, context);
+                        setSelectedMonthYear(result['month'] as String,
+                            result['year'] as int, context);
                       }
                     }
                   },
                 ),
               );
-
             } else {
               Navigation.instance.navigateTo(item.routeName);
             }
           },
         ),
       );
-    } else if(title == GlobalConstants.toolsTitle) {
+    } else if (title == GlobalConstants.toolsTitle) {
       List<GlobalListDialogItem> globalListDialogItem = [];
       globalListDialogItem.addAll([
         GlobalListDialogItem(
@@ -467,7 +468,7 @@ class AdeopNaviViewmodel extends ChangeNotifier {
         ),
         GlobalListDialogItem(
           title: GlobalConstants.ctPtFailureTitle,
-          routeName:  Routes.ctptMenuScreen,
+          routeName: Routes.ctptMenuScreen,
           imageAsset: Assets.ctPtFailure,
         ),
         GlobalListDialogItem(
@@ -486,7 +487,7 @@ class AdeopNaviViewmodel extends ChangeNotifier {
           title: title,
           items: globalListDialogItem,
           onItemSelected: (item) {
-            if(item.title == GlobalConstants.gisIdsTitle) {
+            if (item.title == GlobalConstants.gisIdsTitle) {
               List<GlobalListDialogItem> globalListDialogItem = [];
               globalListDialogItem.addAll([
                 GlobalListDialogItem(
@@ -499,7 +500,7 @@ class AdeopNaviViewmodel extends ChangeNotifier {
                 ),
                 GlobalListDialogItem(
                   title: "View Offline Forms(Pending)",
-                  routeName:Routes.viewPendingOfflineForms,
+                  routeName: Routes.viewPendingOfflineForms,
                 ),
               ]);
               showCupertinoDialog(
@@ -518,7 +519,7 @@ class AdeopNaviViewmodel extends ChangeNotifier {
           },
         ),
       );
-    } else if(title == GlobalConstants.dtrTitle) {
+    } else if (title == GlobalConstants.dtrTitle) {
       List<GlobalListDialogItem> globalListDialogItem = [];
       globalListDialogItem.addAll([
         GlobalListDialogItem(
@@ -558,13 +559,12 @@ class AdeopNaviViewmodel extends ChangeNotifier {
           title: title,
           items: globalListDialogItem,
           onItemSelected: (item) {
-            if(item.title == GlobalConstants.dtrMasterTitle) {
+            if (item.title == GlobalConstants.dtrMasterTitle) {
               List<GlobalListDialogItem> globalListDialogItem = [];
               globalListDialogItem.addAll([
                 GlobalListDialogItem(
                     title: "Create DTR Master(Online)",
-                    routeName: Routes.createOnlineDTR
-                ),
+                    routeName: Routes.createOnlineDTR),
                 GlobalListDialogItem(
                   title: "View Mapped DTR's",
                   routeName: Routes.configureFilter,
@@ -602,7 +602,7 @@ class AdeopNaviViewmodel extends ChangeNotifier {
           },
         ),
       );
-    } else if(title == GlobalConstants.subStationTitle) {
+    } else if (title == GlobalConstants.subStationTitle) {
       List<GlobalListDialogItem> globalListDialogItem = [];
       globalListDialogItem.addAll([
         // GlobalListDialogItem(
@@ -631,7 +631,7 @@ class AdeopNaviViewmodel extends ChangeNotifier {
           title: title,
           items: globalListDialogItem,
           onItemSelected: (item) {
-            if(item.title == GlobalConstants.interruptionsTitle) {
+            if (item.title == GlobalConstants.interruptionsTitle) {
               List<GlobalListDialogItem> globalListDialogItem = [];
               globalListDialogItem.addAll([
                 // GlobalListDialogItem(
@@ -663,9 +663,7 @@ class AdeopNaviViewmodel extends ChangeNotifier {
                 //     routeName: Routes.viewSaidiSaifiScreen
                 // ),
                 GlobalListDialogItem(
-                    title: "View Report",
-                    routeName: Routes.viewReportScreen
-                ),
+                    title: "View Report", routeName: Routes.viewReportScreen),
               ]);
               showCupertinoDialog(
                 context: context,
@@ -683,21 +681,15 @@ class AdeopNaviViewmodel extends ChangeNotifier {
           },
         ),
       );
-    } else if(title == GlobalConstants.reports) {
+    } else if (title == GlobalConstants.reports) {
       List<GlobalListDialogItem> globalListDialogItem = [];
       globalListDialogItem.addAll([
         GlobalListDialogItem(
-            title: "CT PT Failure Reports",
-            routeName: Routes.reportsScreen
-        ),
+            title: "CT PT Failure Reports", routeName: Routes.reportsScreen),
         GlobalListDialogItem(
-            title: "Middle Poles Reports",
-            routeName: Routes.reportsScreen
-        ),
+            title: "Middle Poles Reports", routeName: Routes.reportsScreen),
         GlobalListDialogItem(
-            title: "Maintenance Reports",
-            routeName: Routes.reportsScreen
-        ),
+            title: "Maintenance Reports", routeName: Routes.reportsScreen),
       ]);
       showCupertinoDialog(
         context: context,
@@ -706,12 +698,15 @@ class AdeopNaviViewmodel extends ChangeNotifier {
           items: globalListDialogItem,
           onItemSelected: (item) {
             //Navigation.instance.navigateTo(item.routeName);
-            if(item.title == "CT PT Failure Reports") {
-              Navigation.instance.navigateTo(item.routeName, args: Apis.GET_CTPT_BAR_GRAPH_DATA_URL);
-            } else if(item.title == "Middle Poles Reports") {
-              Navigation.instance.navigateTo(item.routeName, args: Apis.GET_MIDDLE_POLES_BAR_GRAPH_DATA_URL);
-            } else if(item.title == "Maintenance Reports") {
-              Navigation.instance.navigateTo(item.routeName, args: Apis.GET_MAINTENANCE_BAR_GRAPH_DATA_URL);
+            if (item.title == "CT PT Failure Reports") {
+              Navigation.instance.navigateTo(item.routeName,
+                  args: Apis.GET_CTPT_BAR_GRAPH_DATA_URL);
+            } else if (item.title == "Middle Poles Reports") {
+              Navigation.instance.navigateTo(item.routeName,
+                  args: Apis.GET_MIDDLE_POLES_BAR_GRAPH_DATA_URL);
+            } else if (item.title == "Maintenance Reports") {
+              Navigation.instance.navigateTo(item.routeName,
+                  args: Apis.GET_MAINTENANCE_BAR_GRAPH_DATA_URL);
             } else {
               Navigation.instance.navigateTo(item.routeName);
             }
@@ -722,20 +717,18 @@ class AdeopNaviViewmodel extends ChangeNotifier {
       Navigation.instance.navigateTo(routeName);
     }
   }
-  Map<String, dynamic>?  selectedMonthYear;
+
+  Map<String, dynamic>? selectedMonthYear;
   void setSelectedMonthYear(String month, int year, BuildContext context) {
     selectedMonthYear = {
       'month': month,
       'year': year,
     };
-    if(selectedMonthYear!=null){
-      Navigation.instance.navigateTo(
-          Routes.inspectServices, args: selectedMonthYear
-      );
+    if (selectedMonthYear != null) {
+      Navigation.instance
+          .navigateTo(Routes.inspectServices, args: selectedMonthYear);
     }
     print("selectedMonthYear universal: $selectedMonthYear");
     notifyListeners();
   }
-
 }
-

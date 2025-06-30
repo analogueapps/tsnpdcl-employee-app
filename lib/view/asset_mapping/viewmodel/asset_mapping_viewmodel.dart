@@ -12,7 +12,6 @@ import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/view/asset_mapping/model/asset_location.dart';
 
 class AssetMappingViewModel extends ChangeNotifier {
-
   //Controller
   final TextEditingController _assetCodeController = TextEditingController();
 
@@ -21,7 +20,6 @@ class AssetMappingViewModel extends ChangeNotifier {
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
-
 
   final List<String> assetTypeList = ['HT METER SERVICE', 'LT METER SERVICE'];
   String? assetSelectValue;
@@ -49,7 +47,7 @@ class AssetMappingViewModel extends ChangeNotifier {
     }
 
     _positionStream = Geolocator.getPositionStream(
-      locationSettings: LocationSettings(accuracy: LocationAccuracy.high),
+      locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
     ).listen((Position position) {
       latitude = position.latitude;
       longitude = position.longitude;
@@ -65,14 +63,14 @@ class AssetMappingViewModel extends ChangeNotifier {
       showAlertDialog(context, "Please select asset type");
       return false;
     } else if (assetCodeController.text.isEmpty) {
-      showAlertDialog(context, "Please enter ${assetSelectValue} code");
+      showAlertDialog(context, "Please enter $assetSelectValue code");
       return false;
     } else if (totalAccuracy == null) {
       showAlertDialog(context, "Please wait until your location is captured");
       return false;
-    } else if (totalAccuracy!>= MINIMUM_GPS_ACCURACY_REQUIRED) {
+    } else if (totalAccuracy! >= MINIMUM_GPS_ACCURACY_REQUIRED) {
       showAlertDialog(context,
-          "Please wait until your location accuracy comes below ${MINIMUM_GPS_ACCURACY_REQUIRED} mtrs");
+          "Please wait until your location accuracy comes below $MINIMUM_GPS_ACCURACY_REQUIRED mtrs");
       return false;
     }
     return true;
@@ -89,8 +87,8 @@ class AssetMappingViewModel extends ChangeNotifier {
     print('Entered');
     print('Entering into request data');
     final requestData = {
-      "token": SharedPreferenceHelper.getStringValue(
-          LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
       "assetType": assetSelectValue,
       "assetCode": assetCodeController.text,
@@ -142,7 +140,6 @@ class AssetMappingViewModel extends ChangeNotifier {
       rethrow;
     }
   }
-
 }
 
 

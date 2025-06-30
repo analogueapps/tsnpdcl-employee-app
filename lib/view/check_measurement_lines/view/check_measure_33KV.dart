@@ -45,7 +45,9 @@ class CheckMeasure33kv extends StatelessWidget {
                   children: [
                     Expanded(
                       child: GoogleMap(
-                        initialCameraPosition: viewModel.cameraPosition ?? const CameraPosition(target: LatLng(0, 0), zoom: 10),
+                        initialCameraPosition: viewModel.cameraPosition ??
+                            const CameraPosition(
+                                target: LatLng(0, 0), zoom: 10),
                         polylines: viewModel.polylines,
                         markers: viewModel.markers,
                         myLocationEnabled: false,
@@ -103,22 +105,25 @@ class CheckMeasure33kv extends StatelessWidget {
                                         // labelText: 'Select an option',
                                         border: OutlineInputBorder(),
                                       ),
-                                      child: viewModel.poleNumber.text==""?Text(
-                                        viewModel.selectedPoleFeeder != null
-                                            ? (viewModel.selectedPoleFeeder!
-                                            .tempSeries !=
-                                            null &&
-                                            viewModel
-                                                .selectedPoleFeeder!
-                                                .tempSeries!
-                                                .isNotEmpty
-                                            ? '${viewModel.selectedPoleFeeder!.tempSeries}-${viewModel.selectedPoleFeeder!.poleNum}'
-                                            : viewModel
-                                            .selectedPoleFeeder!
-                                            .poleNum ??
-                                            '')
-                                            : 'Tap to select',
-                                      ):Text(viewModel.poleNumber.text),
+                                      child: viewModel.poleNumber.text == ""
+                                          ? Text(
+                                              viewModel.selectedPoleFeeder !=
+                                                      null
+                                                  ? (viewModel.selectedPoleFeeder!
+                                                                  .tempSeries !=
+                                                              null &&
+                                                          viewModel
+                                                              .selectedPoleFeeder!
+                                                              .tempSeries!
+                                                              .isNotEmpty
+                                                      ? '${viewModel.selectedPoleFeeder!.tempSeries}-${viewModel.selectedPoleFeeder!.poleNum}'
+                                                      : viewModel
+                                                              .selectedPoleFeeder!
+                                                              .poleNum ??
+                                                          '')
+                                                  : 'Tap to select',
+                                            )
+                                          : Text(viewModel.poleNumber.text),
                                     ),
                                   ),
                                 ]),
@@ -729,8 +734,8 @@ class CheckMeasure33kv extends StatelessWidget {
                                     Container(
                                       width: double.infinity,
                                       // or fixed width
-                                      padding:
-                                         const EdgeInsets.symmetric(horizontal: 12),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 12),
                                       child: DropdownButton<SpinnerList>(
                                         isExpanded: true,
                                         hint: const Text("Select a substation"),
@@ -740,8 +745,7 @@ class CheckMeasure33kv extends StatelessWidget {
                                           return DropdownMenuItem<SpinnerList>(
                                             value: substation,
                                             child: Text(
-                                                substation?.optionName ??
-                                                    ''),
+                                                substation?.optionName ?? ''),
                                           );
                                         }).toList(),
                                         onChanged: (SpinnerList? newValue) {
@@ -760,17 +764,17 @@ class CheckMeasure33kv extends StatelessWidget {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 11,
                                     ),
                                     const Divider(
                                       color: Colors.grey,
                                       thickness: 0.2,
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 11,
                                     ),
-                                    Text('Choose Service'),
+                                    const Text('Choose Service'),
                                     DropdownButton<String>(
                                       isExpanded: true,
                                       hint: const Text("Select an option"),
@@ -779,7 +783,7 @@ class CheckMeasure33kv extends StatelessWidget {
                                           viewModel.htServiceNames.map((item) {
                                         return DropdownMenuItem<String>(
                                           value: item,
-                                          child: Text('${item}'),
+                                          child: Text('$item'),
                                         );
                                       }).toList(),
                                       onChanged: (htServiceName) {
@@ -790,7 +794,7 @@ class CheckMeasure33kv extends StatelessWidget {
                                   ],
                                 )),
 
-                            SizedBox(
+                            const SizedBox(
                               height: 11,
                             ),
                             const Divider(
@@ -892,11 +896,11 @@ class CheckMeasure33kv extends StatelessWidget {
                 onChanged: (_) => onCheckboxToggle(),
               ),
             ),
-            SizedBox(width: 10),
+            const SizedBox(width: 10),
             Expanded(
               child: DropdownButtonFormField<String>(
                 value: dropValue,
-                hint: Text("Select"),
+                hint: const Text("Select"),
                 isExpanded: true,
                 items: viewModel.poleQty.map((int value) {
                   final stringValue = value.toString();

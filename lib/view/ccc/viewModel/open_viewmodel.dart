@@ -23,7 +23,7 @@ class OpenViewmodel extends ChangeNotifier {
     }
     selectedDay = "";
     selectedHours = "";
-    registeredNumber.text=data.registeredMobileNumber??"";
+    registeredNumber.text = data.registeredMobileNumber ?? "";
   }
 
   final BuildContext context;
@@ -33,8 +33,8 @@ class OpenViewmodel extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
-  final TextEditingController remarks= TextEditingController();
-  final TextEditingController registeredNumber= TextEditingController();
+  final TextEditingController remarks = TextEditingController();
+  final TextEditingController registeredNumber = TextEditingController();
 
   ///choose option
   String? selectedOption = "";
@@ -45,7 +45,7 @@ class OpenViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-  String? selectedDay ;
+  String? selectedDay;
   String? selectedHours;
   List<String> days = [];
   List<String> hours = [];
@@ -66,24 +66,22 @@ class OpenViewmodel extends ChangeNotifier {
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
-        return StatefulBuilder(
-          builder: (context, setState)
-        {
+        return StatefulBuilder(builder: (context, setState) {
           return AlertDialog(
               title: Text(
-                "#${data.ticketNumber}", style: const TextStyle(fontSize: 18),),
+                "#${data.ticketNumber}",
+                style: const TextStyle(fontSize: 18),
+              ),
               content: SingleChildScrollView(
                 child: SizedBox(
-                  width: MediaQuery
-                      .of(context)
-                      .size
-                      .width * 0.9, // or a fixed width like 300
+                  width: MediaQuery.of(context).size.width *
+                      0.9, // or a fixed width like 300
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                          "SELECT OPTION", style: TextStyle(color: Colors.red)),
+                      const Text("SELECT OPTION",
+                          style: TextStyle(color: Colors.red)),
                       Row(
                         children: [
                           Radio<String>(
@@ -92,8 +90,7 @@ class OpenViewmodel extends ChangeNotifier {
                               onChanged: (value) {
                                 toggleOption(value!);
                                 setState(() {});
-                              }
-                          ),
+                              }),
                           const SizedBox(width: 4),
                           const Text("InProgress"),
                         ],
@@ -101,92 +98,100 @@ class OpenViewmodel extends ChangeNotifier {
                       Row(
                         children: [
                           Radio<String>(
-                            value: "Resolved",
-                            groupValue: selectedOption,
-                            onChanged: (value) {toggleOption(value!);
-                            setState(() {});
-                            }
-                          ),
+                              value: "Resolved",
+                              groupValue: selectedOption,
+                              onChanged: (value) {
+                                toggleOption(value!);
+                                setState(() {});
+                              }),
                           const SizedBox(width: 4),
                           const Text("Resolved"),
                         ],
                       ),
                       const SizedBox(height: 10),
                       Visibility(
-                        visible: selectedOption=="InProgress",
-                        child:Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                      const Text("PROVIDE TIME FRAME",
-                          style: TextStyle(color: Colors.red)),
-                      const SizedBox(height: 10),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text("NO OF DAYS",
-                                    style: TextStyle(color: Colors.lightBlue)),
-                                DropdownButton<String>(
-                                  isExpanded: true,
-                                  hint: const Text("Select Days"),
-                                  value: selectedDay?.isNotEmpty == true
-                                      ? selectedDay
-                                      : null,
-                                  items: days.map((item) {
-                                    return DropdownMenuItem<String>(
-                                      value: item,
-                                      child: Text(item),
-                                    );
-                                  }).toList(),
-                                  onChanged: days.isNotEmpty ? (value) {
-                                    onDayChange(value!);
-                                    setState(() {});
-                                  }: null,
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text("NO OF HOURS",
-                                    style: TextStyle(color: Colors.lightBlue)),
-                                DropdownButton<String>(
-                                  isExpanded: true,
-                                  hint: const Text("Select Hours"),
-                                  value: selectedHours?.isNotEmpty == true
-                                      ? selectedHours
-                                      : null,
-                                  items: hours.map((item) {
-                                    return DropdownMenuItem<String>(
-                                      value: item,
-                                      child: Text(item),
-                                    );
-                                  }).toList(),
-                                  onChanged: hours.isNotEmpty ? (value) {
-                                    onHoursChange(value!);
-                                    setState(() {});
-                                  }: null,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      ]
-                      ),
+                        visible: selectedOption == "InProgress",
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text("PROVIDE TIME FRAME",
+                                  style: TextStyle(color: Colors.red)),
+                              const SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text("NO OF DAYS",
+                                            style: TextStyle(
+                                                color: Colors.lightBlue)),
+                                        DropdownButton<String>(
+                                          isExpanded: true,
+                                          hint: const Text("Select Days"),
+                                          value: selectedDay?.isNotEmpty == true
+                                              ? selectedDay
+                                              : null,
+                                          items: days.map((item) {
+                                            return DropdownMenuItem<String>(
+                                              value: item,
+                                              child: Text(item),
+                                            );
+                                          }).toList(),
+                                          onChanged: days.isNotEmpty
+                                              ? (value) {
+                                                  onDayChange(value!);
+                                                  setState(() {});
+                                                }
+                                              : null,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text("NO OF HOURS",
+                                            style: TextStyle(
+                                                color: Colors.lightBlue)),
+                                        DropdownButton<String>(
+                                          isExpanded: true,
+                                          hint: const Text("Select Hours"),
+                                          value:
+                                              selectedHours?.isNotEmpty == true
+                                                  ? selectedHours
+                                                  : null,
+                                          items: hours.map((item) {
+                                            return DropdownMenuItem<String>(
+                                              value: item,
+                                              child: Text(item),
+                                            );
+                                          }).toList(),
+                                          onChanged: hours.isNotEmpty
+                                              ? (value) {
+                                                  onHoursChange(value!);
+                                                  setState(() {});
+                                                }
+                                              : null,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ]),
                       ),
                       const SizedBox(height: 20),
-                      const Text(
-                          "ENTER REMARKS", style: TextStyle(color: Colors.red)),
+                      const Text("ENTER REMARKS",
+                          style: TextStyle(color: Colors.red)),
                       TextFormField(
                         maxLines: null,
                         minLines: 5,
-                        controller:remarks ,
+                        controller: remarks,
                         keyboardType: TextInputType.multiline,
                         decoration: const InputDecoration(
                           // labelText: "Enter remarks here",
@@ -195,7 +200,6 @@ class OpenViewmodel extends ChangeNotifier {
                           alignLabelWithHint: true,
                         ),
                       ),
-
                     ],
                   ),
                 ),
@@ -207,13 +211,19 @@ class OpenViewmodel extends ChangeNotifier {
                     resetDialogValues();
                   },
                   style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.grey)),
+                      backgroundColor: WidgetStateProperty.all(Colors.grey)),
                   child: const Text(
-                    "CANCEL", style: TextStyle(color: Colors.white),),
+                    "CANCEL",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
                 TextButton(
-                  onPressed: () async{
-                    String optionStatus= selectedOption=="InProgress"?"3":selectedOption=="Resolved"?"6":"-1";
+                  onPressed: () async {
+                    String optionStatus = selectedOption == "InProgress"
+                        ? "3"
+                        : selectedOption == "Resolved"
+                            ? "6"
+                            : "-1";
                     Navigator.pop(context);
                     final success = await updateTicket(
                       optionStatus,
@@ -222,26 +232,26 @@ class OpenViewmodel extends ChangeNotifier {
                       selectedDay!,
                       remarks.text,
                     );
-                      print("success: $success");
+                    print("success: $success");
                   },
                   style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.green)),
-
+                      backgroundColor: WidgetStateProperty.all(Colors.green)),
                   child: const Text(
-                    "UPDATE", style: TextStyle(color: Colors.white),),
+                    "UPDATE",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
-              ]
-          );
-        }
-        );
+              ]);
+        });
       },
     );
   }
 
-  Future<bool> updateTicket(String status, String tickId, String hours, String days,String remarks)async{
+  Future<bool> updateTicket(String status, String tickId, String hours,
+      String days, String remarks) async {
     if (!validateForm1()) {
       return false;
-    }else{
+    } else {
       print("in else block");
       await updateOpen(status, tickId, hours, days, remarks);
       return true;
@@ -252,33 +262,36 @@ class OpenViewmodel extends ChangeNotifier {
     if (selectedOption == null || selectedOption!.isEmpty) {
       AlertUtils.showSnackBar(context, "Please select a option", isTrue);
       return false;
-    }else if ((selectedOption=="InProgress")&&(selectedDay==""|| selectedDay==null)) {
+    } else if ((selectedOption == "InProgress") &&
+        (selectedDay == "" || selectedDay == null)) {
       AlertUtils.showSnackBar(context, "Please select no of days", isTrue);
       return false;
-    } else if ((selectedOption=="InProgress")&&(selectedHours == null || selectedHours=="")) {
+    } else if ((selectedOption == "InProgress") &&
+        (selectedHours == null || selectedHours == "")) {
       AlertUtils.showSnackBar(context, "Please select no of hours", isTrue);
       return false;
-    }
-    else if (remarks.text .isEmpty || remarks.text=="") {
+    } else if (remarks.text.isEmpty || remarks.text == "") {
       AlertUtils.showSnackBar(context, "Please enter remarks", isTrue);
       return false;
-    }    return true;
+    }
+    return true;
   }
 
-
-  Future<bool> updateOpen(String status, String tickId, String hours, String days,String remarks) async {
+  Future<bool> updateOpen(String status, String tickId, String hours,
+      String days, String remarks) async {
     _isLoading = isTrue;
     notifyListeners();
 
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
-      "deviceId":await getDeviceId(),
-      "ticketId":tickId,
-      "status":status,
-      "maxDays":days,
-      "maxHours":hours,
-      "remarks":remarks
+      "deviceId": await getDeviceId(),
+      "ticketId": tickId,
+      "status": status,
+      "maxDays": days,
+      "maxHours": hours,
+      "remarks": remarks
     };
     var response = await ApiProvider(baseUrl: Apis.CCC_END_POINT_BASE_URL)
         .postApiCall(context, Apis.UPDATE_TICKET, payload);
@@ -291,14 +304,14 @@ class OpenViewmodel extends ChangeNotifier {
         if (response.statusCode == successResponseCode) {
           if (response.data['sessionValid'] == isTrue) {
             if (response.data['taskSuccess'] == isTrue) {
-              if(response.data['message']!=null) {
-                await showSuccessDialog(context, response.data['message'], (){
+              if (response.data['message'] != null) {
+                await showSuccessDialog(context, response.data['message'], () {
                   Navigator.pop(context);
                 });
                 resetDialogValues();
                 return true;
               }
-            }else{
+            } else {
               showErrorDialog(context, response.data['message']);
             }
           } else {
@@ -308,10 +321,10 @@ class OpenViewmodel extends ChangeNotifier {
           showAlertDialog(context, response.data['message']);
         }
       }
-    }catch(e){
+    } catch (e) {
       throw Exception("Exception Occurred while Authenticating");
-    }finally{
-      _isLoading=false;
+    } finally {
+      _isLoading = false;
       notifyListeners();
     }
     return false;
@@ -321,64 +334,66 @@ class OpenViewmodel extends ChangeNotifier {
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
-        return StatefulBuilder(
-            builder: (context, setState)
-            {
-              return AlertDialog(
-                  title: const Text(
-                    "📞 CONNECT WITH CONSUMER", style: TextStyle(fontSize: 12),),
-                  content: SingleChildScrollView(
-                    child: SizedBox(
-                      width: MediaQuery
-                          .of(context)
-                          .size
-                          .width * 0.9, // or a fixed width like 300
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ViewDetailedLcTileWidget(
-                              tileKey: "CONSUMER NO",
-                              tileValue: data.mobileNo??""),
-
-                          _buildTextField("YOUR NUMBER",registeredNumber, ),
-
-                        ],
+        return StatefulBuilder(builder: (context, setState) {
+          return AlertDialog(
+              title: const Text(
+                "📞 CONNECT WITH CONSUMER",
+                style: TextStyle(fontSize: 12),
+              ),
+              content: SingleChildScrollView(
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width *
+                      0.9, // or a fixed width like 300
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ViewDetailedLcTileWidget(
+                          tileKey: "CONSUMER NO",
+                          tileValue: data.mobileNo ?? ""),
+                      _buildTextField(
+                        "YOUR NUMBER",
+                        registeredNumber,
                       ),
-                    ),
+                    ],
                   ),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        resetDialogValues();
-                      },
-                      style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(Colors.grey)),
-                      child: const Text(
-                        "CANCEL", style: TextStyle(color: Colors.white),),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        callConsumer( data.ticketNumber!, data.mobileNo??"", registeredNumber.text );
-                      },
-                      style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(Colors.green)),
-
-                      child: const Text(
-                        "CONNECT", style: TextStyle(color: Colors.white),),
-                    ),
-                  ]
-              );
-            }
-        );
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    resetDialogValues();
+                  },
+                  style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.all(Colors.grey)),
+                  child: const Text(
+                    "CANCEL",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    callConsumer(data.ticketNumber!, data.mobileNo ?? "",
+                        registeredNumber.text);
+                  },
+                  style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.all(Colors.green)),
+                  child: const Text(
+                    "CONNECT",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ]);
+        });
       },
     );
   }
+
   Widget _buildTextField(String label, TextEditingController controller) {
     return Padding(
         padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
-        child:Row(children: [
+        child: Row(children: [
           const SizedBox(
             width: 10.0,
           ),
@@ -405,10 +420,11 @@ class OpenViewmodel extends ChangeNotifier {
         ]));
   }
 
-  Future<bool> callConsumer(String tickId, String agentMobile, String userMobile)async{
+  Future<bool> callConsumer(
+      String tickId, String agentMobile, String userMobile) async {
     if (!validateForm2()) {
       return false;
-    }else{
+    } else {
       print("in else block");
       await makeCall(tickId, agentMobile, userMobile);
       return true;
@@ -417,24 +433,32 @@ class OpenViewmodel extends ChangeNotifier {
 
   bool validateForm2() {
     if (registeredNumber.text == "" || registeredNumber.text.isEmpty) {
-         AlertUtils.showSnackBar(context, "Please enter your mobile number", isTrue);
-          return  false;
-        }else if(registeredNumber.text.length<10){
-          AlertUtils.showSnackBar(context, "Please enter valid mobile number", isTrue);
-          return  false;
-        }
+      AlertUtils.showSnackBar(
+          context, "Please enter your mobile number", isTrue);
+      return false;
+    } else if (registeredNumber.text.length < 10) {
+      AlertUtils.showSnackBar(
+          context, "Please enter valid mobile number", isTrue);
+      return false;
+    }
     return true;
   }
-  Future<bool> makeCall( String tickId, String agentMobile, String userMobile,) async {
+
+  Future<bool> makeCall(
+    String tickId,
+    String agentMobile,
+    String userMobile,
+  ) async {
     _isLoading = isTrue;
     notifyListeners();
 
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
-      "ticketId":tickId,
-      "agentMobile":agentMobile,
-      "customerMobile":userMobile,
+      "ticketId": tickId,
+      "agentMobile": agentMobile,
+      "customerMobile": userMobile,
     };
     var response = await ApiProvider(baseUrl: Apis.CCC_END_POINT_BASE_URL)
         .postApiCall(context, Apis.CALL_CONSUMER, payload);
@@ -447,13 +471,13 @@ class OpenViewmodel extends ChangeNotifier {
         if (response.statusCode == successResponseCode) {
           if (response.data['sessionValid'] == isTrue) {
             if (response.data['taskSuccess'] == isTrue) {
-              if(response.data['message']!=null) {
-                showSuccessDialog(context, response.data['message'], (){
+              if (response.data['message'] != null) {
+                showSuccessDialog(context, response.data['message'], () {
                   Navigator.pop(context);
                 });
                 resetDialogValues();
               }
-            }else{
+            } else {
               showErrorDialog(context, response.data['message']);
             }
           } else {
@@ -463,25 +487,21 @@ class OpenViewmodel extends ChangeNotifier {
           showAlertDialog(context, response.data['message']);
         }
       }
-    }catch(e){
+    } catch (e) {
       throw Exception("Exception Occurred while Authenticating");
-    }finally{
-      _isLoading=false;
+    } finally {
+      _isLoading = false;
       notifyListeners();
     }
     return false;
   }
 
-
-
-
-
   void resetDialogValues() {
     selectedOption = "";
     selectedDay = "";
     selectedHours = "";
-    remarks.text="";
-    registeredNumber.text=data.registeredMobileNumber??"";
+    remarks.text = "";
+    registeredNumber.text = data.registeredMobileNumber ?? "";
     notifyListeners();
   }
 }

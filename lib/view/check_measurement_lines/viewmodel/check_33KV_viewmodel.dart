@@ -49,9 +49,10 @@ class Check33kvViewmodel extends ChangeNotifier {
   final BuildContext context;
   final Map<String, dynamic> args;
   double MINIMUM_GPS_ACCURACY_REQUIRED = 15.0;
-  String empName=SharedPreferenceHelper.getStringValue(LoginSdkPrefs.empNameKey);
-  String empDesignation=SharedPreferenceHelper.getStringValue(LoginSdkPrefs.designationCodeKey);
-
+  String empName =
+      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.empNameKey);
+  String empDesignation =
+      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.designationCodeKey);
 
   double? latitude;
   double? longitude;
@@ -142,7 +143,7 @@ class Check33kvViewmodel extends ChangeNotifier {
     final humanIcon = await _bitmapDescriptorFromAsset(Assets.human);
     print("employee name = $empName");
     markers.add(Marker(
-      markerId:  MarkerId("$empName($empDesignation)"),
+      markerId: MarkerId("$empName($empDesignation)"),
       position: _currentLocation,
       icon: humanIcon,
       infoWindow: InfoWindow(
@@ -154,14 +155,13 @@ class Check33kvViewmodel extends ChangeNotifier {
   Future<void> processMapData(bool drawHuman) async {
     if (poleFeederList.isEmpty) return;
 
-    if (followSwitch && currentLocation != null) {
+    if (followSwitch) {
       await _addHumanMarker();
 
       mapController?.animateCamera(CameraUpdate.newCameraPosition(
         CameraPosition(target: currentLocation, zoom: 18),
       ));
     }
-
 
     for (int i = 0; i < poleFeederList.length; i++) {
       final entity = poleFeederList[i];
@@ -170,11 +170,16 @@ class Check33kvViewmodel extends ChangeNotifier {
         final polyline = Polyline(
           polylineId: PolylineId('polyline_$i'),
           points: [
-            LatLng(double.parse(entity.sourceLat!), double.parse(entity.sourceLon!)),
+            LatLng(double.parse(entity.sourceLat!),
+                double.parse(entity.sourceLon!)),
             LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
           ],
           width: 4,
-          color: entity.tempSeries != null ? Colors.blue : entity.newProposalId != null ? Colors.red : Colors.black,
+          color: entity.tempSeries != null
+              ? Colors.blue
+              : entity.newProposalId != null
+                  ? Colors.red
+                  : Colors.black,
         );
         polylines.add(polyline);
 
@@ -244,7 +249,9 @@ class Check33kvViewmodel extends ChangeNotifier {
       markers.add(Marker(
         markerId: MarkerId('sourceType_${entity.id}'),
         position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
-        icon: entity.feederVolt == "33KV" ? await _bitmapDescriptorFromAsset(Assets.ss132Kv) : await _bitmapDescriptorFromAsset(Assets.ss33Kv),
+        icon: entity.feederVolt == "33KV"
+            ? await _bitmapDescriptorFromAsset(Assets.ss132Kv)
+            : await _bitmapDescriptorFromAsset(Assets.ss33Kv),
       ));
     }
 
@@ -253,21 +260,24 @@ class Check33kvViewmodel extends ChangeNotifier {
         case 'ss':
           markers.add(Marker(
             markerId: MarkerId('loadType_ss_${entity.id}'),
-            position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+            position:
+                LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
             icon: await _bitmapDescriptorFromAsset(Assets.ss33Kv),
           ));
           break;
         case 'dtr':
           markers.add(Marker(
             markerId: MarkerId('loadType_dtr_${entity.id}'),
-            position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+            position:
+                LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
             icon: await _bitmapDescriptorFromAsset(Assets.dtr),
           ));
           break;
         case 'ht':
           markers.add(Marker(
             markerId: MarkerId('loadType_ht_${entity.id}'),
-            position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+            position:
+                LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
             icon: await _bitmapDescriptorFromAsset(Assets.htService),
           ));
           break;
@@ -299,7 +309,7 @@ class Check33kvViewmodel extends ChangeNotifier {
     );
 
     // Center the text
-    textPainter.paint(canvas, Offset(0, 0)); // Adjust if necessary
+    textPainter.paint(canvas, const Offset(0, 0)); // Adjust if necessary
 
     final picture = recorder.endRecording();
     final img = await picture.toImage(
@@ -307,7 +317,8 @@ class Check33kvViewmodel extends ChangeNotifier {
       textPainter.height.toInt(),
     );
 
-    final ByteData? byteData = await img.toByteData(format: ui.ImageByteFormat.png);
+    final ByteData? byteData =
+        await img.toByteData(format: ui.ImageByteFormat.png);
     if (byteData != null) {
       final Uint8List uint8List = byteData.buffer.asUint8List();
       final bitmapDescriptor = BitmapDescriptor.fromBytes(uint8List);
@@ -325,7 +336,8 @@ class Check33kvViewmodel extends ChangeNotifier {
     }
   }
 
-  LatLng _calculateMidpoint(double lat1, double lon1, double lat2, double lon2) {
+  LatLng _calculateMidpoint(
+      double lat1, double lon1, double lat2, double lon2) {
     double midLat = (lat1 + lat2) / 2;
     double midLon = (lon1 + lon2) / 2;
     return LatLng(midLat, midLon);
@@ -338,9 +350,13 @@ class Check33kvViewmodel extends ChangeNotifier {
 
   Future<Uint8List> _getBytesFromAsset(String path, int width) async {
     ByteData byteData = await rootBundle.load(path);
-    ui.Codec codec = await ui.instantiateImageCodec(byteData.buffer.asUint8List());
+    ui.Codec codec =
+        await ui.instantiateImageCodec(byteData.buffer.asUint8List());
     ui.FrameInfo fi = await codec.getNextFrame();
-    final Uint8List resizedData = (await fi.image.toByteData(format: ui.ImageByteFormat.png))!.buffer.asUint8List();
+    final Uint8List resizedData =
+        (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
+            .buffer
+            .asUint8List();
     return resizedData;
   }
 
@@ -392,7 +408,7 @@ class Check33kvViewmodel extends ChangeNotifier {
               final poleText = entity.tempSeries != null
                   ? "${entity.tempSeries}-${entity.poleNum}"
                   : entity.poleNum;
-              poleFeederSelected= poleText ?? '';
+              poleFeederSelected = poleText ?? '';
               print("selected Pole number is $poleText");
               notifyListeners();
               // If needed, store the entity as tag
@@ -410,8 +426,8 @@ class Check33kvViewmodel extends ChangeNotifier {
       ),
     );
   }
-  void _handleLocation() async {
 
+  void _handleLocation() async {
     bool isLocationEnabled = await Geolocator.isLocationServiceEnabled();
     if (!isLocationEnabled) {
       // Show a dialog to enable location services
@@ -423,7 +439,8 @@ class Check33kvViewmodel extends ChangeNotifier {
             onWillPop: () async => false,
             child: AlertDialog(
               title: const Text("Location Service Disabled"),
-              content: const Text("Please enable location services to use this feature."),
+              content: const Text(
+                  "Please enable location services to use this feature."),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
@@ -447,7 +464,7 @@ class Check33kvViewmodel extends ChangeNotifier {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text("Location permissions are denied."),
           ),
         );
@@ -460,16 +477,17 @@ class Check33kvViewmodel extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text("Location Permission Required"),
-            content: Text("Location permissions are permanently denied. Please enable them in the app settings."),
+            title: const Text("Location Permission Required"),
+            content: const Text(
+                "Location permissions are permanently denied. Please enable them in the app settings."),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
-                child: Text("Cancel"),
+                child: const Text("Cancel"),
               ),
               TextButton(
                 onPressed: () => Navigator.of(context).pop(true),
-                child: Text("Open Settings"),
+                child: const Text("Open Settings"),
               ),
             ],
           );
@@ -482,16 +500,16 @@ class Check33kvViewmodel extends ChangeNotifier {
       }
     }
 
-    if (permission != LocationPermission.whileInUse && permission != LocationPermission.always) {
+    if (permission != LocationPermission.whileInUse &&
+        permission != LocationPermission.always) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text("Location permissions are still denied."),
         ),
       );
       return;
     }
     await startListening();
-
   }
 
   StreamSubscription<Position>? _positionStream;
@@ -506,7 +524,7 @@ class Check33kvViewmodel extends ChangeNotifier {
     }
 
     _positionStream = Geolocator.getPositionStream(
-      locationSettings: LocationSettings(accuracy: LocationAccuracy.high),
+      locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
     ).listen((Position position) {
       latitude = position.latitude;
       longitude = position.longitude;
@@ -604,7 +622,7 @@ class Check33kvViewmodel extends ChangeNotifier {
                           "Please choose Source Pole Num or check Source pole not mapped or origin Pole");
                     }
                   },
-                  child: Text("OK")),
+                  child: const Text("OK")),
             ],
           );
         },
@@ -620,7 +638,7 @@ class Check33kvViewmodel extends ChangeNotifier {
                 const Text(
                   "Please be sure your field condition resemble to below show scenario for selecting",
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Image.asset(Assets.check11KvRight),
@@ -638,7 +656,7 @@ class Check33kvViewmodel extends ChangeNotifier {
                           "Please choose Source Pole Num or check Source pole not mapped or origin Pole");
                     }
                   },
-                  child: Text("OK")),
+                  child: const Text("OK")),
             ],
           );
         },
@@ -710,7 +728,7 @@ class Check33kvViewmodel extends ChangeNotifier {
         selectedFirstGroup.clear();
       }
 
-      final limit = 2;
+      const limit = 2;
 
       if (selectedSecondGroup.length < limit) {
         selectedSecondGroup.add(val);
@@ -956,7 +974,7 @@ class Check33kvViewmodel extends ChangeNotifier {
     print("$_selectedConnected: Connected  selected");
     if (_selectedConnected == "HT Services") {
       showCircleDialog(() {
-        Future.delayed(Duration(milliseconds: 300), () {
+        Future.delayed(const Duration(milliseconds: 300), () {
           notifyListeners();
         });
       });
@@ -1265,8 +1283,8 @@ class Check33kvViewmodel extends ChangeNotifier {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Choose Circle'),
-          content: Container(
+          title: const Text('Choose Circle'),
+          content: SizedBox(
             width: double.maxFinite,
             child: ListView.builder(
               shrinkWrap: true,
@@ -1278,7 +1296,7 @@ class Check33kvViewmodel extends ChangeNotifier {
                     Navigator.of(context).pop();
                     ccValue = index + 1;
                     notifyListeners();
-                    print('CC value assigned : ${ccValue}');
+                    print('CC value assigned : $ccValue');
                     loadHTServices(ccValue.toString()).then((_) {
                       onCircleSelected();
                     });
@@ -1454,7 +1472,8 @@ class Check33kvViewmodel extends ChangeNotifier {
     }
   }
 
-  Future<void> save33KVPole() async { //922
+  Future<void> save33KVPole() async {
+    //922
     _isLoading = isTrue;
     notifyListeners();
 
@@ -1493,7 +1512,7 @@ class Check33kvViewmodel extends ChangeNotifier {
         "slat": poleLat,
         "slon": poleLon,
       },
-      "cross": '${buildCrossingString()}',
+      "cross": buildCrossingString(),
       "connLoad": selectedConnected == "No Load" ? "N" : "NEW SS",
       "ht": selectedHtServiceName != null
           ? "${htServiceNames.indexOf(selectedHtServiceName)}"
@@ -1631,7 +1650,7 @@ class Check33kvViewmodel extends ChangeNotifier {
       AlertUtils.showSnackBar(
           context, "Please enter quantity for all selected cross arms.", true);
       return false;
-    } else if (selectedCrossings.isEmpty || selectedCrossings == null) {
+    } else if (selectedCrossings.isEmpty) {
       AlertUtils.showSnackBar(context, "Please select any crossing", isTrue);
       return false;
     } else if (selectedConnected == "" || selectedConnected == null) {
@@ -1728,7 +1747,7 @@ class Check33kvViewmodel extends ChangeNotifier {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text("CANCEL")),
+                child: const Text("CANCEL")),
             TextButton(
               onPressed: () {
                 Navigator.pop(context); // close the dialog

@@ -1,11 +1,8 @@
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
-import 'package:tsnpdcl_employee/view/line_clearance/viewmodel/add_induction_point_viewmodel.dart';
-import 'package:tsnpdcl_employee/view/pole_tracker/viewmodel/pole_tracker_selection_view_sketch_viewmodel.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/viewmodel/pole_tracker_selection_viewmodel.dart';
 import 'package:tsnpdcl_employee/widget/primary_button.dart';
 
@@ -26,8 +23,7 @@ class PoleTrackerSelectionScreen extends StatelessWidget {
           style: const TextStyle(
               color: Colors.white,
               fontSize: toolbarTitleSize,
-              fontWeight: FontWeight.w700
-          ),
+              fontWeight: FontWeight.w700),
         ),
         iconTheme: const IconThemeData(
           color: Colors.white,
@@ -58,7 +54,9 @@ class PoleTrackerSelectionScreen extends StatelessWidget {
                           controlAffinity: ListTileControlAffinity.leading,
                           title: const Text(
                             "33KV Line",
-                            style: TextStyle(fontSize: normalSize, fontWeight: FontWeight.w500),
+                            style: TextStyle(
+                                fontSize: normalSize,
+                                fontWeight: FontWeight.w500),
                           ),
                           value: viewModel.isSelected("33KV Line"),
                           onChanged: (value) {
@@ -71,7 +69,9 @@ class PoleTrackerSelectionScreen extends StatelessWidget {
                           controlAffinity: ListTileControlAffinity.leading,
                           title: const Text(
                             "11 KV Line",
-                            style: TextStyle(fontSize: normalSize, fontWeight: FontWeight.w500),
+                            style: TextStyle(
+                                fontSize: normalSize,
+                                fontWeight: FontWeight.w500),
                           ),
                           value: viewModel.isSelected("11 KV Line"),
                           onChanged: (value) {
@@ -99,9 +99,9 @@ class PoleTrackerSelectionScreen extends StatelessWidget {
                         value: viewModel.listSubStationSelect,
                         items: viewModel.listSubStationItem
                             .map((item) => DropdownMenuItem<String>(
-                          value: item.optionCode,
-                          child: Text(item.optionName!),
-                        ))
+                                  value: item.optionCode,
+                                  child: Text(item.optionName!),
+                                ))
                             .toList(),
                         onChanged: (value) {
                           viewModel.onListSubStationItemSelect(value);
@@ -131,9 +131,13 @@ class PoleTrackerSelectionScreen extends StatelessWidget {
                       children: [
                         Text(
                           "New Feeder Proposal",
-                          style: TextStyle(fontWeight: FontWeight.w500, fontSize: normalSize),
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: normalSize),
                         ),
-                        SizedBox(height: doubleTwo,),
+                        SizedBox(
+                          height: doubleTwo,
+                        ),
                         Text.rich(
                           TextSpan(
                             text: 'Choose this option if you want to create a ',
@@ -141,7 +145,9 @@ class PoleTrackerSelectionScreen extends StatelessWidget {
                             children: [
                               TextSpan(
                                 text: 'New/Extension Line Proposal',
-                                style: TextStyle(fontSize: extraRegularSize, fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                    fontSize: extraRegularSize,
+                                    fontWeight: FontWeight.bold),
                               ),
                               TextSpan(
                                 text: ' sketch',
@@ -164,12 +170,17 @@ class PoleTrackerSelectionScreen extends StatelessWidget {
                       children: [
                         Text(
                           "Line Extension Work",
-                          style: TextStyle(fontWeight: FontWeight.w500, fontSize: normalSize),
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: normalSize),
                         ),
-                        SizedBox(height: doubleTwo,),
+                        SizedBox(
+                          height: doubleTwo,
+                        ),
                         Text.rich(
                           TextSpan(
-                            text: 'Choose this option for Line extension proposal on Existing Line',
+                            text:
+                                'Choose this option for Line extension proposal on Existing Line',
                             style: TextStyle(fontSize: extraRegularSize),
                           ),
                         ),
@@ -187,17 +198,24 @@ class PoleTrackerSelectionScreen extends StatelessWidget {
                       children: [
                         Text(
                           "Digital Existing Feeder",
-                          style: TextStyle(fontWeight: FontWeight.w500, fontSize: normalSize),
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: normalSize),
                         ),
-                        SizedBox(height: doubleTwo,),
+                        SizedBox(
+                          height: doubleTwo,
+                        ),
                         Text.rich(
                           TextSpan(
-                            text: 'Choose this option if you want to digitise the ',
+                            text:
+                                'Choose this option if you want to digitise the ',
                             style: TextStyle(fontSize: extraRegularSize),
                             children: [
                               TextSpan(
                                 text: 'Existing Feeder',
-                                style: TextStyle(fontSize: extraRegularSize, fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                    fontSize: extraRegularSize,
+                                    fontWeight: FontWeight.bold),
                               ),
                             ],
                           ),
@@ -227,9 +245,9 @@ class PoleTrackerSelectionScreen extends StatelessWidget {
                         value: viewModel.listFeederSelect,
                         items: viewModel.listFeederItem
                             .map((item) => DropdownMenuItem<String>(
-                          value: item.optionCode,
-                          child: Text(item.optionName!),
-                        ))
+                                  value: item.optionCode,
+                                  child: Text(item.optionName!),
+                                ))
                             .toList(),
                         onChanged: (value) {
                           viewModel.onListFeederItemSelect(value);
@@ -245,7 +263,8 @@ class PoleTrackerSelectionScreen extends StatelessWidget {
                     ],
                   ),
                   Visibility(
-                    visible: viewModel.isPurposeSelected("NFP") || viewModel.isPurposeSelected("LEW"),
+                    visible: viewModel.isPurposeSelected("NFP") ||
+                        viewModel.isPurposeSelected("LEW"),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -264,9 +283,13 @@ class PoleTrackerSelectionScreen extends StatelessWidget {
                             children: [
                               Text(
                                 "Create New Proposal",
-                                style: TextStyle(fontWeight: FontWeight.w500, fontSize: normalSize),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: normalSize),
                               ),
-                              SizedBox(height: doubleTwo,),
+                              SizedBox(
+                                height: doubleTwo,
+                              ),
                               Text(
                                 'Choose this option if you want to create New Proposal Now',
                                 style: TextStyle(fontSize: extraRegularSize),
@@ -285,9 +308,13 @@ class PoleTrackerSelectionScreen extends StatelessWidget {
                             children: [
                               Text(
                                 "Existing Proposal",
-                                style: TextStyle(fontWeight: FontWeight.w500, fontSize: normalSize),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: normalSize),
                               ),
-                              SizedBox(height: doubleTwo,),
+                              SizedBox(
+                                height: doubleTwo,
+                              ),
                               Text(
                                 'Choose this option if you want to modify the sketch under existing proposal',
                                 style: TextStyle(fontSize: extraRegularSize),
@@ -303,7 +330,9 @@ class PoleTrackerSelectionScreen extends StatelessWidget {
                     ),
                   ),
                   Visibility(
-                    visible: viewModel.newSketchPropEntity != null || viewModel.isProposalSelected("CNP") || viewModel.isProposalSelected("EP"),
+                    visible: viewModel.newSketchPropEntity != null ||
+                        viewModel.isProposalSelected("CNP") ||
+                        viewModel.isProposalSelected("EP"),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -321,9 +350,7 @@ class PoleTrackerSelectionScreen extends StatelessWidget {
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: CommonColors.colorPrimary
-                                )
-                            ),
+                                    color: CommonColors.colorPrimary)),
                             labelStyle: TextStyle(fontFamily: appFontFamily),
                             hintStyle: TextStyle(fontFamily: appFontFamily),
                           ),
@@ -339,11 +366,8 @@ class PoleTrackerSelectionScreen extends StatelessWidget {
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: CommonColors.colorPrimary
-                                )
-                            ),
+                                    color: CommonColors.colorPrimary)),
                             labelStyle: TextStyle(fontFamily: appFontFamily),
-
                             hintStyle: TextStyle(fontFamily: appFontFamily),
                           ),
                         ),
@@ -351,28 +375,34 @@ class PoleTrackerSelectionScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: doubleFive,),
+                  const SizedBox(
+                    height: doubleFive,
+                  ),
                   CheckboxListTile(
                     controlAffinity: ListTileControlAffinity.leading,
                     contentPadding: EdgeInsets.zero,
                     title: const Text(
                       "Restrict duplicate pole numbers",
-                      style: TextStyle(fontWeight: FontWeight.w500, fontSize: normalSize),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500, fontSize: normalSize),
                     ),
                     value: viewModel.duplicate,
                     onChanged: (value) {
                       viewModel.duplicateCheck(value);
                     },
                   ),
-                  const SizedBox(height: doubleFive,),
+                  const SizedBox(
+                    height: doubleFive,
+                  ),
                   PrimaryButton(
                       fullWidth: isTrue,
                       text: "DIGITIZE NOW",
                       onPressed: () {
                         viewModel.digitizeNow();
-                      }
+                      }),
+                  const SizedBox(
+                    height: doubleTen,
                   ),
-                  const SizedBox(height: doubleTen,),
                   PrimaryButton(
                       fullWidth: isTrue,
                       buttonColor: CommonColors.colorSecondary,
@@ -380,9 +410,10 @@ class PoleTrackerSelectionScreen extends StatelessWidget {
                       onPressed: () {
                         viewModel.saveForOffline();
                         print("save for offline");
-                      }
+                      }),
+                  const SizedBox(
+                    height: doubleTwenty,
                   ),
-                  const SizedBox(height: doubleTwenty,),
                 ],
               ),
             );
@@ -391,6 +422,4 @@ class PoleTrackerSelectionScreen extends StatelessWidget {
       ),
     );
   }
-
-
 }

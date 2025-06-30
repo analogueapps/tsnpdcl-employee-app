@@ -39,13 +39,13 @@ class MeterStockViewmodel extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   //meterStock
-  List<MeterStockEntity> _meterStockEntityList = [];
+  final List<MeterStockEntity> _meterStockEntityList = [];
   List<MeterStockEntity> get meterStockEntityList => _meterStockEntityList;
 
   //loadStaff
   LoadStaffEntity? _selectedStaffEntity; // Changed to store full entity
   LoadStaffEntity? get selectedStaffEntity => _selectedStaffEntity;
-  List<LoadStaffEntity> _loadStaffEntityList = [];
+  final List<LoadStaffEntity> _loadStaffEntityList = [];
   List<LoadStaffEntity> get loadStaffEntityList => _loadStaffEntityList;
 
   void setSelectedStaff(LoadStaffEntity? staff) {
@@ -58,8 +58,8 @@ class MeterStockViewmodel extends ChangeNotifier {
     notifyListeners();
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(
-          LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
     };
 
@@ -70,10 +70,9 @@ class MeterStockViewmodel extends ChangeNotifier {
       "data": jsonEncode(requestData),
     };
 
-
     try {
-      var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(
-          context, Apis.NPDCL_EMP_URL, payload);
+      var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+          .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
 
       _isLoading = false;
       notifyListeners();
@@ -104,13 +103,14 @@ class MeterStockViewmodel extends ChangeNotifier {
 
                   if (jsonList is String) {
                     String cleanedJsonString = jsonList
-                        .replaceAll(r'\"', '"')  // Unescape quotes
-                        .replaceAll(r'\u0026', '&')  // Handle Unicode characters
+                        .replaceAll(r'\"', '"') // Unescape quotes
+                        .replaceAll(r'\u0026', '&') // Handle Unicode characters
                         .trim();
 
                     // Remove trailing comma if present
                     if (cleanedJsonString.endsWith(',')) {
-                      cleanedJsonString = cleanedJsonString.substring(0, cleanedJsonString.length - 1);
+                      cleanedJsonString = cleanedJsonString.substring(
+                          0, cleanedJsonString.length - 1);
                     }
 
                     // Ensure the string is properly formatted JSON array
@@ -120,20 +120,27 @@ class MeterStockViewmodel extends ChangeNotifier {
 
                     // Parse the cleaned JSON string
                     final parsedList = jsonDecode(cleanedJsonString) as List;
-                    dataList = parsedList.map((json) => MeterStockEntity.fromJson(json)).toList();
+                    dataList = parsedList
+                        .map((json) => MeterStockEntity.fromJson(json))
+                        .toList();
                   } else if (jsonList is List) {
-                    dataList = jsonList.map((json) => MeterStockEntity.fromJson(json)).toList();
+                    dataList = jsonList
+                        .map((json) => MeterStockEntity.fromJson(json))
+                        .toList();
                   }
 
                   _meterStockEntityList.addAll(dataList);
-                  print("Meters data: ${_meterStockEntityList.length} items loaded");
+                  print(
+                      "Meters data: ${_meterStockEntityList.length} items loaded");
                   notifyListeners();
                 } catch (e, stackTrace) {
                   print("Error parsing objectJson: $e");
                   print("Stack trace: $stackTrace");
-                  showErrorDialog(context, "Failed to parse meter data. Please contact support.");
+                  showErrorDialog(context,
+                      "Failed to parse meter data. Please contact support.");
                 }
-              }            }
+              }
+            }
           } else {
             showAlertDialog(context, responseData['message']);
           }
@@ -152,8 +159,8 @@ class MeterStockViewmodel extends ChangeNotifier {
     notifyListeners();
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(
-          LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
     };
 
@@ -164,10 +171,9 @@ class MeterStockViewmodel extends ChangeNotifier {
       "data": jsonEncode(requestData),
     };
 
-
     try {
-      var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(
-          context, Apis.NPDCL_EMP_URL, payload);
+      var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+          .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
 
       _isLoading = false;
       notifyListeners();
@@ -198,12 +204,13 @@ class MeterStockViewmodel extends ChangeNotifier {
 
                   if (jsonList is String) {
                     String cleanedJsonString = jsonList
-                        .replaceAll(r'\"', '"')  // Unescape quotes
+                        .replaceAll(r'\"', '"') // Unescape quotes
                         // .replaceAll(r'\u0026', '&')  // Handle Unicode characters
                         .trim();
 
                     if (cleanedJsonString.endsWith(',')) {
-                      cleanedJsonString = cleanedJsonString.substring(0, cleanedJsonString.length - 1);
+                      cleanedJsonString = cleanedJsonString.substring(
+                          0, cleanedJsonString.length - 1);
                     }
 
                     // Ensure the string is properly formatted JSON array
@@ -213,22 +220,29 @@ class MeterStockViewmodel extends ChangeNotifier {
 
                     // Parse the cleaned JSON string
                     final staffList = jsonDecode(cleanedJsonString) as List;
-                    dataList = staffList.map((json) => LoadStaffEntity.fromJson(json)).toList();
+                    dataList = staffList
+                        .map((json) => LoadStaffEntity.fromJson(json))
+                        .toList();
                   } else if (jsonList is List) {
-                    dataList = jsonList.map((json) => LoadStaffEntity.fromJson(json)).toList();
+                    dataList = jsonList
+                        .map((json) => LoadStaffEntity.fromJson(json))
+                        .toList();
                   }
 
                   _loadStaffEntityList.addAll(dataList);
                   showStaffDialog(context);
-                  print("Meters data: ${_loadStaffEntityList.length} items loaded");
+                  print(
+                      "Meters data: ${_loadStaffEntityList.length} items loaded");
 
                   notifyListeners();
                 } catch (e, stackTrace) {
                   print("Error parsing objectJson: $e");
                   print("Stack trace: $stackTrace");
-                  showErrorDialog(context, "Failed to parse meter data. Please contact support.");
+                  showErrorDialog(context,
+                      "Failed to parse meter data. Please contact support.");
                 }
-              }            }
+              }
+            }
           } else {
             showAlertDialog(context, responseData['message']);
           }
@@ -276,45 +290,52 @@ class MeterStockViewmodel extends ChangeNotifier {
                     ),
                     const SizedBox(height: 10),
                     // Meter List
-                Expanded(
-                  child: SizedBox(
-                    height: 200,
-                    child: _meterStockEntityList.isEmpty
-                        ? const Center(child: Text("No meters available"))
-                        : ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: _meterStockEntityList
-                          .where((meter) => meter.meterNo.toString()
-                          .toLowerCase()
-                          .contains(searchQuery) ?? false)
-                          .length,
-                      itemBuilder: (context, index) {
-                        final filteredMeters = _meterStockEntityList
-                            .where((meter) => meter.meterNo.toString()
-                            .toLowerCase()
-                            .contains(searchQuery) ?? false)
-                            .toList();
+                    Expanded(
+                      child: SizedBox(
+                        height: 200,
+                        child: _meterStockEntityList.isEmpty
+                            ? const Center(child: Text("No meters available"))
+                            : ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: _meterStockEntityList
+                                    .where((meter) =>
+                                        meter.meterNo
+                                            .toString()
+                                            .toLowerCase()
+                                            .contains(searchQuery) ??
+                                        false)
+                                    .length,
+                                itemBuilder: (context, index) {
+                                  final filteredMeters = _meterStockEntityList
+                                      .where((meter) =>
+                                          meter.meterNo
+                                              .toString()
+                                              .toLowerCase()
+                                              .contains(searchQuery) ??
+                                          false)
+                                      .toList();
 
-                        final meter = filteredMeters[index];
-                        final isChecked = selectedMeters.contains(meter);
+                                  final meter = filteredMeters[index];
+                                  final isChecked =
+                                      selectedMeters.contains(meter);
 
-                        return ListTile(
-                          title: Text(
-                              "${meter.meterNo?.toString() ?? 'N/A'} | ${meter.make?.toString() ?? 'N/A'}"),
-                          onTap: () {
-                            toggleMeterSelection(meter, !isChecked);
-                            // setState(() {}); // Update dialog UI
-                            notifyListeners();
-                            AlertUtils.showSnackBar(
-                                context, "Meter Selected", isFalse);
-                            Navigator.pop(context);
-                            print("Selected meter: ${meter.meterNo}");
-                          },
-                        );
-                      },
+                                  return ListTile(
+                                    title: Text(
+                                        "${meter.meterNo?.toString() ?? 'N/A'} | ${meter.make?.toString() ?? 'N/A'}"),
+                                    onTap: () {
+                                      toggleMeterSelection(meter, !isChecked);
+                                      // setState(() {}); // Update dialog UI
+                                      notifyListeners();
+                                      AlertUtils.showSnackBar(
+                                          context, "Meter Selected", isFalse);
+                                      Navigator.pop(context);
+                                      print("Selected meter: ${meter.meterNo}");
+                                    },
+                                  );
+                                },
+                              ),
+                      ),
                     ),
-                  ),
-                ),
                   ],
                 ),
               ),
@@ -366,39 +387,45 @@ class MeterStockViewmodel extends ChangeNotifier {
                         child: _loadStaffEntityList.isEmpty
                             ? const Center(child: Text("No meters available"))
                             : ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: _loadStaffEntityList
-                              .where((staff) => staff.name.toString()
-                              .toLowerCase()
-                              .contains(searchQuery1) ?? false)
-                              .length,
-                          itemBuilder: (context, index) {
-                            final filteredStaff = _loadStaffEntityList
-                                .where((meter) => meter.name.toString()
-                                .toLowerCase()
-                                .contains(searchQuery1) ?? false)
-                                .toList();
+                                shrinkWrap: true,
+                                itemCount: _loadStaffEntityList
+                                    .where((staff) =>
+                                        staff.name
+                                            .toString()
+                                            .toLowerCase()
+                                            .contains(searchQuery1) ??
+                                        false)
+                                    .length,
+                                itemBuilder: (context, index) {
+                                  final filteredStaff = _loadStaffEntityList
+                                      .where((meter) =>
+                                          meter.name
+                                              .toString()
+                                              .toLowerCase()
+                                              .contains(searchQuery1) ??
+                                          false)
+                                      .toList();
 
-                            final staffName = filteredStaff[index];
-                            return ListTile(
-                              title: Text(
-                                  "${staffName.name ?? 'N/A'}, ${staffName.designation??"null"} "),
-                              onTap: () async{
-                                setSelectedStaff(staffName);
-                                notifyListeners();
-                                Navigator.pop(context);
-                                //  if(title=="Meters issued to O&M") {
-                                //   await getLoaderLoadMetersStock();
-                                //   Navigation.instance.navigateTo(Routes.metersStock);
-                                //   print("Meters issued to O&M : ${staffName.employeeId}");
-                                // }else{
-                                   allotmentDialog(context);
-                                   print("Sleected Staff ${staffName.name}");
-                                 // }
-                              },
-                            );
-                          },
-                        ),
+                                  final staffName = filteredStaff[index];
+                                  return ListTile(
+                                    title: Text(
+                                        "${staffName.name ?? 'N/A'}, ${staffName.designation ?? "null"} "),
+                                    onTap: () async {
+                                      setSelectedStaff(staffName);
+                                      notifyListeners();
+                                      Navigator.pop(context);
+                                      //  if(title=="Meters issued to O&M") {
+                                      //   await getLoaderLoadMetersStock();
+                                      //   Navigation.instance.navigateTo(Routes.metersStock);
+                                      //   print("Meters issued to O&M : ${staffName.employeeId}");
+                                      // }else{
+                                      allotmentDialog(context);
+                                      print("Sleected Staff ${staffName.name}");
+                                      // }
+                                    },
+                                  );
+                                },
+                              ),
                       ),
                     ),
                   ],
@@ -431,21 +458,23 @@ class MeterStockViewmodel extends ChangeNotifier {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Expanded(child:
-                    SizedBox(
-                      height: 200, // Limit height
-                      child: selectedMeters.isEmpty
-                          ? const Center(child: Text("No meters available"))
-                          : ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: selectedMeters.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            title: Text(selectedMeters[index].meterNo.toString()), // FIXED
-                          );
-                        },
+                    Expanded(
+                      child: SizedBox(
+                        height: 200, // Limit height
+                        child: selectedMeters.isEmpty
+                            ? const Center(child: Text("No meters available"))
+                            : ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: selectedMeters.length,
+                                itemBuilder: (context, index) {
+                                  return ListTile(
+                                    title: Text(selectedMeters[index]
+                                        .meterNo
+                                        .toString()), // FIXED
+                                  );
+                                },
+                              ),
                       ),
-                    ),
                     ),
                   ],
                 ),
@@ -455,7 +484,8 @@ class MeterStockViewmodel extends ChangeNotifier {
                   onPressed: () {
                     allotMetersToStaff();
                     Navigator.pop(context);
-                    print("empID:${SharedPreferenceHelper.getStringValue(LoginSdkPrefs.userIdPrefKey)}");
+                    print(
+                        "empID:${SharedPreferenceHelper.getStringValue(LoginSdkPrefs.userIdPrefKey)}");
                   },
                   child: const Text("CONFIRM & ALLOT"),
                 ),
@@ -479,7 +509,8 @@ class MeterStockViewmodel extends ChangeNotifier {
 
   Future<void> allotMetersToStaff() async {
     if (selectedMeters.isEmpty || _selectedStaffEntity == null) {
-      AlertUtils.showSnackBar(context, "Please select staff and meters to allot", true);
+      AlertUtils.showSnackBar(
+          context, "Please select staff and meters to allot", true);
       return;
     }
 
@@ -511,12 +542,14 @@ class MeterStockViewmodel extends ChangeNotifier {
         "opDate": meter.opDate,
         "newMeterId": meter.newMeterId,
         "sectionCode": _selectedStaffEntity!.sectionCode, // From selected staff
-        "loginName": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.userIdPrefKey), // Still from prefs
+        "loginName": SharedPreferenceHelper.getStringValue(
+            LoginSdkPrefs.userIdPrefKey), // Still from prefs
       };
     }).toList();
 
     final Map<String, dynamic> innerData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "array": meterArray,
     };
@@ -529,7 +562,7 @@ class MeterStockViewmodel extends ChangeNotifier {
       "path": "/saveAllotmentOfMeters",
       "apiVersion": "1.0",
       "method": "POST",
-      "data": "$innerDataString", // Stringified JSON as per your example
+      "data": innerDataString, // Stringified JSON as per your example
     };
 
     try {
@@ -540,7 +573,8 @@ class MeterStockViewmodel extends ChangeNotifier {
       Navigator.pop(context);
 
       if (response != null) {
-        var responseData = response.data is String ? jsonDecode(response.data) : response.data;
+        var responseData =
+            response.data is String ? jsonDecode(response.data) : response.data;
 
         if (response.statusCode == successResponseCode) {
           if (responseData['tokenValid'] == true) {
@@ -560,20 +594,18 @@ class MeterStockViewmodel extends ChangeNotifier {
                       ),
                       actions: <Widget>[
                         TextButton(
-                          style: TextButton.styleFrom(textStyle: Theme
-                              .of(context)
-                              .textTheme
-                              .labelLarge),
+                          style: TextButton.styleFrom(
+                              textStyle:
+                                  Theme.of(context).textTheme.labelLarge),
                           child: const Text('EXIT'),
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
                         ),
                         TextButton(
-                          style: TextButton.styleFrom(textStyle: Theme
-                              .of(context)
-                              .textTheme
-                              .labelLarge),
+                          style: TextButton.styleFrom(
+                              textStyle:
+                                  Theme.of(context).textTheme.labelLarge),
                           child: const Text('CONTINUE'),
                           onPressed: () {
                             Navigator.of(context).pop();
@@ -582,21 +614,27 @@ class MeterStockViewmodel extends ChangeNotifier {
                         ),
                       ],
                     );
-                  }
-              );
-              AlertUtils.showSnackBar(context, responseData['message'] ?? "Meters allotted successfully", false);
+                  });
+              AlertUtils.showSnackBar(
+                  context,
+                  responseData['message'] ?? "Meters allotted successfully",
+                  false);
             } else {
-              AlertUtils.showSnackBar(context, responseData['message'] ?? "Allotment failed", true);
+              AlertUtils.showSnackBar(
+                  context, responseData['message'] ?? "Allotment failed", true);
             }
           } else {
-            AlertUtils.showSnackBar(context, responseData['message'] ?? "Session expired", true);
+            AlertUtils.showSnackBar(
+                context, responseData['message'] ?? "Session expired", true);
             Navigator.pushReplacementNamed(context, '/login');
           }
         } else {
-          AlertUtils.showSnackBar(context, "Unable to process your request", true);
+          AlertUtils.showSnackBar(
+              context, "Unable to process your request", true);
         }
       } else {
-        AlertUtils.showSnackBar(context, "Unable to process your request", true);
+        AlertUtils.showSnackBar(
+            context, "Unable to process your request", true);
       }
     } catch (e) {
       Navigator.pop(context);

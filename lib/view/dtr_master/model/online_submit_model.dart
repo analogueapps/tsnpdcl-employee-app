@@ -1,5 +1,4 @@
 // models.dart (same as previous)
-import 'dart:convert';
 import 'dart:io';
 
 class DTR {

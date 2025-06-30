@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
@@ -15,7 +13,8 @@ class ViewFailureConfirmedList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => ViewFailureConfirmedViewmodel(context: context, status: "ADEOP_CNF"),
+      create: (_) =>
+          ViewFailureConfirmedViewmodel(context: context, status: "ADEOP_CNF"),
       child: Consumer<ViewFailureConfirmedViewmodel>(
         builder: (context, viewModel, child) {
           return Scaffold(
@@ -61,8 +60,8 @@ class ViewFailureConfirmedList extends StatelessWidget {
               ],
             ),
             body: viewModel.isLoading
-            ? const Center(child: CircularProgressIndicator())
-              : ListView.builder(
+                ? const Center(child: CircularProgressIndicator())
+                : ListView.builder(
                     itemCount: viewModel.failureReports.length,
                     itemBuilder: (context, index) {
                       if (viewModel.failureReports.isEmpty) {

@@ -12,9 +12,9 @@ import 'package:tsnpdcl_employee/view/tong_tester_readings/model/dropdown_option
 
 class OverloadedFloatingButtonProvider with ChangeNotifier {
   final sectionCode =
-  SharedPreferenceHelper.getStringValue(LoginSdkPrefs.sectionCodePrefKey);
+      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.sectionCodePrefKey);
   final section =
-  SharedPreferenceHelper.getStringValue(LoginSdkPrefs.sectionPrefKey);
+      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.sectionPrefKey);
   final BuildContext context;
   List<DropdownOption> _structures = [];
   Map<String, dynamic>? _currentStructure;
@@ -72,7 +72,7 @@ class OverloadedFloatingButtonProvider with ChangeNotifier {
 
     // Set initial time for the time picker
     TimeOfDay initialTime =
-    isToday ? TimeOfDay.now() : const TimeOfDay(hour: 23, minute: 59);
+        isToday ? TimeOfDay.now() : const TimeOfDay(hour: 23, minute: 59);
 
     TimeOfDay? pickedTime = await showTimePicker(
       context: context,
@@ -113,8 +113,8 @@ class OverloadedFloatingButtonProvider with ChangeNotifier {
     try {
       final requestData = {
         "authToken":
-        SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ??
-            "",
+            SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ??
+                "",
         "api": Apis.API_KEY,
         "sectionCode": sectionCode,
       };
@@ -184,14 +184,14 @@ class OverloadedFloatingButtonProvider with ChangeNotifier {
       _structures = dataList
           .where((e) => e.structureCode != null)
           .map((e) => DropdownOption(
-        optionId: e.structureCode!,
-        optionName: e.structureCode!,
-      ))
+                optionId: e.structureCode!,
+                optionName: e.structureCode!,
+              ))
           .toList();
 
       // Extract the first structureCode from the dataList (or the 'objectJson')
       String firstStructureCode =
-      dataList.isNotEmpty ? dataList[0].structureCode! : "";
+          dataList.isNotEmpty ? dataList[0].structureCode! : "";
 
       // Debugging: Print first structureCode and the structures list
       print("Fetched ${dataList.length} structures");
@@ -204,7 +204,7 @@ class OverloadedFloatingButtonProvider with ChangeNotifier {
         print(
             "Calling _loadStructureDetails with $firstStructureCode, isLoadingStructures: $_isLoadingStructures");
         _isLoadingStructures =
-        false; // Reset before calling _loadStructureDetails
+            false; // Reset before calling _loadStructureDetails
         notifyListeners();
         try {
           await _loadStructureDetails(firstStructureCode);
@@ -245,9 +245,9 @@ class OverloadedFloatingButtonProvider with ChangeNotifier {
 
     try {
       print("Inside try block of _loadStructureDetails");
-      String authToken = await SharedPreferenceHelper.getStringValue(
-          LoginSdkPrefs.tokenPrefKey) ??
-          '';
+      String authToken =
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ??
+              '';
       print("Auth token retrieved: $authToken");
 
       final requestData = {
@@ -267,7 +267,7 @@ class OverloadedFloatingButtonProvider with ChangeNotifier {
 
       final response = await ApiProvider(baseUrl: Apis.ROOT_URL)
           .postApiCall(context, Apis.NPDCL_EMP_URL, payload)
-          .timeout(Duration(seconds: 30), onTimeout: () {
+          .timeout(const Duration(seconds: 30), onTimeout: () {
         throw Exception("API call timed out");
       });
 
@@ -356,8 +356,9 @@ class OverloadedFloatingButtonProvider with ChangeNotifier {
       print("Confirmed entry into saveTongTesterReading");
 
       // Retrieve auth token and API key from SharedPreferences
-      String authToken = await SharedPreferenceHelper.getStringValue(
-          LoginSdkPrefs.tokenPrefKey) ?? '';
+      String authToken =
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ??
+              '';
       String apiKey = Apis.API_KEY;
 
       // Validate required fields
@@ -374,7 +375,8 @@ class OverloadedFloatingButtonProvider with ChangeNotifier {
           builder: (BuildContext context) {
             return AlertDialog(
               title: const Text("Error"),
-              content: const Text("All tong tester reading fields must be filled"),
+              content:
+                  const Text("All tong tester reading fields must be filled"),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
@@ -457,7 +459,7 @@ class OverloadedFloatingButtonProvider with ChangeNotifier {
       // Make the API call with timeout
       final response = await ApiProvider(baseUrl: Apis.ROOT_URL)
           .postApiCall(context, Apis.NPDCL_EMP_URL, payload)
-          .timeout(Duration(seconds: 30), onTimeout: () {
+          .timeout(const Duration(seconds: 30), onTimeout: () {
         Navigator.pop(context); // Dismiss loader
         showDialog(
           context: context,
@@ -514,9 +516,8 @@ class OverloadedFloatingButtonProvider with ChangeNotifier {
           builder: (BuildContext context) {
             return AlertDialog(
               title: const Text("Error"),
-              content: Text(
-                  responseData['message'] ??
-                      "Request failed with status ${response.statusCode}"),
+              content: Text(responseData['message'] ??
+                  "Request failed with status ${response.statusCode}"),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
@@ -536,7 +537,8 @@ class OverloadedFloatingButtonProvider with ChangeNotifier {
           builder: (BuildContext context) {
             return AlertDialog(
               title: const Text("Session Expired"),
-              content: const Text("Your session has expired. Please log in again."),
+              content:
+                  const Text("Your session has expired. Please log in again."),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
@@ -597,7 +599,8 @@ class OverloadedFloatingButtonProvider with ChangeNotifier {
           builder: (BuildContext context) {
             return AlertDialog(
               title: const Text("Error"),
-              content: Text("Failed to save tong tester reading: ${e.toString()}"),
+              content:
+                  Text("Failed to save tong tester reading: ${e.toString()}"),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),

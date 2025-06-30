@@ -2,19 +2,18 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
-import 'package:tsnpdcl_employee/dialogs/process_dialog.dart';
 import 'package:tsnpdcl_employee/network/api_provider.dart';
 import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
-import 'package:tsnpdcl_employee/utils/alerts.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/view/tong_tester_readings/model/overload_dtr_list_model.dart';
 
 class OverloadDtrListViewmodel extends ChangeNotifier {
   OverloadDtrListViewmodel({required this.context}) {
-    getOverloadList(SharedPreferenceHelper.getStringValue(
-        LoginSdkPrefs.sectionCodePrefKey), "20f");
+    getOverloadList(
+        SharedPreferenceHelper.getStringValue(LoginSdkPrefs.sectionCodePrefKey),
+        "20f");
   }
 
   final BuildContext context;
@@ -25,14 +24,13 @@ class OverloadDtrListViewmodel extends ChangeNotifier {
   final List<OverloadDtrListModel> _overLoadItems = [];
   List<OverloadDtrListModel> get overLoadItems => _overLoadItems;
 
-  Future<void> getOverloadList(String officeCode, String iNCurrent ) async {
+  Future<void> getOverloadList(String officeCode, String iNCurrent) async {
     _isLoading = isTrue;
     notifyListeners();
 
-
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(
-          LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
       "officeCode": officeCode,
       "iNCurrent": iNCurrent
@@ -61,7 +59,9 @@ class OverloadDtrListViewmodel extends ChangeNotifier {
                 } else {
                   jsonList = [];
                 }
-                final List<OverloadDtrListModel> dataList = jsonList.map((json) => OverloadDtrListModel.fromJson(json)).toList();
+                final List<OverloadDtrListModel> dataList = jsonList
+                    .map((json) => OverloadDtrListModel.fromJson(json))
+                    .toList();
                 _overLoadItems.addAll(dataList);
                 notifyListeners();
               } else {
@@ -79,8 +79,10 @@ class OverloadDtrListViewmodel extends ChangeNotifier {
             showSessionExpiredDialog(context);
           }
         } else {
-          showAlertDialog(context, response.data['message'] ??
-              'Request failed with status: ${response.statusCode}');
+          showAlertDialog(
+              context,
+              response.data['message'] ??
+                  'Request failed with status: ${response.statusCode}');
         }
       }
     } catch (e) {
@@ -91,5 +93,4 @@ class OverloadDtrListViewmodel extends ChangeNotifier {
       notifyListeners();
     }
   }
-
 }

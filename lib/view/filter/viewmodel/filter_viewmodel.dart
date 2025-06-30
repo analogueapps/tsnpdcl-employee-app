@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:tsnpdcl_employee/utils/alerts.dart';
 import 'package:tsnpdcl_employee/view/filter/model/filter_label_model_list.dart';
 
 class FilterViewModel extends ChangeNotifier {
@@ -18,7 +17,8 @@ class FilterViewModel extends ChangeNotifier {
   String get searchQuery => _searchQuery;
 
   List<OptionList> _originalOptionList = []; // Full list of options
-  List<OptionList> _filteredOptionList = []; // Filtered list based on search query
+  List<OptionList> _filteredOptionList =
+      []; // Filtered list based on search query
   List<OptionList> get filteredOptionList => _filteredOptionList;
 
   Map<String, Map<String, OptionList>> hashMapSelectedOptions = {};
@@ -39,14 +39,13 @@ class FilterViewModel extends ChangeNotifier {
       _filteredOptionList = List.from(_originalOptionList);
     }
     notifyListeners();
-
   }
 
   void updateSearchQuery(String query) {
     _searchQuery = query.toLowerCase();
     _filteredOptionList = _originalOptionList
-        .where((option) =>
-        option.optionName!.toLowerCase().contains(_searchQuery))
+        .where(
+            (option) => option.optionName!.toLowerCase().contains(_searchQuery))
         .toList();
     notifyListeners();
   }
@@ -101,7 +100,6 @@ class FilterViewModel extends ChangeNotifier {
     notifyListeners();
     print(hashMapSelectedOptions);
   }
-
 
   void clearFilters() {
     for (var filter in filters) {

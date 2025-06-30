@@ -17,11 +17,11 @@ import 'package:tsnpdcl_employee/view/routed_from_ccc/model/consumer_uscno_model
 import 'package:tsnpdcl_employee/widget/pdf_platform_to_temporary.dart';
 
 class AppBillingComponentsViewmodel extends ChangeNotifier {
-  AppBillingComponentsViewmodel({required this.context, this.args}){
-    if(args!=null && args!['uscno'] != null) {
+  AppBillingComponentsViewmodel({required this.context, this.args}) {
+    if (args != null && args!['uscno'] != null) {
       uscNo.text = args?['uscno'];
-    }else{
-      uscnoReadOnly=isFalse;
+    } else {
+      uscnoReadOnly = isFalse;
       notifyListeners();
     }
     addToMeterList();
@@ -40,7 +40,7 @@ class AppBillingComponentsViewmodel extends ChangeNotifier {
 
   bool get meterAvailableSwitch => _meterAvailableSwitch;
 
-  bool uscnoReadOnly=isTrue;
+  bool uscnoReadOnly = isTrue;
 
   String? selectedCheckboxId;
   bool isSelected(String id) => selectedCheckboxId == id;
@@ -57,33 +57,34 @@ class AppBillingComponentsViewmodel extends ChangeNotifier {
   set meterAvailable(bool value) {
     _meterAvailableSwitch = value;
     print("_meterAvailableSwitch: $_meterAvailableSwitch");
-    if(_meterAvailableSwitch==isTrue){
+    if (_meterAvailableSwitch == isTrue) {
       _loadMeterMake();
     }
     notifyListeners();
   }
 
   final formKey = GlobalKey<FormState>();
-  TextEditingController uscNo= TextEditingController();
-  TextEditingController consumerWithUscNo= TextEditingController();
-  TextEditingController scNoCat= TextEditingController();
-  TextEditingController consumerName= TextEditingController();
-  TextEditingController addressLine1= TextEditingController();
-  TextEditingController addressLine2= TextEditingController();
-  TextEditingController addressLine3= TextEditingController();
-  TextEditingController addressLine4= TextEditingController();
-  TextEditingController serialNo= TextEditingController();
-  TextEditingController capacity= TextEditingController();
-  TextEditingController kwh= TextEditingController();
-  TextEditingController kvah= TextEditingController();
-  TextEditingController fromDate= TextEditingController();
-  TextEditingController toDate= TextEditingController();
-  TextEditingController proposedAvg= TextEditingController();
+  TextEditingController uscNo = TextEditingController();
+  TextEditingController consumerWithUscNo = TextEditingController();
+  TextEditingController scNoCat = TextEditingController();
+  TextEditingController consumerName = TextEditingController();
+  TextEditingController addressLine1 = TextEditingController();
+  TextEditingController addressLine2 = TextEditingController();
+  TextEditingController addressLine3 = TextEditingController();
+  TextEditingController addressLine4 = TextEditingController();
+  TextEditingController serialNo = TextEditingController();
+  TextEditingController capacity = TextEditingController();
+  TextEditingController kwh = TextEditingController();
+  TextEditingController kvah = TextEditingController();
+  TextEditingController fromDate = TextEditingController();
+  TextEditingController toDate = TextEditingController();
+  TextEditingController proposedAvg = TextEditingController();
 
   void setFromDate(String date) {
     fromDate.text = date;
     notifyListeners();
   }
+
   void setToDate(String date) {
     toDate.text = date;
     notifyListeners();
@@ -113,7 +114,8 @@ class AppBillingComponentsViewmodel extends ChangeNotifier {
 
       try {
         // Convert to temp file
-        selectedFile = await PdfPlatformToTemp.createTempFileFromPlatformFile(platformFile);
+        selectedFile = await PdfPlatformToTemp.createTempFileFromPlatformFile(
+            platformFile);
         fileName = PdfPlatformToTemp.getFileName(platformFile);
 
         notifyListeners(); // Notify UI of changes
@@ -133,22 +135,23 @@ class AppBillingComponentsViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<ConsumerUscnoModel> _consumerUSCNOData=[];
-  List<ConsumerUscnoModel> get consumerUSCNOData=>_consumerUSCNOData;
+  final List<ConsumerUscnoModel> _consumerUSCNOData = [];
+  List<ConsumerUscnoModel> get consumerUSCNOData => _consumerUSCNOData;
 
-  Future<void> getConsumerWithUscNo(String uscNo)async{
+  Future<void> getConsumerWithUscNo(String uscNo) async {
     ProcessDialogHelper.showProcessDialog(
       context,
       message: "Fetching please wait...",
     );
-    fetchDetailsClicked=isTrue;
+    fetchDetailsClicked = isTrue;
     _consumerUSCNOData.clear();
     notifyListeners();
 
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
-      "uscno":uscNo,
+      "uscno": uscNo,
     };
 
     var response = await ApiProvider(baseUrl: Apis.ERO_CORRESPONDENCE_URL)
@@ -164,7 +167,7 @@ class AppBillingComponentsViewmodel extends ChangeNotifier {
         if (response.statusCode == successResponseCode) {
           if (response.data['sessionValid'] == isTrue) {
             if (response.data['taskSuccess'] == isTrue) {
-              if(response.data['dataList']!=null) {
+              if (response.data['dataList'] != null) {
                 List<dynamic> jsonList;
 
                 if (response.data['dataList'] is String) {
@@ -175,8 +178,9 @@ class AppBillingComponentsViewmodel extends ChangeNotifier {
                   jsonList = [];
                 }
 
-                final List<ConsumerUscnoModel> dataList =
-                jsonList.map((json) => ConsumerUscnoModel.fromJson(json)).toList();
+                final List<ConsumerUscnoModel> dataList = jsonList
+                    .map((json) => ConsumerUscnoModel.fromJson(json))
+                    .toList();
 
                 _consumerUSCNOData.addAll(dataList);
                 storeConsumerDetails();
@@ -208,36 +212,30 @@ class AppBillingComponentsViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<EroModel> meterStatus=[];
+  List<EroModel> meterStatus = [];
 
   void addToMeterList() {
-    meterStatus.add(
-        EroModel(optionId: "01", optionName: "LIVE(01)"));
+    meterStatus.add(EroModel(optionId: "01", optionName: "LIVE(01)"));
     meterStatus.add(EroModel(optionId: "02", optionName: "STUCKUP(02)"));
-    meterStatus.add(
-        EroModel(optionId: "03", optionName: "UDC(03)"));
-    meterStatus.add(
-        EroModel(optionId: "05", optionName: "DOOR-LOCK(05)"));
-    meterStatus.add(
-        EroModel(optionId: "06", optionName: "METER NOT EXIST(06)"));
-    meterStatus.add(
-        EroModel(optionId: "07", optionName: "ROUND COMPLETE(07)"));
-    meterStatus.add(
-        EroModel(optionId: "9", optionName: "NIL CONSUMPTION(09)"));
-    meterStatus.add(EroModel(
-        optionId: "11", optionName: "BURNT(11)"));
+    meterStatus.add(EroModel(optionId: "03", optionName: "UDC(03)"));
+    meterStatus.add(EroModel(optionId: "05", optionName: "DOOR-LOCK(05)"));
+    meterStatus
+        .add(EroModel(optionId: "06", optionName: "METER NOT EXIST(06)"));
+    meterStatus.add(EroModel(optionId: "07", optionName: "ROUND COMPLETE(07)"));
+    meterStatus.add(EroModel(optionId: "9", optionName: "NIL CONSUMPTION(09)"));
+    meterStatus.add(EroModel(optionId: "11", optionName: "BURNT(11)"));
     meterStatus.add(EroModel(optionId: "12", optionName: "SLUGGISH(12)"));
     meterStatus.add(EroModel(optionId: "13", optionName: "OTHERS(13)"));
   }
-  
-  void storeConsumerDetails(){
-    consumerWithUscNo.text= consumerUSCNOData[0].uscNo;
-    consumerName.text= consumerUSCNOData[0].consumerName;
-    addressLine1.text= consumerUSCNOData[0].address1??"";
-    addressLine2.text= consumerUSCNOData[0].address2??"";
-    addressLine3.text= consumerUSCNOData[0].address3??"";
-    addressLine4.text= consumerUSCNOData[0].address4??"";
-    scNoCat.text= "${consumerUSCNOData[0].scNo}/${consumerUSCNOData[0].cat}";
+
+  void storeConsumerDetails() {
+    consumerWithUscNo.text = consumerUSCNOData[0].uscNo;
+    consumerName.text = consumerUSCNOData[0].consumerName;
+    addressLine1.text = consumerUSCNOData[0].address1 ?? "";
+    addressLine2.text = consumerUSCNOData[0].address2 ?? "";
+    addressLine3.text = consumerUSCNOData[0].address3 ?? "";
+    addressLine4.text = consumerUSCNOData[0].address4 ?? "";
+    scNoCat.text = "${consumerUSCNOData[0].scNo}/${consumerUSCNOData[0].cat}";
     notifyListeners();
   }
 
@@ -246,7 +244,8 @@ class AppBillingComponentsViewmodel extends ChangeNotifier {
     notifyListeners();
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
     };
 
@@ -276,9 +275,8 @@ class AppBillingComponentsViewmodel extends ChangeNotifier {
             if (data['success'] == true) {
               if (data['objectJson'] != null) {
                 final List<dynamic> rawList = jsonDecode(data['objectJson']);
-                final List<EroModel> listData = rawList
-                    .map((json) => EroModel.fromJson(json))
-                    .toList();
+                final List<EroModel> listData =
+                    rawList.map((json) => EroModel.fromJson(json)).toList();
                 meterMakesMap.addAll(listData);
               } else {
                 showAlertDialog(context, "No Data Found");
@@ -309,93 +307,90 @@ class AppBillingComponentsViewmodel extends ChangeNotifier {
 
       if (!validateForm()) {
         return;
-      }else{
+      } else {
         saveRevokeData();
         print("in else block");
       }
     }
   }
+
   bool validateForm() {
-    if (uscNo.text.isEmpty || uscNo.text.isEmpty || consumerWithUscNo.text.isEmpty) {
-      AlertUtils.showSnackBar(
-          context, "Please Enter USCNO and fetch consumer details first", isTrue);
+    if (uscNo.text.isEmpty ||
+        uscNo.text.isEmpty ||
+        consumerWithUscNo.text.isEmpty) {
+      AlertUtils.showSnackBar(context,
+          "Please Enter USCNO and fetch consumer details first", isTrue);
       return false;
     }
-    if (meterAvailableSwitch == isTrue &&(serialNo.text.isEmpty)) {
+    if (meterAvailableSwitch == isTrue && (serialNo.text.isEmpty)) {
       AlertUtils.showSnackBar(
-          context, "Please Enter meter serial number",
-          isTrue);
+          context, "Please Enter meter serial number", isTrue);
+      return false;
+    } else if (meterAvailableSwitch == isTrue && capacity.text.isEmpty) {
+      AlertUtils.showSnackBar(context, "Please Enter meter capacity", isTrue);
+      return false;
+    } else if (meterAvailableSwitch == isTrue && kwh.text.isEmpty) {
+      AlertUtils.showSnackBar(context, "Please Enter KWH reading", isTrue);
+      return false;
+    } else if (meterAvailableSwitch == isTrue &&
+        _consumerUSCNOData[0].trivectorFlag == "1" &&
+        kvah.text.isEmpty) {
+      AlertUtils.showSnackBar(context, "Please Enter KVAH reading", isTrue);
+      return false;
+    } else if (toDate.text.isEmpty) {
+      AlertUtils.showSnackBar(
+          context, "Please select Revision to date", isTrue);
+      return false;
+    } else if (fromDate.text.isEmpty) {
+      AlertUtils.showSnackBar(
+          context, "Please select Revision from date", isTrue);
+      return false;
+    } else if (selectedCheckboxId ==
+            "EXCESS AVG. BILLED DURING METER DEFECTIVE PERIOD" &&
+        proposedAvg.text.isEmpty) {
+      AlertUtils.showSnackBar(
+          context, "Please Enter proposed average units", isTrue);
+      return false;
+    } else if (selectedCheckboxId == "") {
+      AlertUtils.showSnackBar(context, "Please select complaint type", isTrue);
       return false;
     }
-    else if (meterAvailableSwitch == isTrue && capacity.text.isEmpty) {
+    if (fileName == "") {
       AlertUtils.showSnackBar(
-          context, "Please Enter meter capacity",
-          isTrue);
-      return false;
-    }else if (meterAvailableSwitch == isTrue && kwh.text.isEmpty) {
-      AlertUtils.showSnackBar(
-          context, "Please Enter KWH reading",
-          isTrue);
-      return false;
-    }else if (meterAvailableSwitch == isTrue  && _consumerUSCNOData[0].trivectorFlag== "1"&&kvah.text.isEmpty) {
-      AlertUtils.showSnackBar(
-          context, "Please Enter KVAH reading",
-          isTrue);
-      return false;
-    }else if ( toDate.text.isEmpty) {
-      AlertUtils.showSnackBar(
-          context, "Please select Revision to date",
-          isTrue);
-      return false;
-    }else if ( fromDate.text.isEmpty) {
-      AlertUtils.showSnackBar(
-          context, "Please select Revision from date",
-          isTrue);
-      return false;
-    }else if (selectedCheckboxId=="EXCESS AVG. BILLED DURING METER DEFECTIVE PERIOD"&&proposedAvg.text.isEmpty) {
-      AlertUtils.showSnackBar(
-          context, "Please Enter proposed average units",
-          isTrue);
-      return false;
-    }else if (selectedCheckboxId=="") {
-      AlertUtils.showSnackBar(
-          context, "Please select complaint type",
-          isTrue);
-      return false;
-    }
-    if(fileName==""){
-      AlertUtils.showSnackBar(
-          context, "Please upload consumer representation",
-          isTrue);
+          context, "Please upload consumer representation", isTrue);
       return false;
     }
     return true;
   }
 
-
   Future<void> saveRevokeData() async {
     ProcessDialogHelper.showProcessDialog(context, message: "Loading...");
 
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(
-          LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "deviceId": await getDeviceId(),
       "consumer": jsonEncode(_consumerUSCNOData),
       "kwh": meterAvailableSwitch == isTrue ? kwh.text : "-",
       "KvAh": meterAvailableSwitch == isTrue ? kvah.text : "",
-      "meterCap":meterAvailableSwitch == isTrue ? capacity.text:"",
-      "meterMake":meterAvailableSwitch == isTrue ? meterMakeName:"",
-      "meterSerialNo":serialNo.text??"",
-      "averageProposedUnits":selectedCheckboxId=="EXCESS AVG. BILLED DURING METER DEFECTIVE PERIOD"?proposedAvg.text.isEmpty:null,
-      "billRevisionFromDate":fromDate.text,
-      "billRevisionToDate":toDate.text,
-      "complaintType":meterAvailableSwitch == isTrue ?selectedCheckboxId:"06",
-      "fieldStatus":meterStatusName,
-      "cccComplaintId":""
+      "meterCap": meterAvailableSwitch == isTrue ? capacity.text : "",
+      "meterMake": meterAvailableSwitch == isTrue ? meterMakeName : "",
+      "meterSerialNo": serialNo.text ?? "",
+      "averageProposedUnits": selectedCheckboxId ==
+              "EXCESS AVG. BILLED DURING METER DEFECTIVE PERIOD"
+          ? proposedAvg.text.isEmpty
+          : null,
+      "billRevisionFromDate": fromDate.text,
+      "billRevisionToDate": toDate.text,
+      "complaintType":
+          meterAvailableSwitch == isTrue ? selectedCheckboxId : "06",
+      "fieldStatus": meterStatusName,
+      "cccComplaintId": ""
     };
 
     var response = await ApiProvider(baseUrl: Apis.ERO_CORRESPONDENCE_URL)
-        .postApiCallWithFile(context, Apis.SAVE_APP_BILLING_COMPLAINT, payload, 'consumer_representation',selectedFile!, fileName );
+        .postApiCallWithFile(context, Apis.SAVE_APP_BILLING_COMPLAINT, payload,
+            'consumer_representation', selectedFile!, fileName);
 
     if (context.mounted) ProcessDialogHelper.closeDialog(context);
 
@@ -411,7 +406,7 @@ class AppBillingComponentsViewmodel extends ChangeNotifier {
           if (data['sessionValid'] == true) {
             if (data['taskSuccess'] == true) {
               if (data['message'] != null) {
-                showSuccessDialog(context, data['message'] , (){
+                showSuccessDialog(context, data['message'], () {
                   Navigator.pop(context);
                 });
               } else {
@@ -435,7 +430,7 @@ class AppBillingComponentsViewmodel extends ChangeNotifier {
     }
   }
 
-  void resetValues(){
+  void resetValues() {
     consumerWithUscNo.clear();
     consumerName.clear();
     addressLine1.clear();

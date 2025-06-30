@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
@@ -22,7 +21,8 @@ class PtrFeederScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
         create: (_) => PtrFeederViewmodel(context: context),
-        child: Consumer<PtrFeederViewmodel>(builder: (context, viewModel, child) {
+        child:
+            Consumer<PtrFeederViewmodel>(builder: (context, viewModel, child) {
           return WillPopScope(
             onWillPop: () => viewModel.cautionForBackScreen(context),
             child: Scaffold(
@@ -42,203 +42,205 @@ class PtrFeederScreen extends StatelessWidget {
               body: viewModel.isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : Padding(
-                padding: const EdgeInsets.all(15),
-                child: Form(
-                  key: viewModel.formKey,
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                height: 350,
-                                child: Card(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                      children: [
-                                        Text("SELECT SUBSTATION",
-                                            style: TextStyle(
-                                                color: Colors.red[900])),
-                                        const SizedBox(height: 10),
-                                        DropdownButtonFormField<String>(
-                                          value: viewModel.selectedSs,
-                                          hint: const Text(
-                                              "SELECT SUBSTATION"),
-                                          isExpanded: true,
-                                          items: viewModel.subStationList
-                                              .map((LcMasterSsList item) {
-                                            return DropdownMenuItem<
-                                                String>(
-                                              value: item.optionId,
-                                              child: Text(
-                                                  item.optionName ?? ""),
-                                            );
-                                          }).toList(),
-                                          onChanged: (newValue) {
-                                            viewModel.updateSs(newValue);
-                                          },
-                                        ),
-                                        const SizedBox(height: 10),
-                                        TextButton(
-                                          style: TextButton.styleFrom(
-                                            backgroundColor:
-                                            Colors.grey[300],
-                                          ),
-                                          onPressed: () {
-                                            viewModel
-                                                .pickDateFromDateTimePicker(
-                                                context);
-                                          },
-                                          child: Row(
+                      padding: const EdgeInsets.all(15),
+                      child: Form(
+                        key: viewModel.formKey,
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 350,
+                                      child: Card(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(10),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
-                                              const Icon(
-                                                  Icons
-                                                      .calendar_month_outlined,
-                                                  size: 25,
-                                                  color: Colors.black),
-                                              const SizedBox(width: 8),
-                                              Text(
-                                                viewModel.pickedDate ==
-                                                    '' ||
-                                                    viewModel
-                                                        .pickedDate ==
-                                                        "null/null/null"
-                                                    ? "CHOOSE DATE"
-                                                    : viewModel
-                                                    .pickedDate,
-                                                style: TextStyle(
-                                                    color:
-                                                    Colors.red[900]),
+                                              Text("SELECT SUBSTATION",
+                                                  style: TextStyle(
+                                                      color: Colors.red[900])),
+                                              const SizedBox(height: 10),
+                                              DropdownButtonFormField<String>(
+                                                value: viewModel.selectedSs,
+                                                hint: const Text(
+                                                    "SELECT SUBSTATION"),
+                                                isExpanded: true,
+                                                items: viewModel.subStationList
+                                                    .map((LcMasterSsList item) {
+                                                  return DropdownMenuItem<
+                                                      String>(
+                                                    value: item.optionId,
+                                                    child: Text(
+                                                        item.optionName ?? ""),
+                                                  );
+                                                }).toList(),
+                                                onChanged: (newValue) {
+                                                  viewModel.updateSs(newValue);
+                                                },
+                                              ),
+                                              const SizedBox(height: 10),
+                                              TextButton(
+                                                style: TextButton.styleFrom(
+                                                  backgroundColor:
+                                                      Colors.grey[300],
+                                                ),
+                                                onPressed: () {
+                                                  viewModel
+                                                      .pickDateFromDateTimePicker(
+                                                          context);
+                                                },
+                                                child: Row(
+                                                  children: [
+                                                    const Icon(
+                                                        Icons
+                                                            .calendar_month_outlined,
+                                                        size: 25,
+                                                        color: Colors.black),
+                                                    const SizedBox(width: 8),
+                                                    Text(
+                                                      viewModel.pickedDate ==
+                                                                  '' ||
+                                                              viewModel
+                                                                      .pickedDate ==
+                                                                  "null/null/null"
+                                                          ? "CHOOSE DATE"
+                                                          : viewModel
+                                                              .pickedDate,
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.red[900]),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              const SizedBox(height: 10),
+                                              Text("SELECT LOAD HOURS",
+                                                  style: TextStyle(
+                                                      color: Colors.red[900])),
+                                              const SizedBox(height: 10),
+                                              DropdownButtonFormField<String>(
+                                                value:
+                                                    viewModel.selectedLoadHour,
+                                                hint: const Text(
+                                                    "SELECT LOAD HOUR"),
+                                                isExpanded: true,
+                                                items: viewModel.loadHours
+                                                    .map((String value) {
+                                                  return DropdownMenuItem<
+                                                      String>(
+                                                    value: value,
+                                                    child: Text(value),
+                                                  );
+                                                }).toList(),
+                                                onChanged: (newValue) {
+                                                  viewModel.selectedLoadHour =
+                                                      newValue;
+                                                },
+                                              ),
+                                              const SizedBox(height: 10),
+                                              SizedBox(
+                                                width: double.infinity,
+                                                child: PrimaryButton(
+                                                  text: "GET DETAILS",
+                                                  onPressed: () {
+                                                    viewModel.getDetails(
+                                                        viewModel.selectedSs);
+                                                  },
+                                                ),
                                               ),
                                             ],
                                           ),
                                         ),
-                                        const SizedBox(height: 10),
-                                        Text("SELECT LOAD HOURS",
-                                            style: TextStyle(
-                                                color: Colors.red[900])),
-                                        const SizedBox(height: 10),
-                                        DropdownButtonFormField<String>(
-                                          value:
-                                          viewModel.selectedLoadHour,
-                                          hint: const Text(
-                                              "SELECT LOAD HOUR"),
-                                          isExpanded: true,
-                                          items: viewModel.loadHours
-                                              .map((String value) {
-                                            return DropdownMenuItem<
-                                                String>(
-                                              value: value,
-                                              child: Text(value),
-                                            );
-                                          }).toList(),
-                                          onChanged: (newValue) {
-                                            viewModel.selectedLoadHour =
-                                                newValue;
-                                          },
-                                        ),
-                                        const SizedBox(height: 10),
-                                        SizedBox(
-                                          width: double.infinity,
-                                          child: PrimaryButton(
-                                            text: "GET DETAILS",
-                                            onPressed: () {
-                                              viewModel.getDetails(
-                                                  viewModel.selectedSs);
-                                            },
-                                          ),
-                                        ),
-                                      ],
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              ),
-                              if (viewModel
-                                  .loadInAmpsModelList.isNotEmpty)
-                                ListView.builder(
-                                  physics:
-                                  const NeverScrollableScrollPhysics(),
-                                  // Use parent scroll
-                                  shrinkWrap: true,
-                                  // Important!
-                                  itemCount: viewModel
-                                      .loadInAmpsModelList.length,
-                                  itemBuilder: (context, index) {
-                                    final data = viewModel
-                                        .loadInAmpsModelList[index];
-                                    final ctrl =
-                                    viewModel.controllers[index];
+                                    if (viewModel
+                                        .loadInAmpsModelList.isNotEmpty)
+                                      ListView.builder(
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        // Use parent scroll
+                                        shrinkWrap: true,
+                                        // Important!
+                                        itemCount: viewModel
+                                            .loadInAmpsModelList.length,
+                                        itemBuilder: (context, index) {
+                                          final data = viewModel
+                                              .loadInAmpsModelList[index];
+                                          final ctrl =
+                                              viewModel.controllers[index];
 
-                                    return Card(
-                                      margin: const EdgeInsets.symmetric(
-                                          vertical: 8, horizontal: 12),
-                                      child: Padding(
-                                        padding:
-                                        const EdgeInsets.all(12.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: [
-                                            Align(
-                                              alignment:
-                                              Alignment.topRight,
-                                              child: Text(
-                                                data.type ?? '',
-                                                style: const TextStyle(
-                                                    fontWeight:
-                                                    FontWeight.bold,
-                                                    color: Colors.red),
+                                          return Card(
+                                            margin: const EdgeInsets.symmetric(
+                                                vertical: 8, horizontal: 12),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(12.0),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Align(
+                                                    alignment:
+                                                        Alignment.topRight,
+                                                    child: Text(
+                                                      data.type ?? '',
+                                                      style: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.red),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 6),
+                                                  ViewDetailedLcTileWidget(
+                                                      tileKey: "Name",
+                                                      tileValue:
+                                                          " ${data.name ?? ''}"),
+                                                  const Divider(),
+                                                  ViewDetailedLcTileWidget(
+                                                      tileKey: "Capacity",
+                                                      tileValue:
+                                                          " ${data.capacity ?? ''}"),
+                                                  const Divider(),
+                                                  const SizedBox(height: 10),
+                                                  _buildTextField('R Phase',
+                                                      ctrl.rController),
+                                                  _buildTextField('Y Phase',
+                                                      ctrl.yController),
+                                                  _buildTextField('B Phase',
+                                                      ctrl.bController),
+                                                ],
                                               ),
                                             ),
-                                            const SizedBox(height: 6),
-                                            ViewDetailedLcTileWidget(
-                                                tileKey: "Name",
-                                                tileValue:
-                                                " ${data.name ?? ''}"),
-                                            const Divider(),
-                                            ViewDetailedLcTileWidget(
-                                                tileKey: "Capacity",
-                                                tileValue:
-                                                " ${data.capacity ?? ''}"),
-                                            const Divider(),
-                                            const SizedBox(height: 10),
-                                            _buildTextField('R Phase', ctrl.rController),
-                                            _buildTextField('Y Phase', ctrl.yController),
-                                            _buildTextField('B Phase', ctrl.bController),
-                                          ],
-                                        ),
+                                          );
+                                        },
                                       ),
-                                    );
-                                  },
+                                  ],
                                 ),
-                            ],
-                          ),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            SizedBox(
+                              width: double.infinity,
+                              child: PrimaryButton(
+                                text: "SUBMIT",
+                                onPressed: () {
+                                  if (viewModel.validateAllPhaseControllers()) {
+                                    viewModel.submitLoads();
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      const SizedBox(height: 10),
-                      SizedBox(
-                        width: double.infinity,
-                        child: PrimaryButton(
-                          text: "SUBMIT",
-                          onPressed: () {
-                            if (viewModel.validateAllPhaseControllers()) {
-                              viewModel.submitLoads();
-                            }
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+                    ),
             ),
           );
-        })
-    );
+        }));
   }
 
   Widget _buildTextField(String label, TextEditingController controller) {

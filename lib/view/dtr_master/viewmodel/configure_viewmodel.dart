@@ -20,7 +20,7 @@ class MapDtrViewMobel extends ChangeNotifier {
   bool _isLoading = isFalse;
 
   bool get isLoading => _isLoading;
-  
+
   final formKey = GlobalKey<FormState>();
   final TextEditingController equipNoORStructCode = TextEditingController();
 
@@ -30,7 +30,7 @@ class MapDtrViewMobel extends ChangeNotifier {
   //Distribution
   String? _selectedDistribution;
   String? get selectedDistribution => _selectedDistribution;
-  List<SubstationModel> _distributions = [];
+  final List<SubstationModel> _distributions = [];
   List<SubstationModel> get distributions => _distributions;
 
   void onListDistriSelected(String? value) {
@@ -47,7 +47,9 @@ class MapDtrViewMobel extends ChangeNotifier {
 
     try {
       final requestData = {
-        "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ?? "",
+        "authToken":
+            SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ??
+                "",
         "api": Apis.API_KEY,
       };
 
@@ -107,17 +109,18 @@ class MapDtrViewMobel extends ChangeNotifier {
         }
 
         dataList = (jsonDecode(cleanedJson) as List<dynamic>)
-            .map((json) => SubstationModel.fromJson(json as Map<String, dynamic>))
+            .map((json) =>
+                SubstationModel.fromJson(json as Map<String, dynamic>))
             .toList();
       } else if (jsonList is List) {
-        dataList = (jsonList as List<dynamic>)
-            .map((json) => SubstationModel.fromJson(json as Map<String, dynamic>))
+        dataList = (jsonList)
+            .map((json) =>
+                SubstationModel.fromJson(json as Map<String, dynamic>))
             .toList();
       }
 
       _distributions.addAll(dataList);
       print("Successfully loaded ${_distributions.length} distributions");
-
     } catch (e, stackTrace) {
       print("Error fetching distributions: $e\n$stackTrace");
       showErrorDialog(context, "Failed to load distributions: ${e.toString()}");
@@ -127,8 +130,6 @@ class MapDtrViewMobel extends ChangeNotifier {
       notifyListeners();
     }
   }
-
-
 
   //Feeder wise
   //1. Circle
@@ -161,21 +162,22 @@ class MapDtrViewMobel extends ChangeNotifier {
   void onListCircleSelected(String? value) {
     _selectedCircle = value ?? '000';
     _selectedStation = null;
-    _selectedFeeder=null;
+    _selectedFeeder = null;
     getSubstations();
     print("_selectedCircle: $_selectedCircle");
     notifyListeners();
   }
+
   // 2.station
   String? _selectedStation;
   String? get selectedStation => _selectedStation;
 
-  List<SubstationModel> _stations = [];
+  final List<SubstationModel> _stations = [];
   List<SubstationModel> get stations => _stations;
 
   void onStationSelected(String? value) {
     _selectedStation = value;
-    _selectedFeeder=null;
+    _selectedFeeder = null;
     getFeeders();
     print("_selectedStation: $_selectedStation");
     notifyListeners();
@@ -190,7 +192,8 @@ class MapDtrViewMobel extends ChangeNotifier {
 
     try {
       final requestData = {
-        "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+        "authToken":
+            SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
         "api": Apis.API_KEY,
         "circleCode": _selectedCircle
       };
@@ -240,9 +243,7 @@ class MapDtrViewMobel extends ChangeNotifier {
 
       if (jsonList is String) {
         // Clean and parse JSON string
-        String cleanedJson = jsonList
-            .replaceAll(r'\"', '"')
-            .trim();
+        String cleanedJson = jsonList.replaceAll(r'\"', '"').trim();
 
         if (cleanedJson.endsWith(',')) {
           cleanedJson = cleanedJson.substring(0, cleanedJson.length - 1);
@@ -255,16 +256,13 @@ class MapDtrViewMobel extends ChangeNotifier {
         dataList = (jsonDecode(cleanedJson) as List)
             .map((json) => SubstationModel.fromJson(json))
             .toList();
-      }
-      else if (jsonList is List) {
-        dataList = jsonList
-            .map((json) => SubstationModel.fromJson(json))
-            .toList();
+      } else if (jsonList is List) {
+        dataList =
+            jsonList.map((json) => SubstationModel.fromJson(json)).toList();
       }
 
       _stations.addAll(dataList);
       print("Successfully loaded ${_stations.length} stations");
-
     } catch (e, stackTrace) {
       print("Error fetching stations: $e\n$stackTrace");
       showErrorDialog(context, "Failed to load stations: ${e.toString()}");
@@ -275,14 +273,12 @@ class MapDtrViewMobel extends ChangeNotifier {
     }
   }
 
-
 //3.feeder
   String? _selectedFeeder;
   String? get selectedFeeder => _selectedFeeder;
 
   List<SubstationModel> _feeder = [];
   List<SubstationModel> get feeder => _feeder;
-
 
   void onListFeederSelected(String? value) {
     if (value != null && _feeder.any((item) => item.optionCode == value)) {
@@ -301,7 +297,9 @@ class MapDtrViewMobel extends ChangeNotifier {
 
     try {
       final requestData = {
-        "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ?? "",
+        "authToken":
+            SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ??
+                "",
         "api": Apis.API_KEY,
         "ss": _selectedStation ?? "",
       };
@@ -326,7 +324,8 @@ class MapDtrViewMobel extends ChangeNotifier {
       }
 
       if (response.statusCode != successResponseCode) {
-        throw Exception(responseData['message'] ?? "Request failed with status ${response.statusCode}");
+        throw Exception(responseData['message'] ??
+            "Request failed with status ${response.statusCode}");
       }
 
       if (responseData['tokenValid'] != true) {
@@ -354,21 +353,23 @@ class MapDtrViewMobel extends ChangeNotifier {
           cleanedJson = '[$cleanedJson]';
         }
         dataList = (jsonDecode(cleanedJson) as List<dynamic>)
-            .map((json) => SubstationModel.fromJson(json as Map<String, dynamic>))
+            .map((json) =>
+                SubstationModel.fromJson(json as Map<String, dynamic>))
             .toList();
       } else if (jsonList is List) {
-        dataList = (jsonList as List<dynamic>)
-            .map((json) => SubstationModel.fromJson(json as Map<String, dynamic>))
+        dataList = (jsonList)
+            .map((json) =>
+                SubstationModel.fromJson(json as Map<String, dynamic>))
             .toList();
       }
 
       _feeder = dataList.toSet().toList(); // Deduplicate based on optionCode
-      print("Feeder option codes: ${_feeder.map((f) => f.optionCode).toList()}");
+      print(
+          "Feeder option codes: ${_feeder.map((f) => f.optionCode).toList()}");
       if (_feeder.isNotEmpty) {
         _selectedFeeder = _feeder.first.optionCode; // Default to first feeder
       }
       print("Successfully loaded ${_feeder.length} feeders");
-
     } catch (e, stackTrace) {
       print("Error fetching feeders: $e\n$stackTrace");
       showErrorDialog(context, "Failed to load feeders: ${e.toString()}");
@@ -395,7 +396,9 @@ class MapDtrViewMobel extends ChangeNotifier {
     try {
       if (_selectedFilter == "Feeder wise") {
         requestFData = {
-          "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ?? "",
+          "authToken": SharedPreferenceHelper.getStringValue(
+                  LoginSdkPrefs.tokenPrefKey) ??
+              "",
           "api": Apis.API_KEY,
           "ss": _selectedStation ?? "",
           "fc": _selectedFeeder ?? "",
@@ -404,7 +407,9 @@ class MapDtrViewMobel extends ChangeNotifier {
         };
       } else if (_selectedFilter == "Distribution wise") {
         requestFData = {
-          "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ?? "",
+          "authToken": SharedPreferenceHelper.getStringValue(
+                  LoginSdkPrefs.tokenPrefKey) ??
+              "",
           "api": Apis.API_KEY,
           "dc": _selectedDistribution ?? "",
           "fc": "",
@@ -437,7 +442,8 @@ class MapDtrViewMobel extends ChangeNotifier {
       print("API Response: $responseData");
 
       if (response.statusCode != successResponseCode) {
-        throw Exception(responseData['message'] ?? "Request failed with status ${response.statusCode}");
+        throw Exception(responseData['message'] ??
+            "Request failed with status ${response.statusCode}");
       }
 
       if (responseData['tokenValid'] != true) {
@@ -460,19 +466,22 @@ class MapDtrViewMobel extends ChangeNotifier {
         String cleanedJson = jsonList.trim();
         try {
           if (!cleanedJson.startsWith('[') || !cleanedJson.endsWith(']')) {
-            throw FormatException("Invalid JSON array format in message: $cleanedJson");
+            throw FormatException(
+                "Invalid JSON array format in message: $cleanedJson");
           }
           dataList = (jsonDecode(cleanedJson) as List<dynamic>)
-              .map((json) => FeederDisModel.fromJson(json as Map<String, dynamic>))
+              .map((json) =>
+                  FeederDisModel.fromJson(json as Map<String, dynamic>))
               .toList();
           _fDEntityList = dataList;
         } catch (e) {
           print("Error decoding JSON string: $e");
-          throw e;
+          rethrow;
         }
       } else if (jsonList is List) {
         dataList = jsonList
-            .map((json) => FeederDisModel.fromJson(json as Map<String, dynamic>))
+            .map(
+                (json) => FeederDisModel.fromJson(json as Map<String, dynamic>))
             .toList();
       } else if (jsonList is String) {
         // Parse the string only if it appears to be a valid JSON list
@@ -481,19 +490,19 @@ class MapDtrViewMobel extends ChangeNotifier {
           dataList = (jsonDecode(cleaned) as List)
               .map((json) => FeederDisModel.fromJson(json))
               .toList();
-      } else {
-        throw Exception("Unexpected message format: ${jsonList.runtimeType}");
-      }
+        } else {
+          throw Exception("Unexpected message format: ${jsonList.runtimeType}");
+        }
       } else {
         throw Exception("Unexpected message format: ${jsonList.runtimeType}");
       }
 
       print("Successfully loaded ${_fDEntityList.length} structure entities");
-      print("Navigating to MappedDtr with ${_fDEntityList.length} items: ${_fDEntityList.map((e) => e.toJson())}");
+      print(
+          "Navigating to MappedDtr with ${_fDEntityList.length} items: ${_fDEntityList.map((e) => e.toJson())}");
       // Navigator.pushNamed(context, Routes.mappedDtrScreen, arguments: _fDEntityList);
-      Navigation.instance.navigateTo( Routes.mappedDtrScreen, args: _fDEntityList);
-
-
+      Navigation.instance
+          .navigateTo(Routes.mappedDtrScreen, args: _fDEntityList);
     } catch (e, stackTrace) {
       print("Error fetching feeder/distribution data: $e\n$stackTrace");
       showErrorDialog(context, "Failed to load data: ${e.toString()}");
@@ -506,7 +515,7 @@ class MapDtrViewMobel extends ChangeNotifier {
   }
 
   // Equipment no/Structure code
-  List<FeederDisModel> _structureDataConfi = [];
+  final List<FeederDisModel> _structureDataConfi = [];
   List<FeederDisModel> get structureData => _structureDataConfi;
 
   Future<void> getStructureData() async {
@@ -514,12 +523,10 @@ class MapDtrViewMobel extends ChangeNotifier {
     _structureDataConfi.clear();
     notifyListeners();
 
-
-
     final requestData = {
       "authToken":
-      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ??
-          "",
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ??
+              "",
       "api": Apis.API_KEY,
       "structureCode": equipNoORStructCode.text,
     };
@@ -573,8 +580,7 @@ class MapDtrViewMobel extends ChangeNotifier {
                   print(
                       "Structure data: ${_structureDataConfi.length} items loaded");
                   print(
-                      "Structure details: ${_structureDataConfi.map((e) =>
-                          e.toJson())}");
+                      "Structure details: ${_structureDataConfi.map((e) => e.toJson())}");
                   Navigation.instance.navigateTo(
                     Routes.dtrStructure,
                     args: _structureDataConfi,
@@ -594,8 +600,8 @@ class MapDtrViewMobel extends ChangeNotifier {
             showSessionExpiredDialog(context);
           }
         } else {
-          showErrorDialog(context,
-              "Request failed with status: ${response.statusCode}");
+          showErrorDialog(
+              context, "Request failed with status: ${response.statusCode}");
         }
       }
     } catch (e) {
@@ -604,11 +610,10 @@ class MapDtrViewMobel extends ChangeNotifier {
     }
   }
 
-
   void setSelectedFilter(String title) {
     _selectedFilter = title;
     print("$_selectedFilter: filter selected");
-    if(_selectedFilter=="Distribution wise"){
+    if (_selectedFilter == "Distribution wise") {
       getDistributions();
     }
     notifyListeners();
@@ -621,51 +626,49 @@ class MapDtrViewMobel extends ChangeNotifier {
 
       if (!validateForm()) {
         return;
-      }else if(_selectedFilter=="Distribution wise"||_selectedFilter=="Feeder wise"){
+      } else if (_selectedFilter == "Distribution wise" ||
+          _selectedFilter == "Feeder wise") {
         getStructFeederDis();
-      }else {
+      } else {
         getStructureData();
       }
     }
   }
-    bool validateForm() {
-      if (_selectedFilter==''||_selectedFilter==null) {
-        AlertUtils.showSnackBar(context, "Please select any one filter Circle", isTrue);
-        print("Please select any one filter Circle");
-        return false;
-      }
-      if (_selectedFilter=="Equipment/Structure search" && equipNoORStructCode.text.isEmpty ) {
-        AlertUtils.showSnackBar(
-            context, "Please Enter Your Equipment No/Structure Code",
-            isTrue);
-        return false;
-      } else if (_selectedFilter=="Equipment/Structure search" && equipNoORStructCode.text.length<9 ) {
-        AlertUtils.showSnackBar(
-            context, "Please Enter Your Equipment No/Structure Code",
-            isTrue);
-        return false;
-      }
-      else if (_selectedFilter=="Distribution wise" && selectedDistribution==null) {
-        AlertUtils.showSnackBar(
-            context, "Please select Distribution",
-            isTrue);
-        return false;
-      }else if (_selectedFilter=="Feeder wise" && selectedCircle==null) {
-        AlertUtils.showSnackBar(
-            context, "Please select Circle",
-            isTrue);
-        return false;
-      }else if ((_selectedFilter=="Feeder wise" &&selectedCircle!=null) && selectedStation==null) {
-        AlertUtils.showSnackBar(
-            context, "Please select Station",
-            isTrue);
-        return false;
-      }else if (((_selectedFilter=="Feeder wise"&&selectedCircle!=null)&&selectedStation!=null) && selectedFeeder==null) {
-        AlertUtils.showSnackBar(
-            context, "Please select Feeder",
-            isTrue);
-        return false;
-      }
-      return true;
+
+  bool validateForm() {
+    if (_selectedFilter == '' || _selectedFilter == null) {
+      AlertUtils.showSnackBar(
+          context, "Please select any one filter Circle", isTrue);
+      print("Please select any one filter Circle");
+      return false;
     }
+    if (_selectedFilter == "Equipment/Structure search" &&
+        equipNoORStructCode.text.isEmpty) {
+      AlertUtils.showSnackBar(
+          context, "Please Enter Your Equipment No/Structure Code", isTrue);
+      return false;
+    } else if (_selectedFilter == "Equipment/Structure search" &&
+        equipNoORStructCode.text.length < 9) {
+      AlertUtils.showSnackBar(
+          context, "Please Enter Your Equipment No/Structure Code", isTrue);
+      return false;
+    } else if (_selectedFilter == "Distribution wise" &&
+        selectedDistribution == null) {
+      AlertUtils.showSnackBar(context, "Please select Distribution", isTrue);
+      return false;
+    } else if (_selectedFilter == "Feeder wise" && selectedCircle == null) {
+      AlertUtils.showSnackBar(context, "Please select Circle", isTrue);
+      return false;
+    } else if ((_selectedFilter == "Feeder wise" && selectedCircle != null) &&
+        selectedStation == null) {
+      AlertUtils.showSnackBar(context, "Please select Station", isTrue);
+      return false;
+    } else if (((_selectedFilter == "Feeder wise" && selectedCircle != null) &&
+            selectedStation != null) &&
+        selectedFeeder == null) {
+      AlertUtils.showSnackBar(context, "Please select Feeder", isTrue);
+      return false;
+    }
+    return true;
+  }
 }

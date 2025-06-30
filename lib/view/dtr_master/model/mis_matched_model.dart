@@ -17,7 +17,6 @@ class MisMatchedModel {
     this.wing,
     this.phyLocAdd,
     this.statusRemarks,
-
   });
 
   MisMatchedModel.fromJson(dynamic json) {
@@ -43,7 +42,7 @@ class MisMatchedModel {
       statusRemarks = json['statusRemarks']?.toString();
     } catch (e) {
       print("Error parsing MisMatchedModel: $e");
-      throw FormatException("Invalid meter data format");
+      throw const FormatException("Invalid meter data format");
     }
   }
 
@@ -58,9 +57,7 @@ class MisMatchedModel {
   String? phyLocAdd;
   String? statusRemarks;
 
-
   MisMatchedModel copyWith({
-
     String? sapEquipmentCode,
     String? structureCode,
     String? make,
@@ -70,11 +67,8 @@ class MisMatchedModel {
     String? wing,
     String? phyLocAdd,
     String? statusRemarks,
-
-
   }) =>
       MisMatchedModel(
-
         sapEquipmentCode: sapEquipmentCode ?? this.sapEquipmentCode,
         structureCode: structureCode ?? this.structureCode,
         make: make ?? this.make,
@@ -84,8 +78,6 @@ class MisMatchedModel {
         wing: wing ?? this.wing,
         phyLocAdd: phyLocAdd ?? this.phyLocAdd,
         statusRemarks: statusRemarks ?? this.statusRemarks,
-
-
       );
 
   Map<String, dynamic> toJson() {
@@ -99,7 +91,6 @@ class MisMatchedModel {
     map['wing'] = wing;
     map['phyLocAdd'] = phyLocAdd;
     map['statusRemarks'] = statusRemarks;
-
 
     return map;
   }

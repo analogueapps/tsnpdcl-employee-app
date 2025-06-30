@@ -53,14 +53,13 @@ class EnterServicesDetailsViewmodel extends ChangeNotifier {
 
   void onListCircleSelected(String? value) {
     _selectedCircle = value ?? '000';
-    final index = _circle.indexWhere((circle) =>
-    circle.circleId == _selectedCircle);
+    final index =
+        _circle.indexWhere((circle) => circle.circleId == _selectedCircle);
     print("Selected Circle: $_selectedCircle, Position: $index");
     getEroList(index.toString());
     notifyListeners();
     notifyListeners();
   }
-
 
   List<EroModel> _getEro = [];
   String? _selectedEro;
@@ -69,13 +68,12 @@ class EnterServicesDetailsViewmodel extends ChangeNotifier {
 
   String? get selectedEro => _selectedEro;
 
-
   Future<void> getEroList(String selectedCircleId) async {
     ProcessDialogHelper.showProcessDialog(context, message: "Loading...");
 
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(
-          LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "app": "in.tsnpdcl.npdclemployee",
       "cid": selectedCircleId,
     };
@@ -87,9 +85,8 @@ class EnterServicesDetailsViewmodel extends ChangeNotifier {
       if (context.mounted) ProcessDialogHelper.closeDialog(context);
 
       if (response != null) {
-        dynamic responseData = response.data is String
-            ? jsonDecode(response.data)
-            : response.data;
+        dynamic responseData =
+            response.data is String ? jsonDecode(response.data) : response.data;
 
         // Fix: handle List as root
         if (responseData is List && responseData.isNotEmpty) {
@@ -137,62 +134,52 @@ class EnterServicesDetailsViewmodel extends ChangeNotifier {
   }
 
   //Find service
-  Future<void> submitForm(String circleId, String ero,
-      String sc, String usc) async {
+  Future<void> submitForm(
+      String circleId, String ero, String sc, String usc) async {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
       notifyListeners();
 
       if (!validateForm()) {
         return;
-      }else{
+      } else {
         confirmServiceData(circleId, ero, sc, usc);
         print("in else block");
       }
     }
   }
+
   bool validateForm() {
     if (_selectedCircle == "" || _selectedCircle == null) {
-      AlertUtils.showSnackBar(
-          context, "Please select Circle", isTrue);
+      AlertUtils.showSnackBar(context, "Please select Circle", isTrue);
       return false;
-    } else if (_selectedEro == ""||_selectedEro==null) {
-      AlertUtils.showSnackBar(
-          context, "Please select ERO",
-          isTrue);
+    } else if (_selectedEro == "" || _selectedEro == null) {
+      AlertUtils.showSnackBar(context, "Please select ERO", isTrue);
       return false;
-    }
-    else if (scNoController.text == "" && uscNoController.text=="") {
-      AlertUtils.showSnackBar(
-          context, "Please enter SCNO or USCNO ",
-          isTrue);
+    } else if (scNoController.text == "" && uscNoController.text == "") {
+      AlertUtils.showSnackBar(context, "Please enter SCNO or USCNO ", isTrue);
       return false;
-    }else if (uscNoController.text != "" && uscNoController.text.length<8) {
-      AlertUtils.showSnackBar(
-          context, "USCNO should be 8 characters",
-          isTrue);
+    } else if (uscNoController.text != "" && uscNoController.text.length < 8) {
+      AlertUtils.showSnackBar(context, "USCNO should be 8 characters", isTrue);
       return false;
-    }else if (uscNoController.text != "" && uscNoController.text.length>8) {
-      AlertUtils.showSnackBar(
-          context, "USCNO should be 8 characters",
-          isTrue);
+    } else if (uscNoController.text != "" && uscNoController.text.length > 8) {
+      AlertUtils.showSnackBar(context, "USCNO should be 8 characters", isTrue);
       return false;
     }
     return true;
   }
-  List<ServiceDetailsModel> _confirmService = [];
 
+  List<ServiceDetailsModel> _confirmService = [];
 
   List<ServiceDetailsModel> get confirmService => _confirmService;
 
-
-  Future<void> confirmServiceData(String circleId, String ero,
-      String sc, String usc) async {
+  Future<void> confirmServiceData(
+      String circleId, String ero, String sc, String usc) async {
     ProcessDialogHelper.showProcessDialog(context, message: "Loading...");
 
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(
-          LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "app": "in.tsnpdcl.npdclemployee",
       "cid": usc.isEmpty ? circleId : "-",
       "ero": usc.isEmpty ? ero : "-",
@@ -206,9 +193,8 @@ class EnterServicesDetailsViewmodel extends ChangeNotifier {
       if (context.mounted) ProcessDialogHelper.closeDialog(context);
 
       if (response != null) {
-        dynamic responseData = response.data is String
-            ? jsonDecode(response.data)
-            : response.data;
+        dynamic responseData =
+            response.data is String ? jsonDecode(response.data) : response.data;
 
         if (responseData is List && responseData.isNotEmpty) {
           responseData = responseData.first;
@@ -254,16 +240,16 @@ class EnterServicesDetailsViewmodel extends ChangeNotifier {
             flex: 2, // Adjust flex for the label
             child: Text(
               label,
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: FontWeight.bold),
               textAlign: TextAlign.start,
             ),
           ),
-          SizedBox(width: 25), // Space between label and value
+          const SizedBox(width: 25), // Space between label and value
           Expanded(
             flex: 3, // Adjust flex for the value
             child: Text(
               value,
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: FontWeight.bold),
               textAlign: TextAlign.start,
               softWrap: true,
               overflow: TextOverflow.visible, // Ensures wrapping
@@ -273,7 +259,6 @@ class EnterServicesDetailsViewmodel extends ChangeNotifier {
       ),
     );
   }
-
 
   void showConsumerDialog(ServiceDetailsModel objectList) {
     showCupertinoDialog<void>(
@@ -293,12 +278,11 @@ class EnterServicesDetailsViewmodel extends ChangeNotifier {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildInfoRow("Consumer Name:", objectList.name!),
-                        _buildInfoRow("Service No:", objectList.scno!),
-                        _buildInfoRow("USCNO:", objectList.uscno!),
-                        _buildInfoRow("Circle Code:", objectList.circle!),
-                        _buildInfoRow("ERO Code:", objectList.erono!),
-
+                        _buildInfoRow("Consumer Name:", objectList.name),
+                        _buildInfoRow("Service No:", objectList.scno),
+                        _buildInfoRow("USCNO:", objectList.uscno),
+                        _buildInfoRow("Circle Code:", objectList.circle),
+                        _buildInfoRow("ERO Code:", objectList.erono),
                       ],
                     ),
                   ),
@@ -318,19 +302,19 @@ class EnterServicesDetailsViewmodel extends ChangeNotifier {
             ),
             CupertinoDialogAction(
               onPressed: () {
-                if(bs_udc==true){
+                if (bs_udc == true) {
                   Navigator.of(context).pop();
-                  String webUrl = "${Apis.CHECK_BS_UDC_WED_URL}bsUdcEntryForm.jsp?scno=${_confirmService.first.uscno}&ero=${selectedEro!}&emp_id=${SharedPreferenceHelper.getStringValue(LoginSdkPrefs.userIdPrefKey)}&sectionId=${SharedPreferenceHelper.getStringValue(LoginSdkPrefs.sectionIdKey)}";
-                  Navigation.instance.navigateTo(
-                      Routes.webViewScreen, args: {
+                  String webUrl =
+                      "${Apis.CHECK_BS_UDC_WED_URL}bsUdcEntryForm.jsp?scno=${_confirmService.first.uscno}&ero=${selectedEro!}&emp_id=${SharedPreferenceHelper.getStringValue(LoginSdkPrefs.userIdPrefKey)}&sectionId=${SharedPreferenceHelper.getStringValue(LoginSdkPrefs.sectionIdKey)}";
+                  Navigation.instance.navigateTo(Routes.webViewScreen, args: {
                     "title": "BS/UDC Inspection",
                     "url": webUrl,
                   });
-                }else{
+                } else {
                   Navigator.of(context).pop();
-                  String webUrl = "${Apis.CHECK_BS_UDC_WED_URL}checkReadingEntryForm.jsp?scno=${_confirmService.first.uscno}&ero=${selectedEro!}&emp_id=${SharedPreferenceHelper.getStringValue(LoginSdkPrefs.userIdPrefKey)}&sectionId=${SharedPreferenceHelper.getStringValue(LoginSdkPrefs.sectionIdKey)}";
-                  Navigation.instance.navigateTo(
-                      Routes.webViewScreen, args: {
+                  String webUrl =
+                      "${Apis.CHECK_BS_UDC_WED_URL}checkReadingEntryForm.jsp?scno=${_confirmService.first.uscno}&ero=${selectedEro!}&emp_id=${SharedPreferenceHelper.getStringValue(LoginSdkPrefs.userIdPrefKey)}&sectionId=${SharedPreferenceHelper.getStringValue(LoginSdkPrefs.sectionIdKey)}";
+                  Navigation.instance.navigateTo(Routes.webViewScreen, args: {
                     "title": "Check Reading",
                     "url": webUrl,
                   });
@@ -347,6 +331,7 @@ class EnterServicesDetailsViewmodel extends ChangeNotifier {
     );
   }
 
+  @override
   void dispose() {
     scNoController.dispose();
     uscNoController.dispose();

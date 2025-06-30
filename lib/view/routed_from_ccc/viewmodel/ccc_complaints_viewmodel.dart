@@ -14,10 +14,9 @@ import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/view/routed_from_ccc/model/ccc_complaint_model.dart';
 import 'package:tsnpdcl_employee/widget/primary_button.dart';
 
-
 class CccComplaintsViewmodel extends ChangeNotifier {
   CccComplaintsViewmodel({required this.context}) {
-    getCCCDivertedComplaints( );
+    getCCCDivertedComplaints();
   }
 
   final BuildContext context;
@@ -36,12 +35,13 @@ class CccComplaintsViewmodel extends ChangeNotifier {
     "Dismantling of service": "DISMANTLE_OF_SERVICES",
   };
 
-  Future<bool> getCCCDivertedComplaints( ) async {
+  Future<bool> getCCCDivertedComplaints() async {
     _isLoading = isTrue;
     notifyListeners();
 
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
     };
     var response = await ApiProvider(baseUrl: Apis.ERO_CORRESPONDENCE_URL)
@@ -60,7 +60,7 @@ class CccComplaintsViewmodel extends ChangeNotifier {
                 await showSuccessDialog(
                   context,
                   response.data['message'],
-                      () {
+                  () {
                     Navigator.pop(context);
                   },
                 );
@@ -68,8 +68,7 @@ class CccComplaintsViewmodel extends ChangeNotifier {
                 final dataList = response.data['dataList'];
                 if (dataList is List && dataList.isNotEmpty) {
                   List<CccComplaintModel> fetchedList = dataList
-                      .map((item) =>
-                      CccComplaintModel.fromJson(item))
+                      .map((item) => CccComplaintModel.fromJson(item))
                       .toList();
 
                   _complaintList.addAll(fetchedList);
@@ -85,86 +84,104 @@ class CccComplaintsViewmodel extends ChangeNotifier {
           showAlertDialog(context, response.data['message']);
         }
       }
-    }catch(e){
+    } catch (e) {
       throw Exception("Exception Occurred while Authenticating");
-    }finally{
-      _isLoading=false;
+    } finally {
+      _isLoading = false;
       notifyListeners();
     }
     return false;
   }
 
-  void complaintDialog(context, String subComplaint, String  complaintId,String uscno ){
+  void complaintDialog(
+      context, String subComplaint, String complaintId, String uscno) {
     showDialog(
       context: context,
       builder: (_) {
-        return   AlertDialog(
-                  title: const Text(
-                    "Choose Action", style: const TextStyle(fontSize: 18),),
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      TextButton(onPressed: (){
-                        final subtypeKey = billingSubTypes[subComplaint];
+        return AlertDialog(
+          title: const Text(
+            "Choose Action",
+            style: TextStyle(fontSize: 18),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextButton(
+                  onPressed: () {
+                    final subtypeKey = billingSubTypes[subComplaint];
 
-                        if (subtypeKey != null) {
-                          final arguments = {
-                            "uscno": uscno,
-                            "cccComplaintId": complaintId,
-                          };
+                    if (subtypeKey != null) {
+                      final arguments = {
+                        "uscno": uscno,
+                        "cccComplaintId": complaintId,
+                      };
 
-                          switch (subtypeKey) {
-                            case "REVOKE_OF_SERVICES":
-                              print("Redirected to REVOKE_OF_SERVICES");
-                              Navigator.of(context).pop();
-                              Navigation.instance
-                                  .navigateTo(Routes.revokeOfServices, args: arguments,);
-                              break;
-                            case "WRONG_BILLING":
-                              print("Redirected to WRONG_BILLING");
-                              Navigator.of(context).pop();
-                              // Navigation.instance
-                              //     .navigateTo(Routes.revokeOfServices, args: arguments,);
-                              break;
-                            case "DISMANTLE_OF_SERVICES":
-                              print("Redirected to DISMANTLE_OF_SERVICES");
-                              Navigator.of(context).pop();
-                              Navigation.instance
-                                  .navigateTo(Routes.dismantleOfServices, args: arguments,);
-                              break;
-                          }
-                        } else {
-                          AlertUtils.showSnackBar(
-                            context,
-                            "Sorry, complaint subtype not matching predefined types",
-                            true,
+                      switch (subtypeKey) {
+                        case "REVOKE_OF_SERVICES":
+                          print("Redirected to REVOKE_OF_SERVICES");
+                          Navigator.of(context).pop();
+                          Navigation.instance.navigateTo(
+                            Routes.revokeOfServices,
+                            args: arguments,
                           );
-                        }
-
-                      }, child:const Text("Create Ero Correspondence", style: TextStyle(color:Colors.black),)),
-                      TextButton(
-                          onPressed: (){
-                            final arguments = {
-                              "hideButton": true,
-                              "ticketId": complaintId,
-                            };
-                            Navigator.pop(context);
-                            Navigation.instance
-                                .navigateTo(Routes.viewDetailComplaint, args: arguments,);
-                          },
-                          child: const Text("View Detail Complaint", style: TextStyle(color:Colors.black),))
-                    ],
-                  ) ,
+                          break;
+                        case "WRONG_BILLING":
+                          print("Redirected to WRONG_BILLING");
+                          Navigator.of(context).pop();
+                          // Navigation.instance
+                          //     .navigateTo(Routes.revokeOfServices, args: arguments,);
+                          break;
+                        case "DISMANTLE_OF_SERVICES":
+                          print("Redirected to DISMANTLE_OF_SERVICES");
+                          Navigator.of(context).pop();
+                          Navigation.instance.navigateTo(
+                            Routes.dismantleOfServices,
+                            args: arguments,
+                          );
+                          break;
+                      }
+                    } else {
+                      AlertUtils.showSnackBar(
+                        context,
+                        "Sorry, complaint subtype not matching predefined types",
+                        true,
+                      );
+                    }
+                  },
+                  child: const Text(
+                    "Create Ero Correspondence",
+                    style: TextStyle(color: Colors.black),
+                  )),
+              TextButton(
+                  onPressed: () {
+                    final arguments = {
+                      "hideButton": true,
+                      "ticketId": complaintId,
+                    };
+                    Navigator.pop(context);
+                    Navigation.instance.navigateTo(
+                      Routes.viewDetailComplaint,
+                      args: arguments,
+                    );
+                  },
+                  child: const Text(
+                    "View Detail Complaint",
+                    style: TextStyle(color: Colors.black),
+                  ))
+            ],
+          ),
           actions: [
-            SizedBox( width: double.infinity,
-              child:PrimaryButton(text: "Cancel", onPressed: () {
-                Navigator.of(context).pop();
-              },
+            SizedBox(
+              width: double.infinity,
+              child: PrimaryButton(
+                text: "Cancel",
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
               ),
             ),
           ],
-
-              );
+        );
       },
     );
   }

@@ -14,7 +14,7 @@ class AddInductionPointViewModel extends ChangeNotifier {
   // Current View Context
   final BuildContext context;
 
-  bool _isLoading = isFalse;
+  final bool _isLoading = isFalse;
   bool get isLoading => _isLoading;
 
   String? selectedCheckboxId;
@@ -54,9 +54,9 @@ class AddInductionPointViewModel extends ChangeNotifier {
     if (selectedCheckboxId != id) {
       selectedCheckboxId = null;
       selectedCheckboxId = id;
-      if(id == "33KV LINE"){
+      if (id == "33KV LINE") {
         get132KVSSLines();
-      } else if(id == "11KV LINE" || id == "LT LINE") {
+      } else if (id == "11KV LINE" || id == "LT LINE") {
         addCircleList();
       }
     }
@@ -70,7 +70,8 @@ class AddInductionPointViewModel extends ChangeNotifier {
     );
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
     };
 
@@ -81,7 +82,8 @@ class AddInductionPointViewModel extends ChangeNotifier {
       "data": jsonEncode(requestData),
     };
 
-    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -92,26 +94,28 @@ class AddInductionPointViewModel extends ChangeNotifier {
           response.data = jsonDecode(response.data); // Parse string to JSON
         }
         if (response.statusCode == successResponseCode) {
-          if(response.data['tokenValid'] == isTrue) {
+          if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
-              if(response.data['objectJson'] != null) {
-                final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
-                final List<SpinnerList> listData = jsonList.map((json) => SpinnerList.fromJson(json)).toList();
+              if (response.data['objectJson'] != null) {
+                final List<dynamic> jsonList =
+                    jsonDecode(response.data['objectJson']);
+                final List<SpinnerList> listData =
+                    jsonList.map((json) => SpinnerList.fromJson(json)).toList();
                 list132kVssItem.addAll(listData);
                 print('list132kVssItem : $list132kVssItem');
               }
             } else {
-              showAlertDialog(context,response.data['message']);
+              showAlertDialog(context, response.data['message']);
             }
           } else {
             showSessionExpiredDialog(context);
           }
         } else {
-          showAlertDialog(context,response.data['message']);
+          showAlertDialog(context, response.data['message']);
         }
       }
     } catch (e) {
-      showErrorDialog(context,  "An error occurred. Please try again.");
+      showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
     }
 
@@ -120,7 +124,7 @@ class AddInductionPointViewModel extends ChangeNotifier {
 
   void onList132kVssValueChange(String? value) {
     list132kVssSelect = value;
-    if(value != null) {
+    if (value != null) {
       clearList33KvFeederOf132kVssItem();
       get33KVFeederOf132KVSSLines(value);
     }
@@ -134,7 +138,8 @@ class AddInductionPointViewModel extends ChangeNotifier {
     );
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "ss": ss,
     };
@@ -146,7 +151,8 @@ class AddInductionPointViewModel extends ChangeNotifier {
       "data": jsonEncode(requestData),
     };
 
-    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -157,26 +163,28 @@ class AddInductionPointViewModel extends ChangeNotifier {
           response.data = jsonDecode(response.data); // Parse string to JSON
         }
         if (response.statusCode == successResponseCode) {
-          if(response.data['tokenValid'] == isTrue) {
+          if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
-              if(response.data['objectJson'] != null) {
-                final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
-                final List<SpinnerList> listData = jsonList.map((json) => SpinnerList.fromJson(json)).toList();
+              if (response.data['objectJson'] != null) {
+                final List<dynamic> jsonList =
+                    jsonDecode(response.data['objectJson']);
+                final List<SpinnerList> listData =
+                    jsonList.map((json) => SpinnerList.fromJson(json)).toList();
                 list33KvFeederOf132kVssItem.addAll(listData);
                 // print('list33KvFeederOf132kVssItem : ${list33KvFeederOf132kVssItem[0].optionName}');
               }
             } else {
-              showAlertDialog(context,response.data['message']);
+              showAlertDialog(context, response.data['message']);
             }
           } else {
             showSessionExpiredDialog(context);
           }
         } else {
-          showAlertDialog(context,response.data['message']);
+          showAlertDialog(context, response.data['message']);
         }
       }
     } catch (e) {
-      showErrorDialog(context,  "An error occurred. Please try again.");
+      showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
     }
 
@@ -190,29 +198,29 @@ class AddInductionPointViewModel extends ChangeNotifier {
 
   void addCircleList() {
     listCircleItem.addAll([
-      SpinnerList(optionCode:"401",optionName: "KHAMMAM"),
-      SpinnerList(optionCode:"402",optionName: "HANAMKONDA"),
-      SpinnerList(optionCode:"407",optionName: "WARANGAL"),
-      SpinnerList(optionCode:"403",optionName: "KARIMNAGAR"),
-      SpinnerList(optionCode:"405",optionName: "ADILABAD"),
-      SpinnerList(optionCode:"404",optionName: "NIZAMABAD"),
-      SpinnerList(optionCode:"406",optionName: "BHADRADRI KOTHAGUDEM"),
-      SpinnerList(optionCode:"408",optionName: "JANGAON"),
-      SpinnerList(optionCode:"409",optionName: "BHOOPALAPALLY"),
-      SpinnerList(optionCode:"410",optionName: "MAHABUBABAD"),
-      SpinnerList(optionCode:"411",optionName: "JAGITYAL"),
-      SpinnerList(optionCode:"412",optionName: "PEDDAPALLY"),
-      SpinnerList(optionCode:"413",optionName: "KAMAREDDY"),
-      SpinnerList(optionCode:"414",optionName: "NIRMAL"),
-      SpinnerList(optionCode:"415",optionName: "ASIFABAD"),
-      SpinnerList(optionCode:"416",optionName: "MANCHERIAL"),
+      SpinnerList(optionCode: "401", optionName: "KHAMMAM"),
+      SpinnerList(optionCode: "402", optionName: "HANAMKONDA"),
+      SpinnerList(optionCode: "407", optionName: "WARANGAL"),
+      SpinnerList(optionCode: "403", optionName: "KARIMNAGAR"),
+      SpinnerList(optionCode: "405", optionName: "ADILABAD"),
+      SpinnerList(optionCode: "404", optionName: "NIZAMABAD"),
+      SpinnerList(optionCode: "406", optionName: "BHADRADRI KOTHAGUDEM"),
+      SpinnerList(optionCode: "408", optionName: "JANGAON"),
+      SpinnerList(optionCode: "409", optionName: "BHOOPALAPALLY"),
+      SpinnerList(optionCode: "410", optionName: "MAHABUBABAD"),
+      SpinnerList(optionCode: "411", optionName: "JAGITYAL"),
+      SpinnerList(optionCode: "412", optionName: "PEDDAPALLY"),
+      SpinnerList(optionCode: "413", optionName: "KAMAREDDY"),
+      SpinnerList(optionCode: "414", optionName: "NIRMAL"),
+      SpinnerList(optionCode: "415", optionName: "ASIFABAD"),
+      SpinnerList(optionCode: "416", optionName: "MANCHERIAL"),
     ]);
     notifyListeners();
   }
 
   void onListCircleValueChange(String? value) {
     listCircleSelect = value;
-    if(value != null) {
+    if (value != null) {
       clearList33kVSsOfCircleItem();
       clearListFeederItem();
       clearListInterferenceItem();
@@ -229,7 +237,8 @@ class AddInductionPointViewModel extends ChangeNotifier {
     );
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "circleCode": circleCode,
     };
@@ -241,7 +250,8 @@ class AddInductionPointViewModel extends ChangeNotifier {
       "data": jsonEncode(requestData),
     };
 
-    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -252,25 +262,27 @@ class AddInductionPointViewModel extends ChangeNotifier {
           response.data = jsonDecode(response.data); // Parse string to JSON
         }
         if (response.statusCode == successResponseCode) {
-          if(response.data['tokenValid'] == isTrue) {
+          if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
-              if(response.data['objectJson'] != null) {
-                final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
-                final List<SpinnerList> listData = jsonList.map((json) => SpinnerList.fromJson(json)).toList();
+              if (response.data['objectJson'] != null) {
+                final List<dynamic> jsonList =
+                    jsonDecode(response.data['objectJson']);
+                final List<SpinnerList> listData =
+                    jsonList.map((json) => SpinnerList.fromJson(json)).toList();
                 list33kVSsOfCircleItem.addAll(listData);
               }
             } else {
-              showAlertDialog(context,response.data['message']);
+              showAlertDialog(context, response.data['message']);
             }
           } else {
             showSessionExpiredDialog(context);
           }
         } else {
-          showAlertDialog(context,response.data['message']);
+          showAlertDialog(context, response.data['message']);
         }
       }
     } catch (e) {
-      showErrorDialog(context,  "An error occurred. Please try again.");
+      showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
     }
 
@@ -279,7 +291,7 @@ class AddInductionPointViewModel extends ChangeNotifier {
 
   void onList33kVSsOfCircleValueChange(String? value) {
     list33kVSsOfCircleSelect = value;
-    if(value != null) {
+    if (value != null) {
       clearListFeederItem();
       clearListInterferenceItem();
       clearListDistributionItem();
@@ -295,7 +307,8 @@ class AddInductionPointViewModel extends ChangeNotifier {
     );
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "ss": ss,
     };
@@ -307,7 +320,8 @@ class AddInductionPointViewModel extends ChangeNotifier {
       "data": jsonEncode(requestData),
     };
 
-    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -318,25 +332,27 @@ class AddInductionPointViewModel extends ChangeNotifier {
           response.data = jsonDecode(response.data); // Parse string to JSON
         }
         if (response.statusCode == successResponseCode) {
-          if(response.data['tokenValid'] == isTrue) {
+          if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
-              if(response.data['objectJson'] != null) {
-                final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
-                final List<SpinnerList> listData = jsonList.map((json) => SpinnerList.fromJson(json)).toList();
+              if (response.data['objectJson'] != null) {
+                final List<dynamic> jsonList =
+                    jsonDecode(response.data['objectJson']);
+                final List<SpinnerList> listData =
+                    jsonList.map((json) => SpinnerList.fromJson(json)).toList();
                 listFeederItem.addAll(listData);
               }
             } else {
-              showAlertDialog(context,response.data['message']);
+              showAlertDialog(context, response.data['message']);
             }
           } else {
             showSessionExpiredDialog(context);
           }
         } else {
-          showAlertDialog(context,response.data['message']);
+          showAlertDialog(context, response.data['message']);
         }
       }
     } catch (e) {
-      showErrorDialog(context,  "An error occurred. Please try again.");
+      showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
     }
 
@@ -345,7 +361,7 @@ class AddInductionPointViewModel extends ChangeNotifier {
 
   void onListFeederValueChange(String? value) {
     listFeederSelect = value;
-    if(value != null) {
+    if (value != null) {
       clearListInterferenceItem();
       clearListDistributionItem();
       getInterferenceType();
@@ -355,17 +371,17 @@ class AddInductionPointViewModel extends ChangeNotifier {
 
   void getInterferenceType() {
     listInterferenceItem.addAll([
-      SpinnerList(optionCode:"CROSSING",optionName: "CROSSING"),
-      SpinnerList(optionCode:"DOUBLE FEEDING",optionName: "DOUBLE FEEDING"),
-      if(isSelected("LT LINE"))
-        SpinnerList(optionCode:"HT/LT",optionName: "HT/LT")
+      SpinnerList(optionCode: "CROSSING", optionName: "CROSSING"),
+      SpinnerList(optionCode: "DOUBLE FEEDING", optionName: "DOUBLE FEEDING"),
+      if (isSelected("LT LINE"))
+        SpinnerList(optionCode: "HT/LT", optionName: "HT/LT")
     ]);
     notifyListeners();
   }
 
   void onListInterferenceValueChange(String? value) {
     listInterferenceSelect = value;
-    if(value != null && isSelected("LT LINE")) {
+    if (value != null && isSelected("LT LINE")) {
       clearListDistributionItem();
       getDistributions();
     }
@@ -379,7 +395,8 @@ class AddInductionPointViewModel extends ChangeNotifier {
     );
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "feederCode": listFeederSelect,
       "ebsstructure": true,
@@ -392,7 +409,8 @@ class AddInductionPointViewModel extends ChangeNotifier {
       "data": jsonEncode(requestData),
     };
 
-    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -403,25 +421,27 @@ class AddInductionPointViewModel extends ChangeNotifier {
           response.data = jsonDecode(response.data); // Parse string to JSON
         }
         if (response.statusCode == successResponseCode) {
-          if(response.data['tokenValid'] == isTrue) {
+          if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
-              if(response.data['objectJson'] != null) {
-                final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
-                final List<SpinnerList> listData = jsonList.map((json) => SpinnerList.fromJson(json)).toList();
+              if (response.data['objectJson'] != null) {
+                final List<dynamic> jsonList =
+                    jsonDecode(response.data['objectJson']);
+                final List<SpinnerList> listData =
+                    jsonList.map((json) => SpinnerList.fromJson(json)).toList();
                 listDistributionItem.addAll(listData);
               }
             } else {
-              showAlertDialog(context,response.data['message']);
+              showAlertDialog(context, response.data['message']);
             }
           } else {
             showSessionExpiredDialog(context);
           }
         } else {
-          showAlertDialog(context,response.data['message']);
+          showAlertDialog(context, response.data['message']);
         }
       }
     } catch (e) {
-      showErrorDialog(context,  "An error occurred. Please try again.");
+      showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
     }
 
@@ -455,7 +475,6 @@ class AddInductionPointViewModel extends ChangeNotifier {
     list33KvFeederOf132kVssSelect = null;
   }
 
-
   void clearListCircleItem() {
     // clearListCircleItem
     listCircleItem.clear();
@@ -467,7 +486,6 @@ class AddInductionPointViewModel extends ChangeNotifier {
     list33kVSsOfCircleItem.clear();
     list33kVSsOfCircleSelect = null;
   }
-
 
   void clearListFeederItem() {
     // clearListFeederItem
@@ -488,24 +506,24 @@ class AddInductionPointViewModel extends ChangeNotifier {
   }
 
   Future<void> onSaveClicked(Map<String, dynamic> args) async {
-    if(selectedCheckboxId != null) {
-
+    if (selectedCheckboxId != null) {
       final requestData = {
-        "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+        "token":
+            SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
         "appId": 'in.tsnpdcl.npdclemployee',
         "deviceId": await getDeviceId(),
         "ssCode": args['ssCode'],
         "fdrCode": args['fdrCode'],
-        "type":"NONE",
+        "type": "NONE",
       };
 
       print('Request data in our : $requestData');
 
-      if(selectedCheckboxId == "NO INDUCTION SOURCE"){
+      if (selectedCheckboxId == "NO INDUCTION SOURCE") {
         requestData['type'] = "NONE";
-      } else if(selectedCheckboxId == "EHT LINE"){
+      } else if (selectedCheckboxId == "EHT LINE") {
         requestData['type'] = "EHT";
-      } else if(selectedCheckboxId == "33KV LINE"){
+      } else if (selectedCheckboxId == "33KV LINE") {
         requestData['type'] = "33KV";
 
         if (list132kVssSelect == null) {
@@ -515,19 +533,22 @@ class AddInductionPointViewModel extends ChangeNotifier {
           showAlertDialog(context, "Please select 33KV Feeder");
           return;
         }
-        requestData['indFdrName'] = list33KvFeederOf132kVssItem.firstWhere((item) => item.optionCode == list33KvFeederOf132kVssSelect).optionName;
-        requestData['indSSName'] = list132kVssItem.firstWhere((item) => item.optionCode == list132kVssSelect).optionName;
+        requestData['indFdrName'] = list33KvFeederOf132kVssItem
+            .firstWhere(
+                (item) => item.optionCode == list33KvFeederOf132kVssSelect)
+            .optionName;
+        requestData['indSSName'] = list132kVssItem
+            .firstWhere((item) => item.optionCode == list132kVssSelect)
+            .optionName;
         requestData['ehtSSCode'] = list132kVssSelect;
         requestData['indFdrCode'] = list33KvFeederOf132kVssSelect;
-
-
-      } else if(selectedCheckboxId == "11KV LINE") {
+      } else if (selectedCheckboxId == "11KV LINE") {
         requestData['type'] = "11KV";
 
-        if (listCircleSelect == null)  {
+        if (listCircleSelect == null) {
           showAlertDialog(context, "Please select Circle");
           return;
-        } else if (list33kVSsOfCircleSelect == null)  {
+        } else if (list33kVSsOfCircleSelect == null) {
           showAlertDialog(context, "Please select 33/11KV Substation");
           return;
         } else if (listFeederSelect == null) {
@@ -539,18 +560,21 @@ class AddInductionPointViewModel extends ChangeNotifier {
         }
 
         requestData['indSS33KvCode'] = list33kVSsOfCircleSelect;
-        requestData['indSSName'] = list33kVSsOfCircleItem.firstWhere((item) => item.optionCode == list33kVSsOfCircleSelect).optionName;
+        requestData['indSSName'] = list33kVSsOfCircleItem
+            .firstWhere((item) => item.optionCode == list33kVSsOfCircleSelect)
+            .optionName;
         requestData['indFdrCode'] = listFeederSelect;
-        requestData['indFdrName'] = listFeederItem.firstWhere((item) => item.optionCode == listFeederSelect).optionName;
+        requestData['indFdrName'] = listFeederItem
+            .firstWhere((item) => item.optionCode == listFeederSelect)
+            .optionName;
         requestData['interferenceType'] = listInterferenceSelect;
-
-      } else if(selectedCheckboxId == "LT LINE") {
+      } else if (selectedCheckboxId == "LT LINE") {
         requestData['type'] = "LT";
 
-        if (listCircleSelect == null)  {
+        if (listCircleSelect == null) {
           showAlertDialog(context, "Please select Circle");
           return;
-        } else if (list33kVSsOfCircleSelect == null)  {
+        } else if (list33kVSsOfCircleSelect == null) {
           showAlertDialog(context, "Please select 33/11KV Substation");
           return;
         } else if (listFeederSelect == null) {
@@ -565,9 +589,13 @@ class AddInductionPointViewModel extends ChangeNotifier {
         }
 
         requestData['indSS33KvCode'] = list33kVSsOfCircleSelect;
-        requestData['indSSName'] = list33kVSsOfCircleItem.firstWhere((item) => item.optionCode == list33kVSsOfCircleSelect).optionName;
+        requestData['indSSName'] = list33kVSsOfCircleItem
+            .firstWhere((item) => item.optionCode == list33kVSsOfCircleSelect)
+            .optionName;
         requestData['indFdrCode'] = listFeederSelect;
-        requestData['indFdrName'] = listFeederItem.firstWhere((item) => item.optionCode == listFeederSelect).optionName;
+        requestData['indFdrName'] = listFeederItem
+            .firstWhere((item) => item.optionCode == listFeederSelect)
+            .optionName;
         requestData['interferenceType'] = listInterferenceSelect;
         requestData['indDtrStructCode'] = listDistributionSelect;
       }
@@ -577,7 +605,8 @@ class AddInductionPointViewModel extends ChangeNotifier {
         message: "Please wait...",
       );
       print('final sent response : $requestData');
-      var response = await ApiProvider(baseUrl: Apis.LC_END_POINT_BASE_URL).postApiCall(context, Apis.ADD_INDUCTION_POINT_URL, requestData);
+      var response = await ApiProvider(baseUrl: Apis.LC_END_POINT_BASE_URL)
+          .postApiCall(context, Apis.ADD_INDUCTION_POINT_URL, requestData);
       if (context.mounted) {
         ProcessDialogHelper.closeDialog(context);
       }
@@ -588,36 +617,36 @@ class AddInductionPointViewModel extends ChangeNotifier {
             response.data = jsonDecode(response.data); // Parse string to JSON
           }
           if (response.statusCode == successResponseCode) {
-            if(response.data['sessionValid'] == isTrue) {
+            if (response.data['sessionValid'] == isTrue) {
               if (response.data['taskSuccess'] == isTrue) {
-                await showSuccessDialog(context, response.data['message'], () {
-                  Navigation.instance.pushBack();
+                await showSuccessDialog(
+                  context,
+                  response.data['message'],
+                  () {
+                    Navigation.instance.pushBack();
                   },
                 );
               } else {
-                showAlertDialog(context,response.data['message']);
+                showAlertDialog(context, response.data['message']);
               }
             } else {
               showSessionExpiredDialog(context);
             }
           } else {
-            showAlertDialog(context,response.data['message']);
+            showAlertDialog(context, response.data['message']);
           }
         }
       } catch (e) {
-        showErrorDialog(context,  "An error occurred. Please try again.");
+        showErrorDialog(context, "An error occurred. Please try again.");
         rethrow;
       }
 
       notifyListeners();
-
     } else {
       showAlertDialog(context, "Please choose induction source");
     }
   }
-
 }
-
 
 // if(list132kVssSelect == null) {
 // showAlertDialog(context, "Please select EHT Substation");

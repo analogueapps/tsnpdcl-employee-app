@@ -29,12 +29,12 @@ class DtrInspectionListScreen extends StatelessWidget {
             appBar: AppBar(
               backgroundColor: CommonColors.colorPrimary,
               title: Text(
-                StatusConstants.getDTRInspectionListScreenTitle(status).toUpperCase(),
+                StatusConstants.getDTRInspectionListScreenTitle(status)
+                    .toUpperCase(),
                 style: const TextStyle(
                     color: Colors.white,
                     fontSize: titleSize,
-                    fontWeight: FontWeight.w700
-                ),
+                    fontWeight: FontWeight.w700),
               ),
               iconTheme: const IconThemeData(
                 color: Colors.white,
@@ -43,87 +43,99 @@ class DtrInspectionListScreen extends StatelessWidget {
             body: viewModel.isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : viewModel.dtrInspectionSheetEntityList.isEmpty
-                ? const Center(child: Text("No data founded."),)
-                : ListView.builder(
-                itemCount: viewModel.dtrInspectionSheetEntityList.length,
-                itemBuilder: (context, index) {
-                  final item = viewModel.dtrInspectionSheetEntityList[index];
+                    ? const Center(
+                        child: Text("No data founded."),
+                      )
+                    : ListView.builder(
+                        itemCount:
+                            viewModel.dtrInspectionSheetEntityList.length,
+                        itemBuilder: (context, index) {
+                          final item =
+                              viewModel.dtrInspectionSheetEntityList[index];
 
-                  return GestureDetector(
-                    onTap: () {
-                      if(status=="inspectionDone") {
-                        Navigation.instance.navigateTo(Routes
-                            .dtrMaintenanceInspectionScreen, args: jsonEncode(
-                            item));
-                      } else if(status=="toBeMaintained"){
-                        Navigation.instance.navigateTo(Routes.dtrMaintenanceEntry, args: jsonEncode(item));
-                      }
-                    },
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: doubleFive,),
-                        Container(
-                          margin: const EdgeInsets.only(left: doubleTen, right: doubleTen),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "#${checkNull(item.sheetId.toString())}",
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w200,
-                                  fontSize: doubleTen,
+                          return GestureDetector(
+                            onTap: () {
+                              if (status == "inspectionDone") {
+                                Navigation.instance.navigateTo(
+                                    Routes.dtrMaintenanceInspectionScreen,
+                                    args: jsonEncode(item));
+                              } else if (status == "toBeMaintained") {
+                                Navigation.instance.navigateTo(
+                                    Routes.dtrMaintenanceEntry,
+                                    args: jsonEncode(item));
+                              }
+                            },
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(
+                                  height: doubleFive,
                                 ),
-                              ),
-                              Text(
-                                checkNull(item.structureCode),
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  fontSize:
-                                  normalSize,
+                                Container(
+                                  margin: const EdgeInsets.only(
+                                      left: doubleTen, right: doubleTen),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "#${checkNull(item.sheetId.toString())}",
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w200,
+                                          fontSize: doubleTen,
+                                        ),
+                                      ),
+                                      Text(
+                                        checkNull(item.structureCode),
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: normalSize,
+                                        ),
+                                      ),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "${checkNull(item.employeeMasterEntityByLmEmpId.empName)}/${checkNull(item.employeeMasterEntityByLmEmpId.designation)}",
+                                            style: const TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: regularTextSize,
+                                                fontWeight: FontWeight.w300),
+                                          ),
+                                          Text(
+                                            "Date: ${formatIsoDateForDtrInspectionDetails(item.insertDate)}",
+                                            style: const TextStyle(
+                                                color: Colors.green,
+                                                fontSize: regularTextSize,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "${checkNull(item.employeeMasterEntityByLmEmpId!.empName)}/${checkNull(item.employeeMasterEntityByLmEmpId!.designation)}",
-                                    style: const TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: regularTextSize,
-                                        fontWeight: FontWeight.w300
-                                    ),
-                                  ),
-                                  Text(
-                                    "Date: ${formatIsoDateForDtrInspectionDetails(item.insertDate)}",
-                                    style: const TextStyle(
-                                        color: Colors.green,
-                                        fontSize: regularTextSize,
-                                        fontWeight: FontWeight.w600
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: doubleFive,),
-                        const Divider(
-                          color: Colors.grey,
-                          thickness: 1,
-                          height: 1,
-                        ),
-                      ],
-                    ),
-                  );
-                }
-            ),
+                                const SizedBox(
+                                  height: doubleFive,
+                                ),
+                                const Divider(
+                                  color: Colors.grey,
+                                  thickness: 1,
+                                  height: 1,
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
             floatingActionButton: FloatingActionButton(
               onPressed: () {
                 viewModel.filterFabClicked();
               },
               backgroundColor: CommonColors.colorPrimary,
-              child: const Icon(Icons.filter_alt_outlined, color: Colors.white,),
+              child: const Icon(
+                Icons.filter_alt_outlined,
+                color: Colors.white,
+              ),
             ),
           );
         },

@@ -10,7 +10,7 @@ import 'package:tsnpdcl_employee/view/gis_ids/database/pending_offline_list_db.d
 import 'package:tsnpdcl_employee/view/gis_ids/model/gis_individual_model.dart';
 
 class GisIndividualIdViewModel extends ChangeNotifier {
-  GisIndividualIdViewModel({required this.context, required this.gisID}){
+  GisIndividualIdViewModel({required this.context, required this.gisID}) {
     getGisIDs();
   }
 
@@ -20,7 +20,7 @@ class GisIndividualIdViewModel extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  List<GisSurveyData> _gisData = [];
+  final List<GisSurveyData> _gisData = [];
   List<GisSurveyData> get gisData => _gisData;
 
   Future<void> getGisIDs() async {
@@ -28,10 +28,11 @@ class GisIndividualIdViewModel extends ChangeNotifier {
     notifyListeners();
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
-      "m":"$gisID",
-      "gis":"true"
+      "m": "$gisID",
+      "gis": "true"
     };
 
     final payload = {
@@ -62,11 +63,13 @@ class GisIndividualIdViewModel extends ChangeNotifier {
         }
 
         if (responseData is Map<String, dynamic>) {
-          const int successResponseCode = 200; // Replace with your actual success code
+          const int successResponseCode =
+              200; // Replace with your actual success code
           const bool isTrue = true; // Define isTrue if not already defined
 
           if (response.statusCode == successResponseCode) {
-            if (responseData['tokenValid'] == isTrue||responseData['tokenValid'] == isFalse) {
+            if (responseData['tokenValid'] == isTrue ||
+                responseData['tokenValid'] == isFalse) {
               if (responseData['success'] == isTrue) {
                 if (responseData['objectJson'] != null) {
                   try {
@@ -79,15 +82,20 @@ class GisIndividualIdViewModel extends ChangeNotifier {
                           .replaceAll(r'\u0026', '&')
                           .trim();
                       if (cleanedJsonString.endsWith(',')) {
-                        cleanedJsonString = cleanedJsonString.substring(0, cleanedJsonString.length - 1);
+                        cleanedJsonString = cleanedJsonString.substring(
+                            0, cleanedJsonString.length - 1);
                       }
                       if (!cleanedJsonString.startsWith('[')) {
                         cleanedJsonString = '[$cleanedJsonString]';
                       }
                       final parsedList = jsonDecode(cleanedJsonString) as List;
-                      dataList = parsedList.map((json) => GisSurveyData.fromJson(json)).toList();
+                      dataList = parsedList
+                          .map((json) => GisSurveyData.fromJson(json))
+                          .toList();
                     } else if (jsonList is List) {
-                      dataList = jsonList.map((json) => GisSurveyData.fromJson(json)).toList();
+                      dataList = jsonList
+                          .map((json) => GisSurveyData.fromJson(json))
+                          .toList();
                     }
 
                     _gisData.clear();
@@ -97,20 +105,23 @@ class GisIndividualIdViewModel extends ChangeNotifier {
                   } catch (e, stackTrace) {
                     print("Error parsing objectJson: $e");
                     print("Stack trace: $stackTrace");
-                    showErrorDialog(context, "Failed to parse GIS data. Please contact support.");
+                    showErrorDialog(context,
+                        "Failed to parse GIS data. Please contact support.");
                   }
                 } else {
                   print("No objectJson found in response");
                   showAlertDialog(context, "No GIS data available.");
                 }
               } else {
-                showAlertDialog(context, responseData['message'] ?? "Operation failed");
+                showAlertDialog(
+                    context, responseData['message'] ?? "Operation failed");
               }
             } else {
               showSessionExpiredDialog(context);
             }
           } else {
-            showErrorDialog(context, "Request failed with status: ${response.statusCode}");
+            showErrorDialog(
+                context, "Request failed with status: ${response.statusCode}");
           }
         } else {
           showErrorDialog(context, "Unexpected response format.");
@@ -142,6 +153,4 @@ class GisIndividualIdViewModel extends ChangeNotifier {
       );
     }
   }
-
 }
-

@@ -12,7 +12,7 @@ import 'package:tsnpdcl_employee/view/gis_ids/database/gis_offline_list_db.dart'
 import 'package:tsnpdcl_employee/view/gis_ids/model/gis_ids_model.dart';
 
 class GISIDsViewModel extends ChangeNotifier {
-  GISIDsViewModel({required this.context}){
+  GISIDsViewModel({required this.context}) {
     getGisIDs();
     _filteredGisData = List.from(_gisData); // Initialize filtered data
     _searchController.addListener(_filterGisData); // Listen to search input
@@ -24,11 +24,12 @@ class GISIDsViewModel extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   // Initial GIS data
-  List<GisIdsModel> _gisData = [];
+  final List<GisIdsModel> _gisData = [];
   List<GisIdsModel> _filteredGisData = [];
   final TextEditingController _searchController = TextEditingController();
 
-  List<GisIdsModel> get gisData => _filteredGisData.isNotEmpty ? _filteredGisData : _gisData;
+  List<GisIdsModel> get gisData =>
+      _filteredGisData.isNotEmpty ? _filteredGisData : _gisData;
   TextEditingController get searchController => _searchController;
 
   void _filterGisData() {
@@ -46,13 +47,13 @@ class GISIDsViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-
   Future<void> getGisIDs() async {
     _isLoading = true;
     notifyListeners();
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
     };
 
@@ -78,7 +79,8 @@ class GISIDsViewModel extends ChangeNotifier {
             responseData = jsonDecode(responseData);
           } catch (e) {
             print("Error decoding response data: $e");
-            showErrorDialog(context, "Invalid response format. Please try again.");
+            showErrorDialog(
+                context, "Invalid response format. Please try again.");
             return;
           }
         }
@@ -97,25 +99,32 @@ class GISIDsViewModel extends ChangeNotifier {
                         .replaceAll(r'\u0026', '&')
                         .trim();
                     if (cleanedJsonString.endsWith(',')) {
-                      cleanedJsonString = cleanedJsonString.substring(0, cleanedJsonString.length - 1);
+                      cleanedJsonString = cleanedJsonString.substring(
+                          0, cleanedJsonString.length - 1);
                     }
                     if (!cleanedJsonString.startsWith('[')) {
                       cleanedJsonString = '[$cleanedJsonString]';
                     }
                     final parsedList = jsonDecode(cleanedJsonString) as List;
-                    dataList = parsedList.map((json) => GisIdsModel.fromJson(json)).toList();
+                    dataList = parsedList
+                        .map((json) => GisIdsModel.fromJson(json))
+                        .toList();
                   } else if (jsonList is List) {
-                    dataList = jsonList.map((json) => GisIdsModel.fromJson(json)).toList();
+                    dataList = jsonList
+                        .map((json) => GisIdsModel.fromJson(json))
+                        .toList();
                   }
 
                   _filteredGisData.clear();
                   _filteredGisData.addAll(dataList);
-                  print("Meters data: ${_filteredGisData.length} items loaded here");
+                  print(
+                      "Meters data: ${_filteredGisData.length} items loaded here");
                   notifyListeners();
                 } catch (e, stackTrace) {
                   print("Error parsing objectJson: $e");
                   print("Stack trace: $stackTrace");
-                  showErrorDialog(context, "Failed to parse meter data. Please contact support.");
+                  showErrorDialog(context,
+                      "Failed to parse meter data. Please contact support.");
                 }
               }
             } else {
@@ -139,9 +148,10 @@ class GISIDsViewModel extends ChangeNotifier {
     notifyListeners();
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
-      "gisId":"$gisID"
+      "gisId": "$gisID"
     };
 
     final payload = {
@@ -166,7 +176,8 @@ class GISIDsViewModel extends ChangeNotifier {
             responseData = jsonDecode(responseData);
           } catch (e) {
             print("Error decoding response data: $e");
-            showErrorDialog(context, "Invalid response format. Please try again.");
+            showErrorDialog(
+                context, "Invalid response format. Please try again.");
             return;
           }
         }
@@ -177,9 +188,13 @@ class GISIDsViewModel extends ChangeNotifier {
               if (responseData['message'] != null) {
                 try {
                   final jsonMessage = responseData['message'];
-                  showSuccessDialog(context, jsonMessage,   () {
-                    Navigation.instance.pushBack();
-                  },);
+                  showSuccessDialog(
+                    context,
+                    jsonMessage,
+                    () {
+                      Navigation.instance.pushBack();
+                    },
+                  );
                 } catch (e, stackTrace) {
                   print("Error parsing message: $e");
                   print("Stack trace: $stackTrace");
@@ -195,8 +210,8 @@ class GISIDsViewModel extends ChangeNotifier {
             showSessionExpiredDialog(context);
           }
         } else {
-          showErrorDialog(context,
-              "Request failed with status: ${response.statusCode}");
+          showErrorDialog(
+              context, "Request failed with status: ${response.statusCode}");
         }
       }
     } catch (e) {
@@ -207,12 +222,10 @@ class GISIDsViewModel extends ChangeNotifier {
     }
   }
 
-
-
   // Save for offline (placeholder)
   Future<void> saveForOffline(String regNum) async {
     final gisItem = gisData.firstWhere(
-          (item) => item.regNum == regNum,
+      (item) => item.regNum == regNum,
       orElse: () => throw Exception('GIS item not found'),
     );
 

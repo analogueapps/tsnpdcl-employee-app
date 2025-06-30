@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
 import 'package:tsnpdcl_employee/dialogs/process_dialog.dart';
-import 'package:tsnpdcl_employee/model/sub_menu_grid_item.dart';
 import 'package:tsnpdcl_employee/network/api_provider.dart';
 import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
@@ -11,13 +10,9 @@ import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
-import 'package:tsnpdcl_employee/utils/global_constants.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/view/auth/model/npdcl_user.dart';
 import 'package:tsnpdcl_employee/view/filter/model/filter_label_model_list.dart';
-import 'package:tsnpdcl_employee/view/line_clearance/model/all_lc_request_list.dart';
-import 'package:tsnpdcl_employee/view/line_clearance/model/induction_points_of_feeder_list.dart';
-import 'package:tsnpdcl_employee/view/line_clearance/model/lc_master_ss_list.dart';
 import 'package:tsnpdcl_employee/view/pdms/model/pole_request_indent_entity.dart';
 import 'package:tsnpdcl_employee/widget/fill_text_form_field.dart';
 
@@ -30,7 +25,8 @@ class CreatePoleIndentsViewmodel extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   final List<PoleRequestIndentEntity> _createPoleIndentList = [];
-  List<PoleRequestIndentEntity> get createPoleIndentList => _createPoleIndentList;
+  List<PoleRequestIndentEntity> get createPoleIndentList =>
+      _createPoleIndentList;
 
   // Filter list
   final List<FilterLabelModelList> filterLabelModelList = [];
@@ -42,9 +38,11 @@ class CreatePoleIndentsViewmodel extends ChangeNotifier {
   }
 
   void _loadUser() {
-    String? prefJson = SharedPreferenceHelper.getStringValue(LoginSdkPrefs.npdclUserPrefKey);
+    String? prefJson =
+        SharedPreferenceHelper.getStringValue(LoginSdkPrefs.npdclUserPrefKey);
     final List<dynamic> jsonList = jsonDecode(prefJson);
-    final List<NpdclUser> user = jsonList.map((json) => NpdclUser.fromJson(json)).toList();
+    final List<NpdclUser> user =
+        jsonList.map((json) => NpdclUser.fromJson(json)).toList();
     npdclUser = user[0];
   }
 
@@ -53,18 +51,22 @@ class CreatePoleIndentsViewmodel extends ChangeNotifier {
     _isLoading = isTrue;
     notifyListeners();
 
-    String? prefJson = SharedPreferenceHelper.getStringValue(LoginSdkPrefs.npdclUserPrefKey);
+    String? prefJson =
+        SharedPreferenceHelper.getStringValue(LoginSdkPrefs.npdclUserPrefKey);
     final List<dynamic> jsonList = jsonDecode(prefJson);
-    final List<NpdclUser> user = jsonList.map((json) => NpdclUser.fromJson(json)).toList();
+    final List<NpdclUser> user =
+        jsonList.map((json) => NpdclUser.fromJson(json)).toList();
     NpdclUser npdclUser = user[0];
 
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
       "circleId": npdclUser.secMasterEntity!.circleId
     };
 
-    var response = await ApiProvider(baseUrl: Apis.PDMS_END_POINT_BASE_URL).postApiCall(context, Apis.GET_INDENTS_OF_STATUS_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.PDMS_END_POINT_BASE_URL)
+        .postApiCall(context, Apis.GET_INDENTS_OF_STATUS_URL, payload);
     _isLoading = isFalse;
 
     try {
@@ -74,33 +76,36 @@ class CreatePoleIndentsViewmodel extends ChangeNotifier {
         }
         if (response.statusCode == successResponseCode) {
           //if(response.data['sessionValid'] == isTrue) {
-            if (response.data['taskSuccess'] == isTrue) {
-              if(response.data['dataList'] != null) {
-                // final List<dynamic> jsonList = jsonDecode(response.data['dataList']);
-                List<dynamic> jsonList;
+          if (response.data['taskSuccess'] == isTrue) {
+            if (response.data['dataList'] != null) {
+              // final List<dynamic> jsonList = jsonDecode(response.data['dataList']);
+              List<dynamic> jsonList;
 
-                // If dataList is a String, decode it; otherwise, it's already a List
-                if (response.data['dataList'] is String) {
-                  jsonList = jsonDecode(response.data['dataList']);
-                } else if (response.data['dataList'] is List) {
-                  jsonList = response.data['dataList'];
-                } else {
-                  jsonList = [];  // Fallback to empty list if the type is unexpected
-                }
-                final List<PoleRequestIndentEntity> dataList = jsonList.map((json) => PoleRequestIndentEntity.fromJson(json)).toList();
-                _createPoleIndentList.addAll(dataList);
-                notifyListeners();
+              // If dataList is a String, decode it; otherwise, it's already a List
+              if (response.data['dataList'] is String) {
+                jsonList = jsonDecode(response.data['dataList']);
+              } else if (response.data['dataList'] is List) {
+                jsonList = response.data['dataList'];
+              } else {
+                jsonList =
+                    []; // Fallback to empty list if the type is unexpected
               }
+              final List<PoleRequestIndentEntity> dataList = jsonList
+                  .map((json) => PoleRequestIndentEntity.fromJson(json))
+                  .toList();
+              _createPoleIndentList.addAll(dataList);
+              notifyListeners();
             }
+          }
           // } else {
           //   showSessionExpiredDialog(context);
           // }
         } else {
-          showAlertDialog(context,response.data['message']);
+          showAlertDialog(context, response.data['message']);
         }
       }
     } catch (e) {
-      showErrorDialog(context,  "An error occurred. Please try again.");
+      showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
     }
 
@@ -110,8 +115,10 @@ class CreatePoleIndentsViewmodel extends ChangeNotifier {
   void createActionClicked() {
     bool isChecked1 = false;
     bool isChecked2 = false;
-    final TextEditingController requisitionNoTextEditingController = TextEditingController();
-    final TextEditingController quantityTextEditingController = TextEditingController();
+    final TextEditingController requisitionNoTextEditingController =
+        TextEditingController();
+    final TextEditingController quantityTextEditingController =
+        TextEditingController();
 
     // List of string items
     final List<String> items = ["8m/140", "9.10m/280", "11.0m/365"];
@@ -142,7 +149,8 @@ class CreatePoleIndentsViewmodel extends ChangeNotifier {
                 ),
               ),
               content: SizedBox(
-                width: MediaQuery.of(context).size.width * pointEight, // 80% of screen width
+                width: MediaQuery.of(context).size.width *
+                    pointEight, // 80% of screen width
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -154,13 +162,17 @@ class CreatePoleIndentsViewmodel extends ChangeNotifier {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    const SizedBox(height: doubleFive,),
+                    const SizedBox(
+                      height: doubleFive,
+                    ),
                     FillTextFormField(
                       controller: requisitionNoTextEditingController,
                       labelText: '',
                       keyboardType: TextInputType.text,
                     ),
-                    const SizedBox(height: doubleFifteen,),
+                    const SizedBox(
+                      height: doubleFifteen,
+                    ),
                     const Text(
                       "Choose pole type",
                       style: TextStyle(
@@ -168,15 +180,19 @@ class CreatePoleIndentsViewmodel extends ChangeNotifier {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    const SizedBox(height: doubleFive,),
+                    const SizedBox(
+                      height: doubleFive,
+                    ),
                     DropdownButton<String>(
                       isExpanded: true,
                       hint: const Text("Select an item"),
                       value: selectedItem,
-                      items: items.map((item) => DropdownMenuItem<String>(
-                        value: item,
-                        child: Text(item),
-                      )).toList(),
+                      items: items
+                          .map((item) => DropdownMenuItem<String>(
+                                value: item,
+                                child: Text(item),
+                              ))
+                          .toList(),
                       onChanged: (String? newValue) {
                         setState(() {
                           selectedItem = newValue;
@@ -191,7 +207,9 @@ class CreatePoleIndentsViewmodel extends ChangeNotifier {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    const SizedBox(height: doubleFive,),
+                    const SizedBox(
+                      height: doubleFive,
+                    ),
                     FillTextFormField(
                       controller: quantityTextEditingController,
                       labelText: '',
@@ -224,7 +242,9 @@ class CreatePoleIndentsViewmodel extends ChangeNotifier {
                       contentPadding: EdgeInsets.zero,
                       controlAffinity: ListTileControlAffinity.leading,
                     ),
-                    const SizedBox(height: doubleFive,),
+                    const SizedBox(
+                      height: doubleFive,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -238,9 +258,16 @@ class CreatePoleIndentsViewmodel extends ChangeNotifier {
                           onPressed: () async {
                             Navigator.of(context).pop();
                           },
-                          child: Text("Cancel".toUpperCase(), style: const TextStyle(fontSize: extraRegularSize, color: Colors.white),),
+                          child: Text(
+                            "Cancel".toUpperCase(),
+                            style: const TextStyle(
+                                fontSize: extraRegularSize,
+                                color: Colors.white),
+                          ),
                         ),
-                        const SizedBox(width: doubleTen,),
+                        const SizedBox(
+                          width: doubleTen,
+                        ),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.green,
@@ -249,21 +276,38 @@ class CreatePoleIndentsViewmodel extends ChangeNotifier {
                             ),
                           ),
                           onPressed: () async {
-                            if (requisitionNoTextEditingController.text.isEmpty || requisitionNoTextEditingController.text.length < 5) {
-                              showAlertDialog(context, "Please enter SAP Requisition No");
-                            } else if (selectedItem == null || selectedItem!.isEmpty) {
-                              showAlertDialog(context, "Please select the Pole Type");
-                            } else if (quantityTextEditingController.text.isEmpty) {
+                            if (requisitionNoTextEditingController
+                                    .text.isEmpty ||
+                                requisitionNoTextEditingController.text.length <
+                                    5) {
+                              showAlertDialog(
+                                  context, "Please enter SAP Requisition No");
+                            } else if (selectedItem == null ||
+                                selectedItem!.isEmpty) {
+                              showAlertDialog(
+                                  context, "Please select the Pole Type");
+                            } else if (quantityTextEditingController
+                                .text.isEmpty) {
                               showAlertDialog(context, "Please enter quantity");
                             } else if (!isChecked1) {
-                              showAlertDialog(context, "Please check the checkbox");
+                              showAlertDialog(
+                                  context, "Please check the checkbox");
                             } else if (!isChecked2) {
-                              showAlertDialog(context, "Please check the checkbox");
+                              showAlertDialog(
+                                  context, "Please check the checkbox");
                             } else {
-                              createIndent(requisitionNoTextEditingController.text, selectedItem!, quantityTextEditingController.text);
+                              createIndent(
+                                  requisitionNoTextEditingController.text,
+                                  selectedItem!,
+                                  quantityTextEditingController.text);
                             }
                           },
-                          child: Text("Create Indent".toUpperCase(), style: const TextStyle(fontSize: extraRegularSize, color: Colors.white),),
+                          child: Text(
+                            "Create Indent".toUpperCase(),
+                            style: const TextStyle(
+                                fontSize: extraRegularSize,
+                                color: Colors.white),
+                          ),
                         ),
                       ],
                     ),
@@ -284,7 +328,8 @@ class CreatePoleIndentsViewmodel extends ChangeNotifier {
     );
 
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
       "qty": qty,
       "reqNo": reqNo,
@@ -292,7 +337,8 @@ class CreatePoleIndentsViewmodel extends ChangeNotifier {
       "circleId": npdclUser.secMasterEntity!.circleId
     };
 
-    var response = await ApiProvider(baseUrl: Apis.PDMS_END_POINT_BASE_URL).postApiCall(context, Apis.CREATE_POLE_INDENT_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.PDMS_END_POINT_BASE_URL)
+        .postApiCall(context, Apis.CREATE_POLE_INDENT_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -303,11 +349,14 @@ class CreatePoleIndentsViewmodel extends ChangeNotifier {
           response.data = jsonDecode(response.data); // Parse string to JSON
         }
         if (response.statusCode == successResponseCode) {
-          if(response.data['sessionValid'] == isTrue) {
+          if (response.data['sessionValid'] == isTrue) {
             if (response.data['taskSuccess'] == isTrue) {
-              await showSuccessDialog(context, response.data['success'], () {
-                Navigation.instance.pushBack();
-              },
+              await showSuccessDialog(
+                context,
+                response.data['success'],
+                () {
+                  Navigation.instance.pushBack();
+                },
               );
             } else {
               showAlertDialog(context, response.data['message']);
@@ -316,17 +365,17 @@ class CreatePoleIndentsViewmodel extends ChangeNotifier {
             showSessionExpiredDialog(context);
           }
         } else {
-          showAlertDialog(context,response.data['message']);
+          showAlertDialog(context, response.data['message']);
         }
       }
     } catch (e) {
-      showErrorDialog(context,  "An error occurred. Please try again.");
+      showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
     }
   }
 
   void filterFabClicked() {
-    if(filterLabelModelList.isNotEmpty) {
+    if (filterLabelModelList.isNotEmpty) {
       moveToFilterScreen();
     } else {
       getFilterData();
@@ -340,12 +389,14 @@ class CreatePoleIndentsViewmodel extends ChangeNotifier {
     );
 
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
       "circleId": npdclUser.secMasterEntity!.circleId
     };
 
-    var response = await ApiProvider(baseUrl: Apis.PDMS_END_POINT_BASE_URL).postApiCall(context, Apis.GET_INDENTS_FILTER_DATA_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.PDMS_END_POINT_BASE_URL)
+        .postApiCall(context, Apis.GET_INDENTS_FILTER_DATA_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -357,7 +408,7 @@ class CreatePoleIndentsViewmodel extends ChangeNotifier {
         }
         if (response.statusCode == successResponseCode) {
           if (response.data['taskSuccess'] == isTrue) {
-            if(response.data['dataList'] != null) {
+            if (response.data['dataList'] != null) {
               // final List<dynamic> jsonList = jsonDecode(response.data['dataList']);
               List<dynamic> jsonList;
 
@@ -367,9 +418,12 @@ class CreatePoleIndentsViewmodel extends ChangeNotifier {
               } else if (response.data['dataList'] is List) {
                 jsonList = response.data['dataList'];
               } else {
-                jsonList = [];  // Fallback to empty list if the type is unexpected
+                jsonList =
+                    []; // Fallback to empty list if the type is unexpected
               }
-              final List<FilterLabelModelList> dataList = jsonList.map((json) => FilterLabelModelList.fromJson(json)).toList();
+              final List<FilterLabelModelList> dataList = jsonList
+                  .map((json) => FilterLabelModelList.fromJson(json))
+                  .toList();
               filterLabelModelList.addAll(dataList);
               notifyListeners();
               moveToFilterScreen();
@@ -378,18 +432,19 @@ class CreatePoleIndentsViewmodel extends ChangeNotifier {
             showAlertDialog(context, response.data['message']);
           }
         } else {
-          showAlertDialog(context,response.data['message']);
+          showAlertDialog(context, response.data['message']);
         }
       }
     } catch (e) {
-      showErrorDialog(context,  "An error occurred. Please try again.");
+      showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
     }
   }
 
   void moveToFilterScreen() {
-    Navigation.instance.navigateTo(Routes.filterScreen, args: jsonEncode(filterLabelModelList),onReturn: (result) {
-      if(result != null) {
+    Navigation.instance.navigateTo(Routes.filterScreen,
+        args: jsonEncode(filterLabelModelList), onReturn: (result) {
+      if (result != null) {
         getIndentsWithFilter(result);
       }
     });
@@ -400,19 +455,23 @@ class CreatePoleIndentsViewmodel extends ChangeNotifier {
     _isLoading = isTrue;
     notifyListeners();
 
-    String? prefJson = SharedPreferenceHelper.getStringValue(LoginSdkPrefs.npdclUserPrefKey);
+    String? prefJson =
+        SharedPreferenceHelper.getStringValue(LoginSdkPrefs.npdclUserPrefKey);
     final List<dynamic> jsonList = jsonDecode(prefJson);
-    final List<NpdclUser> user = jsonList.map((json) => NpdclUser.fromJson(json)).toList();
+    final List<NpdclUser> user =
+        jsonList.map((json) => NpdclUser.fromJson(json)).toList();
     NpdclUser npdclUser = user[0];
 
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
       "query": jsonEncode(result),
       "circleId": npdclUser.secMasterEntity!.circleId
     };
 
-    var response = await ApiProvider(baseUrl: Apis.PDMS_END_POINT_BASE_URL).postApiCall(context, Apis.GET_FILTERED_INDENTS_DATA_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.PDMS_END_POINT_BASE_URL)
+        .postApiCall(context, Apis.GET_FILTERED_INDENTS_DATA_URL, payload);
     _isLoading = isFalse;
 
     try {
@@ -423,7 +482,7 @@ class CreatePoleIndentsViewmodel extends ChangeNotifier {
         if (response.statusCode == successResponseCode) {
           //if(response.data['sessionValid'] == isTrue) {
           if (response.data['taskSuccess'] == isTrue) {
-            if(response.data['dataList'] != null) {
+            if (response.data['dataList'] != null) {
               // final List<dynamic> jsonList = jsonDecode(response.data['dataList']);
               List<dynamic> jsonList;
 
@@ -433,13 +492,16 @@ class CreatePoleIndentsViewmodel extends ChangeNotifier {
               } else if (response.data['dataList'] is List) {
                 jsonList = response.data['dataList'];
               } else {
-                jsonList = [];  // Fallback to empty list if the type is unexpected
+                jsonList =
+                    []; // Fallback to empty list if the type is unexpected
               }
-              final List<PoleRequestIndentEntity> dataList = jsonList.map((json) => PoleRequestIndentEntity.fromJson(json)).toList();
+              final List<PoleRequestIndentEntity> dataList = jsonList
+                  .map((json) => PoleRequestIndentEntity.fromJson(json))
+                  .toList();
               _createPoleIndentList.addAll(dataList);
               notifyListeners();
-              if(_createPoleIndentList.isEmpty) {
-                showAlertDialog(context,response.data['message']);
+              if (_createPoleIndentList.isEmpty) {
+                showAlertDialog(context, response.data['message']);
               }
             }
           }
@@ -447,15 +509,14 @@ class CreatePoleIndentsViewmodel extends ChangeNotifier {
           //   showSessionExpiredDialog(context);
           // }
         } else {
-          showAlertDialog(context,response.data['message']);
+          showAlertDialog(context, response.data['message']);
         }
       }
     } catch (e) {
-      showErrorDialog(context,  "An error occurred. Please try again.");
+      showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
     }
 
     notifyListeners();
   }
-
 }

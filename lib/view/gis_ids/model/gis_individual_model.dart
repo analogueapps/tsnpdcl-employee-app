@@ -1,6 +1,7 @@
 import 'dart:convert';
 
-GisSurveyData gisSurveyDataFromJson(String str) => GisSurveyData.fromJson(json.decode(str));
+GisSurveyData gisSurveyDataFromJson(String str) =>
+    GisSurveyData.fromJson(json.decode(str));
 
 String gisSurveyDataToJson(GisSurveyData data) => json.encode(data.toJson());
 
@@ -45,7 +46,9 @@ class GisSurveyData {
 
   GisSurveyData.fromJson(dynamic json) {
     try {
-      surveyId = json['surveyId'] is int ? json['surveyId'] as int : int.tryParse(json['surveyId']?.toString() ?? '') ?? 0;
+      surveyId = json['surveyId'] is int
+          ? json['surveyId'] as int
+          : int.tryParse(json['surveyId']?.toString() ?? '') ?? 0;
       sectionCode = json['sectionCode']?.toString() ?? '';
       sanctionNo = json['sanctionNo']?.toString() ?? '';
       beforeLat = json['beforeLat'] is double
@@ -71,7 +74,9 @@ class GisSurveyData {
       subdivision = json['subdivision']?.toString() ?? '';
       subdivisionCode = json['subdivisionCode']?.toString() ?? '';
       section = json['section']?.toString() ?? '';
-      gisId = json['gisId'] is int ? json['gisId'] as int : int.tryParse(json['gisId']?.toString() ?? '') ?? 0;
+      gisId = json['gisId'] is int
+          ? json['gisId'] as int
+          : int.tryParse(json['gisId']?.toString() ?? '') ?? 0;
       sapUploadFlag = json['sapUploadFlag']?.toString() ?? '';
       pointVoltage = json['pointVoltage']?.toString() ?? '';
       editable = json['editable'] as bool? ?? false;
@@ -84,16 +89,23 @@ class GisSurveyData {
           : double.tryParse(json['afterLon']?.toString() ?? '') ?? 0.0;
       dateOfBeforeMarkedAsLong = json['dateOfBeforeMarkedAsLong'] is int
           ? json['dateOfBeforeMarkedAsLong'] as int
-          : int.tryParse(json['dateOfBeforeMarkedAsLong']?.toString() ?? '') ?? 0;
+          : int.tryParse(json['dateOfBeforeMarkedAsLong']?.toString() ?? '') ??
+              0;
       dateOfAfterMarked = json['dateOfAfterMarked']?.toString() ?? '';
       dateOfAfterMarkedAsLong = json['dateOfAfterMarkedAsLong'] is int
           ? json['dateOfAfterMarkedAsLong'] as int
-          : int.tryParse(json['dateOfAfterMarkedAsLong']?.toString() ?? '') ?? 0;
-      formControlList = json['formControlList'] is List ? List<dynamic>.from(json['formControlList']) : [];
-      rowList = (json['rowList'] as List<dynamic>?)?.map((e) => RowListItem.fromJson(e)).toList() ?? [];
+          : int.tryParse(json['dateOfAfterMarkedAsLong']?.toString() ?? '') ??
+              0;
+      formControlList = json['formControlList'] is List
+          ? List<dynamic>.from(json['formControlList'])
+          : [];
+      rowList = (json['rowList'] as List<dynamic>?)
+              ?.map((e) => RowListItem.fromJson(e))
+              .toList() ??
+          [];
     } catch (e) {
       print("Error parsing GisSurveyData: $e");
-      throw FormatException("Invalid GIS survey data format");
+      throw const FormatException("Invalid GIS survey data format");
     }
   }
 
@@ -200,10 +212,12 @@ class GisSurveyData {
         afterImageUrl: afterImageUrl ?? this.afterImageUrl,
         afterLat: afterLat ?? this.afterLat,
         afterLon: afterLon ?? this.afterLon,
-        dateOfBeforeMarkedAsLong: dateOfBeforeMarkedAsLong ?? this.dateOfBeforeMarkedAsLong,
-        remarksBySurveyor: remarksBySurveyor?? this. remarksBySurveyor,
+        dateOfBeforeMarkedAsLong:
+            dateOfBeforeMarkedAsLong ?? this.dateOfBeforeMarkedAsLong,
+        remarksBySurveyor: remarksBySurveyor ?? this.remarksBySurveyor,
         dateOfAfterMarked: dateOfAfterMarked ?? this.dateOfAfterMarked,
-        dateOfAfterMarkedAsLong: dateOfAfterMarkedAsLong ?? this.dateOfAfterMarkedAsLong,
+        dateOfAfterMarkedAsLong:
+            dateOfAfterMarkedAsLong ?? this.dateOfAfterMarkedAsLong,
         formControlList: formControlList ?? this.formControlList,
         rowList: rowList ?? this.rowList,
       );
@@ -240,7 +254,7 @@ class GisSurveyData {
     map['afterLat'] = afterLat;
     map['afterLon'] = afterLon;
     map['dateOfBeforeMarkedAsLong'] = dateOfBeforeMarkedAsLong;
-    map[' remarksBySurveyor;']=  remarksBySurveyor;
+    map[' remarksBySurveyor;'] = remarksBySurveyor;
     map['dateOfAfterMarked'] = dateOfAfterMarked;
     map['dateOfAfterMarkedAsLong'] = dateOfAfterMarkedAsLong;
     map['formControlList'] = formControlList;
@@ -317,11 +331,21 @@ class RowListItem {
     displayValue = json['displayValue']?.toString();
     labelColor = json['labelColor']?.toString();
     valueColor = json['valueColor']?.toString();
-    headerBar = json['headerBar'] != null ? HeaderBar.fromJson(json['headerBar']) : null;
-    width = json['width'] is int ? json['width'] as int : int.tryParse(json['width']?.toString() ?? '') ?? 0;
-    height = json['height'] is int ? json['height'] as int : int.tryParse(json['height']?.toString() ?? '') ?? 0;
-    scaleType = json['scaleType'] is int ? json['scaleType'] as int : int.tryParse(json['scaleType']?.toString() ?? '') ?? 0;
-    rowType = json['rowType'] is int ? json['rowType'] as int : int.tryParse(json['rowType']?.toString() ?? '') ?? 0;
+    headerBar = json['headerBar'] != null
+        ? HeaderBar.fromJson(json['headerBar'])
+        : null;
+    width = json['width'] is int
+        ? json['width'] as int
+        : int.tryParse(json['width']?.toString() ?? '') ?? 0;
+    height = json['height'] is int
+        ? json['height'] as int
+        : int.tryParse(json['height']?.toString() ?? '') ?? 0;
+    scaleType = json['scaleType'] is int
+        ? json['scaleType'] as int
+        : int.tryParse(json['scaleType']?.toString() ?? '') ?? 0;
+    rowType = json['rowType'] is int
+        ? json['rowType'] as int
+        : int.tryParse(json['rowType']?.toString() ?? '') ?? 0;
     latitude = json['latitude'] is double
         ? json['latitude'] as double
         : double.tryParse(json['latitude']?.toString() ?? '') ?? 0.0;

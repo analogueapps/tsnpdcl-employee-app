@@ -30,15 +30,18 @@ class ViewDetailedPoleIndentViewModel extends ChangeNotifier {
   Function? buttonAction;
 
   ViewDetailedPoleIndentViewModel({required this.context, required this.data}) {
-    poleRequestIndentEntity = PoleRequestIndentEntity.fromJson(jsonDecode(data));
+    poleRequestIndentEntity =
+        PoleRequestIndentEntity.fromJson(jsonDecode(data));
     _loadUser();
     _updateButtonState();
   }
 
   void _loadUser() {
-    String? prefJson = SharedPreferenceHelper.getStringValue(LoginSdkPrefs.npdclUserPrefKey);
+    String? prefJson =
+        SharedPreferenceHelper.getStringValue(LoginSdkPrefs.npdclUserPrefKey);
     final List<dynamic> jsonList = jsonDecode(prefJson);
-    final List<NpdclUser> user = jsonList.map((json) => NpdclUser.fromJson(json)).toList();
+    final List<NpdclUser> user =
+        jsonList.map((json) => NpdclUser.fromJson(json)).toList();
     npdclUser = user[0];
   }
 
@@ -59,7 +62,7 @@ class ViewDetailedPoleIndentViewModel extends ChangeNotifier {
       buttonColor = CommonColors.deepRed;
       buttonAction = _showCancelIndentDialog;
     } else if (DesignationUtils.isAe(npdclUser.designationCode!.toInt()) &&
-        DesignationUtils.isStoreWing(checkNull(npdclUser!.wing)) &&
+        DesignationUtils.isStoreWing(checkNull(npdclUser.wing)) &&
         (indentStatus == StatusCodes.PoleIndentStatus.AE_OD_STR ||
             indentStatus == StatusCodes.PoleIndentStatus.PAR_APPROVED)) {
       isButtonVisible = true;
@@ -67,7 +70,7 @@ class ViewDetailedPoleIndentViewModel extends ChangeNotifier {
       buttonColor = CommonColors.colorPrimary;
       buttonAction = _showApprovalDialog;
     } else if (DesignationUtils.isAde(npdclUser.designationCode!.toInt()) &&
-        DesignationUtils.isStoreWing(checkNull(npdclUser!.wing)) &&
+        DesignationUtils.isStoreWing(checkNull(npdclUser.wing)) &&
         indentStatus == StatusCodes.PoleIndentStatus.ADE_STR) {
       isButtonVisible = true;
       buttonText = "APPROVE/REJECT";
@@ -89,9 +92,7 @@ class ViewDetailedPoleIndentViewModel extends ChangeNotifier {
           onComplete: (verified, requestId) {
             forwardPoleIndentToStores();
           },
-          onCancelByUser: () {
-
-          },
+          onCancelByUser: () {},
         );
       },
     );
@@ -101,7 +102,8 @@ class ViewDetailedPoleIndentViewModel extends ChangeNotifier {
     showAlertActionDialog(
         context: context,
         title: "CANCEL INDENT",
-        message: "Do you want to cancel this Indent #${poleRequestIndentEntity.indentId} ?",
+        message:
+            "Do you want to cancel this Indent #${poleRequestIndentEntity.indentId} ?",
         okLabel: "YES,CANCEL",
         cancelLabel: "NO",
         onPressed: () {
@@ -114,14 +116,11 @@ class ViewDetailedPoleIndentViewModel extends ChangeNotifier {
                 onComplete: (verified, requestId) {
                   updateIndent(true);
                 },
-                onCancelByUser: () {
-
-                },
+                onCancelByUser: () {},
               );
             },
           );
-        }
-    );
+        });
     // WidgetsBinding.instance.addPostFrameCallback((_) {
     //   showGeneralDialog(
     //     context: context,
@@ -140,13 +139,19 @@ class ViewDetailedPoleIndentViewModel extends ChangeNotifier {
   }
 
   void _showApprovalDialog() {
-    List<String> items = ["Process Multiple Indents At Once","Process Single Indent"];
+    List<String> items = [
+      "Process Multiple Indents At Once",
+      "Process Single Indent"
+    ];
     showDialog(
       context: context,
       barrierDismissible: isFalse,
       builder: (context) {
         return AlertDialog(
-          title: const Text("Choose Option", style: TextStyle(fontWeight: FontWeight.w700),),
+          title: const Text(
+            "Choose Option",
+            style: TextStyle(fontWeight: FontWeight.w700),
+          ),
           content: SizedBox(
             width: double.maxFinite,
             child: ListView.builder(
@@ -157,8 +162,7 @@ class ViewDetailedPoleIndentViewModel extends ChangeNotifier {
                   title: Text(items[index]),
                   onTap: () {
                     Navigator.pop(context);
-                    if(index == 0) {
-                      
+                    if (index == 0) {
                     } else if (index == 1) {
                       showForwardOrRejectDialog();
                     }
@@ -187,13 +191,15 @@ class ViewDetailedPoleIndentViewModel extends ChangeNotifier {
     );
 
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
       "indentId": poleRequestIndentEntity.indentId,
       "cancelIndent": cancel
     };
 
-    var response = await ApiProvider(baseUrl: Apis.PDMS_END_POINT_BASE_URL).postApiCall(context, Apis.UPDATE_POLE_INDENT_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.PDMS_END_POINT_BASE_URL)
+        .postApiCall(context, Apis.UPDATE_POLE_INDENT_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -204,11 +210,14 @@ class ViewDetailedPoleIndentViewModel extends ChangeNotifier {
           response.data = jsonDecode(response.data); // Parse string to JSON
         }
         if (response.statusCode == successResponseCode) {
-          if(response.data['sessionValid'] == isTrue) {
+          if (response.data['sessionValid'] == isTrue) {
             if (response.data['taskSuccess'] == isTrue) {
-              await showSuccessDialog(context, response.data['success'], () {
-                Navigation.instance.pushBack();
-              },
+              await showSuccessDialog(
+                context,
+                response.data['success'],
+                () {
+                  Navigation.instance.pushBack();
+                },
               );
             } else {
               showAlertDialog(context, response.data['message']);
@@ -217,11 +226,11 @@ class ViewDetailedPoleIndentViewModel extends ChangeNotifier {
             showSessionExpiredDialog(context);
           }
         } else {
-          showAlertDialog(context,response.data['message']);
+          showAlertDialog(context, response.data['message']);
         }
       }
     } catch (e) {
-      showErrorDialog(context,  "An error occurred. Please try again.");
+      showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
     }
   }
@@ -233,13 +242,15 @@ class ViewDetailedPoleIndentViewModel extends ChangeNotifier {
     );
 
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
       "indentId": poleRequestIndentEntity.indentId,
       "cancelIndent": false
     };
 
-    var response = await ApiProvider(baseUrl: Apis.PDMS_END_POINT_BASE_URL).postApiCall(context, Apis.FORWARD_POLE_INDENT_TO_STORES_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.PDMS_END_POINT_BASE_URL)
+        .postApiCall(context, Apis.FORWARD_POLE_INDENT_TO_STORES_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -250,11 +261,14 @@ class ViewDetailedPoleIndentViewModel extends ChangeNotifier {
           response.data = jsonDecode(response.data); // Parse string to JSON
         }
         if (response.statusCode == successResponseCode) {
-          if(response.data['sessionValid'] == isTrue) {
+          if (response.data['sessionValid'] == isTrue) {
             if (response.data['taskSuccess'] == isTrue) {
-              await showSuccessDialog(context, response.data['success'], () {
-                Navigation.instance.pushBack();
-              },
+              await showSuccessDialog(
+                context,
+                response.data['success'],
+                () {
+                  Navigation.instance.pushBack();
+                },
               );
             } else {
               showAlertDialog(context, response.data['message']);
@@ -263,21 +277,22 @@ class ViewDetailedPoleIndentViewModel extends ChangeNotifier {
             showSessionExpiredDialog(context);
           }
         } else {
-          showAlertDialog(context,response.data['message']);
+          showAlertDialog(context, response.data['message']);
         }
       }
     } catch (e) {
-      showErrorDialog(context,  "An error occurred. Please try again.");
+      showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
     }
   }
 
-  void showForwardOrRejectDialog() {
-
-  }
+  void showForwardOrRejectDialog() {}
 
   bool isIndentEditable() {
-    return (poleRequestIndentEntity.balanceQty != null && poleRequestIndentEntity.balanceQty! > 0) && poleRequestIndentEntity.indentStatus != StatusCodes.PoleIndentStatus.CANCELED;
+    return (poleRequestIndentEntity.balanceQty != null &&
+            poleRequestIndentEntity.balanceQty! > 0) &&
+        poleRequestIndentEntity.indentStatus !=
+            StatusCodes.PoleIndentStatus.CANCELED;
   }
 
   void editActionClicked() {
@@ -308,7 +323,8 @@ class ViewDetailedPoleIndentViewModel extends ChangeNotifier {
                 ),
               ),
               content: SizedBox(
-                width: MediaQuery.of(context).size.width * pointEight, // 80% of screen width
+                width: MediaQuery.of(context).size.width *
+                    pointEight, // 80% of screen width
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -320,14 +336,20 @@ class ViewDetailedPoleIndentViewModel extends ChangeNotifier {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    const SizedBox(height: doubleFive,),
+                    const SizedBox(
+                      height: doubleFive,
+                    ),
                     FillTextFormField(
-                      controller: TextEditingController(text: checkNull(poleRequestIndentEntity.requisitionNo.toString())),
+                      controller: TextEditingController(
+                          text: checkNull(poleRequestIndentEntity.requisitionNo
+                              .toString())),
                       labelText: '',
                       keyboardType: TextInputType.none,
                       isReadOnly: isTrue,
                     ),
-                    const SizedBox(height: doubleFifteen,),
+                    const SizedBox(
+                      height: doubleFifteen,
+                    ),
                     const Text(
                       "Choose pole type",
                       style: TextStyle(
@@ -335,9 +357,12 @@ class ViewDetailedPoleIndentViewModel extends ChangeNotifier {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    const SizedBox(height: doubleFive,),
+                    const SizedBox(
+                      height: doubleFive,
+                    ),
                     FillTextFormField(
-                      controller: TextEditingController(text: checkNull(poleRequestIndentEntity.poleType)),
+                      controller: TextEditingController(
+                          text: checkNull(poleRequestIndentEntity.poleType)),
                       labelText: '',
                       keyboardType: TextInputType.none,
                       isReadOnly: isTrue,
@@ -345,8 +370,9 @@ class ViewDetailedPoleIndentViewModel extends ChangeNotifier {
                     ),
                     const Divider(),
                     Container(
-                      margin: const EdgeInsets.only(top: doubleTen, bottom: doubleTen),
-                      child:  Row(
+                      margin: const EdgeInsets.only(
+                          top: doubleTen, bottom: doubleTen),
+                      child: Row(
                         children: [
                           const Expanded(
                             child: Text(
@@ -359,7 +385,8 @@ class ViewDetailedPoleIndentViewModel extends ChangeNotifier {
                           Expanded(
                             child: Center(
                               child: Text(
-                                checkNull(poleRequestIndentEntity.requestedQty.toString()),
+                                checkNull(poleRequestIndentEntity.requestedQty
+                                    .toString()),
                                 textAlign: TextAlign.center,
                               ),
                             ),
@@ -369,8 +396,9 @@ class ViewDetailedPoleIndentViewModel extends ChangeNotifier {
                     ),
                     const Divider(),
                     Container(
-                      margin: const EdgeInsets.only(top: doubleTen, bottom: doubleTen),
-                      child:  Row(
+                      margin: const EdgeInsets.only(
+                          top: doubleTen, bottom: doubleTen),
+                      child: Row(
                         children: [
                           const Expanded(
                             child: Text(
@@ -383,7 +411,8 @@ class ViewDetailedPoleIndentViewModel extends ChangeNotifier {
                           Expanded(
                             child: Center(
                               child: Text(
-                                checkNull(poleRequestIndentEntity.balanceQty.toString()),
+                                checkNull(poleRequestIndentEntity.balanceQty
+                                    .toString()),
                                 textAlign: TextAlign.center,
                               ),
                             ),
@@ -399,7 +428,9 @@ class ViewDetailedPoleIndentViewModel extends ChangeNotifier {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    const SizedBox(height: doubleFive,),
+                    const SizedBox(
+                      height: doubleFive,
+                    ),
                     FillTextFormField(
                       controller: textEditingController,
                       labelText: '',
@@ -432,7 +463,9 @@ class ViewDetailedPoleIndentViewModel extends ChangeNotifier {
                       contentPadding: EdgeInsets.zero,
                       controlAffinity: ListTileControlAffinity.leading,
                     ),
-                    const SizedBox(height: doubleFive,),
+                    const SizedBox(
+                      height: doubleFive,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -446,9 +479,16 @@ class ViewDetailedPoleIndentViewModel extends ChangeNotifier {
                           onPressed: () async {
                             Navigator.of(context).pop();
                           },
-                          child: Text("Cancel".toUpperCase(), style: const TextStyle(fontSize: extraRegularSize, color: Colors.white),),
+                          child: Text(
+                            "Cancel".toUpperCase(),
+                            style: const TextStyle(
+                                fontSize: extraRegularSize,
+                                color: Colors.white),
+                          ),
                         ),
-                        const SizedBox(width: doubleTen,),
+                        const SizedBox(
+                          width: doubleTen,
+                        ),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.green,
@@ -457,18 +497,28 @@ class ViewDetailedPoleIndentViewModel extends ChangeNotifier {
                             ),
                           ),
                           onPressed: () async {
-                            if (poleRequestIndentEntity.requisitionNo!.isEmpty || poleRequestIndentEntity.requisitionNo!.length < 5) {
-                              showAlertDialog(context, "Please enter SAP Requisition No");
-                            } else if (poleRequestIndentEntity.poleType!.isEmpty) {
-                              showAlertDialog(context, "Please select the Pole Type");
+                            if (poleRequestIndentEntity
+                                    .requisitionNo!.isEmpty ||
+                                poleRequestIndentEntity.requisitionNo!.length <
+                                    5) {
+                              showAlertDialog(
+                                  context, "Please enter SAP Requisition No");
+                            } else if (poleRequestIndentEntity
+                                .poleType!.isEmpty) {
+                              showAlertDialog(
+                                  context, "Please select the Pole Type");
                             } else if (textEditingController.text.isEmpty) {
                               showAlertDialog(context, "Please enter quantity");
-                            } else if (textEditingController.text.length > (poleRequestIndentEntity.balanceQty ?? 0)) {
-                              showAlertDialog(context, "Please enter quantity less than available balance quantity (${poleRequestIndentEntity.balanceQty})");
+                            } else if (textEditingController.text.length >
+                                (poleRequestIndentEntity.balanceQty ?? 0)) {
+                              showAlertDialog(context,
+                                  "Please enter quantity less than available balance quantity (${poleRequestIndentEntity.balanceQty})");
                             } else if (!isChecked1) {
-                              showAlertDialog(context, "Please check the checkbox");
+                              showAlertDialog(
+                                  context, "Please check the checkbox");
                             } else if (!isChecked2) {
-                              showAlertDialog(context, "Please check the checkbox");
+                              showAlertDialog(
+                                  context, "Please check the checkbox");
                             } else {
                               showDialog(
                                 barrierDismissible: false,
@@ -477,17 +527,23 @@ class ViewDetailedPoleIndentViewModel extends ChangeNotifier {
                                   return OtpRequestAndValidateDialog(
                                     isAuthenticatedOtp: true,
                                     onComplete: (verified, requestId) {
-                                      updateIndentWithQty(false, int.parse(textEditingController.text));
+                                      updateIndentWithQty(
+                                          false,
+                                          int.parse(
+                                              textEditingController.text));
                                     },
-                                    onCancelByUser: () {
-
-                                    },
+                                    onCancelByUser: () {},
                                   );
                                 },
                               );
                             }
                           },
-                          child: Text("Update Indent".toUpperCase(), style: const TextStyle(fontSize: extraRegularSize, color: Colors.white),),
+                          child: Text(
+                            "Update Indent".toUpperCase(),
+                            style: const TextStyle(
+                                fontSize: extraRegularSize,
+                                color: Colors.white),
+                          ),
                         ),
                       ],
                     ),
@@ -508,14 +564,16 @@ class ViewDetailedPoleIndentViewModel extends ChangeNotifier {
     );
 
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
       "indentId": poleRequestIndentEntity.indentId,
       "cancelIndent": cancel,
       "qty": qty,
     };
 
-    var response = await ApiProvider(baseUrl: Apis.PDMS_END_POINT_BASE_URL).postApiCall(context, Apis.UPDATE_POLE_INDENT_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.PDMS_END_POINT_BASE_URL)
+        .postApiCall(context, Apis.UPDATE_POLE_INDENT_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -526,11 +584,14 @@ class ViewDetailedPoleIndentViewModel extends ChangeNotifier {
           response.data = jsonDecode(response.data); // Parse string to JSON
         }
         if (response.statusCode == successResponseCode) {
-          if(response.data['sessionValid'] == isTrue) {
+          if (response.data['sessionValid'] == isTrue) {
             if (response.data['taskSuccess'] == isTrue) {
-              await showSuccessDialog(context, response.data['success'], () {
-                Navigation.instance.pushBack();
-              },
+              await showSuccessDialog(
+                context,
+                response.data['success'],
+                () {
+                  Navigation.instance.pushBack();
+                },
               );
             } else {
               showAlertDialog(context, response.data['message']);
@@ -539,11 +600,11 @@ class ViewDetailedPoleIndentViewModel extends ChangeNotifier {
             showSessionExpiredDialog(context);
           }
         } else {
-          showAlertDialog(context,response.data['message']);
+          showAlertDialog(context, response.data['message']);
         }
       }
     } catch (e) {
-      showErrorDialog(context,  "An error occurred. Please try again.");
+      showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
     }
   }

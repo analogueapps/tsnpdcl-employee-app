@@ -1,11 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
-import 'package:tsnpdcl_employee/view/check_measurement_lines/model/polefeeder_model.dart';
 import 'package:tsnpdcl_employee/view/check_measurement_lines/viewmodel/pole_33KV_viewmodel.dart';
 import 'package:tsnpdcl_employee/widget/primary_button.dart';
 import 'package:tsnpdcl_employee/widget/view_detailed_lc_tile_widget.dart';
@@ -43,7 +41,9 @@ class Pole33kvFeeder extends StatelessWidget {
                   children: [
                     Expanded(
                       child: GoogleMap(
-                        initialCameraPosition: viewModel.cameraPosition ?? const CameraPosition(target: LatLng(0, 0), zoom: 10),
+                        initialCameraPosition: viewModel.cameraPosition ??
+                            const CameraPosition(
+                                target: LatLng(0, 0), zoom: 10),
                         polylines: viewModel.polylines,
                         markers: viewModel.markers,
                         myLocationEnabled: false,
@@ -114,14 +114,14 @@ class Pole33kvFeeder extends StatelessWidget {
                                         viewModel.showPoleFeederDropdown();
                                       },
                                       child: InputDecorator(
-                                        decoration: const InputDecoration(
-                                          // labelText: 'Select an option',
-                                          border: OutlineInputBorder(),
-                                        ),
-                                        child: Text(
-                                          viewModel.poleFeederSelected ??"Tap to select",
-                                        )
-                                      ),
+                                          decoration: const InputDecoration(
+                                            // labelText: 'Select an option',
+                                            border: OutlineInputBorder(),
+                                          ),
+                                          child: Text(
+                                            viewModel.poleFeederSelected ??
+                                                "Tap to select",
+                                          )),
                                     ),
                                   ]),
                             ),

@@ -65,58 +65,61 @@ class PendingListScreen extends StatelessWidget {
           ),
           body: viewModel.isLoading
               ? const Center(child: CircularProgressIndicator())
-              :  ListView.builder(
-                itemCount: viewModel.pendingAndFinishedList.length,
-                itemBuilder: (context, index) {
-                  final item = viewModel.pendingAndFinishedList[index];
-                  return InkWell(
-                    onTap: () {
-                      Navigation.instance.navigateTo(
-                      Routes.viewDetailedPendingListScreen,
-                      args: {
-                      'surveyID': item.surveyId,
-                      'status': item.status,
+              : ListView.builder(
+                  itemCount: viewModel.pendingAndFinishedList.length,
+                  itemBuilder: (context, index) {
+                    final item = viewModel.pendingAndFinishedList[index];
+                    return InkWell(
+                      onTap: () {
+                        Navigation.instance.navigateTo(
+                          Routes.viewDetailedPendingListScreen,
+                          args: {
+                            'surveyID': item.surveyId,
+                            'status': item.status,
+                          },
+                        );
                       },
-                      );
-                    },
-                    child: viewModel.pendingAndFinishedList.isEmpty?
-                        Center(child: Text("No data found"),):
-                    ListTile(
-                      title: Text(
-                        "Survey Id: ${item.surveyId}",
-                      ),
-                      subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              item.sanctionNo,
+                      child: viewModel.pendingAndFinishedList.isEmpty
+                          ? const Center(
+                              child: Text("No data found"),
+                            )
+                          : ListTile(
+                              title: Text(
+                                "Survey Id: ${item.surveyId}",
+                              ),
+                              subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      item.sanctionNo,
+                                    ),
+                                    Text(
+                                      "${item.sanctionNo} - LatA ${item.poleALat}, LonA ${item.poleALon}",
+                                    ),
+                                    Text(
+                                      "EMP ID:${item.surveyorId}|Section: ${item.section}",
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          item.dateOfAbMarked,
+                                        ),
+                                        Text(
+                                          item.status,
+                                          style: TextStyle(
+                                              color: item.status == "PENDING"
+                                                  ? Colors.red
+                                                  : Colors.green),
+                                        ),
+                                      ],
+                                    ),
+                                    const Divider(),
+                                  ]),
                             ),
-                            Text(
-                              "${item.sanctionNo} - LatA ${item.poleALat}, LonA ${item.poleALon}",
-                            ),
-                            Text(
-                              "EMP ID:${item.surveyorId}|Section: ${item.section}",
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  item.dateOfAbMarked,
-                                ),
-                                Text(
-                                  item.status,
-                                  style: TextStyle(
-                                      color: item.status == "PENDING"
-                                          ? Colors.red
-                                          : Colors.green),
-                                ),
-                              ],
-                            ),
-                            const Divider(),
-                          ]),
-                    ),
-                  );
-                }),
+                    );
+                  }),
         );
       }),
     );

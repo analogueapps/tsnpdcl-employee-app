@@ -18,7 +18,7 @@ class CreateGisIdViewModel extends ChangeNotifier {
   static const bool isFalse = false;
   static const int successResponseCode = 200;
 
-  bool _isLoading = isFalse;
+  final bool _isLoading = isFalse;
   bool get isLoading => _isLoading;
 
   // Lists
@@ -48,7 +48,8 @@ class CreateGisIdViewModel extends ChangeNotifier {
   List<Circle> get circle => _circle;
 
   void onListCircleSelected(String? value) {
-    if (!_33kvline) { // Only allow changes if 33KV is not selected
+    if (!_33kvline) {
+      // Only allow changes if 33KV is not selected
       _selectedCircle = value ?? '000';
       _selectedSubStation = null;
       _selectedFeeder = null;
@@ -61,7 +62,7 @@ class CreateGisIdViewModel extends ChangeNotifier {
   String? _selectedSubStation;
   String? get selectedStation => _selectedSubStation;
 
-  List<SpinnerList> _stations = [];
+  final List<SpinnerList> _stations = [];
   List<SpinnerList> get stations => _stations;
 
   void onStationSelected(String? value) {
@@ -85,7 +86,8 @@ class CreateGisIdViewModel extends ChangeNotifier {
     );
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "circleCode": selectedCircle,
     };
@@ -97,7 +99,8 @@ class CreateGisIdViewModel extends ChangeNotifier {
       "data": jsonEncode(requestData),
     };
 
-    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -111,8 +114,10 @@ class CreateGisIdViewModel extends ChangeNotifier {
           if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
               if (response.data['objectJson'] != null) {
-                final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
-                final List<SpinnerList> listData = jsonList.map((json) => SpinnerList.fromJson(json)).toList();
+                final List<dynamic> jsonList =
+                    jsonDecode(response.data['objectJson']);
+                final List<SpinnerList> listData =
+                    jsonList.map((json) => SpinnerList.fromJson(json)).toList();
                 _stations.addAll(listData);
               }
             } else {
@@ -136,7 +141,7 @@ class CreateGisIdViewModel extends ChangeNotifier {
   String? _selectedFeeder;
   String? get selectedFeeder => _selectedFeeder;
 
-  List<SpinnerList> _feeder = [];
+  final List<SpinnerList> _feeder = [];
   List<SpinnerList> get feeder => _feeder;
 
   void onListFeederSelected(String? value) {
@@ -154,7 +159,8 @@ class CreateGisIdViewModel extends ChangeNotifier {
     );
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "ss": ss,
     };
@@ -166,7 +172,8 @@ class CreateGisIdViewModel extends ChangeNotifier {
       "data": jsonEncode(requestData),
     };
 
-    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -180,8 +187,10 @@ class CreateGisIdViewModel extends ChangeNotifier {
           if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
               if (response.data['objectJson'] != null) {
-                final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
-                final List<SpinnerList> listData = jsonList.map((json) => SpinnerList.fromJson(json)).toList();
+                final List<dynamic> jsonList =
+                    jsonDecode(response.data['objectJson']);
+                final List<SpinnerList> listData =
+                    jsonList.map((json) => SpinnerList.fromJson(json)).toList();
                 _feeder.addAll(listData);
               }
             } else {
@@ -210,7 +219,8 @@ class CreateGisIdViewModel extends ChangeNotifier {
     );
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
     };
 
@@ -221,7 +231,8 @@ class CreateGisIdViewModel extends ChangeNotifier {
       "data": jsonEncode(requestData),
     };
 
-    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -235,8 +246,10 @@ class CreateGisIdViewModel extends ChangeNotifier {
           if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
               if (response.data['objectJson'] != null) {
-                final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
-                final List<SpinnerList> listData = jsonList.map((json) => SpinnerList.fromJson(json)).toList();
+                final List<dynamic> jsonList =
+                    jsonDecode(response.data['objectJson']);
+                final List<SpinnerList> listData =
+                    jsonList.map((json) => SpinnerList.fromJson(json)).toList();
                 _stations.addAll(listData);
               }
             } else {
@@ -265,7 +278,8 @@ class CreateGisIdViewModel extends ChangeNotifier {
     );
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "ss": ss,
     };
@@ -277,7 +291,8 @@ class CreateGisIdViewModel extends ChangeNotifier {
       "data": jsonEncode(requestData),
     };
 
-    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -291,8 +306,10 @@ class CreateGisIdViewModel extends ChangeNotifier {
           if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
               if (response.data['objectJson'] != null) {
-                final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
-                final List<SpinnerList> listData = jsonList.map((json) => SpinnerList.fromJson(json)).toList();
+                final List<dynamic> jsonList =
+                    jsonDecode(response.data['objectJson']);
+                final List<SpinnerList> listData =
+                    jsonList.map((json) => SpinnerList.fromJson(json)).toList();
                 _feeder.addAll(listData);
               }
             } else {
@@ -321,8 +338,8 @@ class CreateGisIdViewModel extends ChangeNotifier {
     );
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(
-          LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "ssCode": _selectedSubStation,
       "feederCode": _selectedFeeder,
@@ -338,8 +355,8 @@ class CreateGisIdViewModel extends ChangeNotifier {
       "data": jsonEncode(requestData),
     };
 
-    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(
-        context, Apis.NPDCL_EMP_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -353,7 +370,9 @@ class CreateGisIdViewModel extends ChangeNotifier {
           if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
               if (response.data['message'] != null) {
-               showSuccessDialog(context, response.data['message'], (){Navigator.pop(context);});
+                showSuccessDialog(context, response.data['message'], () {
+                  Navigator.pop(context);
+                });
               }
             } else {
               showAlertDialog(context, response.data['message']);
@@ -419,7 +438,8 @@ class CreateGisIdViewModel extends ChangeNotifier {
 
   // Text controllers
   final TextEditingController landMarkController = TextEditingController();
-  final TextEditingController workDescriptionController = TextEditingController();
+  final TextEditingController workDescriptionController =
+      TextEditingController();
 
   // Submit action
   void submit() {
@@ -431,10 +451,14 @@ class CreateGisIdViewModel extends ChangeNotifier {
     print('Land Mark: ${landMarkController.text}');
     print('Work Description: ${workDescriptionController.text}');
 
-    if(_selectedFeeder!=null||_selectedSubStation!=null||selectedLineType!=null||landMarkController.text.isNotEmpty||workDescriptionController.text.isNotEmpty) {
+    if (_selectedFeeder != null ||
+        _selectedSubStation != null ||
+        selectedLineType != null ||
+        landMarkController.text.isNotEmpty ||
+        workDescriptionController.text.isNotEmpty) {
       createGisId();
-    }else{
-      AlertUtils.showSnackBar(context,"Please fill all the fields", isTrue);
+    } else {
+      AlertUtils.showSnackBar(context, "Please fill all the fields", isTrue);
     }
   }
 

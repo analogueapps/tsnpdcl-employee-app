@@ -20,13 +20,12 @@ class DocketScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: CommonColors.colorPrimary,
-          title:const Text(
+          title: const Text(
             "Select Docket",
-            style:  TextStyle(
+            style: TextStyle(
                 color: Colors.white,
                 fontSize: toolbarTitleSize,
-                fontWeight: FontWeight.w700
-            ),
+                fontWeight: FontWeight.w700),
           ),
           iconTheme: const IconThemeData(
             color: Colors.white,
@@ -34,77 +33,90 @@ class DocketScreen extends StatelessWidget {
         ),
         body: ChangeNotifierProvider(
             create: (_) => DocketViewmodel(context: context, sectionID: ssc),
-            child: Consumer<DocketViewmodel>(
-                builder: (context, viewModel, child) {
-                  return Stack(
-                      children:[
-                       ListView.builder(
+            child:
+                Consumer<DocketViewmodel>(builder: (context, viewModel, child) {
+              return Stack(children: [
+                ListView.builder(
                   itemCount: viewModel.docketList.length,
                   itemBuilder: (context, index) {
-                  final item = viewModel.docketList[index];
-                  final isExpanded = viewModel.expandedIndexes.contains(index);
+                    final item = viewModel.docketList[index];
+                    final isExpanded =
+                        viewModel.expandedIndexes.contains(index);
 
-                  return Card(
-                  margin: const EdgeInsets.all(8),
-                  child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: viewModel.docketList.isEmpty?Center(child:Text("No data")):Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                  Text("Proposal No. ${item.id}", style: const TextStyle(fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 8),
-                  Text(
-                  item.worklDesc??"",
-                  maxLines: isExpanded ? null : 3,
-                  overflow: TextOverflow.fade,
-                  ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                  child:  Text(
-                  isExpanded ? "Less" : "More",
-                  style: const TextStyle(color: Colors.blue),
-                  ),
-                  ),
-                  const SizedBox(height: 8),
-                    Text(" ${item.ssName}", style: const TextStyle(color: Colors.green),),
-                    Align(
-                      alignment: Alignment.centerRight,child:Text(" ${item.insertDate}", style: const TextStyle(fontSize: 12),),
-                    ),
-                  const SizedBox(height: 10),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child:ElevatedButton(
-                    style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.green),),
-                  onPressed: () {
-                      viewModel.onItemSelected(item);
-                    // Navigation.instance.navigateTo(Routes.checkMeasureScreen );
-                  },
-                  child: const
-                     Text("Select", style: TextStyle(color: Colors.white),),
-                  ),
-                  )
-                  ],
-                  ),
-                  ),
-                  );
-                  },
-                  ),
-
-                        if (viewModel.isLoading)
-                           Positioned.fill(
-                            child: Container(
-                              color: Colors.black.withOpacity(0.0),
-                              // Semi-transparent overlay
-                              child: const Center(
-                                child: CircularProgressIndicator(),
+                    return Card(
+                      margin: const EdgeInsets.all(8),
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: viewModel.docketList.isEmpty
+                            ? const Center(child: Text("No data"))
+                            : Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("Proposal No. ${item.id}",
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold)),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    item.worklDesc ?? "",
+                                    maxLines: isExpanded ? null : 3,
+                                    overflow: TextOverflow.fade,
+                                  ),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      isExpanded ? "Less" : "More",
+                                      style:
+                                          const TextStyle(color: Colors.blue),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    " ${item.ssName}",
+                                    style: const TextStyle(color: Colors.green),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      " ${item.insertDate}",
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: ElevatedButton(
+                                      style: ButtonStyle(
+                                        backgroundColor:
+                                            WidgetStateProperty.all(
+                                                Colors.green),
+                                      ),
+                                      onPressed: () {
+                                        viewModel.onItemSelected(item);
+                                        // Navigation.instance.navigateTo(Routes.checkMeasureScreen );
+                                      },
+                                      child: const Text(
+                                        "Select",
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                  )
+                                ],
                               ),
-                            ),
-                          )
-                  ]
-                  );
-                }
-            )
-        )
-    );
+                      ),
+                    );
+                  },
+                ),
+                if (viewModel.isLoading)
+                  Positioned.fill(
+                    child: Container(
+                      color: Colors.black.withOpacity(0.0),
+                      // Semi-transparent overlay
+                      child: const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  )
+              ]);
+            })));
   }
-  }
+}

@@ -13,16 +13,18 @@ import 'package:tsnpdcl_employee/view/interruptions/model/substation_model.dart'
 
 class Breakdown11kvViewmodel extends ChangeNotifier {
   final BuildContext context;
-  List<SubstationModel> _substations = [];
+  final List<SubstationModel> _substations = [];
   String? selectedOptionId; // Store the selected optionId
   String? selectedSubstation;
   List<FeederModel> _feeders = [];
   String? selectedFeeder;
   bool _isLoading = false;
-  String? selectedSupplyOption; // Possible values: "Not Arranged", "Arranged", "Partially Provided", or null
+  String?
+      selectedSupplyOption; // Possible values: "Not Arranged", "Arranged", "Partially Provided", or null
   DateTime? selectedDateTime;
   final TextEditingController substationsController = TextEditingController();
-  List<SubstationModel> get substations => _substations; // Updated to return SubstationModel
+  List<SubstationModel> get substations =>
+      _substations; // Updated to return SubstationModel
   List<FeederModel> get feeders => _feeders; // Updated to return FeederModel
   bool get isLoading => _isLoading;
 
@@ -43,11 +45,14 @@ class Breakdown11kvViewmodel extends ChangeNotifier {
     _isLoading = true; // Set loading state to true
     notifyListeners();
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
     };
-    var response = await ApiProvider(baseUrl: Apis.INTERRUPTIONS_END_POINT_BASE_URL)
-        .postApiCall(context, Apis.GET_SUBSTATIONS_OF_SECTION, payload); // Updated endpoint
+    var response =
+        await ApiProvider(baseUrl: Apis.INTERRUPTIONS_END_POINT_BASE_URL)
+            .postApiCall(context, Apis.GET_SUBSTATIONS_OF_SECTION,
+                payload); // Updated endpoint
 
     try {
       if (response != null) {
@@ -63,17 +68,21 @@ class Breakdown11kvViewmodel extends ChangeNotifier {
               } else if (response.data['dataList'] is List) {
                 jsonList = response.data['dataList'];
               } else {
-                jsonList = []; // Fallback to empty list if the type is unexpected
+                jsonList =
+                    []; // Fallback to empty list if the type is unexpected
               }
-              final List<SubstationModel> dataList =
-              jsonList.map((json) => SubstationModel.fromJson(json)).toList();
+              final List<SubstationModel> dataList = jsonList
+                  .map((json) => SubstationModel.fromJson(json))
+                  .toList();
               _substations.addAll(dataList); // Update _substations list
               notifyListeners();
             }
           }
         } else {
           showAlertDialog(
-              context, response.data['message'] ?? "API returned status ${response.statusCode}");
+              context,
+              response.data['message'] ??
+                  "API returned status ${response.statusCode}");
         }
       }
     } catch (e) {
@@ -90,7 +99,7 @@ class Breakdown11kvViewmodel extends ChangeNotifier {
     selectedSubstation = substation;
     // Find the selected substation
     final selected = _substations.firstWhere(
-          (s) => s.optionName == substation,
+      (s) => s.optionName == substation,
       orElse: () => SubstationModel(optionId: null, optionName: null),
     );
     if (selected.optionId != null) {
@@ -129,7 +138,7 @@ class Breakdown11kvViewmodel extends ChangeNotifier {
 
     // Set initial time for the time picker
     TimeOfDay initialTime =
-    isToday ? TimeOfDay.now() : const TimeOfDay(hour: 23, minute: 59);
+        isToday ? TimeOfDay.now() : const TimeOfDay(hour: 23, minute: 59);
 
     TimeOfDay? pickedTime = await showTimePicker(
       context: context,
@@ -162,7 +171,8 @@ class Breakdown11kvViewmodel extends ChangeNotifier {
   }
 
   void setSupplyOption(String? option) {
-    selectedSupplyOption = option; // Set the selected option, or null to deselect
+    selectedSupplyOption =
+        option; // Set the selected option, or null to deselect
     notifyListeners();
   }
 
@@ -174,13 +184,16 @@ class Breakdown11kvViewmodel extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
       "ssCode": selectedOptionId!,
     };
     try {
-      var response = await ApiProvider(baseUrl: Apis.INTERRUPTIONS_END_POINT_BASE_URL)
-          .postApiCall(context, Apis.GET_FEEDERS_OF_SS, payload); // Updated endpoint
+      var response =
+          await ApiProvider(baseUrl: Apis.INTERRUPTIONS_END_POINT_BASE_URL)
+              .postApiCall(
+                  context, Apis.GET_FEEDERS_OF_SS, payload); // Updated endpoint
       if (response != null) {
         // Handle response parsing
         if (response.data is String) {
@@ -195,10 +208,12 @@ class Breakdown11kvViewmodel extends ChangeNotifier {
           } else if (response.data['dataList'] is List) {
             jsonList = response.data['dataList'];
           }
-          _feeders = jsonList.map((json) => FeederModel.fromJson(json)).toList();
+          _feeders =
+              jsonList.map((json) => FeederModel.fromJson(json)).toList();
         } else {
           // Handle error cases
-          String errorMessage = response.data['message'] ?? "Failed to load feeders";
+          String errorMessage =
+              response.data['message'] ?? "Failed to load feeders";
         }
       }
     } catch (e) {
@@ -240,13 +255,13 @@ class Breakdown11kvViewmodel extends ChangeNotifier {
 
     final payload = {
       "token":
-      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
       "voltage": "11KV",
       "ssCode": selectedOptionId, // Using the selected substation's optionId
       "ssName": selectedSubstation,
       "fdrCode":
-      _feeders.firstWhere((f) => f.optionName == selectedFeeder).optionId,
+          _feeders.firstWhere((f) => f.optionName == selectedFeeder).optionId,
       "fdrName": selectedFeeder,
       "startDate": DateFormat("dd/MM/yyyy").format(selectedDateTime!),
       "startTime": DateFormat("HH:mm").format(selectedDateTime!),
@@ -256,9 +271,9 @@ class Breakdown11kvViewmodel extends ChangeNotifier {
 
     try {
       var response =
-      await ApiProvider(baseUrl: Apis.INTERRUPTIONS_END_POINT_BASE_URL)
-          .postApiCall(context, Apis.SAVE_BREAKDOWN_REPORT,
-          payload); // Replace with your actual API endpoint
+          await ApiProvider(baseUrl: Apis.INTERRUPTIONS_END_POINT_BASE_URL)
+              .postApiCall(context, Apis.SAVE_BREAKDOWN_REPORT,
+                  payload); // Replace with your actual API endpoint
       if (response != null) {
         if (response.data is String) {
           response.data = jsonDecode(response.data);
@@ -283,5 +298,4 @@ class Breakdown11kvViewmodel extends ChangeNotifier {
       notifyListeners();
     }
   }
-
 }

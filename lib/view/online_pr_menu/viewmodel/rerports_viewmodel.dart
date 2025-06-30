@@ -10,29 +10,25 @@ import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 
-class ReportsViewModel extends ChangeNotifier{
-
-  ReportsViewModel( {required this.context}){
+class ReportsViewModel extends ChangeNotifier {
+  ReportsViewModel({required this.context}) {
     checkAuth();
   }
 
-  String pickedDate='${DateTime.now()}';
+  String pickedDate = '${DateTime.now()}';
 
   final BuildContext context;
 
-  bool _isLoading=false;
-  bool get isLoading=>_isLoading;
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
 
   Future<void> pickDateFromDateTimePicker(BuildContext context) async {
-    DateTime? selected= await showDatePicker(
+    DateTime? selected = await showDatePicker(
         context: context,
-        firstDate: DateTime(1900,01,01),
-        lastDate: DateTime(2100,31,12)
-    );
-    pickedDate='${selected?.day}/${selected?.month}/${selected?.year}';
+        firstDate: DateTime(1900, 01, 01),
+        lastDate: DateTime(2100, 31, 12));
+    pickedDate = '${selected?.day}/${selected?.month}/${selected?.year}';
     notifyListeners();
-
-
   }
 
   void checkDeviceAuth(context, String msg) async {
@@ -40,14 +36,22 @@ class ReportsViewModel extends ChangeNotifier{
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title:  const SizedBox( width: double.infinity,child:const Text("RC Authentication Fail", style: TextStyle(color: Colors.red),)),
+          title: const SizedBox(
+              width: double.infinity,
+              child: Text(
+                "RC Authentication Fail",
+                style: TextStyle(color: Colors.red),
+              )),
           content: Text(msg),
           actions: [
-            SizedBox( width: double.infinity,
-              child:PrimaryButton(text: "OK", onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
-              },
+            SizedBox(
+              width: double.infinity,
+              child: PrimaryButton(
+                text: "OK",
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                },
               ),
             ),
           ],
@@ -61,9 +65,10 @@ class ReportsViewModel extends ChangeNotifier{
     notifyListeners();
 
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
-      "deviceId":await getDeviceId(),
+      "deviceId": await getDeviceId(),
     };
     var response = await ApiProvider(baseUrl: Apis.ONLINE_PR_END_POINT_BASE_URL)
         .postApiCall(context, Apis.ISSUE_DUPLICATE_URL, payload);
@@ -89,13 +94,12 @@ class ReportsViewModel extends ChangeNotifier{
           showAlertDialog(context, response.data['message']);
         }
       }
-    }catch(e){
+    } catch (e) {
       throw Exception("Exception Occurred while Authenticating");
-    }finally{
-      _isLoading=false;
+    } finally {
+      _isLoading = false;
       notifyListeners();
     }
     return false;
   }
-
 }

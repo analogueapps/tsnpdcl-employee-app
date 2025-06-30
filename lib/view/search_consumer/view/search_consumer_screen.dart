@@ -52,9 +52,7 @@ class SearchConsumerScreen extends StatelessWidget {
                       ],
                     );
 
-                    if (result != null &&
-                        result[0] != null &&
-                        result[0] is String) {
+                    if (result != null) {
                       // Get the service number from the dialog result
                       String serviceNumber = result[0];
 
@@ -72,15 +70,20 @@ class SearchConsumerScreen extends StatelessWidget {
                     //   zoom: viewModel.markerPosition != null ? 15.0 : 0,
                     // ),
                     initialCameraPosition: viewModel.initialCameraPosition!,
-                    markers: viewModel.markerPosition != null ? {
-                      Marker(
-                        markerId: MarkerId(viewModel.consumerLocation?.consumerName ?? 'unknown'),
-                        position: viewModel.markerPosition!,
-                        infoWindow: InfoWindow(
-                          title: viewModel.consumerLocation?.scno ?? 'Unknown',
-                        ),
-                      ),
-                    } : {},
+                    markers: viewModel.markerPosition != null
+                        ? {
+                            Marker(
+                              markerId: MarkerId(
+                                  viewModel.consumerLocation?.consumerName ??
+                                      'unknown'),
+                              position: viewModel.markerPosition!,
+                              infoWindow: InfoWindow(
+                                title: viewModel.consumerLocation?.scno ??
+                                    'Unknown',
+                              ),
+                            ),
+                          }
+                        : {},
                     myLocationEnabled: isFalse,
                     myLocationButtonEnabled: isFalse,
                     zoomControlsEnabled: isFalse,

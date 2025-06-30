@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
@@ -8,7 +6,6 @@ import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/view/filter/viewmodel/filter_viewmodel.dart';
 import 'package:tsnpdcl_employee/widget/primary_button.dart';
-
 
 class FilterScreen extends StatelessWidget {
   static const id = Routes.filterScreen;
@@ -33,8 +30,7 @@ class FilterScreen extends StatelessWidget {
                 style: const TextStyle(
                     color: Colors.white,
                     fontSize: toolbarTitleSize,
-                    fontWeight: FontWeight.w700
-                ),
+                    fontWeight: FontWeight.w700),
               ),
               iconTheme: const IconThemeData(
                 color: Colors.white,
@@ -44,7 +40,10 @@ class FilterScreen extends StatelessWidget {
                   onPressed: () {
                     viewModel.clearFilters();
                   },
-                  child: const Text('CLEAR FILTER',style: TextStyle(color: Colors.white),),
+                  child: const Text(
+                    'CLEAR FILTER',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ],
             ),
@@ -68,15 +67,13 @@ class FilterScreen extends StatelessWidget {
                             color: viewModel.selectedFilter == filter
                                 ? Colors.white
                                 : Colors.transparent,
-                            child: Text(
-                              filter.labelName!,
-                              style: TextStyle(
-                                color: viewModel.selectedFilter == filter
-                                    ? CommonColors.colorPrimary
-                                    : Colors.black,
-                                fontWeight: FontWeight.w700,
-                              )
-                            ),
+                            child: Text(filter.labelName!,
+                                style: TextStyle(
+                                  color: viewModel.selectedFilter == filter
+                                      ? CommonColors.colorPrimary
+                                      : Colors.black,
+                                  fontWeight: FontWeight.w700,
+                                )),
                           ),
                         );
                       },
@@ -102,8 +99,7 @@ class FilterScreen extends StatelessWidget {
                                     viewModel.updateSearchQuery("");
                                     viewModel.searchController.clear();
                                   },
-                                  icon: const Icon(Icons.cancel)
-                              ),
+                                  icon: const Icon(Icons.cancel)),
                             ),
                           ),
                           onChanged: (query) {
@@ -113,24 +109,36 @@ class FilterScreen extends StatelessWidget {
                       ),
                       Expanded(
                         child: viewModel.filteredOptionList.isEmpty
-                            ? const Center(child: Text('No filter options found'))
+                            ? const Center(
+                                child: Text('No filter options found'))
                             : ListView.separated(
                                 itemCount: viewModel.filteredOptionList.length,
-                                separatorBuilder: (BuildContext context, int index) => const Divider(height: 1),
+                                separatorBuilder:
+                                    (BuildContext context, int index) =>
+                                        const Divider(height: 1),
                                 itemBuilder: (context, index) {
-                                  final option = viewModel.filteredOptionList[index];
+                                  final option =
+                                      viewModel.filteredOptionList[index];
                                   return CheckboxListTile(
-                                    controlAffinity: ListTileControlAffinity.leading,
+                                    controlAffinity:
+                                        ListTileControlAffinity.leading,
                                     contentPadding: EdgeInsets.zero,
-                                    visualDensity: const VisualDensity(horizontal: -4, vertical: -2), // Reduce space
-                                    title: Text(option.optionName!, style: const TextStyle(fontSize: extraRegularSize, fontWeight: FontWeight.w700),),
+                                    visualDensity: const VisualDensity(
+                                        horizontal: -4,
+                                        vertical: -2), // Reduce space
+                                    title: Text(
+                                      option.optionName!,
+                                      style: const TextStyle(
+                                          fontSize: extraRegularSize,
+                                          fontWeight: FontWeight.w700),
+                                    ),
                                     value: option.isSelected,
                                     onChanged: (value) {
                                       viewModel.toggleOptionSelection(option);
                                     },
                                   );
                                 },
-                        ),
+                              ),
                       ),
                     ],
                   ),
@@ -138,28 +146,30 @@ class FilterScreen extends StatelessWidget {
               ],
             ),
             bottomNavigationBar: Padding(
-              padding: const EdgeInsets.all(doubleTwenty),
-              child: Row(
-                children: [
-                  Expanded(
-                      child: Text(
-                        viewModel.hashMapSelectedOptions.isNotEmpty ? "(${viewModel.hashMapSelectedOptions.length}) Filters" : "(0) Filters"
-                      ),
-                  ),
-                  Expanded(child: PrimaryButton(
-                      text: "Apply Filter".toUpperCase(),
-                      fullWidth: isTrue,
-                      onPressed: () {
-                        if(viewModel.hashMapSelectedOptions.isNotEmpty) {
-                          Navigator.pop(context, viewModel.hashMapSelectedOptions);
-                        } else {
-                          showAlertDialog(context,"Please select at least filter criteria and try again");
-                        }
-                      }
-                  ),)
-                ],
-              )
-            ),
+                padding: const EdgeInsets.all(doubleTwenty),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(viewModel.hashMapSelectedOptions.isNotEmpty
+                          ? "(${viewModel.hashMapSelectedOptions.length}) Filters"
+                          : "(0) Filters"),
+                    ),
+                    Expanded(
+                      child: PrimaryButton(
+                          text: "Apply Filter".toUpperCase(),
+                          fullWidth: isTrue,
+                          onPressed: () {
+                            if (viewModel.hashMapSelectedOptions.isNotEmpty) {
+                              Navigator.pop(
+                                  context, viewModel.hashMapSelectedOptions);
+                            } else {
+                              showAlertDialog(context,
+                                  "Please select at least filter criteria and try again");
+                            }
+                          }),
+                    )
+                  ],
+                )),
           );
         },
       ),

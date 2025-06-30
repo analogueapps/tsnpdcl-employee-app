@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
-import 'package:tsnpdcl_employee/dialogs/dialog_master.dart'; // Import dialog method
+// Import dialog method
 import 'package:tsnpdcl_employee/utils/general_routes.dart'; // Import Routes
 import 'package:tsnpdcl_employee/view/middle_poles/viewmodel/middle_poles_viewmodel.dart';
 import '../../../utils/app_constants.dart';
@@ -38,7 +38,6 @@ class MiddlePolesScreen extends StatelessWidget {
                 final item = viewModel.menuItems[index];
                 return GestureDetector(
                   onTap: () {
-
                     viewModel.mpNewMenuItemClicked(context, item);
                   },
                   child: Column(

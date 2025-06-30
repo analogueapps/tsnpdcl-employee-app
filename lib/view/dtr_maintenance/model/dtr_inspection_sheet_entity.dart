@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-
 class DtrInspectionSheetEntity {
   final int sheetId;
   final String sectionCode;
@@ -64,15 +61,15 @@ class DtrInspectionSheetEntity {
   final EmployeeMasterEntityByLmEmpId employeeMasterEntityByAeEmpId;
   final int maintenanceSheetId;
   // final  dtrPostMaintenanceSheetEntityByMaintenanceSheetId;
-  final String?  dtrFencingRequired;
-  final String?  dtrPlinthAsPerStandards;
-  final String?  dtrSurroundingNeatlyMaintained;
-  final String?  entryType;
-  final DateTime?  scheduledDate;
-  final String?  scheduledMonth;
-  final String?  beforeMaintenanceImage;
-  final String?  beforeLat;
-  final String?  beforeLon;
+  final String? dtrFencingRequired;
+  final String? dtrPlinthAsPerStandards;
+  final String? dtrSurroundingNeatlyMaintained;
+  final String? entryType;
+  final DateTime? scheduledDate;
+  final String? scheduledMonth;
+  final String? beforeMaintenanceImage;
+  final String? beforeLat;
+  final String? beforeLon;
   DtrInspectionSheetEntity({
     required this.sheetId,
     required this.sectionCode,
@@ -154,7 +151,7 @@ class DtrInspectionSheetEntity {
       sectionName: json['sectionName'],
       lmEmpId: json['lmEmpId'],
       aeEmpId: json['aeEmpId'],
-      insertDate:json['insertDate'],
+      insertDate: json['insertDate'],
       structureCode: json['structureCode'],
       structureCapacity: json['structureCapacity'],
       abSwitchAvailable: json['abSwitchAvailable'],
@@ -166,7 +163,8 @@ class DtrInspectionSheetEntity {
       hG11KvFuseSetAvailable: json['hG11KvFuseSetAvailable'],
       hornsToBeReplaced: json['hornsToBeReplaced'],
       gapIsNotCorrect: json['gapIsNotCorrect'],
-      hgFuseSetPostTypeInsulatorsCount: json['hgFuseSetPostTypeInsulatorsCount'],
+      hgFuseSetPostTypeInsulatorsCount:
+          json['hgFuseSetPostTypeInsulatorsCount'],
       htBushesDamageCount: json['htBushesDamageCount'],
       htBushRodsDamCount: json['htBushRodsDamCount'],
       ltBushesDamageCount: json['ltBushesDamageCount'],
@@ -206,8 +204,10 @@ class DtrInspectionSheetEntity {
       deviceId: json['deviceId'],
       status: json['status'],
       distbuCode: json['distbuCode'],
-      employeeMasterEntityByLmEmpId: EmployeeMasterEntityByLmEmpId.fromJson(json['employeeMasterEntityByLmEmpId']),
-      employeeMasterEntityByAeEmpId: EmployeeMasterEntityByLmEmpId.fromJson(json['employeeMasterEntityByAeEmpId']),
+      employeeMasterEntityByLmEmpId: EmployeeMasterEntityByLmEmpId.fromJson(
+          json['employeeMasterEntityByLmEmpId']),
+      employeeMasterEntityByAeEmpId: EmployeeMasterEntityByLmEmpId.fromJson(
+          json['employeeMasterEntityByAeEmpId']),
       maintenanceSheetId: json['maintenanceSheetId'],
     );
   }
@@ -274,7 +274,7 @@ class DtrInspectionSheetEntity {
       'distbuCode': distbuCode,
       'employeeMasterEntityByLmEmpId': employeeMasterEntityByLmEmpId.toJson(),
       'employeeMasterEntityByAeEmpId': employeeMasterEntityByAeEmpId.toJson(),
-      'maintenanceSheetId':maintenanceSheetId
+      'maintenanceSheetId': maintenanceSheetId
     };
   }
 }
@@ -410,71 +410,70 @@ class EmployeeMasterEntityByLmEmpId {
     this.ssOpSsCode,
   });
 
-   EmployeeMasterEntityByLmEmpId.fromJson( dynamic json) {
-
-        empId = json['empId'];
-        empAdhaarNumber = json['empAdhaarNumber'];
-        epfAcno = json['epfAcno'];
-        epfUan = json['epfUan'];
-        gpfAcno = json['gpfAcno'];
-        bankAcno = json['bankAcno'];
-        pancardNumber = json['pancardNumber'];
-        empName = json['empName'];
-        empSurname = json['empSurname'];
-        empFatherName = json['empFatherName'];
-        dateOfBirth = json['dateOfBirth'];
-        dateOfJoining = json['dateOfJoining'];
-        designation = json['designation'];
-        cityRuralFlag = json['cityRuralFlag'];
-        incrementRevisionDate = json['incrementRevisionDate'];
-        eroCode = json['eroCode'];
-        unitCode = json['unitCode'];
-        divisionCode = json['divisionCode'];
-        userLogId = json['userLogId'];
-        empStatus = json['empStatus'];
-        basic = json['basic'];
-        payStatus = json['payStatus'];
-        payMonthYear = json['payMonthYear'];
-        billCode = json['billCode'];
-        locationType = json['locationType'];
-        locationCode = json['locationCode'];
-        locationName = json['locationName'];
-        empType = json['empType'];
-        changeReturnGroup = json['changeReturnGroup'];
-        gender = json['gender'];
-        qr = json['qr'];
-        rps = json['rps'];
-        bankCode = json['bankCode'];
-        designationCode = json['designationCode'];
-        mobileno = json['mobileno'];
-        personalMobileNo = json['personalMobileNo'];
-        ofcMobileNo = json['ofcMobileNo'];
-        empPost = json['empPost'];
-        smartLogin = json['smartLogin'];
-        sectionCode = json['sectionCode'];
-        ofcType = json['ofcType'];
-        ofcCode = json['ofcCode'];
-        wing = json['wing'];
-        pensioncode = json['pensioncode'];
-        ppono = json['ppono'];
-        familypensionerName = json['familypensionerName'];
-        familypensionerAmount = json['familypensionerAmount'];
-        pensioncommutedAmount = json['pensioncommutedAmount'];
-        pensioncommutedDate = json['pensioncommutedDate'];
-        reducedpensionDate = json['reducedpensionDate'];
-        dateOfRetirement = json['dateOfRetirement'];
-        allowEbsAndroidApp = json['allowEbsAndroidApp'];
-        facDocument = json['facDocument'];
-        otp = json['otp'];
-        otpDate = json['otpDate'];
-        rcEro = json['rcEro'];
-        rcCode = json['rcCode'];
-        rcFlag = json['rcFlag'];
-        rcMonth = json['rcMonth'];
-        rcAuthDevice = json['rcAuthDevice'];
-        rcAuthDeviceDate = json['rcAuthDeviceDate'];
-        isSsOp = json['isSsOp'];
-        ssOpSsCode = json['ssOpSsCode'];
+  EmployeeMasterEntityByLmEmpId.fromJson(dynamic json) {
+    empId = json['empId'];
+    empAdhaarNumber = json['empAdhaarNumber'];
+    epfAcno = json['epfAcno'];
+    epfUan = json['epfUan'];
+    gpfAcno = json['gpfAcno'];
+    bankAcno = json['bankAcno'];
+    pancardNumber = json['pancardNumber'];
+    empName = json['empName'];
+    empSurname = json['empSurname'];
+    empFatherName = json['empFatherName'];
+    dateOfBirth = json['dateOfBirth'];
+    dateOfJoining = json['dateOfJoining'];
+    designation = json['designation'];
+    cityRuralFlag = json['cityRuralFlag'];
+    incrementRevisionDate = json['incrementRevisionDate'];
+    eroCode = json['eroCode'];
+    unitCode = json['unitCode'];
+    divisionCode = json['divisionCode'];
+    userLogId = json['userLogId'];
+    empStatus = json['empStatus'];
+    basic = json['basic'];
+    payStatus = json['payStatus'];
+    payMonthYear = json['payMonthYear'];
+    billCode = json['billCode'];
+    locationType = json['locationType'];
+    locationCode = json['locationCode'];
+    locationName = json['locationName'];
+    empType = json['empType'];
+    changeReturnGroup = json['changeReturnGroup'];
+    gender = json['gender'];
+    qr = json['qr'];
+    rps = json['rps'];
+    bankCode = json['bankCode'];
+    designationCode = json['designationCode'];
+    mobileno = json['mobileno'];
+    personalMobileNo = json['personalMobileNo'];
+    ofcMobileNo = json['ofcMobileNo'];
+    empPost = json['empPost'];
+    smartLogin = json['smartLogin'];
+    sectionCode = json['sectionCode'];
+    ofcType = json['ofcType'];
+    ofcCode = json['ofcCode'];
+    wing = json['wing'];
+    pensioncode = json['pensioncode'];
+    ppono = json['ppono'];
+    familypensionerName = json['familypensionerName'];
+    familypensionerAmount = json['familypensionerAmount'];
+    pensioncommutedAmount = json['pensioncommutedAmount'];
+    pensioncommutedDate = json['pensioncommutedDate'];
+    reducedpensionDate = json['reducedpensionDate'];
+    dateOfRetirement = json['dateOfRetirement'];
+    allowEbsAndroidApp = json['allowEbsAndroidApp'];
+    facDocument = json['facDocument'];
+    otp = json['otp'];
+    otpDate = json['otpDate'];
+    rcEro = json['rcEro'];
+    rcCode = json['rcCode'];
+    rcFlag = json['rcFlag'];
+    rcMonth = json['rcMonth'];
+    rcAuthDevice = json['rcAuthDevice'];
+    rcAuthDeviceDate = json['rcAuthDeviceDate'];
+    isSsOp = json['isSsOp'];
+    ssOpSsCode = json['ssOpSsCode'];
   }
 
   Map<String, dynamic> toJson() {
@@ -545,6 +544,3 @@ class EmployeeMasterEntityByLmEmpId {
     };
   }
 }
-
-
-

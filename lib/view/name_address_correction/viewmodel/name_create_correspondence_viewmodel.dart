@@ -18,16 +18,16 @@ import 'package:tsnpdcl_employee/view/routed_from_ccc/model/consumer_uscno_model
 import 'package:tsnpdcl_employee/widget/pdf_platform_to_temporary.dart';
 
 class NameCreateCorrespondenceViewmodel extends ChangeNotifier {
-  NameCreateCorrespondenceViewmodel({required this.context}) ;
+  NameCreateCorrespondenceViewmodel({required this.context});
 
   final BuildContext context;
 
-  bool _isLoading = false;
+  final bool _isLoading = false;
 
   bool get isLoading => _isLoading;
 
   bool fetchDetailsClicked = false;
-  String titleOfUpload="";
+  String titleOfUpload = "";
 
   //Name
   bool _nameSwitch = false;
@@ -37,8 +37,8 @@ class NameCreateCorrespondenceViewmodel extends ChangeNotifier {
   set nameAvailable(bool value) {
     _nameSwitch = value;
     print("__nameSwitch: $_nameSwitch");
-    if(_nameSwitch==isFalse){
-      _addressSwitch=isTrue;
+    if (_nameSwitch == isFalse) {
+      _addressSwitch = isTrue;
       notifyListeners();
     }
     notifyListeners();
@@ -51,29 +51,27 @@ class NameCreateCorrespondenceViewmodel extends ChangeNotifier {
   set addressAvailable(bool value) {
     _addressSwitch = value;
     print("__nameSwitch: $_addressSwitch");
-    if(_addressSwitch==isTrue){
-    }
+    if (_addressSwitch == isTrue) {}
     notifyListeners();
   }
 
   final formKey = GlobalKey<FormState>();
-  TextEditingController uscNo= TextEditingController();
-  TextEditingController consumerWithUscNo= TextEditingController();
-  TextEditingController scNoCat= TextEditingController();
-  TextEditingController consumerName= TextEditingController();
-  TextEditingController addressLine1= TextEditingController();
-  TextEditingController addressLine2= TextEditingController();
-  TextEditingController addressLine3= TextEditingController();
-  TextEditingController addressLine4= TextEditingController();
-  TextEditingController editAddressLine1= TextEditingController();
-  TextEditingController editAddressLine2= TextEditingController();
-  TextEditingController editAddressLine3= TextEditingController();
-  TextEditingController editAddressLine4= TextEditingController();
-  TextEditingController pinCode= TextEditingController();
-  TextEditingController surname= TextEditingController();
-  TextEditingController name= TextEditingController();
-  TextEditingController fatherNameOrWO= TextEditingController();
-  
+  TextEditingController uscNo = TextEditingController();
+  TextEditingController consumerWithUscNo = TextEditingController();
+  TextEditingController scNoCat = TextEditingController();
+  TextEditingController consumerName = TextEditingController();
+  TextEditingController addressLine1 = TextEditingController();
+  TextEditingController addressLine2 = TextEditingController();
+  TextEditingController addressLine3 = TextEditingController();
+  TextEditingController addressLine4 = TextEditingController();
+  TextEditingController editAddressLine1 = TextEditingController();
+  TextEditingController editAddressLine2 = TextEditingController();
+  TextEditingController editAddressLine3 = TextEditingController();
+  TextEditingController editAddressLine4 = TextEditingController();
+  TextEditingController pinCode = TextEditingController();
+  TextEditingController surname = TextEditingController();
+  TextEditingController name = TextEditingController();
+  TextEditingController fatherNameOrWO = TextEditingController();
 
   String? selectedOption = "";
 
@@ -99,7 +97,8 @@ class NameCreateCorrespondenceViewmodel extends ChangeNotifier {
 
       try {
         // Convert to temp file
-        selectedFile = await PdfPlatformToTemp.createTempFileFromPlatformFile(platformFile);
+        selectedFile = await PdfPlatformToTemp.createTempFileFromPlatformFile(
+            platformFile);
         fileName = PdfPlatformToTemp.getFileName(platformFile);
         print("Selected fileName: $fileName");
         print("Selected file: $selectedFile");
@@ -112,23 +111,23 @@ class NameCreateCorrespondenceViewmodel extends ChangeNotifier {
     }
   }
 
+  final List<ConsumerUscnoModel> _consumerUSCNOData = [];
+  List<ConsumerUscnoModel> get consumerUSCNOData => _consumerUSCNOData;
 
-  List<ConsumerUscnoModel> _consumerUSCNOData=[];
-  List<ConsumerUscnoModel> get consumerUSCNOData=>_consumerUSCNOData;
-
-  Future<void> getConsumerWithUscNo(String uscNo)async{
+  Future<void> getConsumerWithUscNo(String uscNo) async {
     ProcessDialogHelper.showProcessDialog(
       context,
       message: "Fetching please wait...",
     );
-    fetchDetailsClicked=isTrue;
+    fetchDetailsClicked = isTrue;
     _consumerUSCNOData.clear();
     notifyListeners();
 
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
-      "uscno":uscNo,
+      "uscno": uscNo,
     };
 
     var response = await ApiProvider(baseUrl: Apis.ERO_CORRESPONDENCE_URL)
@@ -144,7 +143,7 @@ class NameCreateCorrespondenceViewmodel extends ChangeNotifier {
         if (response.statusCode == successResponseCode) {
           if (response.data['sessionValid'] == isTrue) {
             if (response.data['taskSuccess'] == isTrue) {
-              if(response.data['dataList']!=null) {
+              if (response.data['dataList'] != null) {
                 List<dynamic> jsonList;
 
                 if (response.data['dataList'] is String) {
@@ -155,8 +154,9 @@ class NameCreateCorrespondenceViewmodel extends ChangeNotifier {
                   jsonList = [];
                 }
 
-                final List<ConsumerUscnoModel> dataList =
-                jsonList.map((json) => ConsumerUscnoModel.fromJson(json)).toList();
+                final List<ConsumerUscnoModel> dataList = jsonList
+                    .map((json) => ConsumerUscnoModel.fromJson(json))
+                    .toList();
 
                 _consumerUSCNOData.addAll(dataList);
                 storeConsumerDetails();
@@ -181,41 +181,37 @@ class NameCreateCorrespondenceViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void storeConsumerDetails(){
-    if (consumerUSCNOData[0].cat=="1")
-    {
-      titleOfUpload="UPLOAD AADHAR";
+  void storeConsumerDetails() {
+    if (consumerUSCNOData[0].cat == "1") {
+      titleOfUpload = "UPLOAD AADHAR";
       notifyListeners();
-    }else {
-      titleOfUpload="UPLOAD MUNICIPALITY RECEIPT";
+    } else {
+      titleOfUpload = "UPLOAD MUNICIPALITY RECEIPT";
       notifyListeners();
     }
-    consumerWithUscNo.text= consumerUSCNOData[0].uscNo;
-    consumerName.text= consumerUSCNOData[0].consumerName;
-    addressLine1.text= consumerUSCNOData[0].address1??"";
-    addressLine2.text= consumerUSCNOData[0].address2??"";
-    addressLine3.text= consumerUSCNOData[0].address3??"";
-    addressLine4.text= consumerUSCNOData[0].address4??"";
-    scNoCat.text= "${consumerUSCNOData[0].scNo}/${consumerUSCNOData[0].cat}";
-    name.text= consumerUSCNOData[0].consumerName;
-    fatherNameOrWO.text= consumerUSCNOData[0].fatherName??"";
-    editAddressLine1.text=consumerUSCNOData[0].address1??"";
-    editAddressLine2.text=consumerUSCNOData[0].address2??"";
-    editAddressLine3.text=consumerUSCNOData[0].address3??"";
-    editAddressLine4.text=consumerUSCNOData[0].address4??"";
-    pinCode.text=consumerUSCNOData[0].pinCode??"";
+    consumerWithUscNo.text = consumerUSCNOData[0].uscNo;
+    consumerName.text = consumerUSCNOData[0].consumerName;
+    addressLine1.text = consumerUSCNOData[0].address1 ?? "";
+    addressLine2.text = consumerUSCNOData[0].address2 ?? "";
+    addressLine3.text = consumerUSCNOData[0].address3 ?? "";
+    addressLine4.text = consumerUSCNOData[0].address4 ?? "";
+    scNoCat.text = "${consumerUSCNOData[0].scNo}/${consumerUSCNOData[0].cat}";
+    name.text = consumerUSCNOData[0].consumerName;
+    fatherNameOrWO.text = consumerUSCNOData[0].fatherName ?? "";
+    editAddressLine1.text = consumerUSCNOData[0].address1 ?? "";
+    editAddressLine2.text = consumerUSCNOData[0].address2 ?? "";
+    editAddressLine3.text = consumerUSCNOData[0].address3 ?? "";
+    editAddressLine4.text = consumerUSCNOData[0].address4 ?? "";
+    pinCode.text = consumerUSCNOData[0].pinCode ?? "";
     notifyListeners();
   }
 
-   String getCorrectionType(){
-    if (nameSwitch==isTrue && addressSwitch==isFalse)
-    {
+  String getCorrectionType() {
+    if (nameSwitch == isTrue && addressSwitch == isFalse) {
       return "NAME";
-    }else if (nameSwitch==isFalse&&addressSwitch==isTrue)
-    {
+    } else if (nameSwitch == isFalse && addressSwitch == isTrue) {
       return "ADDRESS";
-    }else
-    {
+    } else {
       return "NAME & ADDRESS";
     }
   }
@@ -227,96 +223,86 @@ class NameCreateCorrespondenceViewmodel extends ChangeNotifier {
 
       if (!validateForm()) {
         return;
-      }else{
+      } else {
         saveRevokeData();
         print("in else block");
       }
     }
   }
+
   bool validateForm() {
     if (_consumerUSCNOData.isEmpty) {
       AlertUtils.showSnackBar(
           context, "Please fetch consumer details first", isTrue);
       return false;
     }
-    if (nameSwitch == isTrue &&(surname.text.isEmpty)) {
+    if (nameSwitch == isTrue && (surname.text.isEmpty)) {
       AlertUtils.showSnackBar(
-          context, "Please enter Surname of the consumer",
-          isTrue);
+          context, "Please enter Surname of the consumer", isTrue);
+      return false;
+    } else if (_nameSwitch == isTrue && name.text.isEmpty) {
+      AlertUtils.showSnackBar(
+          context, "Please enter Name of the consumer", isTrue);
+      return false;
+    } else if (_addressSwitch == isTrue && editAddressLine1.text.isEmpty) {
+      AlertUtils.showSnackBar(context, "Please enter address line 1", isTrue);
+      return false;
+    } else if (_addressSwitch == isTrue && editAddressLine2.text.isEmpty) {
+      AlertUtils.showSnackBar(context, "Please enter address line 2", isTrue);
+      return false;
+    } else if (_addressSwitch == isTrue && pinCode.text.isEmpty) {
+      AlertUtils.showSnackBar(context, "Please Enter KVAH reading", isTrue);
+      return false;
+    } else if (selectedOption == "") {
+      AlertUtils.showSnackBar(
+          context, "Please select document proof type", isTrue);
       return false;
     }
-    else if (_nameSwitch == isTrue && name.text.isEmpty) {
+    if (fileName == "") {
       AlertUtils.showSnackBar(
-          context, "Please enter Name of the consumer",
-          isTrue);
-      return false;
-    }
-    else if (_addressSwitch == isTrue  && editAddressLine1.text.isEmpty) {
-      AlertUtils.showSnackBar(
-          context, "Please enter address line 1",
-          isTrue);
-      return false;
-    }else if (_addressSwitch == isTrue  && editAddressLine2.text.isEmpty) {
-      AlertUtils.showSnackBar(
-          context, "Please enter address line 2",
-          isTrue);
-      return false;
-    }else if (_addressSwitch == isTrue  && pinCode.text.isEmpty) {
-      AlertUtils.showSnackBar(
-          context, "Please Enter KVAH reading",
-          isTrue);
-      return false;
-    }else if (selectedOption=="") {
-      AlertUtils.showSnackBar(
-          context, "Please select document proof type",
-          isTrue);
-      return false;
-    }
-    if(fileName==""){
-      AlertUtils.showSnackBar(
-          context, "Please upload Name or Address proof document",
-          isTrue);
+          context, "Please upload Name or Address proof document", isTrue);
       return false;
     }
     return true;
   }
 
-
   Future<void> saveRevokeData() async {
     ProcessDialogHelper.showProcessDialog(context, message: "Loading...");
 
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(
-          LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "areaName": consumerUSCNOData[0].areaName,
-      "areaCode":consumerUSCNOData[0].areaCode,
-      "cat":consumerUSCNOData[0].cat,
-      "uscNo":consumerUSCNOData[0].uscNo,
-      "scNo":consumerUSCNOData[0].scNo,
-      "existConsumerName":consumerUSCNOData[0].consumerName,
-      "existFatherName":consumerUSCNOData[0].fatherName,
-      "existSurname":consumerUSCNOData[0].surname??"",
-      "existAdd1":consumerUSCNOData[0].address1,
-      "existAdd2":consumerUSCNOData[0].address2,
-      "existAdd3":consumerUSCNOData[0].address3,
-      "existAdd4":consumerUSCNOData[0].address4,
-      "changedFatherName":fatherNameOrWO.text,
-      "changedSurname":surname.text,
-      "changedAdd1":editAddressLine1.text,
-      "changedAdd2":editAddressLine2.text,
-      "changedAdd3":editAddressLine3.text,
-      "changedAdd4":editAddressLine4.text,
-      "changedConsumerName":name.text,
-      "correctionType":getCorrectionType(),
-      "deviceId":await getDeviceId(),
-      "documentType":selectedOption=="AADHAR"?"AADHAR":"MUNICIPAL TAX RECEIPT",
-      "eroCode":consumerUSCNOData[0].eroCode,
-      "existPinCode":consumerUSCNOData[0].pinCode,
+      "areaCode": consumerUSCNOData[0].areaCode,
+      "cat": consumerUSCNOData[0].cat,
+      "uscNo": consumerUSCNOData[0].uscNo,
+      "scNo": consumerUSCNOData[0].scNo,
+      "existConsumerName": consumerUSCNOData[0].consumerName,
+      "existFatherName": consumerUSCNOData[0].fatherName,
+      "existSurname": consumerUSCNOData[0].surname ?? "",
+      "existAdd1": consumerUSCNOData[0].address1,
+      "existAdd2": consumerUSCNOData[0].address2,
+      "existAdd3": consumerUSCNOData[0].address3,
+      "existAdd4": consumerUSCNOData[0].address4,
+      "changedFatherName": fatherNameOrWO.text,
+      "changedSurname": surname.text,
+      "changedAdd1": editAddressLine1.text,
+      "changedAdd2": editAddressLine2.text,
+      "changedAdd3": editAddressLine3.text,
+      "changedAdd4": editAddressLine4.text,
+      "changedConsumerName": name.text,
+      "correctionType": getCorrectionType(),
+      "deviceId": await getDeviceId(),
+      "documentType":
+          selectedOption == "AADHAR" ? "AADHAR" : "MUNICIPAL TAX RECEIPT",
+      "eroCode": consumerUSCNOData[0].eroCode,
+      "existPinCode": consumerUSCNOData[0].pinCode,
       "changedPinCode": pinCode.text,
     };
 
     var response = await ApiProvider(baseUrl: Apis.ERO_CORRESPONDENCE_URL)
-        .postApiCallWithFile(context, Apis.SAVE_REVOKE_SERVICES, payload, 'consumer_representation',selectedFile!, fileName );
+        .postApiCallWithFile(context, Apis.SAVE_REVOKE_SERVICES, payload,
+            'consumer_representation', selectedFile!, fileName);
 
     if (context.mounted) ProcessDialogHelper.closeDialog(context);
 
@@ -332,7 +318,7 @@ class NameCreateCorrespondenceViewmodel extends ChangeNotifier {
           if (data['sessionValid'] == true) {
             if (data['taskSuccess'] == true) {
               if (data['message'] != null) {
-                showSuccessDialog(context, data['message'] , (){
+                showSuccessDialog(context, data['message'], () {
                   Navigator.pop(context);
                 });
               } else {
@@ -356,7 +342,7 @@ class NameCreateCorrespondenceViewmodel extends ChangeNotifier {
     }
   }
 
-  void resetValues(){
+  void resetValues() {
     consumerWithUscNo.clear();
     consumerName.clear();
     addressLine1.clear();
@@ -373,8 +359,8 @@ class NameCreateCorrespondenceViewmodel extends ChangeNotifier {
     editAddressLine4.clear();
     pinCode.clear();
     selectedOption = "";
-    fileName=null;
-    selectedFile=null;
+    fileName = null;
+    selectedFile = null;
     notifyListeners();
   }
 }

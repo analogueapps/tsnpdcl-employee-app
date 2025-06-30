@@ -1,6 +1,7 @@
 import 'dart:convert';
 
-FeederDisModel feederDisModelFromJson(String str) => FeederDisModel.fromJson(json.decode(str));
+FeederDisModel feederDisModelFromJson(String str) =>
+    FeederDisModel.fromJson(json.decode(str));
 String feederDisModelToJson(FeederDisModel data) => json.encode(data.toJson());
 
 class FeederDisModel {
@@ -85,13 +86,13 @@ class FeederDisModel {
         structureType: json['structureType']?.toString(),
         dtrs: json['dtrs'] != null
             ? (json['dtrs'] as List<dynamic>)
-            .map((e) => DTRModel.fromJson(e as Map<String, dynamic>))
-            .toList()
+                .map((e) => DTRModel.fromJson(e as Map<String, dynamic>))
+                .toList()
             : null,
       );
     } catch (e) {
       print("Error parsing FeederDisModel: $e");
-      throw FormatException("Invalid feeder/distribution data format");
+      throw const FormatException("Invalid feeder/distribution data format");
     }
   }
 
@@ -217,31 +218,31 @@ class DTRModel {
   }
 
   Map<String, dynamic> toJson() => {
-    'ymfd': ymfd,
-    'searchString': searchString,
-    'feederName': feederName,
-    'structureCode': structureCode,
-    'structureCapacity': structureCapacity,
-    'distributionName': distributionName,
-    'meterPhase': meterPhase,
-    'sectionCode': sectionCode,
-    'dtrCapacity': dtrCapacity,
-    'feederCode': feederCode,
-    'createdDate': createdDate,
-    'lat': lat,
-    'lon': lon,
-    'phyLoc': phyLoc,
-    'landMark': landMark,
-    'status': status,
-    'locType': locType,
-    'confirmDate': confirmDate,
-    'distributionCode': distributionCode,
-    'url': url,
-    'createdBy': createdBy,
-    'ratio': ratio,
-    'equipmentCode': equipmentCode,
-    'slno': slno,
-    'make': make,
-    'phase': phase,
-  };
+        'ymfd': ymfd,
+        'searchString': searchString,
+        'feederName': feederName,
+        'structureCode': structureCode,
+        'structureCapacity': structureCapacity,
+        'distributionName': distributionName,
+        'meterPhase': meterPhase,
+        'sectionCode': sectionCode,
+        'dtrCapacity': dtrCapacity,
+        'feederCode': feederCode,
+        'createdDate': createdDate,
+        'lat': lat,
+        'lon': lon,
+        'phyLoc': phyLoc,
+        'landMark': landMark,
+        'status': status,
+        'locType': locType,
+        'confirmDate': confirmDate,
+        'distributionCode': distributionCode,
+        'url': url,
+        'createdBy': createdBy,
+        'ratio': ratio,
+        'equipmentCode': equipmentCode,
+        'slno': slno,
+        'make': make,
+        'phase': phase,
+      };
 }

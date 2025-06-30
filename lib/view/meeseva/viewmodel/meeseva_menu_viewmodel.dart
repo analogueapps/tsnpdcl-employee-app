@@ -23,10 +23,10 @@ class MeesevaMenuViewModel extends ChangeNotifier {
 
     _meesevaMenuItems.addAll([
       SubMenuGridItem(
-          title: GlobalConstants.daysPendingAbstract,
-          iconAsset: Icons.assignment_late_rounded,
-          cardColor: Colors.orange,
-          routeName: routeName,
+        title: GlobalConstants.daysPendingAbstract,
+        iconAsset: Icons.assignment_late_rounded,
+        cardColor: Colors.orange,
+        routeName: routeName,
       ),
       SubMenuGridItem(
           title: GlobalConstants.lmWiseAbstract,
@@ -150,9 +150,7 @@ class MeesevaMenuViewModel extends ChangeNotifier {
         ],
       );
 
-      if (result != null &&
-          result[0] != null &&
-          result[0] is String) {
+      if (result != null) {
         // Get the service number from the dialog result
         String serviceNumber = result[0];
 
@@ -160,14 +158,15 @@ class MeesevaMenuViewModel extends ChangeNotifier {
           "above": serviceNumber,
         };
 
-        Navigation.instance.navigateTo(
-            Routes.meeSevaAbstractScreen, args: argument);
+        Navigation.instance
+            .navigateTo(Routes.meeSevaAbstractScreen, args: argument);
       }
     } else if (title == GlobalConstants.lmWiseAbstract) {
       var argument = {
         "above": "0",
       };
-      Navigation.instance.navigateTo(Routes.meeSevaAbstractScreen, args: argument);
+      Navigation.instance
+          .navigateTo(Routes.meeSevaAbstractScreen, args: argument);
     } else if (title == GlobalConstants.searchApplication) {
       final result = await showTextInputDialog(
         context: context,
@@ -184,9 +183,7 @@ class MeesevaMenuViewModel extends ChangeNotifier {
         ],
       );
 
-      if (result != null &&
-          result[0] != null &&
-          result[0] is String) {
+      if (result != null) {
         // Get the service number from the dialog result
         String serviceNumber = result[0];
         var argument = {
@@ -201,95 +198,96 @@ class MeesevaMenuViewModel extends ChangeNotifier {
         "s": ApplicationStatus.PENDING_FOR_FEASIBILITY_CHECK_ALLOTMENT,
         "ncflag": "M"
       };
-      Navigation.instance.navigateTo(Routes.servicesAppListScreen, args: argument);
+      Navigation.instance
+          .navigateTo(Routes.servicesAppListScreen, args: argument);
     } else if (title == GlobalConstants.underFeasibilityCheckByOm) {
       var argument = {
         "s": ApplicationStatus.UNDER_FEASIBILITY_CHECK,
         "ncflag": "M"
       };
-      Navigation.instance.navigateTo(Routes.servicesAppListScreen, args: argument);
+      Navigation.instance
+          .navigateTo(Routes.servicesAppListScreen, args: argument);
     } else if (title == GlobalConstants.pendingForFeasibleByAe) {
       var argument = {
         "s": ApplicationStatus.LINE_MEN_FEASIBILITY_APPROVED,
         "ncflag": "M"
       };
-      Navigation.instance.navigateTo(Routes.servicesAppListScreen, args: argument);
+      Navigation.instance
+          .navigateTo(Routes.servicesAppListScreen, args: argument);
     } else if (title == GlobalConstants.pendingForNotFeasibleByAe) {
       var argument = {
         "s": ApplicationStatus.LINE_MEN_FEASIBILITY_NOT_APPROVED,
         "ncflag": "M"
       };
-      Navigation.instance.navigateTo(Routes.servicesAppListScreen, args: argument);
+      Navigation.instance
+          .navigateTo(Routes.servicesAppListScreen, args: argument);
     } else if (title == GlobalConstants.metersToBeAllottedByAde) {
       var argument = {
         "s": ApplicationStatus.AE_FEASIBILITY_APPROVED,
         "ncflag": "M"
       };
-      Navigation.instance.navigateTo(Routes.servicesAppListScreen, args: argument);
+      Navigation.instance
+          .navigateTo(Routes.servicesAppListScreen, args: argument);
     } else if (title == GlobalConstants.pendingForNotFeasibleByAde) {
       var argument = {
         "s": ApplicationStatus.AE_FEASIBILITY_NOT_APPROVED,
         "ncflag": "M"
       };
-      Navigation.instance.navigateTo(Routes.servicesAppListScreen, args: argument);
+      Navigation.instance
+          .navigateTo(Routes.servicesAppListScreen, args: argument);
     } else if (title == GlobalConstants.metersToBeAllottedByAe) {
       var argument = {
         "s": ApplicationStatus.METERS_ISSUED_BY_ADE,
         "ncflag": "M"
       };
-      Navigation.instance.navigateTo(Routes.servicesAppListScreen, args: argument);
+      Navigation.instance
+          .navigateTo(Routes.servicesAppListScreen, args: argument);
     } else if (title == GlobalConstants.metersToBeFixedByOmStaff) {
       var argument = {
         "s": ApplicationStatus.METERS_ISSUED_TO_OM_STAFF,
         "ncflag": "M"
       };
-      Navigation.instance.navigateTo(Routes.servicesAppListScreen, args: argument);
+      Navigation.instance
+          .navigateTo(Routes.servicesAppListScreen, args: argument);
     } else if (title == GlobalConstants.metersInstalledToBeReleasedByAe) {
       var argument = {
         "s": ApplicationStatus.METERS_FIXED_PENDING_FOR_RELEASE,
         "ncflag": "M"
       };
-      Navigation.instance.navigateTo(Routes.servicesAppListScreen, args: argument);
+      Navigation.instance
+          .navigateTo(Routes.servicesAppListScreen, args: argument);
     } else if (title == GlobalConstants.releasedByAe) {
-      var argument = {
-        "s": ApplicationStatus.RELEASED,
-        "ncflag": "M"
-      };
-      Navigation.instance.navigateTo(Routes.servicesAppListScreen, args: argument);
-    } else if (title == GlobalConstants.categoryPendingAllotment) { //Category Change module
-      var argument = {
-        "status": "VERIFIED"
-      };
-      Navigation.instance.navigateTo(Routes.categoryPendingAllotment, args: argument);
-    }else if (title == GlobalConstants.underVerification) {
-      var argument = {
-        "status": "F_ALLOT"
-      };
-      Navigation.instance.navigateTo(Routes.categoryPendingAllotment, args: argument);
-    }else if (title == GlobalConstants.acceptedByStaff) {
-      var argument = {
-        "status": "LM_F"
-      };
-      Navigation.instance.navigateTo(Routes.categoryPendingAllotment, args: argument);
-    }else if (title == GlobalConstants.rejectedByStaff) {
-      var argument = {
-        "status": "LM_NF"
-      };
-      Navigation.instance.navigateTo(Routes.categoryPendingAllotment, args: argument);
-    }else if (title == GlobalConstants.approvedByMe) {
-      var argument = {
-        "status": "AE_F"
-      };
-      Navigation.instance.navigateTo(Routes.categoryPendingAllotment, args: argument);
-    }else if (title == GlobalConstants.rejectedByMe) {
-      var argument = {
-        "status": "AE_NF"
-      };
-      Navigation.instance.navigateTo(Routes.categoryPendingAllotment, args: argument);
-    }else if (title == GlobalConstants.loadChangePendingAllotment) { //Load Change Module
-      var argument = {
-        "status": "VERIFIED"
-      };
+      var argument = {"s": ApplicationStatus.RELEASED, "ncflag": "M"};
+      Navigation.instance
+          .navigateTo(Routes.servicesAppListScreen, args: argument);
+    } else if (title == GlobalConstants.categoryPendingAllotment) {
+      //Category Change module
+      var argument = {"status": "VERIFIED"};
+      Navigation.instance
+          .navigateTo(Routes.categoryPendingAllotment, args: argument);
+    } else if (title == GlobalConstants.underVerification) {
+      var argument = {"status": "F_ALLOT"};
+      Navigation.instance
+          .navigateTo(Routes.categoryPendingAllotment, args: argument);
+    } else if (title == GlobalConstants.acceptedByStaff) {
+      var argument = {"status": "LM_F"};
+      Navigation.instance
+          .navigateTo(Routes.categoryPendingAllotment, args: argument);
+    } else if (title == GlobalConstants.rejectedByStaff) {
+      var argument = {"status": "LM_NF"};
+      Navigation.instance
+          .navigateTo(Routes.categoryPendingAllotment, args: argument);
+    } else if (title == GlobalConstants.approvedByMe) {
+      var argument = {"status": "AE_F"};
+      Navigation.instance
+          .navigateTo(Routes.categoryPendingAllotment, args: argument);
+    } else if (title == GlobalConstants.rejectedByMe) {
+      var argument = {"status": "AE_NF"};
+      Navigation.instance
+          .navigateTo(Routes.categoryPendingAllotment, args: argument);
+    } else if (title == GlobalConstants.loadChangePendingAllotment) {
+      //Load Change Module
+      var argument = {"status": "VERIFIED"};
       Navigation.instance.navigateTo(Routes.loadChangeRequests, args: argument);
     }
   }

@@ -605,7 +605,7 @@ class RowList {
 
   HeaderBar? headerBar;
   String? label;
-  dynamic? value;
+  dynamic value;
   String? displayValue;
   String? labelColor;
   String? valueColor;
@@ -622,7 +622,7 @@ class RowList {
   RowList copyWith({
     HeaderBar? headerBar,
     String? label,
-    dynamic? value,
+    dynamic value,
     String? displayValue,
     String? labelColor,
     String? valueColor,

@@ -37,12 +37,15 @@ class GisIndividualId extends StatelessWidget {
               actions: [
                 TextButton(
                     onPressed: () {
-                      Navigation.instance.navigateTo(Routes.addGis,  args: {
-                        'gis': true,
-                        'gisId': viewModel.gisID,
-                        'gisReg': "GIS-00${viewModel.gisID}",
-                        't': "11KV",
-                      },);
+                      Navigation.instance.navigateTo(
+                        Routes.addGis,
+                        args: {
+                          'gis': true,
+                          'gisId': viewModel.gisID,
+                          'gisReg': "GIS-00${viewModel.gisID}",
+                          't': "11KV",
+                        },
+                      );
                     },
                     child: const Text(
                       "ADD GIS POINT",
@@ -57,20 +60,21 @@ class GisIndividualId extends StatelessWidget {
                       ? const Center(child: CircularProgressIndicator())
                       : viewModel.gisData.isEmpty
                           ? const Center(child: Text('No GIS data available'))
-                          :  ListView.builder(
-                                itemCount: viewModel.gisData.length,
-                                itemBuilder: (context, index) {
-                                  final item = viewModel.gisData[index];
-                                  return InkWell(
+                          : ListView.builder(
+                              itemCount: viewModel.gisData.length,
+                              itemBuilder: (context, index) {
+                                final item = viewModel.gisData[index];
+                                return InkWell(
                                   onTap: () {
                                     Navigation.instance.navigateTo(
-                                    Routes.viewWorkScreen,
+                                      Routes.viewWorkScreen,
                                       args: {
                                         'surveyID': item.surveyId as int,
                                         'status': item.status,
-                                      },);
-                                    },
-                                    child: ListTile(
+                                      },
+                                    );
+                                  },
+                                  child: ListTile(
                                     title: Text(
                                         'SURVEY ID: ${item.surveyId ?? 'N/A'}'),
                                     subtitle: Column(
@@ -86,24 +90,26 @@ class GisIndividualId extends StatelessWidget {
                                               'LonA:${item.pbeforeLon ?? 'N/A'}'),
                                           Text(
                                             item.dateOfBeforeMarked ?? 'N/A',
-                                            style:
-                                                TextStyle(color: Colors.blue),
+                                            style: const TextStyle(
+                                                color: Colors.blue),
                                           ),
                                           const SizedBox(
                                             height: 20,
                                           ),
-                                           Align(
-                                              alignment: Alignment.bottomLeft,
-                                              child: SizedBox(
-                                                width: 200,
-                                                child: item.status == "PENDING"? PrimaryButton(
-                                                    text: 'SAVE FOR OFFLINE',
-                                                    onPressed: () {
-                                                      viewModel.saveForOffline(
-                                                          individualGIDId);
-                                                    }):null,
-                                              ),
+                                          Align(
+                                            alignment: Alignment.bottomLeft,
+                                            child: SizedBox(
+                                              width: 200,
+                                              child: item.status == "PENDING"
+                                                  ? PrimaryButton(
+                                                      text: 'SAVE FOR OFFLINE',
+                                                      onPressed: () {
+                                                        viewModel.saveForOffline(
+                                                            individualGIDId);
+                                                      })
+                                                  : null,
                                             ),
+                                          ),
                                           const SizedBox(
                                             width: 10,
                                           ),
@@ -117,10 +123,10 @@ class GisIndividualId extends StatelessWidget {
                                               : Colors.green,
                                           fontSize: 15),
                                     ),
-                                    ),
-                                  );
-                                },
-                              ),
+                                  ),
+                                );
+                              },
+                            ),
                 ),
               ],
             ),

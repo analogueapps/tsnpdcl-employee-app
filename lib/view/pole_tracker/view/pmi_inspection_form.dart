@@ -21,220 +21,222 @@ class PmiInspectionForm extends StatelessWidget {
       create: (_) => PmiInspectionFormViewmodel(context: context, args: args),
       child: Consumer<PmiInspectionFormViewmodel>(
           builder: (context, viewModel, child) {
-            return WillPopScope(
-              onWillPop: () async => false,
-              child: Scaffold(
-                appBar: AppBar(
-                  backgroundColor: CommonColors.colorPrimary,
-                  title: Text(
-                    "pmi entry form".toUpperCase(),
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: toolbarTitleSize,
-                        fontWeight: FontWeight.w700),
-                  ),
-                  iconTheme: const IconThemeData(
+        return WillPopScope(
+          onWillPop: () async => false,
+          child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: CommonColors.colorPrimary,
+              title: Text(
+                "pmi entry form".toUpperCase(),
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: toolbarTitleSize,
+                    fontWeight: FontWeight.w700),
+              ),
+              iconTheme: const IconThemeData(
+                color: Colors.white,
+              ),
+              leading: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(Icons.close)),
+              actions: [
+                viewModel.readOnly != true
+                    ? const IconButton(
+                        onPressed: null,
+                        icon: Icon(
+                          Icons.save_outlined,
+                          color: Colors.white,
+                        ),
+                      )
+                    : const Icon(null),
+                const IconButton(
+                  onPressed: null,
+                  icon: Icon(
+                    Icons.folder_outlined,
                     color: Colors.white,
                   ),
-                  leading: IconButton(onPressed: () {
-                    Navigator.pop(context);
-                  }, icon: Icon(Icons.close)),
-                  actions: [
-                    viewModel.readOnly != true
-                        ? const IconButton(
-                      onPressed: null,
-                      icon: Icon(
-                        Icons.save_outlined,
-                        color: Colors.white,
-                      ),
-                    )
-                        : Icon(null),
-                    const IconButton(
-                      onPressed: null,
-                      icon: Icon(
-                        Icons.folder_outlined,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
                 ),
-                body: viewModel.readOnly
-                    ? Stack(
-                    children: [
-                      ListView.builder(
-                          itemCount: viewModel.rowItems.length,
-                          itemBuilder: (context, index) {
-                            final data = viewModel.rowItems[index];
-                            return data == null
-                                ?
-                            const Center(child: Text("No data found")) :
-                            Column(children: [
-                              data.headerBar != null
-                                  ? ViewDetailedLcHeadWidget(
-                                  title: data.headerBar?.label ?? "PHOTO")
-                                  : SizedBox.shrink(),
-                              data.headerBar?.label ==
-                                  "BEFORE RECTIFICATION PHOTO" ? SizedBox(
-                                height: 200,
-                                width: double.infinity,
-                                child: Icon(Icons.image),) : Text(""),
-                              data.label != "" ? ViewDetailedLcTileWidget(
-                                  tileKey: data.label ?? "",
-                                  tileValue: data.value ?? "") : Text(""),
-                              const Divider(),
-                            ],);
-                          }
-                      ),
-                      if(viewModel.isLoading)
-                        Positioned.fill(
-                          child: Container(
-                            color: Colors.black.withOpacity(0.3),
-                            // Optional: dim background
-                            child: const Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                          ),
-                        ),
-                    ]
-                ) : SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          const Expanded(child: Text('DIGITAL POLE ID')),
-                          Expanded(child: Text(
-                              args['digitalPoleId'].toString())),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      Row(
-                        children: [
-                          const Expanded(child: Text('SCHEDULE ID')),
-                          Expanded(child: Text(args['scheduleId'].toString())),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      Row(
-                        children: [
-                          Expanded(child: Text('VOLTAGE')),
-                          Expanded(child: Text(args['voltage'].toString())),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      Row(
-                        children: [
-                          const Expanded(child: Text('SS CODE')),
-                          Expanded(child: Text(args['ssc'])),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      Row(
-                        children: [
-                          const Expanded(child: Text('FEEDER CODE')),
-                          Expanded(child: Text(args['fc'])),
-                        ],
-                      ),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: viewModel.formControls.length,
+              ],
+            ),
+            body: viewModel.readOnly
+                ? Stack(children: [
+                    ListView.builder(
+                        itemCount: viewModel.rowItems.length,
                         itemBuilder: (context, index) {
-                          final control = viewModel.formControls[index];
-
-
-                          // Skip ones already handled above
-                          if (control.label == "DIGITAL POLE ID" || control
-                              .label == "SCHEDULE ID") {
-                            return SizedBox.shrink();
-                          }
-
-                          return viewModel.entryForm(control, viewModel);
-                        }
-                        ),
-                      const SizedBox(height: 20),
-                      TextField(
-                        controller: viewModel.remarks,
-                        decoration: const InputDecoration(
-                          label: Text('REMARKS (If any)'),
-                        ),
-                      ),
-                      const SizedBox(height: 11),
-
-                      Container(
-                        width: double.infinity,
-                        height: 40,
-                        color: Colors.grey.shade300,
-                        child: const Align(
-                          child: Text(
-                            'BEFORE RECTIFICATION PHOTO',
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                          final data = viewModel.rowItems[index];
+                          return data == null
+                              ? const Center(child: Text("No data found"))
+                              : Column(
+                                  children: [
+                                    data.headerBar != null
+                                        ? ViewDetailedLcHeadWidget(
+                                            title: data.headerBar?.label ??
+                                                "PHOTO")
+                                        : const SizedBox.shrink(),
+                                    data.headerBar?.label ==
+                                            "BEFORE RECTIFICATION PHOTO"
+                                        ? const SizedBox(
+                                            height: 200,
+                                            width: double.infinity,
+                                            child: Icon(Icons.image),
+                                          )
+                                        : const Text(""),
+                                    data.label != ""
+                                        ? ViewDetailedLcTileWidget(
+                                            tileKey: data.label ?? "",
+                                            tileValue: data.value ?? "")
+                                        : const Text(""),
+                                    const Divider(),
+                                  ],
+                                );
+                        }),
+                    if (viewModel.isLoading)
+                      Positioned.fill(
+                        child: Container(
+                          color: Colors.black.withOpacity(0.3),
+                          // Optional: dim background
+                          child: const Center(
+                            child: CircularProgressIndicator(),
                           ),
                         ),
                       ),
-                      const SizedBox(height: 11),
-                      Container(
-                        height: 250,
-                        width: double.infinity,
-                        color: Colors.grey.shade300,
-                        child: viewModel.capturedImage == null
-                            ? const Icon(Icons.image, size: 50)
-                            : Image.file(
-                            viewModel.capturedImage!, fit: BoxFit.cover),
-                      ),
-                      const SizedBox(height: 11),
-                      InkWell(
-                        child: Container(
+                  ])
+                : SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            const Expanded(child: Text('DIGITAL POLE ID')),
+                            Expanded(
+                                child: Text(args['digitalPoleId'].toString())),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        Row(
+                          children: [
+                            const Expanded(child: Text('SCHEDULE ID')),
+                            Expanded(
+                                child: Text(args['scheduleId'].toString())),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        Row(
+                          children: [
+                            const Expanded(child: Text('VOLTAGE')),
+                            Expanded(child: Text(args['voltage'].toString())),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        Row(
+                          children: [
+                            const Expanded(child: Text('SS CODE')),
+                            Expanded(child: Text(args['ssc'])),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        Row(
+                          children: [
+                            const Expanded(child: Text('FEEDER CODE')),
+                            Expanded(child: Text(args['fc'])),
+                          ],
+                        ),
+                        ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: viewModel.formControls.length,
+                            itemBuilder: (context, index) {
+                              final control = viewModel.formControls[index];
+
+                              // Skip ones already handled above
+                              if (control.label == "DIGITAL POLE ID" ||
+                                  control.label == "SCHEDULE ID") {
+                                return const SizedBox.shrink();
+                              }
+
+                              return viewModel.entryForm(control, viewModel);
+                            }),
+                        const SizedBox(height: 20),
+                        TextField(
+                          controller: viewModel.remarks,
+                          decoration: const InputDecoration(
+                            label: Text('REMARKS (If any)'),
+                          ),
+                        ),
+                        const SizedBox(height: 11),
+                        Container(
                           width: double.infinity,
                           height: 40,
-                          color: Colors.orange,
+                          color: Colors.grey.shade300,
                           child: const Align(
                             child: Text(
-                              'CAPTURE PHOTO',
+                              'BEFORE RECTIFICATION PHOTO',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                           ),
                         ),
-                        onTap: () {
-                          viewModel.captureImage();
-                        },
-                      ),
-                      const SizedBox(height: 11),
-                      Row(
-                        children: [
-                          const SizedBox(width: 3),
-                          const Expanded(child: Text('BEFORE LONGITUDE')),
-                          Container(height: 30, width: 1, color: Colors.grey),
-                          const SizedBox(width: 3),
-                          Expanded(
-                            child: TextField(
-                              controller: viewModel.remarks,
-                              decoration: const InputDecoration(
-                                  label: Text('')),
+                        const SizedBox(height: 11),
+                        Container(
+                          height: 250,
+                          width: double.infinity,
+                          color: Colors.grey.shade300,
+                          child: viewModel.capturedImage == null
+                              ? const Icon(Icons.image, size: 50)
+                              : Image.file(viewModel.capturedImage!,
+                                  fit: BoxFit.cover),
+                        ),
+                        const SizedBox(height: 11),
+                        InkWell(
+                          child: Container(
+                            width: double.infinity,
+                            height: 40,
+                            color: Colors.orange,
+                            child: const Align(
+                              child: Text(
+                                'CAPTURE PHOTO',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
                             ),
                           ),
-                        ],
-                      ),
-                    ],
+                          onTap: () {
+                            viewModel.captureImage();
+                          },
+                        ),
+                        const SizedBox(height: 11),
+                        Row(
+                          children: [
+                            const SizedBox(width: 3),
+                            const Expanded(child: Text('BEFORE LONGITUDE')),
+                            Container(height: 30, width: 1, color: Colors.grey),
+                            const SizedBox(width: 3),
+                            Expanded(
+                              child: TextField(
+                                controller: viewModel.remarks,
+                                decoration:
+                                    const InputDecoration(label: Text('')),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                floatingActionButton: FloatingActionButton(
-                  onPressed: viewModel.changeReadOnlyStatus,
-                  backgroundColor: Colors.pinkAccent,
-                  child: const Icon(
-                    Icons.camera_alt,
-                    color: Colors.white,
-                  ),
-                ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: viewModel.changeReadOnlyStatus,
+              backgroundColor: Colors.pinkAccent,
+              child: const Icon(
+                Icons.camera_alt,
+                color: Colors.white,
               ),
-            );
-          }
             ),
-                );
+          ),
+        );
+      }),
+    );
   }
 }
-
-
 
 //  Container(
 //    width: double.infinity,

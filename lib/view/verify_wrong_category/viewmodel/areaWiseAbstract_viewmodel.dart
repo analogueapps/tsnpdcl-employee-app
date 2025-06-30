@@ -8,25 +8,25 @@ import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/view/verify_wrong_category/model/areaWiseAbstract_model.dart';
 
-class AreaWiseAbstractViewModel extends ChangeNotifier{
-
-  AreaWiseAbstractViewModel({required this.context}){
+class AreaWiseAbstractViewModel extends ChangeNotifier {
+  AreaWiseAbstractViewModel({required this.context}) {
     fetchAllAbstract();
   }
   final BuildContext context;
-  TextEditingController searchController=TextEditingController();
-  bool _isLoading=false;
-  List<FetchAllAbstract> _verifyWrongData=[];
+  TextEditingController searchController = TextEditingController();
+  bool _isLoading = false;
+  final List<FetchAllAbstract> _verifyWrongData = [];
 
-  bool get isLoading=>_isLoading;
-  List<FetchAllAbstract> get verifyWrongData=>_verifyWrongData;
+  bool get isLoading => _isLoading;
+  List<FetchAllAbstract> get verifyWrongData => _verifyWrongData;
 
   Future<void> fetchAllAbstract() async {
     _isLoading = true;
     notifyListeners();
 
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
     };
 
@@ -53,8 +53,9 @@ class AreaWiseAbstractViewModel extends ChangeNotifier{
                   jsonList = [];
                 }
 
-                final List<FetchAllAbstract> dataList =
-                jsonList.map((json) => FetchAllAbstract.fromJson(json)).toList();
+                final List<FetchAllAbstract> dataList = jsonList
+                    .map((json) => FetchAllAbstract.fromJson(json))
+                    .toList();
 
                 _verifyWrongData.clear();
                 _verifyWrongData.addAll(dataList);
@@ -68,8 +69,10 @@ class AreaWiseAbstractViewModel extends ChangeNotifier{
             showSessionExpiredDialog(context);
           }
         } else {
-          showAlertDialog(context, response.data['message'] ??
-              'Request failed with status: ${response.statusCode}');
+          showAlertDialog(
+              context,
+              response.data['message'] ??
+                  'Request failed with status: ${response.statusCode}');
         }
       }
     } catch (e, stacktrace) {
@@ -80,5 +83,4 @@ class AreaWiseAbstractViewModel extends ChangeNotifier{
       notifyListeners();
     }
   }
-
 }

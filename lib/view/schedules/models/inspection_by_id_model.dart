@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class MaintenanceItem {
   final int maintenanceId;
   final String inspectedEmpId;
@@ -53,9 +51,9 @@ class MaintenanceItem {
       scheduledMonth: json['scheduledMonth'],
       scheduleId: json['scheduleId'],
       ssMaintenanceAttributesEntitiesByMid:
-      (json['ssMaintenanceAttributesEntitiesByMid'] as List)
-          .map((e) => SSMaintenanceAttribute.fromJson(e))
-          .toList(),
+          (json['ssMaintenanceAttributesEntitiesByMid'] as List)
+              .map((e) => SSMaintenanceAttribute.fromJson(e))
+              .toList(),
     );
   }
 }

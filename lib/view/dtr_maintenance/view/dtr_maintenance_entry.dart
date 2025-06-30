@@ -23,8 +23,8 @@ class DtrMaintenanceEntry extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => DtrMaintenanceEntryViewmodel(
-          context: context, jsonResponse: data),
+      create: (_) =>
+          DtrMaintenanceEntryViewmodel(context: context, jsonResponse: data),
       child: Consumer<DtrMaintenanceEntryViewmodel>(
         builder: (context, viewModel, child) {
           return Scaffold(
@@ -43,7 +43,7 @@ class DtrMaintenanceEntry extends StatelessWidget {
                   Text(
                     viewModel.dtrInspectionSheetEntity != null
                         ? checkNull(
-                        viewModel.dtrInspectionSheetEntity!.structureCode)
+                            viewModel.dtrInspectionSheetEntity!.structureCode)
                         : "N/A",
                     style: const TextStyle(
                         fontSize: normalSize, color: Colors.grey),
@@ -62,7 +62,7 @@ class DtrMaintenanceEntry extends StatelessWidget {
                     height: double.infinity,
                     child: ListView.separated(
                       separatorBuilder: (_, __) =>
-                      const Divider(height: doubleOne),
+                          const Divider(height: doubleOne),
                       itemCount: viewModel.groupsList.length,
                       itemBuilder: (context, index) {
                         final group = viewModel.groupsList[index];
@@ -75,7 +75,9 @@ class DtrMaintenanceEntry extends StatelessWidget {
                           },
                           child: Container(
                             padding: const EdgeInsets.all(doubleFifteen),
-                            color: isSelected ? Colors.grey[300] : Colors.transparent,
+                            color: isSelected
+                                ? Colors.grey[300]
+                                : Colors.transparent,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -83,7 +85,9 @@ class DtrMaintenanceEntry extends StatelessWidget {
                                   child: Text(
                                     group.optionName!,
                                     style: TextStyle(
-                                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                                      fontWeight: isSelected
+                                          ? FontWeight.w700
+                                          : FontWeight.w500,
                                     ),
                                   ),
                                 ),
@@ -101,12 +105,16 @@ class DtrMaintenanceEntry extends StatelessWidget {
                   color: Colors.grey,
                   height: double.infinity,
                 ),
-                 Expanded(
+                Expanded(
                   flex: 3,
                   child: Column(
                     children: [
                       Flexible(
-                          flex: 1, child: DtrHtMaintenanceEntry(data: data,selectedOption:viewModel.selectedGroup!.optionId,)),
+                          flex: 1,
+                          child: DtrHtMaintenanceEntry(
+                            data: data,
+                            selectedOption: viewModel.selectedGroup!.optionId,
+                          )),
                     ],
                   ),
                 ),
@@ -118,30 +126,28 @@ class DtrMaintenanceEntry extends StatelessWidget {
                   text: "Submit".toUpperCase(),
                   fullWidth: isTrue,
                   onPressed: () {
-                     viewModel.handleLocationIconClick();
+                    viewModel.handleLocationIconClick();
                     imageDialog(context, viewModel);
-                  }
-              ),
+                  }),
             ),
           );
         },
       ),
     );
   }
-
 }
 
-void imageDialog(BuildContext context,DtrMaintenanceEntryViewmodel viewModel ) {
+void imageDialog(BuildContext context, DtrMaintenanceEntryViewmodel viewModel) {
   showDialog(
-    barrierDismissible: false,
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
           titlePadding: EdgeInsets.zero,
-          contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16.0, vertical: 12.0),
-          insetPadding: const EdgeInsets.symmetric(
-              horizontal: 24.0, vertical: 24.0),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+          insetPadding:
+              const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
           title: Container(
             width: double.infinity,
             color: CommonColors.colorPrimary,
@@ -170,16 +176,16 @@ void imageDialog(BuildContext context,DtrMaintenanceEntryViewmodel viewModel ) {
                 child: viewModel.photoPath.isEmpty
                     ? const Center(child: Icon(Icons.image, size: 50))
                     : ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: SizedBox(
-                    height: 180,
-                    width: double.infinity,
-                    child: Image.network(
-                      Apis.NPDCL_STORAGE_SERVER_IP + viewModel.photoPath,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
+                        borderRadius: BorderRadius.circular(8),
+                        child: SizedBox(
+                          height: 180,
+                          width: double.infinity,
+                          child: Image.network(
+                            Apis.NPDCL_STORAGE_SERVER_IP + viewModel.photoPath,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
               ),
               const SizedBox(height: 16),
               ElevatedButton(
@@ -187,7 +193,7 @@ void imageDialog(BuildContext context,DtrMaintenanceEntryViewmodel viewModel ) {
                   viewModel.capturePhoto();
                 },
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.grey[200]),
+                  backgroundColor: WidgetStateProperty.all(Colors.grey[200]),
                 ),
                 child: const Text(
                   "CAPTURE IMAGE",
@@ -247,16 +253,15 @@ void imageDialog(BuildContext context,DtrMaintenanceEntryViewmodel viewModel ) {
                 } else {
                   print("In else block");
                 }
-              }, // Replace with logic
+              },
+              style: TextButton.styleFrom(
+                  backgroundColor: Colors.grey[300]), // Replace with logic
               child: const Text(
                 "SUBMIT",
                 style: TextStyle(color: CommonColors.colorPrimary),
               ),
-              style: TextButton.styleFrom(
-                  backgroundColor: Colors.grey[300]),
             ),
           ],
         );
-      }
-  );
+      });
 }

@@ -20,8 +20,8 @@ import 'package:tsnpdcl_employee/view/dlist/model/range_dlist.dart';
 
 // Import google maps flutter and cluster manager with prefixes to avoid conflicts
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
-import 'package:google_maps_cluster_manager_2/google_maps_cluster_manager_2.dart' as gcluster;
-
+import 'package:google_maps_cluster_manager_2/google_maps_cluster_manager_2.dart'
+    as gcluster;
 
 class ClusterMapViewmodel extends ChangeNotifier {
   final BuildContext context;
@@ -40,7 +40,8 @@ class ClusterMapViewmodel extends ChangeNotifier {
 
   Set<gmaps.Marker> markers = {};
   late gmaps.GoogleMapController? _mapController;
-  late Completer<gmaps.GoogleMapController> googleMapController = Completer<gmaps.GoogleMapController>();
+  late Completer<gmaps.GoogleMapController> googleMapController =
+      Completer<gmaps.GoogleMapController>();
   gcluster.ClusterManager<DlistEntityRealmList>? clusterManager;
   List<DlistEntityRealmList> _clusterPlaces = [];
   List<DlistEntityRealmList> get clusterPlaces => _clusterPlaces;
@@ -83,7 +84,7 @@ class ClusterMapViewmodel extends ChangeNotifier {
 
     final requestData = {
       "authToken":
-      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "my": data['my'],
       "oc": data['oc'],
@@ -111,9 +112,9 @@ class ClusterMapViewmodel extends ChangeNotifier {
             if (response.data['success'] == isTrue) {
               if (response.data['objectJson'] != null) {
                 final List<dynamic> jsonList =
-                jsonDecode(response.data['objectJson']);
+                    jsonDecode(response.data['objectJson']);
                 final List<RangeDlist> listData =
-                jsonList.map((json) => RangeDlist.fromJson(json)).toList();
+                    jsonList.map((json) => RangeDlist.fromJson(json)).toList();
                 _dlistEntityRealmList = listData[0].dlistEntityRealmList!;
                 notifyListeners();
                 addRealmItems();
@@ -156,14 +157,16 @@ class ClusterMapViewmodel extends ChangeNotifier {
 
     if (_clusterPlaces.length == 1) {
       await controller.animateCamera(
-        gmaps.CameraUpdate.newLatLngZoom(parseLatLngFromString(_clusterPlaces.first.latLong), 16),
+        gmaps.CameraUpdate.newLatLngZoom(
+            parseLatLngFromString(_clusterPlaces.first.latLong), 16),
       );
       return;
     }
 
     if (_clusterPlaces.length > 1) {
       await controller.animateCamera(
-        gmaps.CameraUpdate.newLatLngZoom(parseLatLngFromString(_clusterPlaces.first.latLong), 10),
+        gmaps.CameraUpdate.newLatLngZoom(
+            parseLatLngFromString(_clusterPlaces.first.latLong), 10),
       );
       return;
     }
@@ -188,7 +191,8 @@ class ClusterMapViewmodel extends ChangeNotifier {
       northeast: gmaps.LatLng(north, east),
     );
 
-    await controller.animateCamera(gmaps.CameraUpdate.newLatLngBounds(bounds, 80));
+    await controller
+        .animateCamera(gmaps.CameraUpdate.newLatLngBounds(bounds, 80));
     notifyListeners();
   }
 
@@ -223,7 +227,8 @@ class ClusterMapViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<gmaps.Marker> _markerBuilder(gcluster.Cluster<DlistEntityRealmList> cluster) async {
+  Future<gmaps.Marker> _markerBuilder(
+      gcluster.Cluster<DlistEntityRealmList> cluster) async {
     final isMultiple = cluster.isMultiple;
     final firstItem = cluster.items.first;
 
@@ -231,9 +236,11 @@ class ClusterMapViewmodel extends ChangeNotifier {
 
     if (isMultiple) {
       final style = _formatClusterStyle(cluster.count);
-      markerIcon = await _getMarkerBitmap(125, text: style.text, bgColor: style.color);
+      markerIcon =
+          await _getMarkerBitmap(125, text: style.text, bgColor: style.color);
     } else {
-      markerIcon = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
+      markerIcon =
+          BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
     }
 
     return gmaps.Marker(
@@ -241,11 +248,13 @@ class ClusterMapViewmodel extends ChangeNotifier {
       position: cluster.location,
       infoWindow: gmaps.InfoWindow(
         title: isMultiple ? '' : '${firstItem.ctname}(${firstItem.sno})',
-        snippet: 'Arrears:${firstItem.arrears} Demands:${firstItem.curdem} Tot:${firstItem.dlamt}',
+        snippet:
+            'Arrears:${firstItem.arrears} Demands:${firstItem.curdem} Tot:${firstItem.dlamt}',
       ),
       onTap: () {
         if (!isMultiple) {
-          Navigation.instance.navigateTo(Routes.dlistAttendScreen, args: jsonEncode(firstItem));
+          Navigation.instance.navigateTo(Routes.dlistAttendScreen,
+              args: jsonEncode(firstItem));
         }
       },
       icon: markerIcon,
@@ -267,7 +276,8 @@ class ClusterMapViewmodel extends ChangeNotifier {
     return count.toString();
   }
 
-  Future<BitmapDescriptor> _getMarkerBitmap(int size, {required String text, required Color bgColor}) async {
+  Future<BitmapDescriptor> _getMarkerBitmap(int size,
+      {required String text, required Color bgColor}) async {
     final PictureRecorder pictureRecorder = PictureRecorder();
     final Canvas canvas = Canvas(pictureRecorder);
 
@@ -297,9 +307,8 @@ class ClusterMapViewmodel extends ChangeNotifier {
 
     final img = await pictureRecorder.endRecording().toImage(size, size);
     final data = await img.toByteData(format: ImageByteFormat.png) as ByteData;
-    return BitmapDescriptor.fromBytes(data!.buffer.asUint8List());
+    return BitmapDescriptor.fromBytes(data.buffer.asUint8List());
   }
-
 
   Place? _convertToPlace(DlistEntityRealmList item) {
     try {
@@ -311,7 +320,8 @@ class ClusterMapViewmodel extends ChangeNotifier {
       final lng = double.tryParse(parts[1].trim());
       if (lat == null || lng == null) return null;
 
-      return Place(name: item.ctname ?? 'Unknown', latLng: gmaps.LatLng(lat, lng));
+      return Place(
+          name: item.ctname ?? 'Unknown', latLng: gmaps.LatLng(lat, lng));
     } catch (e) {
       return null;
     }
@@ -327,10 +337,12 @@ class ClusterMapViewmodel extends ChangeNotifier {
       argument["filter"] = jsonEncode(dFilter);
     }
 
-    Navigation.instance.navigateTo(Routes.dlistFilterScreen, args: argument,onReturn: (result) {
-      if(result != null) {
+    Navigation.instance.navigateTo(Routes.dlistFilterScreen, args: argument,
+        onReturn: (result) {
+      if (result != null) {
         dFilter = DFilter.fromJson(jsonDecode(result));
-        String d = 'Showing ${dFilter!.distributionName} - ${dFilter!.distributionCode}\n'
+        String d =
+            'Showing ${dFilter!.distributionName} - ${dFilter!.distributionCode}\n'
             'Amount Range: ${dFilter!.amountFrom} - ${dFilter!.amountTo}';
         _titleText = d;
         notifyListeners();
@@ -340,7 +352,6 @@ class ClusterMapViewmodel extends ChangeNotifier {
   }
 
   Future<void> addRealmItems() async {
-
     if (dFilter != null) {
       List<String> statusCodes = [];
 
@@ -348,7 +359,8 @@ class ClusterMapViewmodel extends ChangeNotifier {
       if (dFilter!.udcSelected) statusCodes.add("03");
       if (dFilter!.liveSelected) statusCodes.add("01");
 
-      List<DlistEntityRealmList> filteredList = _dlistEntityRealmList.where((item) {
+      List<DlistEntityRealmList> filteredList =
+          _dlistEntityRealmList.where((item) {
         return item.ctareacd == dFilter?.distributionCode &&
             statusCodes.contains(item.dlstat) &&
             item.dlamt != null &&
@@ -408,7 +420,8 @@ class ClusterMapViewmodel extends ChangeNotifier {
                 child: const Text("Open Entry Form"),
                 onPressed: () {
                   Navigator.pop(context);
-                  Navigation.instance.navigateTo(Routes.dlistAttendScreen, args: jsonEncode(selectedItem));
+                  Navigation.instance.navigateTo(Routes.dlistAttendScreen,
+                      args: jsonEncode(selectedItem));
                 },
               ),
               CupertinoDialogAction(
@@ -443,5 +456,3 @@ ClusterStyle _formatClusterStyle(int count) {
   }
   return ClusterStyle(count.toString(), Colors.deepPurple.shade700);
 }
-
-

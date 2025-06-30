@@ -181,7 +181,6 @@ import 'package:tsnpdcl_employee/view/gis_ids/view/create_gis_id.dart';
 import 'package:tsnpdcl_employee/view/gis_ids/view/gis_ids.dart';
 import 'package:tsnpdcl_employee/view/gis_ids/view/gis_individual.dart';
 import 'package:tsnpdcl_employee/view/gis_ids/view/view_work_details.dart';
-import 'package:tsnpdcl_employee/view/gis_ids/model/gis_individual_model.dart';
 import 'package:tsnpdcl_employee/view/gis_ids/view/view_work_floating_button.dart';
 
 class AppRouter {
@@ -192,20 +191,21 @@ class AppRouter {
       case CorporateLoginScreen.id:
         return MaterialPageRoute(builder: (_) => const CorporateLoginScreen());
       case ChangePasswordScreen.id:
-        return MaterialPageRoute(builder: (_) => ChangePasswordScreen(empId: settings.arguments as String));
+        return MaterialPageRoute(
+            builder: (_) =>
+                ChangePasswordScreen(empId: settings.arguments as String));
       case OtpVerificationScreen.id:
         return MaterialPageRoute(
-            builder: (_) => OtpVerificationScreen(data: settings.arguments as Map<String, dynamic>));
+            builder: (_) => OtpVerificationScreen(
+                data: settings.arguments as Map<String, dynamic>));
 
       case UniversalDashboardScreen.id:
         return MaterialPageRoute(
             builder: (_) => const UniversalDashboardScreen());
       case NaviDashboardScreen.id:
-        return MaterialPageRoute(
-            builder: (_) => const NaviDashboardScreen());
+        return MaterialPageRoute(builder: (_) => const NaviDashboardScreen());
       case AdeopNaviScreen.id:
-        return MaterialPageRoute(
-            builder: (_) => const AdeopNaviScreen());
+        return MaterialPageRoute(builder: (_) => const AdeopNaviScreen());
 
       case SearchConsumerScreen.id:
         return MaterialPageRoute(builder: (_) => const SearchConsumerScreen());
@@ -235,7 +235,7 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => ViewDetailedCtptReport(
             data: settings.arguments
-            as FailureReportModel, // Cast to FailureReportModel
+                as FailureReportModel, // Cast to FailureReportModel
           ),
         );
       case ConsumerDetailsScreen.id:
@@ -249,18 +249,18 @@ class AppRouter {
       case SectionScreen.id:
         return MaterialPageRoute(builder: (_) => const SectionScreen());
 
-    // Ganesh pandal
+      // Ganesh pandal
       case GaneshPandalInformationScreen.id:
         return MaterialPageRoute(
             builder: (_) => const GaneshPandalInformationScreen());
 
-    // Consumer details
+      // Consumer details
       case DlistFormScreen.id:
         return MaterialPageRoute(
             builder: (_) =>
                 DlistFormScreen(form: settings.arguments as String));
 
-    // Line Clearance
+      // Line Clearance
       case LcMasterSsListScreen.id:
         return MaterialPageRoute(builder: (_) => const LcMasterSsListScreen());
       case LcMasterFeederListScreen.id:
@@ -284,7 +284,7 @@ class AppRouter {
             builder: (_) =>
                 ViewDetailedLcScreen(lcId: settings.arguments as String));
 
-    // Pole tracker
+      // Pole tracker
       case PoleTrackerSelectionViewSketchScreen.id:
         return MaterialPageRoute(
             builder: (_) => const PoleTrackerSelectionViewSketchScreen());
@@ -307,33 +307,33 @@ class AppRouter {
         return MaterialPageRoute(
             builder: (_) => Pole33kvFeederMarkScreen(
                 args: settings.arguments as Map<String, dynamic>));
-        case Pole33kvFeederEdit.id:
+      case Pole33kvFeederEdit.id:
         return MaterialPageRoute(
             builder: (_) => Pole33kvFeederEdit(
                 args: settings.arguments as Map<String, dynamic>));
-        case PmiInspectionForm.id:
+      case PmiInspectionForm.id:
         return MaterialPageRoute(
             builder: (_) => PmiInspectionForm(
                 args: settings.arguments as Map<String, dynamic>));
-        // case PmiList.id:
-        // return MaterialPageRoute(
-        //     builder: (_) => PmiList(
-        //         args: settings.arguments as Map<String, dynamic>));
+      // case PmiList.id:
+      // return MaterialPageRoute(
+      //     builder: (_) => PmiList(
+      //         args: settings.arguments as Map<String, dynamic>));
       case ViewOfflineFeedersScreen.id:
         return MaterialPageRoute(
             builder: (_) => const ViewOfflineFeedersScreen());
 
-    // BILLING RELATED
+      // BILLING RELATED
       case GruhaJyothiScreen.id:
         return MaterialPageRoute(builder: (_) => const GruhaJyothiScreen());
 
-    // MANAGE STAFF
+      // MANAGE STAFF
       case ManageStaffsScreen.id:
         return MaterialPageRoute(builder: (_) => const ManageStaffsScreen());
-      case AddEmployeeScreen.id :
-        return MaterialPageRoute(builder: (_)=> const AddEmployeeScreen());
+      case AddEmployeeScreen.id:
+        return MaterialPageRoute(builder: (_) => const AddEmployeeScreen());
 
-    // PDMS
+      // PDMS
       case CreatePoleIndentsScreen.id:
         return MaterialPageRoute(
             builder: (_) => const CreatePoleIndentsScreen());
@@ -361,33 +361,34 @@ class AppRouter {
             builder: (_) => ViewDetailedPoleDumpedLocationScreen(
                 data: settings.arguments as String));
       case ViewFirmsScreen.id:
-        return MaterialPageRoute(
-            builder: (_) => const ViewFirmsScreen());
+        return MaterialPageRoute(builder: (_) => const ViewFirmsScreen());
       case CreateFirmScreen.id:
         return MaterialPageRoute(
-            builder: (_) => CreateFirmScreen(data: settings.arguments as String));
+            builder: (_) =>
+                CreateFirmScreen(data: settings.arguments as String));
       case ViewInspectionTicketsScreen.id:
         return MaterialPageRoute(
             builder: (_) => const ViewInspectionTicketsScreen());
       case ViewDetailedInspectionTicketScreen.id:
         return MaterialPageRoute(
-            builder: (_) => ViewDetailedInspectionTicketScreen(data: settings.arguments as String));
+            builder: (_) => ViewDetailedInspectionTicketScreen(
+                data: settings.arguments as String));
 
-    // REPORTS
+      // REPORTS
       case ReportsScreen.id:
         return MaterialPageRoute(
             builder: (_) => ReportsScreen(path: settings.arguments as String));
 
-    // FILTER
+      // FILTER
       case FilterScreen.id:
         return MaterialPageRoute(
             builder: (_) => FilterScreen(data: settings.arguments as String));
 
-    // EXCEPTIONALS
+      // EXCEPTIONALS
       case ExceptionalsScreen.id:
         return MaterialPageRoute(builder: (_) => const ExceptionalsScreen());
 
-    // DTR MAINTENANCE
+      // DTR MAINTENANCE
       case DtrMasterListScreen.id:
         return MaterialPageRoute(builder: (_) => const DtrMasterListScreen());
       case DtrInspectionListScreen.id:
@@ -400,30 +401,30 @@ class AppRouter {
                 data: settings.arguments as String));
       case DtrMaintenanceEntry.id:
         return MaterialPageRoute(
-            builder: (_) => DtrMaintenanceEntry(
-                data: settings.arguments as String));
+            builder: (_) =>
+                DtrMaintenanceEntry(data: settings.arguments as String));
 
-    // Widgets
+      // Widgets
       case PinchZoomImageView.id:
         return MaterialPageRoute(
             builder: (_) =>
                 PinchZoomImageView(imageUrl: settings.arguments as String));
 
-    // Tong tester readings * Bhavana
+      // Tong tester readings * Bhavana
       case OverLoadDTRList.id:
         return MaterialPageRoute(builder: (_) => const OverLoadDTRList());
       case OverloadedFloatingButtonView.id:
-        return MaterialPageRoute(builder: (_) => const OverloadedFloatingButtonView());
+        return MaterialPageRoute(
+            builder: (_) => const OverloadedFloatingButtonView());
       case ViewDetailedTongTesterReadings.id:
         final args = settings.arguments as OverloadDtrListModel;
-        return MaterialPageRoute(builder: (_) =>  ViewDetailedTongTesterReadings(data: args
-        ));
+        return MaterialPageRoute(
+            builder: (_) => ViewDetailedTongTesterReadings(data: args));
 
-
-    // RFSS Screen * Bhavana
+      // RFSS Screen * Bhavana
       case RfssScreen.id:
         return MaterialPageRoute(builder: (_) => const RfssScreen());
-    //Bhavana
+      //Bhavana
       case NonAglServices.id:
         return MaterialPageRoute(builder: (_) => const NonAglServices());
       case AglServices.id:
@@ -431,11 +432,10 @@ class AppRouter {
       case NewInspection.id:
         return MaterialPageRoute(builder: (_) => const NewInspection());
       case DownloadStructuresScreen.id:
-        return MaterialPageRoute(builder: (_) => const DownloadStructuresScreen());
+        return MaterialPageRoute(
+            builder: (_) => const DownloadStructuresScreen());
 
-
-
-    // Middle Poles Screen * Swetha API * BHAVANA
+      // Middle Poles Screen * Swetha API * BHAVANA
       case MiddlePolesScreen.id:
         return MaterialPageRoute(builder: (_) => const MiddlePolesScreen());
       case MiddlePoles33kv.id:
@@ -443,23 +443,26 @@ class AppRouter {
       case MiddlePole11kv.id:
         return MaterialPageRoute(builder: (_) => const MiddlePole11kv());
       case PendingListScreen.id:
-        return MaterialPageRoute(builder: (_) =>  PendingListScreen(status: settings.arguments as String,));
+        return MaterialPageRoute(
+            builder: (_) => PendingListScreen(
+                  status: settings.arguments as String,
+                ));
       case ViewDetailedPendingListScreen.id:
         final args = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
-            builder: (_) =>  ViewDetailedPendingListScreen(
-              surveyID: args['surveyID'] ?? '',
-              status: args['status'] ?? '',
-            )
-        );
+            builder: (_) => ViewDetailedPendingListScreen(
+                  surveyID: args['surveyID'] ?? '',
+                  status: args['status'] ?? '',
+                ));
       case PendingListFloatingButton.id:
         final args = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
-            builder: (_) =>  PendingListFloatingButton(
-              surveyID: args['surveyID'] ?? '',
-              status: args['status'] ?? '',));
+            builder: (_) => PendingListFloatingButton(
+                  surveyID: args['surveyID'] ?? '',
+                  status: args['status'] ?? '',
+                ));
 
-    // SS Maintenance Screen * Swetha API*BHavana
+      // SS Maintenance Screen * Swetha API*BHavana
       case SsMaintenanceScreen.id:
         return MaterialPageRoute(builder: (_) => const SsMaintenanceScreen());
       case MaintenanceDueScreen.id:
@@ -468,7 +471,7 @@ class AppRouter {
         return MaterialPageRoute(
             builder: (_) => const MaintenanceFinishedScreen());
 
-    // Interruptions * swetha
+      // Interruptions * swetha
       case Breakdown33kvScreen.id:
         return MaterialPageRoute(builder: (_) => const Breakdown33kvScreen());
       case Breakdown11kvScreen.id:
@@ -490,33 +493,33 @@ class AppRouter {
       case DetailedView33kvBreakdownScreen.id:
         return MaterialPageRoute(
             builder: (_) => DetailedView33kvBreakdownScreen(
-              data: settings.arguments as Map<String, dynamic>,
-            ));
+                  data: settings.arguments as Map<String, dynamic>,
+                ));
       case DetailedView11kvBreakdownScreen.id:
         return MaterialPageRoute(
             builder: (_) => DetailedView11kvBreakdownScreen(
-              data: settings.arguments as Map<String, dynamic>,
-            ));
+                  data: settings.arguments as Map<String, dynamic>,
+                ));
       case View33kvOpenRestoreDetails.id:
         return MaterialPageRoute(
             builder: (_) => View33kvOpenRestoreDetails(
-              data: settings.arguments as Map<String, dynamic>,
-            ));
+                  data: settings.arguments as Map<String, dynamic>,
+                ));
       case View11kvOpenRestoreDetails.id:
         return MaterialPageRoute(
             builder: (_) => View11kvOpenRestoreDetails(
-              data: settings.arguments as Map<String, dynamic>,
-            ));
+                  data: settings.arguments as Map<String, dynamic>,
+                ));
       case MonthYearSelector.id:
         return MaterialPageRoute(
             builder: (_) =>
-            const MonthYearSelector()); //data: settings.arguments as Map<String, dynamic>,
+                const MonthYearSelector()); //data: settings.arguments as Map<String, dynamic>,
       case ViewReportScreen.id:
         return MaterialPageRoute(
             builder: (_) =>
-            const ViewReportScreen()); //data: settings.arguments as Map<String, dynamic>,
+                const ViewReportScreen()); //data: settings.arguments as Map<String, dynamic>,
 
-    //LTMT * Bhavana
+      //LTMT * Bhavana
       case LtmtMenu.id:
         return MaterialPageRoute(builder: (_) => const LtmtMenu());
       case MetersStock.id:
@@ -525,7 +528,7 @@ class AppRouter {
         return MaterialPageRoute(
             builder: (_) => MetersOm(empId: settings.arguments as String));
 
-    // DTR Master * Bhavana
+      // DTR Master * Bhavana
       case ConfigureFilter.id:
         return MaterialPageRoute(builder: (_) => const ConfigureFilter());
       case MappedDtr.id:
@@ -547,15 +550,16 @@ class AppRouter {
             builder: (_) => StructDetails(
                 structData: settings.arguments as List<FeederDisModel>));
 
-    // DTR FAILURE* bhavana
+      // DTR FAILURE* bhavana
       case DtrFailureReporting.id:
         return MaterialPageRoute(builder: (_) => const DtrFailureReporting());
       case ReportDTRFailure.id:
         return MaterialPageRoute(builder: (_) => const ReportDTRFailure());
       case DtrFailureRectifiedReports.id:
-        return MaterialPageRoute(builder: (_) => const DtrFailureRectifiedReports());
+        return MaterialPageRoute(
+            builder: (_) => const DtrFailureRectifiedReports());
 
-    //FAILURE DTR(S) INSPECTION * BHAVANA
+      //FAILURE DTR(S) INSPECTION * BHAVANA
       case ReportedDTRFailure.id:
         return MaterialPageRoute(builder: (_) => const ReportedDTRFailure());
       case ViewClosedReports.id:
@@ -563,41 +567,46 @@ class AppRouter {
       case ViewInspectionReports.id:
         return MaterialPageRoute(builder: (_) => const ViewInspectionReports());
 
-
-
-    //CT PT FAILURE API * Bhavana
+      //CT PT FAILURE API * Bhavana
       case CTFailureReportScreen.id:
         return MaterialPageRoute(builder: (_) => const CTFailureReportScreen());
       case FailureReportedList.id:
         return MaterialPageRoute(builder: (_) => const FailureReportedList());
       case ViewFailureConfirmedList.id:
-        return MaterialPageRoute(builder: (_) => const ViewFailureConfirmedList());
+        return MaterialPageRoute(
+            builder: (_) => const ViewFailureConfirmedList());
       case ViewReplacedList.id:
         return MaterialPageRoute(builder: (_) => const ViewReplacedList());
       case ViewIssuedList.id:
         return MaterialPageRoute(builder: (_) => const ViewIssuedList());
 
-
-
-    //GIS DIS *bhavana
+      //GIS DIS *bhavana
       case GISIDsScreen.id:
         return MaterialPageRoute(builder: (_) => const GISIDsScreen());
       case CreateGisId.id:
         return MaterialPageRoute(builder: (_) => const CreateGisId());
       case AddGisPoint.id:
         final args = settings.arguments as Map<String, dynamic>;
-        return MaterialPageRoute(builder: (_) => AddGisPoint(gis: args['gis'],gisId:args['gisId'] ,gisReg:args['gisReg'] ,t:args['t'] ,));
+        return MaterialPageRoute(
+            builder: (_) => AddGisPoint(
+                  gis: args['gis'],
+                  gisId: args['gisId'],
+                  gisReg: args['gisReg'],
+                  t: args['t'],
+                ));
       case ViewWorkFloatingButton.id:
-        return MaterialPageRoute(builder: (_)=> ViewWorkFloatingButton(surId: settings.arguments as String));
+        return MaterialPageRoute(
+            builder: (_) =>
+                ViewWorkFloatingButton(surId: settings.arguments as String));
       case GisIndividualId.id:
         return MaterialPageRoute(
             builder: (_) => GisIndividualId(
-              individualGIDId: settings.arguments as int,
-            ));
+                  individualGIDId: settings.arguments as int,
+                ));
       case PendingOfflineList.id:
-        return MaterialPageRoute(builder: (_)=> const PendingOfflineList());
+        return MaterialPageRoute(builder: (_) => const PendingOfflineList());
       case GisOfflineList.id:
-        return MaterialPageRoute(builder: (_)=> const GisOfflineList());
+        return MaterialPageRoute(builder: (_) => const GisOfflineList());
       case WorkDetailsPage.id:
         final args = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
@@ -607,21 +616,24 @@ class AppRouter {
           ),
         );
 
-    // ACCOUNT * SWETHA
+      // ACCOUNT * SWETHA
       case AccountScreen.id:
         return MaterialPageRoute(builder: (_) => const AccountScreen());
 
-    //CHECK READINGS * BHAVANA
+      //CHECK READINGS * BHAVANA
       case CheckReadings.id:
         return MaterialPageRoute(builder: (_) => const CheckReadings());
       case EnterServiceDetails.id:
-        return MaterialPageRoute(builder: (_) => EnterServiceDetails(bs_udc:settings.arguments as bool ,));
+        return MaterialPageRoute(
+            builder: (_) => EnterServiceDetails(
+                  bs_udc: settings.arguments as bool,
+                ));
 
-    //BS_UDC * BHAVANA
+      //BS_UDC * BHAVANA
       case BsUdcList.id:
         return MaterialPageRoute(builder: (_) => const BsUdcList());
 
-    //ONLINE PR * BHAVANA(SAI)
+      //ONLINE PR * BHAVANA(SAI)
       case IssueDuplicateReceipt.id:
         return MaterialPageRoute(builder: (_) => const IssueDuplicateReceipt());
       case PrintLastPrView.id:
@@ -631,135 +643,206 @@ class AppRouter {
       case OnlineCollectionView.id:
         return MaterialPageRoute(builder: (_) => const OnlineCollectionView());
 
-    // MEESEVA * Surya
+      // MEESEVA * Surya
       case MeeSevaAbstractScreen.id:
-        return MaterialPageRoute(builder: (_)=> MeeSevaAbstractScreen(data: settings.arguments as Map<String, dynamic>));
+        return MaterialPageRoute(
+            builder: (_) => MeeSevaAbstractScreen(
+                data: settings.arguments as Map<String, dynamic>));
       case ServicesAppListScreen.id:
-        return MaterialPageRoute(builder: (_)=> ServicesAppListScreen(data: settings.arguments as Map<String, dynamic>,));
+        return MaterialPageRoute(
+            builder: (_) => ServicesAppListScreen(
+                  data: settings.arguments as Map<String, dynamic>,
+                ));
       case FormLoaderScreen.id:
-        return MaterialPageRoute(builder: (_)=> FormLoaderScreen(data: settings.arguments as Map<String, dynamic>,));
-        //Meeseva * Bhavana
-        case CategoryChangeRequests.id:
-        return MaterialPageRoute(builder: (_)=> CategoryChangeRequests(statusData: settings.arguments as Map<String, dynamic>,));
-        case CategoryChangeRequestDetail.id:
-        return MaterialPageRoute(builder: (_)=> CategoryChangeRequestDetail(data: settings.arguments as Map<String, dynamic>,));
-        case LoadChangeRequests.id:
-        return MaterialPageRoute(builder: (_)=> LoadChangeRequests(statusData: settings.arguments as Map<String, dynamic>,));
-        case LoadChangeDetail.id:
-        return MaterialPageRoute(builder: (_)=> LoadChangeDetail(data: settings.arguments as Map<String, dynamic>,));
+        return MaterialPageRoute(
+            builder: (_) => FormLoaderScreen(
+                  data: settings.arguments as Map<String, dynamic>,
+                ));
+      //Meeseva * Bhavana
+      case CategoryChangeRequests.id:
+        return MaterialPageRoute(
+            builder: (_) => CategoryChangeRequests(
+                  statusData: settings.arguments as Map<String, dynamic>,
+                ));
+      case CategoryChangeRequestDetail.id:
+        return MaterialPageRoute(
+            builder: (_) => CategoryChangeRequestDetail(
+                  data: settings.arguments as Map<String, dynamic>,
+                ));
+      case LoadChangeRequests.id:
+        return MaterialPageRoute(
+            builder: (_) => LoadChangeRequests(
+                  statusData: settings.arguments as Map<String, dynamic>,
+                ));
+      case LoadChangeDetail.id:
+        return MaterialPageRoute(
+            builder: (_) => LoadChangeDetail(
+                  data: settings.arguments as Map<String, dynamic>,
+                ));
 
-    // DLIST * Surya
+      // DLIST * Surya
       case DlistMenuScreen.id:
         return MaterialPageRoute(builder: (_) => const DlistMenuScreen());
       case RangeWiseDlistScreen.id:
-        return MaterialPageRoute(builder: (_)=> RangeWiseDlistScreen(data: settings.arguments as String,));
+        return MaterialPageRoute(
+            builder: (_) => RangeWiseDlistScreen(
+                  data: settings.arguments as String,
+                ));
       case ClusterMapScreen.id:
-        return MaterialPageRoute(builder: (_)=> ClusterMapScreen(data: settings.arguments as Map<String, dynamic>,));
+        return MaterialPageRoute(
+            builder: (_) => ClusterMapScreen(
+                  data: settings.arguments as Map<String, dynamic>,
+                ));
       case DlistAttendScreen.id:
-        return MaterialPageRoute(builder: (_)=> DlistAttendScreen(data: settings.arguments as String,));
+        return MaterialPageRoute(
+            builder: (_) => DlistAttendScreen(
+                  data: settings.arguments as String,
+                ));
       case DlistFilterScreen.id:
         return MaterialPageRoute(
-            builder: (_) => DlistFilterScreen(data: settings.arguments as Map<String, dynamic>));
+            builder: (_) => DlistFilterScreen(
+                data: settings.arguments as Map<String, dynamic>));
 
-    //CCC Dashboard * Bhavana
+      //CCC Dashboard * Bhavana
       case CCCDashboardScreen.id:
         return MaterialPageRoute(builder: (_) => const CCCDashboardScreen());
       case CccOricb.id:
         final args = settings.arguments as Map<String, dynamic>;
-        return MaterialPageRoute(builder: (_) =>  CccOricb(
-          status: args['status'] ?? '',
-          title: args['name'] ?? '',
-        ));
+        return MaterialPageRoute(
+            builder: (_) => CccOricb(
+                  status: args['status'] ?? '',
+                  title: args['name'] ?? '',
+                ));
 
       case CCCViewDetailed.id:
         final args = settings.arguments as CccOpenModel;
-        return MaterialPageRoute(builder: (_) =>  CCCViewDetailed(data: args
-        ));
+        return MaterialPageRoute(builder: (_) => CCCViewDetailed(data: args));
 
       case CccComplaintTrack.id:
-        return MaterialPageRoute(builder: (_) =>  CccComplaintTrack(ticketID: settings.arguments as String));
+        return MaterialPageRoute(
+            builder: (_) =>
+                CccComplaintTrack(ticketID: settings.arguments as String));
 
-    //Schedules * Bhavana
+      //Schedules * Bhavana
       case SchedulesScreen.id:
         return MaterialPageRoute(builder: (_) => const SchedulesScreen());
       case ViewSchedule.id:
         final args = settings.arguments as Map<String, dynamic>;
-        return MaterialPageRoute(builder: (_) => ViewSchedule(
-          dt: args['dt'] ?? '',
-          type: args['type'] ?? '',
-        ));
+        return MaterialPageRoute(
+            builder: (_) => ViewSchedule(
+                  dt: args['dt'] ?? '',
+                  type: args['type'] ?? '',
+                ));
       case ViewDetailSchedules.id:
         final args = settings.arguments as ViewScheduleModel;
-        return MaterialPageRoute(builder: (_) =>  ViewDetailSchedules(data: args
-        ));
+        return MaterialPageRoute(
+            builder: (_) => ViewDetailSchedules(data: args));
       case Kv33Screen.id:
-        return MaterialPageRoute(builder: (_) =>  Kv33Screen(args: settings.arguments as Map<String, dynamic>));
+        return MaterialPageRoute(
+            builder: (_) =>
+                Kv33Screen(args: settings.arguments as Map<String, dynamic>));
       case SsInspection.id:
-        return MaterialPageRoute(builder: (_) =>  SsInspection(args: settings.arguments as Map<String, dynamic>));
+        return MaterialPageRoute(
+            builder: (_) =>
+                SsInspection(args: settings.arguments as Map<String, dynamic>));
 
-    // VERIFY WRONG CONFIRMATIONS * Bhavana
+      // VERIFY WRONG CONFIRMATIONS * Bhavana
       case AreaWiseAbstractView.id:
         return MaterialPageRoute(builder: (_) => const AreaWiseAbstractView());
       case InspectServices.id:
-        return MaterialPageRoute(builder: (_) => InspectServices(args: settings.arguments as Map<String, dynamic>));
-        case WrongCatConfirmation.id:
-        return MaterialPageRoute(builder: (_) => WrongCatConfirmation(args: settings.arguments as Map<String, dynamic>));
+        return MaterialPageRoute(
+            builder: (_) => InspectServices(
+                args: settings.arguments as Map<String, dynamic>));
+      case WrongCatConfirmation.id:
+        return MaterialPageRoute(
+            builder: (_) => WrongCatConfirmation(
+                args: settings.arguments as Map<String, dynamic>));
 
       //PTR & FEEDER LOADERS * Bhavana
       case PtrFeederScreen.id:
         return MaterialPageRoute(builder: (_) => const PtrFeederScreen());
 
-        //CHECK MEASUREMENT(LINES)*BHAVANA
-        case CheckMeasureScreen.id:
+      //CHECK MEASUREMENT(LINES)*BHAVANA
+      case CheckMeasureScreen.id:
         return MaterialPageRoute(builder: (_) => const CheckMeasureScreen());
-        case DocketScreen.id:
-        return MaterialPageRoute(builder: (_) =>  DocketScreen(ssc: settings.arguments as String));
-        case Pole11kvFeeder.id:
-        return MaterialPageRoute(builder: (_) =>  Pole11kvFeeder(args: settings.arguments as Map<String, dynamic>));
-        case Pole33kvFeeder.id:
-        return MaterialPageRoute(builder: (_) =>  Pole33kvFeeder(args: settings.arguments as Map<String, dynamic>));
-        case CheckMeasure11kv.id:
-        return MaterialPageRoute(builder: (_) =>  CheckMeasure11kv(args: settings.arguments as Map<String, dynamic>));
-        case CheckMeasure33kv.id:
-        return MaterialPageRoute(builder: (_) =>  CheckMeasure33kv(args: settings.arguments as Map<String, dynamic>));
+      case DocketScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => DocketScreen(ssc: settings.arguments as String));
+      case Pole11kvFeeder.id:
+        return MaterialPageRoute(
+            builder: (_) => Pole11kvFeeder(
+                args: settings.arguments as Map<String, dynamic>));
+      case Pole33kvFeeder.id:
+        return MaterialPageRoute(
+            builder: (_) => Pole33kvFeeder(
+                args: settings.arguments as Map<String, dynamic>));
+      case CheckMeasure11kv.id:
+        return MaterialPageRoute(
+            builder: (_) => CheckMeasure11kv(
+                args: settings.arguments as Map<String, dynamic>));
+      case CheckMeasure33kv.id:
+        return MaterialPageRoute(
+            builder: (_) => CheckMeasure33kv(
+                args: settings.arguments as Map<String, dynamic>));
       case CheckMeasure11kvEdit.id:
-        return MaterialPageRoute(builder: (_) =>  CheckMeasure11kvEdit(args: settings.arguments as Map<String, dynamic>));
+        return MaterialPageRoute(
+            builder: (_) => CheckMeasure11kvEdit(
+                args: settings.arguments as Map<String, dynamic>));
       case MeterChangeEntryScreen.id:
-        return MaterialPageRoute(builder: (_) =>  MeterChangeEntryScreen(args: settings.arguments as Map<String, dynamic>));
+        return MaterialPageRoute(
+            builder: (_) => MeterChangeEntryScreen(
+                args: settings.arguments as Map<String, dynamic>));
 
-        //PART - 2
-        //Daily Nil Report
-        case DailyNil.id:
-        return MaterialPageRoute(builder: (_) =>  const DailyNil());
+      //PART - 2
+      //Daily Nil Report
+      case DailyNil.id:
+        return MaterialPageRoute(builder: (_) => const DailyNil());
 
-        //Routed From CCC
-        case CccComplaints.id:
-        return MaterialPageRoute(builder: (_) =>  const CccComplaints());
-        case DismantleOfServices.id:
-        return MaterialPageRoute(builder: (_) =>   DismantleOfServices(args: settings.arguments as Map<String, dynamic>));
-        case RevokeOfServices.id:
-        return MaterialPageRoute(builder: (_) =>   RevokeOfServices(args:settings.arguments is Map<String, dynamic> ? settings.arguments as Map<String, dynamic> : null));
-        case ViewDetailComplaint.id:
-        return MaterialPageRoute(builder: (_) =>   ViewDetailComplaint(args: settings.arguments as Map<String, dynamic>));
-        case DetailComplaintTrack.id:
-        return MaterialPageRoute(builder: (_) =>   DetailComplaintTrack(arg: settings.arguments as String));
-        case NameCreateCorrespondence.id:
-        return MaterialPageRoute(builder: (_) =>   const NameCreateCorrespondence());
-        case NameAndAddressMenuScreen.id:
-        return MaterialPageRoute(builder: (_) =>   const NameAndAddressMenuScreen());
-        case NameAndAddressChangeRequestList.id:
-        return MaterialPageRoute(builder: (_) =>   NameAndAddressChangeRequestList(args: settings.arguments as String));
-        //REVOKING OF SERVICES
-        case RevokingOfServicesMenuScreen.id:
-        return MaterialPageRoute(builder: (_) =>   const RevokingOfServicesMenuScreen());
-        case RevokingOfServicesRequestList.id:
-        return MaterialPageRoute(builder: (_) =>    RevokingOfServicesRequestList(args: settings.arguments as String));
-        //WRONG BILLING
+      //Routed From CCC
+      case CccComplaints.id:
+        return MaterialPageRoute(builder: (_) => const CccComplaints());
+      case DismantleOfServices.id:
+        return MaterialPageRoute(
+            builder: (_) => DismantleOfServices(
+                args: settings.arguments as Map<String, dynamic>));
+      case RevokeOfServices.id:
+        return MaterialPageRoute(
+            builder: (_) => RevokeOfServices(
+                args: settings.arguments is Map<String, dynamic>
+                    ? settings.arguments as Map<String, dynamic>
+                    : null));
+      case ViewDetailComplaint.id:
+        return MaterialPageRoute(
+            builder: (_) => ViewDetailComplaint(
+                args: settings.arguments as Map<String, dynamic>));
+      case DetailComplaintTrack.id:
+        return MaterialPageRoute(
+            builder: (_) =>
+                DetailComplaintTrack(arg: settings.arguments as String));
+      case NameCreateCorrespondence.id:
+        return MaterialPageRoute(
+            builder: (_) => const NameCreateCorrespondence());
+      case NameAndAddressMenuScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => const NameAndAddressMenuScreen());
+      case NameAndAddressChangeRequestList.id:
+        return MaterialPageRoute(
+            builder: (_) => NameAndAddressChangeRequestList(
+                args: settings.arguments as String));
+      //REVOKING OF SERVICES
+      case RevokingOfServicesMenuScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => const RevokingOfServicesMenuScreen());
+      case RevokingOfServicesRequestList.id:
+        return MaterialPageRoute(
+            builder: (_) => RevokingOfServicesRequestList(
+                args: settings.arguments as String));
+      //WRONG BILLING
       case WrongBillingMenuScreen.id:
-        return MaterialPageRoute(builder: (_) =>   const WrongBillingMenuScreen());
-        case AppBillingComponents.id:
-        return MaterialPageRoute(builder: (_) =>   const AppBillingComponents());
-
+        return MaterialPageRoute(
+            builder: (_) => const WrongBillingMenuScreen());
+      case AppBillingComponents.id:
+        return MaterialPageRoute(builder: (_) => const AppBillingComponents());
 
       default:
         return MaterialPageRoute(

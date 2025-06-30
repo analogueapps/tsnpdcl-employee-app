@@ -1,9 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'package:tsnpdcl_employee/view/pole_tracker/model/digital_feeder_entity.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/model/offline_feeder.dart';
-
-
 
 class OFDatabaseHelper {
   static final OFDatabaseHelper instance = OFDatabaseHelper._init();
@@ -38,8 +35,7 @@ class OFDatabaseHelper {
                 ''');
   }
 
-  Future<void> insertOfflineFeeder(
-      OffLineFeeder feeder) async {
+  Future<void> insertOfflineFeeder(OffLineFeeder feeder) async {
     final db = await database;
 
     await db.insert('offline_feeder', feeder.toJson(),
@@ -53,7 +49,6 @@ class OFDatabaseHelper {
         where: 'feederCode = ?', whereArgs: [feederCode]);
 
     if (feederResult.isEmpty) return null;
-
 
     final feeder = OffLineFeeder.fromJson(feederResult.first);
 
@@ -78,5 +73,4 @@ class OFDatabaseHelper {
     final db = await database;
     await db.delete('offline_feeder');
   }
-
 }

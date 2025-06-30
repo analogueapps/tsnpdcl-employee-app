@@ -30,7 +30,8 @@ class ViewDetailedPoleIndentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => ViewDetailedPoleIndentViewModel(context: context, data: data),
+      create: (_) =>
+          ViewDetailedPoleIndentViewModel(context: context, data: data),
       child: Consumer<ViewDetailedPoleIndentViewModel>(
         builder: (context, viewModel, child) {
           return Scaffold(
@@ -48,7 +49,8 @@ class ViewDetailedPoleIndentScreen extends StatelessWidget {
                   ),
                   Text(
                     "#${viewModel.poleRequestIndentEntity.indentId}",
-                    style: const TextStyle(fontSize: normalSize, color: Colors.grey),
+                    style: const TextStyle(
+                        fontSize: normalSize, color: Colors.grey),
                   ),
                 ],
               ),
@@ -57,12 +59,18 @@ class ViewDetailedPoleIndentScreen extends StatelessWidget {
               ),
               actions: [
                 Visibility(
-                  visible: viewModel.npdclUser.wing == "operation" && viewModel.npdclUser.designationCode == 150 || viewModel.npdclUser.designationCode == 155 && viewModel.isIndentEditable(),
+                  visible: viewModel.npdclUser.wing == "operation" &&
+                          viewModel.npdclUser.designationCode == 150 ||
+                      viewModel.npdclUser.designationCode == 155 &&
+                          viewModel.isIndentEditable(),
                   child: TextButton(
                     onPressed: () {
                       viewModel.editActionClicked();
                     },
-                    child: const Text('EDIT',style: TextStyle(color: Colors.white),),
+                    child: const Text(
+                      'EDIT',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 )
               ],
@@ -70,32 +78,82 @@ class ViewDetailedPoleIndentScreen extends StatelessWidget {
             body: SingleChildScrollView(
               child: Column(
                 children: [
-                  const SizedBox(height: doubleFive,),
-                  ViewDetailedLcTileWidget(tileKey: "Indent Id", tileValue: checkNull(viewModel.poleRequestIndentEntity?.indentId.toString()), valueColor: CommonColors.colorPrimary,),
+                  const SizedBox(
+                    height: doubleFive,
+                  ),
+                  ViewDetailedLcTileWidget(
+                    tileKey: "Indent Id",
+                    tileValue: checkNull(
+                        viewModel.poleRequestIndentEntity.indentId.toString()),
+                    valueColor: CommonColors.colorPrimary,
+                  ),
                   const Divider(),
-                  ViewDetailedLcTileWidget(tileKey: "Indent Date", tileValue: formatIsoDateForPdmsDetails(checkNull(viewModel.poleRequestIndentEntity?.indentDate))),
+                  ViewDetailedLcTileWidget(
+                      tileKey: "Indent Date",
+                      tileValue: formatIsoDateForPdmsDetails(checkNull(
+                          viewModel.poleRequestIndentEntity.indentDate))),
                   const Divider(),
-                  ViewDetailedLcTileWidget(tileKey: "Section", tileValue: checkNull(viewModel.poleRequestIndentEntity?.section)),
+                  ViewDetailedLcTileWidget(
+                      tileKey: "Section",
+                      tileValue:
+                          checkNull(viewModel.poleRequestIndentEntity.section)),
                   const Divider(),
-                  ViewDetailedLcTileWidget(tileKey: "Pole type", tileValue: checkNull(viewModel.poleRequestIndentEntity?.poleType)),
+                  ViewDetailedLcTileWidget(
+                      tileKey: "Pole type",
+                      tileValue: checkNull(
+                          viewModel.poleRequestIndentEntity.poleType)),
                   const Divider(),
-                  ViewDetailedLcTileWidget(tileKey: "Requisition no", tileValue: checkNull(viewModel.poleRequestIndentEntity?.requisitionNo)),
+                  ViewDetailedLcTileWidget(
+                      tileKey: "Requisition no",
+                      tileValue: checkNull(
+                          viewModel.poleRequestIndentEntity.requisitionNo)),
                   const Divider(),
-                  ViewDetailedLcTileWidget(tileKey: "Indent qty", tileValue: checkNull(viewModel.poleRequestIndentEntity?.requestedQty.toString())),
+                  ViewDetailedLcTileWidget(
+                      tileKey: "Indent qty",
+                      tileValue: checkNull(viewModel
+                          .poleRequestIndentEntity.requestedQty
+                          .toString())),
                   const Divider(),
-                  ViewDetailedLcTileWidget(tileKey: "Deleted qty by ae", tileValue: checkNull(viewModel.poleRequestIndentEntity?.aeRemovedQty.toString())),
+                  ViewDetailedLcTileWidget(
+                      tileKey: "Deleted qty by ae",
+                      tileValue: checkNull(viewModel
+                          .poleRequestIndentEntity.aeRemovedQty
+                          .toString())),
                   const Divider(),
-                  ViewDetailedLcTileWidget(tileKey: "Balance qty", tileValue: checkNull(viewModel.poleRequestIndentEntity?.balanceQty.toString())),
+                  ViewDetailedLcTileWidget(
+                      tileKey: "Balance qty",
+                      tileValue: checkNull(viewModel
+                          .poleRequestIndentEntity.balanceQty
+                          .toString())),
                   const Divider(),
-                  ViewDetailedLcTileWidget(tileKey: "Ae od recom. qty", tileValue: checkNull(viewModel.poleRequestIndentEntity?.aeOdRecommendedQty.toString())),
+                  ViewDetailedLcTileWidget(
+                      tileKey: "Ae od recom. qty",
+                      tileValue: checkNull(viewModel
+                          .poleRequestIndentEntity.aeOdRecommendedQty
+                          .toString())),
                   const Divider(),
-                  ViewDetailedLcTileWidget(tileKey: "Ade stores approved qty", tileValue: checkNull(viewModel.poleRequestIndentEntity?.approvedQty.toString())),
+                  ViewDetailedLcTileWidget(
+                      tileKey: "Ade stores approved qty",
+                      tileValue: checkNull(viewModel
+                          .poleRequestIndentEntity.approvedQty
+                          .toString())),
                   const Divider(),
-                  ViewDetailedLcTileWidget(tileKey: "Indent status", tileValue: checkNull(viewModel.poleRequestIndentEntity?.indentStatus), valueColor: CommonColors.colorPrimary,),
+                  ViewDetailedLcTileWidget(
+                    tileKey: "Indent status",
+                    tileValue: checkNull(
+                        viewModel.poleRequestIndentEntity.indentStatus),
+                    valueColor: CommonColors.colorPrimary,
+                  ),
                   const Divider(),
-                  ViewDetailedLcTileWidget(tileKey: "Ae od remarks", tileValue: checkNull(viewModel.poleRequestIndentEntity?.remarksByAeOd)),
+                  ViewDetailedLcTileWidget(
+                      tileKey: "Ae od remarks",
+                      tileValue: checkNull(
+                          viewModel.poleRequestIndentEntity.remarksByAeOd)),
                   const Divider(),
-                  ViewDetailedLcTileWidget(tileKey: "Ade stores remarks", tileValue: checkNull(viewModel.poleRequestIndentEntity?.remarksByAdeStores)),
+                  ViewDetailedLcTileWidget(
+                      tileKey: "Ade stores remarks",
+                      tileValue: checkNull(viewModel
+                          .poleRequestIndentEntity.remarksByAdeStores)),
                   Container(
                     margin: const EdgeInsets.only(top: 5.0),
                     padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
@@ -111,56 +169,105 @@ class ViewDetailedPoleIndentScreen extends StatelessWidget {
                     ),
                   ),
                   Visibility(
-                    visible: viewModel.poleRequestIndentEntity!.poleRequestIndentTrackEntitiesByIndentId != null &&
-                        viewModel.poleRequestIndentEntity!.poleRequestIndentTrackEntitiesByIndentId!.isNotEmpty,
+                    visible: viewModel.poleRequestIndentEntity
+                                .poleRequestIndentTrackEntitiesByIndentId !=
+                            null &&
+                        viewModel
+                            .poleRequestIndentEntity
+                            .poleRequestIndentTrackEntitiesByIndentId!
+                            .isNotEmpty,
                     child: Column(
-                      children: viewModel.poleRequestIndentEntity!.poleRequestIndentTrackEntitiesByIndentId!
-                          .map((poleRequestIndentTrackEntitiesByIndentId) => Column(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
-                            color: Colors.grey[200],
-                            width: double.infinity,
-                            child: Center(
-                              child: Text(
-                                "Log".toUpperCase(),
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: doubleFive,),
-                          ViewDetailedLcTileWidget(tileKey: "Track id", tileValue: checkNull(poleRequestIndentTrackEntitiesByIndentId.trackId.toString())),
-                          const Divider(),
-                          ViewDetailedLcTileWidget(tileKey: "Log date", tileValue: formatIsoDateForPdmsDetails(checkNull(poleRequestIndentTrackEntitiesByIndentId.indentDate))),
-                          const Divider(),
-                          ViewDetailedLcTileWidget(tileKey: "Indent qty", tileValue: checkNull(poleRequestIndentTrackEntitiesByIndentId.requestedQty.toString())),
-                          const Divider(),
-                          ViewDetailedLcTileWidget(tileKey: "Balance qty", tileValue: checkNull(poleRequestIndentTrackEntitiesByIndentId.balanceQty.toString())),
-                          const Divider(),
-                          ViewDetailedLcTileWidget(tileKey: "Ae deleted qty", tileValue: checkNull(null)),
-                          const Divider(),
-                          ViewDetailedLcTileWidget(tileKey: "Ae/od recommended qty", tileValue: checkNull(poleRequestIndentTrackEntitiesByIndentId.aeOdRecommendedQty.toString())),
-                          const Divider(),
-                          ViewDetailedLcTileWidget(tileKey: "Approved qty", tileValue: checkNull(null)),
-                          const Divider(),
-                          ViewDetailedLcTileWidget(tileKey: "Ade op action date", tileValue: checkNull(null)),
-                          const Divider(),
-                          ViewDetailedLcTileWidget(tileKey: "Indent status", tileValue: checkNull(poleRequestIndentTrackEntitiesByIndentId.indentStatus)),
-                          const SizedBox(height: doubleFive,),
-                        ],
-                      ))
+                      children: viewModel.poleRequestIndentEntity
+                          .poleRequestIndentTrackEntitiesByIndentId!
+                          .map((poleRequestIndentTrackEntitiesByIndentId) =>
+                              Column(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.only(
+                                        top: 15.0, bottom: 15.0),
+                                    color: Colors.grey[200],
+                                    width: double.infinity,
+                                    child: Center(
+                                      child: Text(
+                                        "Log".toUpperCase(),
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: doubleFive,
+                                  ),
+                                  ViewDetailedLcTileWidget(
+                                      tileKey: "Track id",
+                                      tileValue: checkNull(
+                                          poleRequestIndentTrackEntitiesByIndentId
+                                              .trackId
+                                              .toString())),
+                                  const Divider(),
+                                  ViewDetailedLcTileWidget(
+                                      tileKey: "Log date",
+                                      tileValue: formatIsoDateForPdmsDetails(
+                                          checkNull(
+                                              poleRequestIndentTrackEntitiesByIndentId
+                                                  .indentDate))),
+                                  const Divider(),
+                                  ViewDetailedLcTileWidget(
+                                      tileKey: "Indent qty",
+                                      tileValue: checkNull(
+                                          poleRequestIndentTrackEntitiesByIndentId
+                                              .requestedQty
+                                              .toString())),
+                                  const Divider(),
+                                  ViewDetailedLcTileWidget(
+                                      tileKey: "Balance qty",
+                                      tileValue: checkNull(
+                                          poleRequestIndentTrackEntitiesByIndentId
+                                              .balanceQty
+                                              .toString())),
+                                  const Divider(),
+                                  ViewDetailedLcTileWidget(
+                                      tileKey: "Ae deleted qty",
+                                      tileValue: checkNull(null)),
+                                  const Divider(),
+                                  ViewDetailedLcTileWidget(
+                                      tileKey: "Ae/od recommended qty",
+                                      tileValue: checkNull(
+                                          poleRequestIndentTrackEntitiesByIndentId
+                                              .aeOdRecommendedQty
+                                              .toString())),
+                                  const Divider(),
+                                  ViewDetailedLcTileWidget(
+                                      tileKey: "Approved qty",
+                                      tileValue: checkNull(null)),
+                                  const Divider(),
+                                  ViewDetailedLcTileWidget(
+                                      tileKey: "Ade op action date",
+                                      tileValue: checkNull(null)),
+                                  const Divider(),
+                                  ViewDetailedLcTileWidget(
+                                      tileKey: "Indent status",
+                                      tileValue: checkNull(
+                                          poleRequestIndentTrackEntitiesByIndentId
+                                              .indentStatus)),
+                                  const SizedBox(
+                                    height: doubleFive,
+                                  ),
+                                ],
+                              ))
                           .toList(),
-
                     ),
                   ),
-                  const SizedBox(height: doubleTen,),
+                  const SizedBox(
+                    height: doubleTen,
+                  ),
                 ],
               ),
             ),
             bottomNavigationBar: Visibility(
-              visible: viewModel.poleRequestIndentEntity?.indentStatus != StatusCodes.PoleIndentStatus.CANCELED,
+              visible: viewModel.poleRequestIndentEntity.indentStatus !=
+                  StatusCodes.PoleIndentStatus.CANCELED,
               child: Padding(
                 padding: const EdgeInsets.all(doubleTwenty),
                 child: PrimaryButton(
@@ -171,8 +278,7 @@ class ViewDetailedPoleIndentScreen extends StatelessWidget {
                       if (viewModel.buttonAction != null) {
                         viewModel.buttonAction!();
                       }
-                    }
-                ),
+                    }),
               ),
             ),
           );

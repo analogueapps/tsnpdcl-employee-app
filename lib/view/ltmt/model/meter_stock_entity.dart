@@ -15,7 +15,6 @@ class MeterStockEntity {
     this.meterNo,
     this.opDate,
     this.newMeterId,
-
   });
 
   MeterStockEntity.fromJson(dynamic json) {
@@ -43,7 +42,7 @@ class MeterStockEntity {
       newMeterId = json['newMeterId']?.toString();
     } catch (e) {
       print("Error parsing MeterStockEntity: $e");
-      throw FormatException("Invalid meter data format");
+      throw const FormatException("Invalid meter data format");
     }
   }
 
@@ -55,10 +54,8 @@ class MeterStockEntity {
   String? opDate;
   String? newMeterId;
   String? poleHeight;
-  
 
   MeterStockEntity copyWith({
-
     String? meterCapacity,
     String? meterType,
     num? meterTrackId,
@@ -66,10 +63,8 @@ class MeterStockEntity {
     num? meterNo,
     String? opDate,
     String? newMeterId,
-    
   }) =>
       MeterStockEntity(
-
         meterCapacity: meterCapacity ?? this.meterCapacity,
         meterType: meterType ?? this.meterType,
         meterTrackId: meterTrackId ?? this.meterTrackId,
@@ -77,7 +72,6 @@ class MeterStockEntity {
         meterNo: meterNo ?? this.meterNo,
         opDate: opDate ?? this.opDate,
         newMeterId: newMeterId ?? this.newMeterId,
-        
       );
 
   Map<String, dynamic> toJson() {
@@ -89,7 +83,7 @@ class MeterStockEntity {
     map['meterNo'] = meterNo;
     map['opDate'] = opDate;
     map['newMeterId'] = newMeterId;
-    
+
     return map;
   }
 }

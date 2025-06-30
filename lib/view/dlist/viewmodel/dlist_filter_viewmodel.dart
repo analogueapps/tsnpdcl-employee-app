@@ -16,7 +16,7 @@ class DlistFilterViewmodel extends ChangeNotifier {
   List<DlistEntityRealmList> _dlistEntityRealmList = [];
   List<DlistEntityRealmList> get dlistEntityRealmList => _dlistEntityRealmList;
 
-  List<OptionList> _filteredOptionList = [];
+  final List<OptionList> _filteredOptionList = [];
   List<OptionList> get filteredOptionList => _filteredOptionList;
 
   final TextEditingController fromAmountController = TextEditingController();
@@ -41,7 +41,8 @@ class DlistFilterViewmodel extends ChangeNotifier {
 
     for (var a in _dlistEntityRealmList) {
       // before check already added or not
-      if (_filteredOptionList.any((element) => element.optionId == a.ctareacd)) {
+      if (_filteredOptionList
+          .any((element) => element.optionId == a.ctareacd)) {
         continue;
       }
       _filteredOptionList.add(
@@ -50,7 +51,8 @@ class DlistFilterViewmodel extends ChangeNotifier {
           optionName: a.areaname,
         ),
       );
-      AlertUtils.printValue('DlistFilterViewmodel','${a.areaname}   code: ${a.ctareacd}');
+      AlertUtils.printValue(
+          'DlistFilterViewmodel', '${a.areaname}   code: ${a.ctareacd}');
     }
 
     if (data['filter'] != null && data['filter'].toString().trim().isNotEmpty) {
@@ -58,8 +60,8 @@ class DlistFilterViewmodel extends ChangeNotifier {
         final decoded = jsonDecode(data['filter']);
         if (decoded is Map<String, dynamic>) {
           final dFilter = DFilter.fromJson(decoded);
-          fromAmountController.text = dFilter.amountFrom?.toString() ?? '';
-          toAmountController.text = dFilter.amountTo?.toString() ?? '';
+          fromAmountController.text = dFilter.amountFrom.toString() ?? '';
+          toAmountController.text = dFilter.amountTo.toString() ?? '';
           isLiveChecked = dFilter.liveSelected;
           isUdcChecked = dFilter.udcSelected;
           isBillStopChecked = dFilter.bsSelected;
@@ -74,16 +76,19 @@ class DlistFilterViewmodel extends ChangeNotifier {
 
   void itemClicked(OptionList item) {
     if (fromAmountController.text.isEmpty) {
-      showAlertDialog(context, "Please specify DList amount range (From amount)");
+      showAlertDialog(
+          context, "Please specify DList amount range (From amount)");
       return;
     } else if (toAmountController.text.isEmpty) {
       showAlertDialog(context, "Please specify DList amount range (To amount)");
       return;
-    } else if (double.tryParse(fromAmountController.text)! > double.tryParse(toAmountController.text)!) {
+    } else if (double.tryParse(fromAmountController.text)! >
+        double.tryParse(toAmountController.text)!) {
       showAlertDialog(context, "From amount can not be greater than To amount");
       return;
     } else if (!isLiveChecked && !isUdcChecked && !isBillStopChecked) {
-      showAlertDialog(context, "Please select at least one service type (LIVE/UDC/BILL STOP)");
+      showAlertDialog(context,
+          "Please select at least one service type (LIVE/UDC/BILL STOP)");
       return;
     } else {
       final dFilter = DFilter(

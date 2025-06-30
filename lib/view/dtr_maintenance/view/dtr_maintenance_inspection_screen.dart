@@ -5,7 +5,6 @@ import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/view/dtr_maintenance/view/dtr_ht_side_group_controller_screen.dart';
-import 'package:tsnpdcl_employee/view/dtr_maintenance/viewmodel/dtr_ht_side_group_controller_viewmodel.dart';
 import 'package:tsnpdcl_employee/view/dtr_maintenance/viewmodel/dtr_maintenance_inspection_viewmodel.dart';
 import 'package:tsnpdcl_employee/widget/primary_button.dart';
 
@@ -66,14 +65,19 @@ class DtrMaintenanceInspectionScreen extends StatelessWidget {
                         final group = viewModel.groupsList[index];
                         final isSelected = viewModel.selectedGroup == group;
 
-                        final bool showTick = viewModel.maintenanceCheckMap[group.optionId]?.call() ?? false;
+                        final bool showTick = viewModel
+                                .maintenanceCheckMap[group.optionId]
+                                ?.call() ??
+                            false;
                         return GestureDetector(
                           onTap: () {
                             viewModel.selectGroup(group);
                           },
                           child: Container(
                             padding: const EdgeInsets.all(doubleFifteen),
-                            color: isSelected ? Colors.grey[300] : Colors.transparent,
+                            color: isSelected
+                                ? Colors.grey[300]
+                                : Colors.transparent,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -81,11 +85,14 @@ class DtrMaintenanceInspectionScreen extends StatelessWidget {
                                   child: Text(
                                     group.optionName!,
                                     style: TextStyle(
-                                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                                      fontWeight: isSelected
+                                          ? FontWeight.w700
+                                          : FontWeight.w500,
                                     ),
                                   ),
                                 ),
-                                if (showTick) const Icon(Icons.check, color: Colors.green),
+                                if (showTick)
+                                  const Icon(Icons.check, color: Colors.green),
                               ],
                             ),
                           ),
@@ -104,7 +111,11 @@ class DtrMaintenanceInspectionScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       Flexible(
-                          flex: 1, child: DtrHtSideGroupControllerScreen(data: data,selectedOption:viewModel.selectedGroup!.optionId,)),
+                          flex: 1,
+                          child: DtrHtSideGroupControllerScreen(
+                            data: data,
+                            selectedOption: viewModel.selectedGroup!.optionId,
+                          )),
                     ],
                   ),
                 ),
@@ -116,15 +127,15 @@ class DtrMaintenanceInspectionScreen extends StatelessWidget {
                   text: "ASSIGN FOR MAINTENANCE".toUpperCase(),
                   fullWidth: isTrue,
                   onPressed: () {
-                    viewModel.getEmployeesOfSection(viewModel.dtrInspectionSheetEntity);
+                    viewModel.getEmployeesOfSection(
+                        viewModel.dtrInspectionSheetEntity);
                     // final htSideViewModel =
                     //     Provider.of<DtrHtSideGroupControllerViewmodel>(context,
                     //         listen: false);
                     // final result = htSideViewModel.methodToCallOnSubmitDtrHtSideGroupControllerScreen(context, isTrue);
                     // if(result) {
                     //   htSideViewModel.getData();
-                    }
-                  ),
+                  }),
             ),
           );
         },

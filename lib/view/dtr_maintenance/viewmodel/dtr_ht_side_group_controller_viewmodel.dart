@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -10,13 +9,12 @@ import 'package:tsnpdcl_employee/view/dtr_maintenance/model/option_spinner.dart'
 import 'package:tsnpdcl_employee/view/filter/model/filter_label_model_list.dart';
 
 class DtrHtSideGroupControllerViewmodel extends ChangeNotifier {
-
-    String? data;
+  String? data;
 
   final bool _isLoading = isFalse;
   bool get isLoading => _isLoading;
 
-  DtrInspectionSheetEntity? dtrInspectionSheetEntity = null;
+  DtrInspectionSheetEntity? dtrInspectionSheetEntity;
 
   // AB SWITCH
   AbSwitch? abSwitch = AbSwitch.Available;
@@ -54,9 +52,10 @@ class DtrHtSideGroupControllerViewmodel extends ChangeNotifier {
   // Constructor to initialize the items
   DtrHtSideGroupControllerViewmodel();
 
-    void loadData(String newData) {
-      data = newData;
-    dtrInspectionSheetEntity = DtrInspectionSheetEntity.fromJson(jsonDecode(newData));
+  void loadData(String newData) {
+    data = newData;
+    dtrInspectionSheetEntity =
+        DtrInspectionSheetEntity.fromJson(jsonDecode(newData));
     notifyListeners();
     // spinnerAbSwitchContactsDamaged = getNumberSpinnerAdapter(includeZero: true, maxValue: 3);
     // spinnerAbSwitchPigTailDamaged = getNumberSpinnerAdapter(includeZero: true, maxValue: 3);
@@ -70,17 +69,19 @@ class DtrHtSideGroupControllerViewmodel extends ChangeNotifier {
 
   OptionSpinner getYesNoSpinner() {
     List<OptionList> optionList = [];
-    optionList.add(OptionList(optionId:"Yes", optionName: "Yes"));
-    optionList.add(OptionList(optionId:"No", optionName: "No"));
+    optionList.add(OptionList(optionId: "Yes", optionName: "Yes"));
+    optionList.add(OptionList(optionId: "No", optionName: "No"));
     return OptionSpinner(optionList);
   }
 
-  OptionSpinner getNumberSpinnerAdapter({required bool includeZero, required int maxValue}) {
+  OptionSpinner getNumberSpinnerAdapter(
+      {required bool includeZero, required int maxValue}) {
     //List<OptionList> optionList = [OptionList(optionId:"-1", optionName:"SELECT")];
     List<OptionList> optionList = [];
 
     for (int i = includeZero ? 0 : 1; i <= maxValue; i++) {
-      optionList.add(OptionList(optionId: i.toString(), optionName: i.toString()));
+      optionList
+          .add(OptionList(optionId: i.toString(), optionName: i.toString()));
     }
 
     return OptionSpinner(optionList);
@@ -311,5 +312,4 @@ class DtrHtSideGroupControllerViewmodel extends ChangeNotifier {
   //   //return htSideGroupModel;
   //   print(htSideGroupModel.toString());
   // }
-
 }

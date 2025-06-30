@@ -18,7 +18,6 @@ class LoadStaffEntity {
     this.personalPhone,
     this.smartLogin,
     this.ofcType,
-
   });
 
   LoadStaffEntity.fromJson(dynamic json) {
@@ -45,7 +44,7 @@ class LoadStaffEntity {
       ofcType = json['ofcType']?.toString();
     } catch (e) {
       print("Error parsing LoadStaffEntity: $e");
-      throw FormatException("Invalid meter data format");
+      throw const FormatException("Invalid meter data format");
     }
   }
 
@@ -61,9 +60,7 @@ class LoadStaffEntity {
   String? smartLogin;
   String? ofcType;
 
-
   LoadStaffEntity copyWith({
-
     String? employeeId,
     String? name,
     String? designationCode,
@@ -74,10 +71,8 @@ class LoadStaffEntity {
     String? personalPhone,
     String? smartLogin,
     String? ofcType,
-
   }) =>
       LoadStaffEntity(
-
         employeeId: employeeId ?? this.employeeId,
         name: name ?? this.name,
         designationCode: designationCode ?? this.designationCode,
@@ -88,7 +83,6 @@ class LoadStaffEntity {
         personalPhone: personalPhone ?? this.personalPhone,
         smartLogin: smartLogin ?? this.smartLogin,
         ofcType: ofcType ?? this.ofcType,
-
       );
 
   Map<String, dynamic> toJson() {

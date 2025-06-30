@@ -11,33 +11,33 @@ import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/widget/primary_button.dart';
 
-
-class IssueDuplicateReceiptViewModel extends ChangeNotifier{
-  IssueDuplicateReceiptViewModel( {required this.context}){
+class IssueDuplicateReceiptViewModel extends ChangeNotifier {
+  IssueDuplicateReceiptViewModel({required this.context}) {
     init();
   }
 
-  void init(){
+  void init() {
     checkAuth();
   }
 
   final BuildContext context;
 
-  bool _isLoading=false;
-  bool get isLoading=>_isLoading;
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
 
-  final TextEditingController uscnoController=TextEditingController();
-  final TextEditingController scnoController=TextEditingController();
-  final TextEditingController receiptNoController=TextEditingController();
+  final TextEditingController uscnoController = TextEditingController();
+  final TextEditingController scnoController = TextEditingController();
+  final TextEditingController receiptNoController = TextEditingController();
 
   Future<bool> checkAuth() async {
     _isLoading = isTrue;
     notifyListeners();
 
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
-      "deviceId":await getDeviceId(),
+      "deviceId": await getDeviceId(),
     };
     var response = await ApiProvider(baseUrl: Apis.ONLINE_PR_END_POINT_BASE_URL)
         .postApiCall(context, Apis.ISSUE_DUPLICATE_URL, payload);
@@ -59,14 +59,14 @@ class IssueDuplicateReceiptViewModel extends ChangeNotifier{
           } else {
             showSessionExpiredDialog(context);
           }
-      } else {
-        showAlertDialog(context, response.data['message']);
+        } else {
+          showAlertDialog(context, response.data['message']);
+        }
       }
-    }
-    }catch(e){
+    } catch (e) {
       throw Exception("Exception Occurred while Authenticating");
-    }finally{
-      _isLoading=false;
+    } finally {
+      _isLoading = false;
       notifyListeners();
     }
     return false;
@@ -77,22 +77,29 @@ class IssueDuplicateReceiptViewModel extends ChangeNotifier{
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title:  const SizedBox( width: double.infinity,child:const Text("RC Authentication Fail", style: TextStyle(color: Colors.red),)),
+          title: const SizedBox(
+              width: double.infinity,
+              child: Text(
+                "RC Authentication Fail",
+                style: TextStyle(color: Colors.red),
+              )),
           content: Text(msg),
           actions: [
-          SizedBox( width: double.infinity,
-          child:PrimaryButton(text: "OK", onPressed: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).pop();
-            },
+            SizedBox(
+              width: double.infinity,
+              child: PrimaryButton(
+                text: "OK",
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                },
+              ),
             ),
-          ),
           ],
         );
       },
     );
   }
-
 
 // void fetchDuplicateReceipt(BuildContext context) async {
   //
@@ -129,5 +136,4 @@ class IssueDuplicateReceiptViewModel extends ChangeNotifier{
   //     notifyListeners();
   //   }
   // }
-
 }

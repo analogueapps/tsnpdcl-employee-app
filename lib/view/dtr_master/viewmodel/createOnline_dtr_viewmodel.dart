@@ -25,7 +25,8 @@ class OnlineDtrViewmodel extends ChangeNotifier {
   OnlineDtrViewmodel({required this.context}) {
     init();
     notifyListeners();
-    print("Designation Code: ${SharedPreferenceHelper.getStringValue(LoginSdkPrefs.designationCodeKey)}");
+    print(
+        "Designation Code: ${SharedPreferenceHelper.getStringValue(LoginSdkPrefs.designationCodeKey)}");
   }
 
   final BuildContext context;
@@ -58,7 +59,7 @@ class OnlineDtrViewmodel extends ChangeNotifier {
 
     _ssno = List.generate(
       999,
-          (index) => (index + 1).toString().padLeft(3, '0'),
+      (index) => (index + 1).toString().padLeft(3, '0'),
     );
     sapDTRStructCode.text = "SELECT-SS-0001";
   }
@@ -69,8 +70,6 @@ class OnlineDtrViewmodel extends ChangeNotifier {
     super.dispose();
   }
 
-
-
   String? _selectedFilter;
   String? get selectedFilter => _selectedFilter;
 
@@ -80,11 +79,10 @@ class OnlineDtrViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-
   // 1.Distribution
   String? _selectedDistribution;
   String? get selectedDistribution => _selectedDistribution;
-  List<SubstationModel> _distributions = [];
+  final List<SubstationModel> _distributions = [];
   List<SubstationModel> get distributions => _distributions;
   Future<void> getDistributions() async {
     _stations.clear();
@@ -95,8 +93,8 @@ class OnlineDtrViewmodel extends ChangeNotifier {
 
     try {
       final requestData = {
-        "authToken": SharedPreferenceHelper.getStringValue(
-            LoginSdkPrefs.tokenPrefKey),
+        "authToken":
+            SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
         "api": Apis.API_KEY,
       };
 
@@ -145,9 +143,7 @@ class OnlineDtrViewmodel extends ChangeNotifier {
 
       if (jsonList is String) {
         // Clean and parse JSON string
-        String cleanedJson = jsonList
-            .replaceAll(r'\"', '"')
-            .trim();
+        String cleanedJson = jsonList.replaceAll(r'\"', '"').trim();
 
         if (cleanedJson.endsWith(',')) {
           cleanedJson = cleanedJson.substring(0, cleanedJson.length - 1);
@@ -160,11 +156,9 @@ class OnlineDtrViewmodel extends ChangeNotifier {
         dataList = (jsonDecode(cleanedJson) as List)
             .map((json) => SubstationModel.fromJson(json))
             .toList();
-      }
-      else if (jsonList is List) {
-        dataList = jsonList
-            .map((json) => SubstationModel.fromJson(json))
-            .toList();
+      } else if (jsonList is List) {
+        dataList =
+            jsonList.map((json) => SubstationModel.fromJson(json)).toList();
       }
 
       _distributions.addAll(dataList);
@@ -179,6 +173,7 @@ class OnlineDtrViewmodel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
   void onListDistriSelected(String? value, String? distriName) {
     _selectedDistribution = value;
     sapDTRStructCode.text = "$distriName-SS-0001";
@@ -195,7 +190,6 @@ class OnlineDtrViewmodel extends ChangeNotifier {
     _selectedSSNo = value;
     notifyListeners();
   }
-
 
   //3.Circle
   String? _selectedCircle = '000';
@@ -236,7 +230,7 @@ class OnlineDtrViewmodel extends ChangeNotifier {
 
   String? get selectedStation => _selectedStation;
 
-  List<SubstationModel> _stations = [];
+  final List<SubstationModel> _stations = [];
 
   List<SubstationModel> get stations => _stations;
 
@@ -257,8 +251,8 @@ class OnlineDtrViewmodel extends ChangeNotifier {
 
     try {
       final requestData = {
-        "authToken": SharedPreferenceHelper.getStringValue(
-            LoginSdkPrefs.tokenPrefKey),
+        "authToken":
+            SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
         "api": Apis.API_KEY,
         "circleCode": _selectedCircle
       };
@@ -308,9 +302,7 @@ class OnlineDtrViewmodel extends ChangeNotifier {
 
       if (jsonList is String) {
         // Clean and parse JSON string
-        String cleanedJson = jsonList
-            .replaceAll(r'\"', '"')
-            .trim();
+        String cleanedJson = jsonList.replaceAll(r'\"', '"').trim();
 
         if (cleanedJson.endsWith(',')) {
           cleanedJson = cleanedJson.substring(0, cleanedJson.length - 1);
@@ -323,11 +315,9 @@ class OnlineDtrViewmodel extends ChangeNotifier {
         dataList = (jsonDecode(cleanedJson) as List)
             .map((json) => SubstationModel.fromJson(json))
             .toList();
-      }
-      else if (jsonList is List) {
-        dataList = jsonList
-            .map((json) => SubstationModel.fromJson(json))
-            .toList();
+      } else if (jsonList is List) {
+        dataList =
+            jsonList.map((json) => SubstationModel.fromJson(json)).toList();
       }
 
       _stations.addAll(dataList);
@@ -351,7 +341,6 @@ class OnlineDtrViewmodel extends ChangeNotifier {
 
   List<SubstationModel> get feeder => _feeder;
 
-
   void onListFeederSelected(String? value) {
     if (value != null && _feeder.any((item) => item.optionCode == value)) {
       _selectedFeeder = value;
@@ -369,8 +358,9 @@ class OnlineDtrViewmodel extends ChangeNotifier {
 
     try {
       final requestData = {
-        "authToken": SharedPreferenceHelper.getStringValue(
-            LoginSdkPrefs.tokenPrefKey) ?? "",
+        "authToken":
+            SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ??
+                "",
         "api": Apis.API_KEY,
         "ss": _selectedStation ?? "",
       };
@@ -425,12 +415,12 @@ class OnlineDtrViewmodel extends ChangeNotifier {
         }
         dataList = (jsonDecode(cleanedJson) as List<dynamic>)
             .map((json) =>
-            SubstationModel.fromJson(json as Map<String, dynamic>))
+                SubstationModel.fromJson(json as Map<String, dynamic>))
             .toList();
       } else if (jsonList is List) {
-        dataList = (jsonList as List<dynamic>)
+        dataList = (jsonList)
             .map((json) =>
-            SubstationModel.fromJson(json as Map<String, dynamic>))
+                SubstationModel.fromJson(json as Map<String, dynamic>))
             .toList();
       }
 
@@ -541,13 +531,12 @@ class OnlineDtrViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-
   //7.DTR Struct Type(*)
   String? _selectedDTRType;
 
   String? get selectedDTRType => _selectedDTRType;
 
-  List _dTRtype = ["SELECT", "Single Pole", "Double Pole"];
+  final List _dTRtype = ["SELECT", "Single Pole", "Double Pole"];
 
   List get dTRtype => _dTRtype;
 
@@ -562,7 +551,7 @@ class OnlineDtrViewmodel extends ChangeNotifier {
 
   String? get selectedPlintType => _selectedPlintType;
 
-  List _plintType = [
+  final List _plintType = [
     "Select",
     "Mounting Arrangements",
     "Rings",
@@ -582,7 +571,7 @@ class OnlineDtrViewmodel extends ChangeNotifier {
 
   String? get selectedABSwitch => _selectedABSwitch;
 
-  List _aBSwitch = ["Select", "Horizontal", "Vertical", "Not Available"];
+  final List _aBSwitch = ["Select", "Horizontal", "Vertical", "Not Available"];
 
   List get aBSwitch => _aBSwitch;
 
@@ -596,7 +585,7 @@ class OnlineDtrViewmodel extends ChangeNotifier {
 
   String? get selectedHGFuse => _selectedHGFuse;
 
-  List _hGFuse = ["Select", "Horizontal", "Vertical", "Not Available"];
+  final List _hGFuse = ["Select", "Horizontal", "Vertical", "Not Available"];
 
   List get hGFuse => _hGFuse;
 
@@ -610,7 +599,7 @@ class OnlineDtrViewmodel extends ChangeNotifier {
 
   String? get selectedLTFuseSet => _selectedLTFuseSet;
 
-  List _lTFuseSet = [
+  final List _lTFuseSet = [
     "Select",
     "Available and Ok",
     "Available but Parallel",
@@ -629,7 +618,12 @@ class OnlineDtrViewmodel extends ChangeNotifier {
 
   String? get selectedLTFuseType => _selectedLTFuseType;
 
-  List _lTType = ["Select", "Not Available", "Distribution Box", "LT Fuse Set"];
+  final List _lTType = [
+    "Select",
+    "Not Available",
+    "Distribution Box",
+    "LT Fuse Set"
+  ];
 
   List get lTType => _lTType;
 
@@ -643,7 +637,7 @@ class OnlineDtrViewmodel extends ChangeNotifier {
 
   String? get selectedLoadPattern => _selectedLoadPattern;
 
-  List _loadPattern = [
+  final List _loadPattern = [
     "Select",
     "Idle",
     "Dedicated PWS",
@@ -679,104 +673,108 @@ class OnlineDtrViewmodel extends ChangeNotifier {
   List<SubstationModel> _make = [];
   List<SubstationModel> get make => _make;
 
-
   Future<void> getMake() async {
-  if (_isLoading) return;
+    if (_isLoading) return;
 
-  _isLoading = true;
-  _make.clear();
-  _selectedMake = null;
-  notifyListeners();
+    _isLoading = true;
+    _make.clear();
+    _selectedMake = null;
+    notifyListeners();
 
-  try {
-  final requestData = {
-  "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ?? "",
-  "api": Apis.API_KEY,
-  };
+    try {
+      final requestData = {
+        "authToken":
+            SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ??
+                "",
+        "api": Apis.API_KEY,
+      };
 
-  final payload = {
-  "path": "/getDtrMakes",
-  "apiVersion": "1.0",
-  "method": "POST",
-  "data": jsonEncode(requestData),
-  };
+      final payload = {
+        "path": "/getDtrMakes",
+        "apiVersion": "1.0",
+        "method": "POST",
+        "data": jsonEncode(requestData),
+      };
 
-  final response = await ApiProvider(baseUrl: Apis.ROOT_URL)
-      .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+      final response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+          .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
 
-  if (response == null) {
-  throw Exception("No response received from server");
-  }
+      if (response == null) {
+        throw Exception("No response received from server");
+      }
 
-  dynamic responseData = response.data;
-  if (responseData is String) {
-  responseData = jsonDecode(responseData);
-  }
+      dynamic responseData = response.data;
+      if (responseData is String) {
+        responseData = jsonDecode(responseData);
+      }
 
-  if (response.statusCode != 200) { // Use a constant for success code
-  throw Exception(responseData['message'] ?? "Request failed with status ${response.statusCode}");
-  }
+      if (response.statusCode != 200) {
+        // Use a constant for success code
+        throw Exception(responseData['message'] ??
+            "Request failed with status ${response.statusCode}");
+      }
 
-  if (responseData['tokenValid'] != true) {
-  showSessionExpiredDialog(context);
-  return;
-  }
+      if (responseData['tokenValid'] != true) {
+        showSessionExpiredDialog(context);
+        return;
+      }
 
-  if (responseData['success'] != true) {
-  throw Exception(responseData['message'] ?? "Operation failed");
-  }
+      if (responseData['success'] != true) {
+        throw Exception(responseData['message'] ?? "Operation failed");
+      }
 
-  final jsonList = responseData['objectJson'];
-  if (jsonList == null) {
-  throw Exception("No make data received");
-  }
+      final jsonList = responseData['objectJson'];
+      if (jsonList == null) {
+        throw Exception("No make data received");
+      }
 
-  List<SubstationModel> dataList;
-  if (jsonList is List) {
-  dataList = jsonList
-      .map((json) => SubstationModel.fromJson(json as Map<String, dynamic>))
-      .toList();
-  } else if (jsonList is String) {
-  dataList = (jsonDecode(jsonList) as List<dynamic>)
-      .map((json) => SubstationModel.fromJson(json as Map<String, dynamic>))
-      .toList();
-  } else {
-  throw Exception("Invalid objectJson format");
-  }
+      List<SubstationModel> dataList;
+      if (jsonList is List) {
+        dataList = jsonList
+            .map((json) =>
+                SubstationModel.fromJson(json as Map<String, dynamic>))
+            .toList();
+      } else if (jsonList is String) {
+        dataList = (jsonDecode(jsonList) as List<dynamic>)
+            .map((json) =>
+                SubstationModel.fromJson(json as Map<String, dynamic>))
+            .toList();
+      } else {
+        throw Exception("Invalid objectJson format");
+      }
 
-  // Deduplicate based on optionCode
-  _make = dataList.toSet().toList();
-  print("Make option codes: ${_make.map((f) => f.optionCode).toList()}");
+      // Deduplicate based on optionCode
+      _make = dataList.toSet().toList();
+      print("Make option codes: ${_make.map((f) => f.optionCode).toList()}");
 
-  if (_make.isNotEmpty) {
-  _selectedMake = _make.first.optionCode; // Default to first item
-  }
-  print("Successfully loaded ${_make.length} makes");
-  } catch (e, stackTrace) {
-  print("Error fetching makes: $e\n$stackTrace");
-  if (context.mounted) {
-  showErrorDialog(context, "Failed to load makes: ${e.toString()}");
-  }
-  } finally {
-  _isLoading = false;
-  notifyListeners();
-  }
+      if (_make.isNotEmpty) {
+        _selectedMake = _make.first.optionCode; // Default to first item
+      }
+      print("Successfully loaded ${_make.length} makes");
+    } catch (e, stackTrace) {
+      print("Error fetching makes: $e\n$stackTrace");
+      if (context.mounted) {
+        showErrorDialog(context, "Failed to load makes: ${e.toString()}");
+      }
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 
   void onListMake(String? value, int cardIndex) {
-  if (cardIndex < dtrCardData.length) {
-  dtrCardData[cardIndex].selectedMake = value;
-  notifyListeners();
+    if (cardIndex < dtrCardData.length) {
+      dtrCardData[cardIndex].selectedMake = value;
+      notifyListeners();
+    }
   }
-  }
-
-
 
   //Capacity
   String? _selectedDtrCapacity;
   String? get selectedDtrCapacity => _selectedDtrCapacity;
 
-  List _dtrCapacity = ["Select",
+  final List _dtrCapacity = [
+    "Select",
     "2500KVA",
     "2000KVA",
     "1600KVA",
@@ -799,14 +797,15 @@ class OnlineDtrViewmodel extends ChangeNotifier {
     "15KVALTN",
     "15KVAAGL",
     "10KVALTN",
-    "10KVAAGL"];
+    "10KVAAGL"
+  ];
   List get dtrCapacity => _dtrCapacity;
 
-  void onListDtrCapacity(String? value,int cardIndex) {
-  if (cardIndex < dtrCardData.length) {
-  dtrCardData[cardIndex].selectedDtrCapacity = value;
-  notifyListeners();
-  }
+  void onListDtrCapacity(String? value, int cardIndex) {
+    if (cardIndex < dtrCardData.length) {
+      dtrCardData[cardIndex].selectedDtrCapacity = value;
+      notifyListeners();
+    }
   }
 
   //Year of Mfg
@@ -819,7 +818,7 @@ class OnlineDtrViewmodel extends ChangeNotifier {
   void generateYearOfMfgList() {
     _yearOfMfg = List.generate(
       DateTime.now().year - 1952 + 1,
-          (index) => (1952 + index).toString(),
+      (index) => (1952 + index).toString(),
     );
     notifyListeners();
   }
@@ -835,45 +834,50 @@ class OnlineDtrViewmodel extends ChangeNotifier {
   String? _selectedPhase;
   String? get selectedPhase => _selectedPhase;
 
-  List _phase = ["Select","Single Phase","3-Phase"];
+  final List _phase = ["Select", "Single Phase", "3-Phase"];
   List get phase => _phase;
 
   void onListPhase(String? value, int cardIndex) {
-  if (cardIndex < dtrCardData.length) {
-  dtrCardData[cardIndex].selectedPhase = value;
-  notifyListeners();
-  }
+    if (cardIndex < dtrCardData.length) {
+      dtrCardData[cardIndex].selectedPhase = value;
+      notifyListeners();
+    }
   }
 
   //ratio
   String? _selectedRatio;
   String? get selectedRatio => _selectedRatio;
 
-  List _ratio = ["Select","6.6KV/240V","11KV/440V"];
+  final List _ratio = ["Select", "6.6KV/240V", "11KV/440V"];
   List get ratio => _ratio;
 
-  void onListRatio(String? value,int cardIndex) {
-  if (cardIndex < dtrCardData.length) {
-  dtrCardData[cardIndex].selectedRatio = value;
-  notifyListeners();
-  }
+  void onListRatio(String? value, int cardIndex) {
+    if (cardIndex < dtrCardData.length) {
+      dtrCardData[cardIndex].selectedRatio = value;
+      notifyListeners();
+    }
   }
 
   //type of meter
   String? _selectedTypeOfMeter;
   String? get selectedTypeOfMeter => _selectedTypeOfMeter;
 
-  List _typeOfMeter = ["Select","Not Available","1Ph Meter","3Ph Meter","CT Meter","HT Meter"];
+  final List _typeOfMeter = [
+    "Select",
+    "Not Available",
+    "1Ph Meter",
+    "3Ph Meter",
+    "CT Meter",
+    "HT Meter"
+  ];
   List get typeOfMeter => _typeOfMeter;
 
   void onListTypeOfMeter(String? value, int cardIndex) {
-  if (cardIndex < dtrCardData.length) {
-  dtrCardData[cardIndex].selectedTypeOfMeter = value;
-  notifyListeners();
+    if (cardIndex < dtrCardData.length) {
+      dtrCardData[cardIndex].selectedTypeOfMeter = value;
+      notifyListeners();
+    }
   }
-  }
-
-
 
   //capture image
   File? _capturedImage;
@@ -882,41 +886,39 @@ class OnlineDtrViewmodel extends ChangeNotifier {
   final ImagePicker _picker = ImagePicker();
 
   Future<void> capturePhoto(int cardIndex) async {
-  final status = await Permission.camera.request();
-  if (status.isDenied || status.isPermanentlyDenied) {
-  if (context.mounted) {
-  ScaffoldMessenger.of(context).showSnackBar(
-  SnackBar(
-  content: Text(status.isPermanentlyDenied
-  ? 'Camera permission permanently denied. Enable in settings.'
-      : 'Camera permission denied'),
-  action: status.isPermanentlyDenied
-  ? SnackBarAction(label: 'Settings', onPressed: openAppSettings)
-      : null,
-  ),
-  );
-  }
-  return;
-  }
+    final status = await Permission.camera.request();
+    if (status.isDenied || status.isPermanentlyDenied) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(status.isPermanentlyDenied
+                ? 'Camera permission permanently denied. Enable in settings.'
+                : 'Camera permission denied'),
+            action: status.isPermanentlyDenied
+                ? const SnackBarAction(
+                    label: 'Settings', onPressed: openAppSettings)
+                : null,
+          ),
+        );
+      }
+      return;
+    }
 
-  try {
-  final XFile? photo = await ImagePicker().pickImage(
-  source: ImageSource.camera,
-  imageQuality: 85,
-  maxWidth: 1024,
-  maxHeight: 1024,
-  );
-  if (photo != null && cardIndex < dtrCardData.length) {
-  dtrCardData[cardIndex].capturedImage = File(photo.path);
-  notifyListeners();
+    try {
+      final XFile? photo = await ImagePicker().pickImage(
+        source: ImageSource.camera,
+        imageQuality: 85,
+        maxWidth: 1024,
+        maxHeight: 1024,
+      );
+      if (photo != null && cardIndex < dtrCardData.length) {
+        dtrCardData[cardIndex].capturedImage = File(photo.path);
+        notifyListeners();
+      }
+    } catch (e) {
+      if (context.mounted) showErrorDialog(context, "Error capturing photo");
+    }
   }
-
-
-  } catch (e) {
-  if (context.mounted) showErrorDialog(context, "Error capturing photo");
-  }
-  }
-
 
   Future<void> fetchCurrentLocation() async {
     _isLoading = true;
@@ -930,7 +932,7 @@ class OnlineDtrViewmodel extends ChangeNotifier {
     }
 
     _positionStream = Geolocator.getPositionStream(
-      locationSettings: LocationSettings(accuracy: LocationAccuracy.high),
+      locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
     ).listen((Position position) {
       latitude = position.latitude;
       longitude = position.longitude;
@@ -941,7 +943,6 @@ class OnlineDtrViewmodel extends ChangeNotifier {
     });
   }
 
-
   Future<void> requestSerialNo(int cardIndex) async {
     if (_isLoading || cardIndex >= dtrCardData.length) return;
     _isLoading = true;
@@ -949,8 +950,9 @@ class OnlineDtrViewmodel extends ChangeNotifier {
 
     try {
       final requestData = {
-        "authToken": SharedPreferenceHelper.getStringValue(
-            LoginSdkPrefs.tokenPrefKey) ?? "",
+        "authToken":
+            SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ??
+                "",
         "api": Apis.API_KEY,
       };
 
@@ -990,10 +992,10 @@ class OnlineDtrViewmodel extends ChangeNotifier {
       if (responseData['message'] == null) {
         throw Exception("No serial number received");
       }
-        final serialNumber = responseData['message'] as String?;
-        if (serialNumber != null) {
+      final serialNumber = responseData['message'] as String?;
+      if (serialNumber != null) {
         dtrCardData[cardIndex].serialNo.text = serialNumber;
-        }
+      }
       print("Successfully generated serial number: $serialNumber");
     } catch (e, stackTrace) {
       print("Error fetching feeders: $e\n$stackTrace");
@@ -1010,7 +1012,8 @@ class OnlineDtrViewmodel extends ChangeNotifier {
     notifyListeners();
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
     };
 
@@ -1036,7 +1039,8 @@ class OnlineDtrViewmodel extends ChangeNotifier {
             responseData = jsonDecode(responseData);
           } catch (e) {
             print("Error decoding response data: $e");
-            showErrorDialog(context, "Invalid response format. Please try again.");
+            showErrorDialog(
+                context, "Invalid response format. Please try again.");
             return;
           }
         }
@@ -1063,8 +1067,8 @@ class OnlineDtrViewmodel extends ChangeNotifier {
             showSessionExpiredDialog(context);
           }
         } else {
-          showErrorDialog(context,
-              "Request failed with status: ${response.statusCode}");
+          showErrorDialog(
+              context, "Request failed with status: ${response.statusCode}");
         }
       }
     } catch (e) {
@@ -1075,12 +1079,10 @@ class OnlineDtrViewmodel extends ChangeNotifier {
     }
   }
 
-
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
 
-  Future<void> submitForm(
-      ) async {
+  Future<void> submitForm() async {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
       notifyListeners();
@@ -1103,9 +1105,8 @@ class OnlineDtrViewmodel extends ChangeNotifier {
                 card.firstTimeChargedDate.text.isEmpty ||
                 card.sapDtr.text.isEmpty ||
                 card.capturedImage == null) {
-              AlertUtils.showSnackBar(
-                  context, "Please complete all DTR details for DTR ${i + 1}",
-                  isTrue);
+              AlertUtils.showSnackBar(context,
+                  "Please complete all DTR details for DTR ${i + 1}", isTrue);
               _isLoading = false;
               notifyListeners();
               return;
@@ -1172,8 +1173,9 @@ class OnlineDtrViewmodel extends ChangeNotifier {
           }
         } catch (e, stackTrace) {
           print("Error submitting form: $e\n$stackTrace");
-          if (context.mounted) showErrorDialog(
-              context, "Failed to submit form: ${e.toString()}");
+          if (context.mounted) {
+            showErrorDialog(context, "Failed to submit form: ${e.toString()}");
+          }
         } finally {
           _isLoading = false;
           notifyListeners();
@@ -1182,169 +1184,145 @@ class OnlineDtrViewmodel extends ChangeNotifier {
     }
   }
 
-    Future<bool> createStructure(BuildContext context, Structure structure) async {
-      _isLoading = true;
-      _errorMessage = null;
-      if (context.mounted) {
-        ProcessDialogHelper.showProcessDialog(context, message: "Uploading images...");
-      }
-      notifyListeners();
-
-      try {
-        // Upload images for each DTR
-        final imageUrls = <String>[];
-        for (final dtr in structure.dtrs) {
-          final imageUrl = await _imageUploader.uploadImage(context, dtr.imageFile);
-          if (imageUrl == null) {
-            _errorMessage = 'Failed to upload image for DTR';
-            if (context.mounted) {
-              ProcessDialogHelper.closeDialog(context);
-              showAlertDialog(context, _errorMessage!);
-            }
-            return false;
-          }
-          imageUrls.add(imageUrl);
-        }
-
-        // Update progress dialog
-        if (context.mounted) {
-          ProcessDialogHelper.showProcessDialog(context, message: "Creating structure...");
-        }
-
-        final structureJson = structure.toJson(imageUrls);
-        final requestData = {
-          "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
-          "api": Apis.API_KEY,
-          "dtrData": jsonEncode(structureJson),
-        };
-
-
-        final payload = {
-          "path": "/saveDTRStructure",
-          "apiVersion": "1.0",
-          "method": "POST",
-          "data": requestData,
-        };
-
-        final response = await ApiProvider(baseUrl: Apis.CHECK_ROOT_URL)
-            .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
-
-        if (context.mounted) {
-          ProcessDialogHelper.closeDialog(context);
-        }
-
-        if (response == null) {
-          throw Exception("No response received from server");
-        }
-
-        dynamic responseData = response.data;
-        if (responseData is String) responseData = jsonDecode(responseData);
-
-        if (response.statusCode == 200) {
-          if (responseData['taskSuccess'] == true) {
-            return true;
-          } else {
-            throw Exception(responseData['message'] ?? "Structure creation failed");
-          }
-        } else {
-          throw Exception(responseData['message'] ?? "Request failed with status ${response.statusCode}");
-        }
-      } catch (e, stackTrace) {
-        print("Error creating structure: $e\n$stackTrace");
-        if (context.mounted) {
-          ProcessDialogHelper.closeDialog(context);
-          showAlertDialog(context, "Failed to create structure: ${e.toString()}");
-        }
-        return false;
-      } finally {
-        _isLoading = false;
-        notifyListeners();
-      }
+  Future<bool> createStructure(
+      BuildContext context, Structure structure) async {
+    _isLoading = true;
+    _errorMessage = null;
+    if (context.mounted) {
+      ProcessDialogHelper.showProcessDialog(context,
+          message: "Uploading images...");
     }
+    notifyListeners();
 
+    try {
+      // Upload images for each DTR
+      final imageUrls = <String>[];
+      for (final dtr in structure.dtrs) {
+        final imageUrl =
+            await _imageUploader.uploadImage(context, dtr.imageFile);
+        if (imageUrl == null) {
+          _errorMessage = 'Failed to upload image for DTR';
+          if (context.mounted) {
+            ProcessDialogHelper.closeDialog(context);
+            showAlertDialog(context, _errorMessage!);
+          }
+          return false;
+        }
+        imageUrls.add(imageUrl);
+      }
+
+      // Update progress dialog
+      if (context.mounted) {
+        ProcessDialogHelper.showProcessDialog(context,
+            message: "Creating structure...");
+      }
+
+      final structureJson = structure.toJson(imageUrls);
+      final requestData = {
+        "authToken":
+            SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+        "api": Apis.API_KEY,
+        "dtrData": jsonEncode(structureJson),
+      };
+
+      final payload = {
+        "path": "/saveDTRStructure",
+        "apiVersion": "1.0",
+        "method": "POST",
+        "data": requestData,
+      };
+
+      final response = await ApiProvider(baseUrl: Apis.CHECK_ROOT_URL)
+          .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+
+      if (context.mounted) {
+        ProcessDialogHelper.closeDialog(context);
+      }
+
+      if (response == null) {
+        throw Exception("No response received from server");
+      }
+
+      dynamic responseData = response.data;
+      if (responseData is String) responseData = jsonDecode(responseData);
+
+      if (response.statusCode == 200) {
+        if (responseData['taskSuccess'] == true) {
+          return true;
+        } else {
+          throw Exception(
+              responseData['message'] ?? "Structure creation failed");
+        }
+      } else {
+        throw Exception(responseData['message'] ??
+            "Request failed with status ${response.statusCode}");
+      }
+    } catch (e, stackTrace) {
+      print("Error creating structure: $e\n$stackTrace");
+      if (context.mounted) {
+        ProcessDialogHelper.closeDialog(context);
+        showAlertDialog(context, "Failed to create structure: ${e.toString()}");
+      }
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
 
   bool validateForm() {
-    if (_selectedFilter==''||_selectedFilter==null) {
+    if (_selectedFilter == '' || _selectedFilter == null) {
       AlertUtils.showSnackBar(context, "Please select location of DTR", isTrue);
       print("Please select any one filter option");
       return false;
     }
-    if (_selectedDistribution==""|| _selectedDistribution==null ) {
-      AlertUtils.showSnackBar(
-          context, "Please select Distribution",
-          isTrue);
+    if (_selectedDistribution == "" || _selectedDistribution == null) {
+      AlertUtils.showSnackBar(context, "Please select Distribution", isTrue);
       return false;
-    } else if (_selectedSSNo==null||_selectedSSNo=="" ) {
-      AlertUtils.showSnackBar(
-          context, "Please select Distribution",
-          isTrue);
+    } else if (_selectedSSNo == null || _selectedSSNo == "") {
+      AlertUtils.showSnackBar(context, "Please select Distribution", isTrue);
       return false;
-    }else if (_selectedStation==""|| _selectedStation==null ) {
-      AlertUtils.showSnackBar(
-          context, "Please select Sub Station",
-          isTrue);
+    } else if (_selectedStation == "" || _selectedStation == null) {
+      AlertUtils.showSnackBar(context, "Please select Sub Station", isTrue);
       return false;
-    }else if (_selectedCircle==""|| _selectedCircle==null ) {
-      AlertUtils.showSnackBar(
-          context, "Please select Circle",
-          isTrue);
+    } else if (_selectedCircle == "" || _selectedCircle == null) {
+      AlertUtils.showSnackBar(context, "Please select Circle", isTrue);
       return false;
-    }else if (_selectedFeeder==""|| _selectedFeeder==null ) {
-      AlertUtils.showSnackBar(
-          context, "Please select Feeder",
-          isTrue);
+    } else if (_selectedFeeder == "" || _selectedFeeder == null) {
+      AlertUtils.showSnackBar(context, "Please select Feeder", isTrue);
       return false;
-    }else if (dtrLocatLandMark.text.isEmpty||dtrLocatLandMark.text=="") {
-      AlertUtils.showSnackBar(
-          context, "Please enter DTR Lank mark",
-          isTrue);
+    } else if (dtrLocatLandMark.text.isEmpty || dtrLocatLandMark.text == "") {
+      AlertUtils.showSnackBar(context, "Please enter DTR Lank mark", isTrue);
       return false;
-    }else if (_selectedCapacity==""|| _selectedCapacity==null ) {
+    } else if (_selectedCapacity == "" || _selectedCapacity == null) {
       AlertUtils.showSnackBar(
-          context, "Please select structure Capacity",
-          isTrue);
+          context, "Please select structure Capacity", isTrue);
       return false;
-    }else if (_selectedPlintType==""|| _selectedPlintType==null ) {
-      AlertUtils.showSnackBar(
-          context, "Please select Plinth type",
-          isTrue);
+    } else if (_selectedPlintType == "" || _selectedPlintType == null) {
+      AlertUtils.showSnackBar(context, "Please select Plinth type", isTrue);
       return false;
-    }else if (_selectedABSwitch==""|| _selectedABSwitch==null ) {
-      AlertUtils.showSnackBar(
-          context, "Please select AB switch type",
-          isTrue);
+    } else if (_selectedABSwitch == "" || _selectedABSwitch == null) {
+      AlertUtils.showSnackBar(context, "Please select AB switch type", isTrue);
       return false;
-    }else if (_selectedHGFuse==""|| _selectedHGFuse==null ) {
-      AlertUtils.showSnackBar(
-          context, "Please select Feeder",
-          isTrue);
+    } else if (_selectedHGFuse == "" || _selectedHGFuse == null) {
+      AlertUtils.showSnackBar(context, "Please select Feeder", isTrue);
       return false;
-    }else if (_selectedLTFuseSet==""|| _selectedLTFuseSet==null ) {
-      AlertUtils.showSnackBar(
-          context, "Please select LT Fuse sets",
-          isTrue);
+    } else if (_selectedLTFuseSet == "" || _selectedLTFuseSet == null) {
+      AlertUtils.showSnackBar(context, "Please select LT Fuse sets", isTrue);
       return false;
-    }else if (_selectedLTFuseType==""|| _selectedLTFuseType==null ) {
-      AlertUtils.showSnackBar(
-          context, "Please select LT Fuse type",
-          isTrue);
+    } else if (_selectedLTFuseType == "" || _selectedLTFuseType == null) {
+      AlertUtils.showSnackBar(context, "Please select LT Fuse type", isTrue);
       return false;
-    }else if (_selectedLoadPattern==""|| _selectedLoadPattern==null ) {
-      AlertUtils.showSnackBar(
-          context, "Please select Load Pattern",
-          isTrue);
+    } else if (_selectedLoadPattern == "" || _selectedLoadPattern == null) {
+      AlertUtils.showSnackBar(context, "Please select Load Pattern", isTrue);
       return false;
-    }else if (latitude==null|| longitude==null ) {
+    } else if (latitude == null || longitude == null) {
       fetchCurrentLocation();
       print(" Final Loaction $latitude and $longitude");
-      AlertUtils.showSnackBar(
-          context, "Please await until we capture  your current location",
-          isTrue);
+      AlertUtils.showSnackBar(context,
+          "Please await until we capture  your current location", isTrue);
       return false;
     }
     return true;
   }
 }
-
-
-

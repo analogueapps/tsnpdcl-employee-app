@@ -4,7 +4,6 @@ import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/view/meeseva/viewmodel/form_loader_viewmodel.dart';
-import 'package:tsnpdcl_employee/widget/view_detailed_lc_head_widget.dart';
 
 class FormLoaderScreen extends StatelessWidget {
   static const id = Routes.formLoaderScreen;
@@ -42,93 +41,115 @@ class FormLoaderScreen extends StatelessWidget {
             body: viewModel.isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : viewModel.cscTscApplicationResponse == null
-                ? const Center(child: Text("No data founded."),)
-            : ListView.builder(
-              itemCount: viewModel.cscTscApplicationResponse!.rowList!.length,
-              itemBuilder: (context, index) {
-                final item = viewModel.cscTscApplicationResponse!.rowList![index];
-                if (item.headerBar != null) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: double.infinity,
-                        color: Color(int.parse(item.headerBar!.backGroundColor!.replaceAll('#', '0xFF'))),
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          item.headerBar!.label!,
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Color(int.parse(item.headerBar!.labelColor!.replaceAll('#', '0xFF'))),
-                          ),
-                        ),
-                      ),
-                      if (item.id == "photoUrl" || item.rowType == 1) ...[
-                        const SizedBox(height: 12),
-                        Center(
-                          child: Container(
-                            width: 120,
-                            height: 120,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.grey.shade200,
-                              image: item.displayValue != null && item.displayValue!.isNotEmpty
-                                  ? DecorationImage(
-                                image: NetworkImage(item.displayValue!),
-                                fit: BoxFit.cover,
-                              )
-                                  : null,
-                            ),
-                            child: item.displayValue == null || item.displayValue!.isEmpty
-                                ? const Icon(Icons.person, size: 60, color: Colors.grey)
-                                : null,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                      ],
-                    ],
-                  );
-                }
-                return Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-                      child: Row(
-                        children: [
-                          const SizedBox(width: 10.0,),
-                          Expanded(
-                            child: Text(
-                              item.label ?? '',
-                              style: TextStyle(
-                                color: Color(int.parse(item.labelColor?.replaceAll('#', '0xFF') ?? '0xFF000000')),
-                                fontWeight: FontWeight.w700,
+                    ? const Center(
+                        child: Text("No data founded."),
+                      )
+                    : ListView.builder(
+                        itemCount: viewModel
+                            .cscTscApplicationResponse!.rowList!.length,
+                        itemBuilder: (context, index) {
+                          final item = viewModel
+                              .cscTscApplicationResponse!.rowList![index];
+                          if (item.headerBar != null) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: double.infinity,
+                                  color: Color(int.parse(item
+                                      .headerBar!.backGroundColor!
+                                      .replaceAll('#', '0xFF'))),
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Text(
+                                    item.headerBar!.label!,
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(int.parse(item
+                                          .headerBar!.labelColor!
+                                          .replaceAll('#', '0xFF'))),
+                                    ),
+                                  ),
+                                ),
+                                if (item.id == "photoUrl" ||
+                                    item.rowType == 1) ...[
+                                  const SizedBox(height: 12),
+                                  Center(
+                                    child: Container(
+                                      width: 120,
+                                      height: 120,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.grey.shade200,
+                                        image: item.displayValue != null &&
+                                                item.displayValue!.isNotEmpty
+                                            ? DecorationImage(
+                                                image: NetworkImage(
+                                                    item.displayValue!),
+                                                fit: BoxFit.cover,
+                                              )
+                                            : null,
+                                      ),
+                                      child: item.displayValue == null ||
+                                              item.displayValue!.isEmpty
+                                          ? const Icon(Icons.person,
+                                              size: 60, color: Colors.grey)
+                                          : null,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 12),
+                                ],
+                              ],
+                            );
+                          }
+                          return Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 10.0, bottom: 10.0),
+                                child: Row(
+                                  children: [
+                                    const SizedBox(
+                                      width: 10.0,
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        item.label ?? '',
+                                        style: TextStyle(
+                                          color: Color(int.parse(item.labelColor
+                                                  ?.replaceAll('#', '0xFF') ??
+                                              '0xFF000000')),
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      height: 20,
+                                      width: 1,
+                                      color: Colors.grey[300],
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        item.displayValue ?? '',
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(
+                                          color: Color(int.parse(item.valueColor
+                                                  ?.replaceAll('#', '0xFF') ??
+                                              '0xFF000000')),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 10.0,
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ),
-                          Container(
-                            height: 20,
-                            width: 1,
-                            color: Colors.grey[300],
-                          ),
-                          Expanded(
-                            child: Text(
-                              item.displayValue ?? '',
-                              textAlign: TextAlign.right,
-                              style: TextStyle(
-                                color: Color(int.parse(item.valueColor?.replaceAll('#', '0xFF') ?? '0xFF000000')),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 10.0,),
-                        ],
+                              const Divider(),
+                            ],
+                          );
+                        },
                       ),
-                    ),
-                    const Divider(),
-                  ],
-                );
-              },
-            ),
             floatingActionButton: Align(
               alignment: Alignment.bottomRight,
               child: Padding(

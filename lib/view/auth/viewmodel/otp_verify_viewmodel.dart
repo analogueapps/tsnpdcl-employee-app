@@ -7,13 +7,10 @@ import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
 import 'package:tsnpdcl_employee/dialogs/process_dialog.dart';
 import 'package:tsnpdcl_employee/network/api_provider.dart';
 import 'package:tsnpdcl_employee/network/api_urls.dart';
-import 'package:tsnpdcl_employee/preference/shared_preference.dart';
-import 'package:tsnpdcl_employee/utils/alerts.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
-import 'package:tsnpdcl_employee/view/auth/model/npdcl_user.dart';
 
 class OtpVerifyViewmodel extends ChangeNotifier {
   // Current View Context
@@ -75,8 +72,7 @@ class OtpVerifyViewmodel extends ChangeNotifier {
 
   // API call simulation
   Future<void> authenticateEmployee() async {
-    if(otp!.isNotEmpty && otp!.length == numSix) {
-
+    if (otp!.isNotEmpty && otp!.length == numSix) {
       ProcessDialogHelper.showProcessDialog(
         context,
         message: "Please wait....",
@@ -97,7 +93,8 @@ class OtpVerifyViewmodel extends ChangeNotifier {
         "data": jsonEncode(requestData),
       };
 
-      var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.AUTH_URL, payload);
+      var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+          .postApiCall(context, Apis.AUTH_URL, payload);
       if (context.mounted) {
         ProcessDialogHelper.closeDialog(context);
       }
@@ -108,28 +105,30 @@ class OtpVerifyViewmodel extends ChangeNotifier {
           }
           if (response.statusCode == successResponseCode) {
             if (response.data['success'] == isTrue) {
-              if(response.data['objectJson'] != null) {
-                final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
+              if (response.data['objectJson'] != null) {
+                final List<dynamic> jsonList =
+                    jsonDecode(response.data['objectJson']);
                 showSuccessDialog(context, "Password changed successfully", () {
-                  Navigation.instance.pushAndRemoveUntil(Routes.employeeIdLoginScreen);
+                  Navigation.instance
+                      .pushAndRemoveUntil(Routes.employeeIdLoginScreen);
                 });
               }
             } else {
-              showAlertDialog(context,response.data['message']);
+              showAlertDialog(context, response.data['message']);
             }
           } else {
-            showAlertDialog(context,response.data['message']);
+            showAlertDialog(context, response.data['message']);
           }
         }
       } catch (e) {
-        showErrorDialog(context,  "An error occurred. Please try again.");
+        showErrorDialog(context, "An error occurred. Please try again.");
         rethrow;
       }
 
       notifyListeners();
     } else {
       //handleEmpValidationErrors();
-      showAlertDialog(context,"Please enter a valid OTP");
+      showAlertDialog(context, "Please enter a valid OTP");
     }
   }
 

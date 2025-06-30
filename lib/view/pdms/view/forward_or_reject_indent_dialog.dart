@@ -1,15 +1,5 @@
-import 'dart:async';
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
-import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
-import 'package:tsnpdcl_employee/dialogs/process_dialog.dart';
-import 'package:tsnpdcl_employee/network/api_provider.dart';
-import 'package:tsnpdcl_employee/network/api_urls.dart';
-import 'package:tsnpdcl_employee/preference/shared_preference.dart';
-import 'package:tsnpdcl_employee/utils/alerts.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
@@ -43,7 +33,8 @@ class ForwardOrRejectIndentDialog extends StatelessWidget {
         ),
       ),
       body: ChangeNotifierProvider(
-        create: (_) => ForwardOrRejectIndentDialogViewModel(context: context, poleRequestIndentEntity: poleRequestIndentEntity),
+        create: (_) => ForwardOrRejectIndentDialogViewModel(
+            context: context, poleRequestIndentEntity: poleRequestIndentEntity),
         child: Consumer<ForwardOrRejectIndentDialogViewModel>(
           builder: (context, viewModel, child) {
             return SingleChildScrollView(
@@ -67,7 +58,9 @@ class ForwardOrRejectIndentDialog extends StatelessWidget {
                           contentPadding: EdgeInsets.zero,
                           title: const Text(
                             "Forward Indent",
-                            style: TextStyle(fontSize: normalSize, fontWeight: FontWeight.w500),
+                            style: TextStyle(
+                                fontSize: normalSize,
+                                fontWeight: FontWeight.w500),
                           ),
                           value: viewModel.isSelected("Forward Indent"),
                           onChanged: (value) {
@@ -81,7 +74,9 @@ class ForwardOrRejectIndentDialog extends StatelessWidget {
                           contentPadding: EdgeInsets.zero,
                           title: const Text(
                             "Reject Indent",
-                            style: TextStyle(fontSize: normalSize, fontWeight: FontWeight.w500),
+                            style: TextStyle(
+                                fontSize: normalSize,
+                                fontWeight: FontWeight.w500),
                           ),
                           value: viewModel.isSelected("Reject Indent"),
                           onChanged: (value) {
@@ -104,14 +99,21 @@ class ForwardOrRejectIndentDialog extends StatelessWidget {
                         ),
                         children: [
                           const Padding(
-                            padding: EdgeInsets.symmetric(vertical: doubleEight),
-                            child: Text("Indent Quantity", style: TextStyle(color: Colors.red),),
+                            padding:
+                                EdgeInsets.symmetric(vertical: doubleEight),
+                            child: Text(
+                              "Indent Quantity",
+                              style: TextStyle(color: Colors.red),
+                            ),
                           ),
                           Center(
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: doubleEight),
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: doubleEight),
                               child: Text(
-                                checkNull(viewModel.poleRequestIndentEntity.requestedQty.toString()),
+                                checkNull(viewModel
+                                    .poleRequestIndentEntity.requestedQty
+                                    .toString()),
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -126,14 +128,21 @@ class ForwardOrRejectIndentDialog extends StatelessWidget {
                         ),
                         children: [
                           const Padding(
-                            padding: EdgeInsets.symmetric(vertical: doubleEight),
-                            child: Text("Balance Quantity", style: TextStyle(color: Colors.red),),
+                            padding:
+                                EdgeInsets.symmetric(vertical: doubleEight),
+                            child: Text(
+                              "Balance Quantity",
+                              style: TextStyle(color: Colors.red),
+                            ),
                           ),
                           Center(
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: doubleEight),
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: doubleEight),
                               child: Text(
-                                checkNull(viewModel.poleRequestIndentEntity.balanceQty.toString()),
+                                checkNull(viewModel
+                                    .poleRequestIndentEntity.balanceQty
+                                    .toString()),
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -148,14 +157,21 @@ class ForwardOrRejectIndentDialog extends StatelessWidget {
                         ),
                         children: [
                           const Padding(
-                            padding: EdgeInsets.symmetric(vertical: doubleEight),
-                            child: Text("AE/OD Recommended Qty", style: TextStyle(color: Colors.red),),
+                            padding:
+                                EdgeInsets.symmetric(vertical: doubleEight),
+                            child: Text(
+                              "AE/OD Recommended Qty",
+                              style: TextStyle(color: Colors.red),
+                            ),
                           ),
                           Center(
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: doubleEight),
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: doubleEight),
                               child: Text(
-                                checkNull(viewModel.poleRequestIndentEntity.aeOdRecommendedQty.toString()),
+                                checkNull(viewModel
+                                    .poleRequestIndentEntity.aeOdRecommendedQty
+                                    .toString()),
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -177,10 +193,9 @@ class ForwardOrRejectIndentDialog extends StatelessWidget {
                     value: viewModel.fysSelect,
                     items: viewModel.fys
                         .map((item) => DropdownMenuItem<String>(
-                      value: item.optionCode,
-                      child: Text(item.optionName!),
-
-                    ))
+                              value: item.optionCode,
+                              child: Text(item.optionName!),
+                            ))
                         .toList(),
                     onChanged: (value) {
                       viewModel.onListFysValueChange(value);

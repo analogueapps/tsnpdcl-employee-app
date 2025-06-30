@@ -30,7 +30,7 @@ class NonAglViewModel extends ChangeNotifier {
   }
 
   final formKey = GlobalKey<FormState>();
-  bool _isLoading = isFalse;
+  final bool _isLoading = isFalse;
   bool get isLoading => _isLoading;
 
   void downloadDistributions() {
@@ -39,28 +39,29 @@ class NonAglViewModel extends ChangeNotifier {
       barrierDismissible: false,
       builder: (context) {
         return WillPopScope(
-            onWillPop: () async => false,
-        child: AlertDialog(
-          title: const Text("Download Distributions ?"),
-          content: const Text("To Download Distributions from the server, please click the DOWNLOAD button. If you have already downloaded the distributions, click OFFLINE."),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                loadOfflineData();
-              },
-              child: const Text('OFFLINE'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                getDistributions();
-                getStructOfCode();
-              },
-              child: const Text('DOWNLOAD'),
-            ),
-          ],
-        ),
+          onWillPop: () async => false,
+          child: AlertDialog(
+            title: const Text("Download Distributions ?"),
+            content: const Text(
+                "To Download Distributions from the server, please click the DOWNLOAD button. If you have already downloaded the distributions, click OFFLINE."),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  loadOfflineData();
+                },
+                child: const Text('OFFLINE'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  getDistributions();
+                  getStructOfCode();
+                },
+                child: const Text('DOWNLOAD'),
+              ),
+            ],
+          ),
         );
       },
     );
@@ -70,10 +71,10 @@ class NonAglViewModel extends ChangeNotifier {
   Future<void> loadOfflineData() async {
     try {
       // Fetch data from database
-      final List<SubstationModel> dbData = await NonAglDistributionDb.instance
-          .getAllNonAglDistribution();
-      final List<String> dbstructuredata = await NonAglStructureDb
-          .instance.getAllStructureCodes();
+      final List<SubstationModel> dbData =
+          await NonAglDistributionDb.instance.getAllNonAglDistribution();
+      final List<String> dbstructuredata =
+          await NonAglStructureDb.instance.getAllStructureCodes();
 
       // deleteAllUnMappedServices();
       distributionList.clear();
@@ -89,18 +90,16 @@ class NonAglViewModel extends ChangeNotifier {
           ? distributionList.first.optionCode
           : null;
 
-
       notifyListeners();
     } catch (e) {
       showErrorDialog(context, "Failed to load offline data: $e");
     }
   }
 
-
   String? _selectedDistribution;
   String? get selectedDistribution => _selectedDistribution;
 
-  List<SubstationModel> _distribution = [];
+  final List<SubstationModel> _distribution = [];
 
   List<SubstationModel> get distributionList => _distribution;
 
@@ -112,8 +111,8 @@ class NonAglViewModel extends ChangeNotifier {
 
     try {
       final requestData = {
-        "authToken": SharedPreferenceHelper.getStringValue(
-            LoginSdkPrefs.tokenPrefKey),
+        "authToken":
+            SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
         "api": Apis.API_KEY,
         "sc": SharedPreferenceHelper.getStringValue(
             LoginSdkPrefs.sectionCodePrefKey),
@@ -133,45 +132,46 @@ class NonAglViewModel extends ChangeNotifier {
         ProcessDialogHelper.closeDialog(context);
       }
 
-        if (response != null) {
-          if (response.data is String) {
-            response.data = jsonDecode(response.data); // Parse string to JSON
-          }
-          if (response.statusCode == successResponseCode) {
-            if (response.data['tokenValid'] == isTrue) {
-              if (response.data['success'] == isTrue) {
-                if (response.data['objectJson'] != null) {
-                  final List<dynamic> jsonList = jsonDecode(
-                      response.data['objectJson']);
-                  final List<SubstationModel> listData = jsonList.map((json) =>
-                      SubstationModel.fromJson(json)).toList();
-                  distributionList.addAll(listData);
-                  if (distributionList.isNotEmpty) {
-                    _selectedDistribution =
-                        distributionList.first.optionCode;
-                  }
-                  // Store in database
-                  await NonAglDistributionDb.instance.clearAllData();
-                  await NonAglDistributionDb.instance.insertNonAglDistribution(
-                      listData);
+      if (response != null) {
+        if (response.data is String) {
+          response.data = jsonDecode(response.data); // Parse string to JSON
+        }
+        if (response.statusCode == successResponseCode) {
+          if (response.data['tokenValid'] == isTrue) {
+            if (response.data['success'] == isTrue) {
+              if (response.data['objectJson'] != null) {
+                final List<dynamic> jsonList =
+                    jsonDecode(response.data['objectJson']);
+                final List<SubstationModel> listData = jsonList
+                    .map((json) => SubstationModel.fromJson(json))
+                    .toList();
+                distributionList.addAll(listData);
+                if (distributionList.isNotEmpty) {
+                  _selectedDistribution = distributionList.first.optionCode;
                 }
-              } else {
-                showAlertDialog(context, response.data['message']);
+                // Store in database
+                await NonAglDistributionDb.instance.clearAllData();
+                await NonAglDistributionDb.instance
+                    .insertNonAglDistribution(listData);
               }
             } else {
-              showSessionExpiredDialog(context);
+              showAlertDialog(context, response.data['message']);
             }
           } else {
-            showAlertDialog(context, response.data['message']);
+            showSessionExpiredDialog(context);
           }
+        } else {
+          showAlertDialog(context, response.data['message']);
         }
-      } catch (e) {
-        showErrorDialog(context, "An error occurred. Please try again.");
-        rethrow;
       }
+    } catch (e) {
+      showErrorDialog(context, "An error occurred. Please try again.");
+      rethrow;
+    }
 
-      notifyListeners();
+    notifyListeners();
   }
+
   void onListDistributionSelected(String? value) {
     _selectedDistribution = value;
     notifyListeners();
@@ -180,7 +180,7 @@ class NonAglViewModel extends ChangeNotifier {
   String? _selectedStructure;
   String? get selectedStructure => _selectedStructure;
 
-  List _structure = [];
+  final List _structure = [];
   List get struct => _structure;
 
   Future<void> getStructOfCode() async {
@@ -190,19 +190,20 @@ class NonAglViewModel extends ChangeNotifier {
     );
 
     final requestSData = {
-        "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
-        "api": Apis.API_KEY,
-      };
-      
-      final payload = {
-        "path": "/getStructuresOfSection",
-        "apiVersion": "1.0",
-        "method": "POST",
-        "data": jsonEncode(requestSData),
-      };
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "api": Apis.API_KEY,
+    };
 
-      final response = await ApiProvider(baseUrl: Apis.ROOT_URL)
-          .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    final payload = {
+      "path": "/getStructuresOfSection",
+      "apiVersion": "1.0",
+      "method": "POST",
+      "data": jsonEncode(requestSData),
+    };
+
+    final response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
 
     try {
       if (response != null) {
@@ -213,8 +214,8 @@ class NonAglViewModel extends ChangeNotifier {
           if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
               if (response.data['message'] != "[]") {
-                final List<dynamic> structures = jsonDecode(
-                    response.data['message']);
+                final List<dynamic> structures =
+                    jsonDecode(response.data['message']);
                 final dbHelper = NonAglStructureDb.instance;
                 // // Clear existing data first
                 await dbHelper.deleteAllData();
@@ -246,12 +247,11 @@ class NonAglViewModel extends ChangeNotifier {
     } catch (e) {
       showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
-    }finally{
+    } finally {
       if (context.mounted) {
         ProcessDialogHelper.closeDialog(context);
       }
     }
-
   }
 
   void onListStructureSelected(String? value) {
@@ -268,8 +268,8 @@ class NonAglViewModel extends ChangeNotifier {
     );
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(
-          LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "dc": distributionCode,
       "agl": false,
@@ -283,8 +283,8 @@ class NonAglViewModel extends ChangeNotifier {
       "data": jsonEncode(requestData),
     };
 
-    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(
-        context, Apis.NPDCL_EMP_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -298,18 +298,20 @@ class NonAglViewModel extends ChangeNotifier {
           if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
               if (response.data['message'] != null) {
-                AlertUtils.showSnackBar(context,  response.data['message'],isFalse);
+                AlertUtils.showSnackBar(
+                    context, response.data['message'], isFalse);
                 if (response.data['objectJson'] != null) {
-                  final List<dynamic> jsonList = jsonDecode(
-                      response.data['objectJson']);
-                  final List<UploadMappedService> listData = jsonList.map((json) =>
-                      UploadMappedService.fromJson(json)).toList();
+                  final List<dynamic> jsonList =
+                      jsonDecode(response.data['objectJson']);
+                  final List<UploadMappedService> listData = jsonList
+                      .map((json) => UploadMappedService.fromJson(json))
+                      .toList();
                   deleteAllAGLUnMappedData();
-                  await NonAglUnmappedServicesDb().insertUnMappedServices(
-                      listData.toSet().toList());
+                  await NonAglUnmappedServicesDb()
+                      .insertUnMappedServices(listData.toSet().toList());
                   print("Store data in SQLite in Unmmaped in AGL");
-                  unmappedServices = await NonAglUnmappedServicesDb()
-                      .getUnMappedServices();
+                  unmappedServices =
+                      await NonAglUnmappedServicesDb().getUnMappedServices();
                   for (var service in unmappedServices) {
                     _checkboxStates[service.uscno] = false;
                   }
@@ -342,7 +344,6 @@ class NonAglViewModel extends ChangeNotifier {
       print('Deleted  records');
     } catch (e) {
       print('Error deleting services: $e');
-
     }
   }
 
@@ -355,11 +356,9 @@ class NonAglViewModel extends ChangeNotifier {
   String? get selectedServiceStructureCode => _selectedServiceStructureCode;
 
   Map<String, String?> get checkedServices {
-    return Map.fromEntries(
-        _checkboxStates.entries
-            .where((entry) => entry.value == true)
-            .map((entry) => MapEntry(entry.key, _serviceMappings[entry.key]))
-    );
+    return Map.fromEntries(_checkboxStates.entries
+        .where((entry) => entry.value == true)
+        .map((entry) => MapEntry(entry.key, _serviceMappings[entry.key])));
   }
 
 // Update your toggleCheckbox method
@@ -394,15 +393,15 @@ class NonAglViewModel extends ChangeNotifier {
     notifyListeners();
     if (!validateForm()) {
       return;
-    }else{
+    } else {
       savedMappedServices(checkedServices);
     }
-
   }
-  bool validateForm() {
 
+  bool validateForm() {
     if (unmappedServices.isEmpty) {
-      AlertUtils.showSnackBar(context, "No mapped services found, to upload", isTrue);
+      AlertUtils.showSnackBar(
+          context, "No mapped services found, to upload", isTrue);
       return false;
     } else if (_checkboxStates == {} && _serviceMappings == {}) {
       AlertUtils.showSnackBar(
@@ -412,14 +411,14 @@ class NonAglViewModel extends ChangeNotifier {
     return true;
   }
 
-
   Future<void> savedMappedServices(Map<String, String?> uploadData) async {
     ProcessDialogHelper.showProcessDialog(
       context,
       message: "Loading...",
     );
 
-    final List<Map<String, dynamic>> mappedData = uploadData.entries.map((entry) {
+    final List<Map<String, dynamic>> mappedData =
+        uploadData.entries.map((entry) {
       return {
         "uscno": entry.key,
         "structure": entry.value,
@@ -427,11 +426,10 @@ class NonAglViewModel extends ChangeNotifier {
     }).toList();
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(
-          LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
-      "data":mappedData,
-
+      "data": mappedData,
     };
 
     final payload = {
@@ -441,8 +439,8 @@ class NonAglViewModel extends ChangeNotifier {
       "data": jsonEncode(requestData),
     };
 
-    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(
-        context, Apis.NPDCL_EMP_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -456,12 +454,12 @@ class NonAglViewModel extends ChangeNotifier {
           if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
               if (response.data['message'] != null) {
-                showSuccessDialog(context, response.data['message'], (){});//Navigation.instance.pushBack();
+                showSuccessDialog(context, response.data['message'],
+                    () {}); //Navigation.instance.pushBack();
                 _checkboxStates.clear();
                 _serviceMappings.clear();
                 notifyListeners();
                 nonAGLUnmappedServices(selectedDistribution!);
-
               }
             } else {
               showAlertDialog(context, response.data['message']);
@@ -493,7 +491,7 @@ class NonAglViewModel extends ChangeNotifier {
                 .toList();
             return AlertDialog(
               title: TextField(
-                decoration: InputDecoration(hintText: "Search"),
+                decoration: const InputDecoration(hintText: "Search"),
                 onChanged: (val) => setState(() => filter = val),
               ),
               content: SizedBox(
@@ -516,8 +514,7 @@ class NonAglViewModel extends ChangeNotifier {
     );
 
     if (selected != null) {
-     onListStructureSelected(selected);
+      onListStructureSelected(selected);
     }
   }
-
 }

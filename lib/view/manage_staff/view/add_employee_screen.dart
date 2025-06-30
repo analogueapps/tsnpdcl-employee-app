@@ -33,7 +33,7 @@ class AddEmployeeScreen extends StatelessWidget {
         child: Consumer<AddEmployeeViewModel>(
             builder: (context, viewModel, child) {
           return viewModel.isLoading
-              ? Center(child: CircularProgressIndicator())
+              ? const Center(child: CircularProgressIndicator())
               : SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.all(11),
@@ -152,7 +152,7 @@ class AddEmployeeScreen extends StatelessWidget {
                                           fontWeight: FontWeight.bold,
                                           color: Colors.red),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 11,
                                     ),
                                     SizedBox(
@@ -191,7 +191,7 @@ class AddEmployeeScreen extends StatelessWidget {
                                               foregroundColor: Colors.red,
                                             ),
                                             onPressed: () {},
-                                            child: Text('CANCLE')),
+                                            child: const Text('CANCLE')),
                                         const SizedBox(
                                           width: 11,
                                         ),
@@ -206,7 +206,8 @@ class AddEmployeeScreen extends StatelessWidget {
                                             onPressed: () {
                                               if (viewModel
                                                   .validateConfirm(context)) {
-                                                viewModel.confirmAddStaff(context);
+                                                viewModel
+                                                    .confirmAddStaff(context);
                                               }
                                             },
                                             child: const Text('CONFIRM')),

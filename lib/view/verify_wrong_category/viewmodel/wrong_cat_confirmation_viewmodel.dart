@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
-import 'package:intl/intl.dart';
 import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
 import 'package:tsnpdcl_employee/network/api_provider.dart';
 import 'package:tsnpdcl_employee/network/api_urls.dart';
@@ -17,22 +16,22 @@ class WrongCatConfirmationViewmodel extends ChangeNotifier {
   final BuildContext context;
   final Map<String, dynamic> args;
 
-  bool _isLoading=false;
-  bool get isLoading=>_isLoading;
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
 
   Future<void> _getCatConfirmEntities() async {
-    _isLoading=true;
+    _isLoading = true;
     notifyListeners();
 
-
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
-      "monthYear":args['monthYear'],
-      "areCode":args['areCode']??""
+      "monthYear": args['monthYear'],
+      "areCode": args['areCode'] ?? ""
     };
 
-    try{
+    try {
       final response = await ApiProvider(baseUrl: Apis.VERIFY_WRONG_CONFIRM_URL)
           .postApiCall(context, Apis.GET_CAT_CONFIRM, payload);
       if (response != null) {
@@ -54,9 +53,8 @@ class WrongCatConfirmationViewmodel extends ChangeNotifier {
                   jsonList = [];
                 }
                 //////<- Should work if response is not [] ->//////
-
-              }else{
-                showEmptyFolderDialog(context, response.data['message'], (){
+              } else {
+                showEmptyFolderDialog(context, response.data['message'], () {
                   Navigator.pop(context);
                 });
               }
@@ -68,17 +66,18 @@ class WrongCatConfirmationViewmodel extends ChangeNotifier {
             showSessionExpiredDialog(context);
           }
         } else {
-          showAlertDialog(context, response.data['message'] ??
-              'Request failed with status: ${response.statusCode}');
+          showAlertDialog(
+              context,
+              response.data['message'] ??
+                  'Request failed with status: ${response.statusCode}');
         }
       }
     } catch (e, stacktrace) {
       print("Exception in fetchAllAbstract: $e\n$stacktrace"); // Log error
       showErrorDialog(context, "An error occurred. Please try again.");
-    }finally{
-      _isLoading=false;
+    } finally {
+      _isLoading = false;
       notifyListeners();
     }
   }
-
 }

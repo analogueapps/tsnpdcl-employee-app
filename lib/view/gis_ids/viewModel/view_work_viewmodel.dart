@@ -14,7 +14,10 @@ import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/view/gis_ids/model/gis_individual_model.dart';
 
 class WorkDetailsViewModel extends ChangeNotifier {
-  WorkDetailsViewModel({required this.context, required this.surId, required this.individualStatus}){
+  WorkDetailsViewModel(
+      {required this.context,
+      required this.surId,
+      required this.individualStatus}) {
     init();
   }
 
@@ -28,12 +31,11 @@ class WorkDetailsViewModel extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  void init(){
+  void init() {
     getCurrentLocation();
     print("individualStatus $individualStatus");
     getData();
   }
-
 
   Future<void> getCurrentLocation() async {
     try {
@@ -41,7 +43,8 @@ class WorkDetailsViewModel extends ChangeNotifier {
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {
-          AlertUtils.showSnackBar(context, "Location permission denied", isTrue);
+          AlertUtils.showSnackBar(
+              context, "Location permission denied", isTrue);
           return;
         }
       }
@@ -69,10 +72,12 @@ class WorkDetailsViewModel extends ChangeNotifier {
     }
   }
 
-
   // Static data
   final List<Map<String, String>> data = [
-    {'label': 'Work Description', 'value': 'After Work T230102010101003 Alternate supply @ Captain'},
+    {
+      'label': 'Work Description',
+      'value': 'After Work T230102010101003 Alternate supply @ Captain'
+    },
     {'label': 'Status', 'value': 'PENDING'},
     {'label': 'Substation Code', 'value': ''},
     {'label': '11kV Feeder Name', 'value': '0007-09-11kV ADVOCATESCOLONY'},
@@ -82,8 +87,7 @@ class WorkDetailsViewModel extends ChangeNotifier {
     {'label': 'Now Proposed Latitude', 'value': '18.0054961'},
   ];
 
-
-  List<GisSurveyData> _workDetails = [];
+  final List<GisSurveyData> _workDetails = [];
   List<GisSurveyData> get workDetails => _workDetails;
 
   Future<void> getData() async {
@@ -98,7 +102,8 @@ class WorkDetailsViewModel extends ChangeNotifier {
 
     try {
       final requestData = {
-        "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+        "authToken":
+            SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
         "api": Apis.API_KEY,
         "_id": surId
       };
@@ -129,9 +134,9 @@ class WorkDetailsViewModel extends ChangeNotifier {
         }
 
         if (responseData is Map<String, dynamic>) {
-
           if (response.statusCode == successResponseCode) {
-            if (responseData['tokenValid'] == isTrue || responseData['tokenValid'] == false) {
+            if (responseData['tokenValid'] == isTrue ||
+                responseData['tokenValid'] == false) {
               if (responseData['success'] == isTrue) {
                 if (responseData['objectJson'] != null) {
                   try {
@@ -144,16 +149,20 @@ class WorkDetailsViewModel extends ChangeNotifier {
                           .replaceAll(r'\u0026', '&')
                           .trim();
                       if (cleanedJsonString.endsWith(',')) {
-                        cleanedJsonString =
-                            cleanedJsonString.substring(0, cleanedJsonString.length - 1);
+                        cleanedJsonString = cleanedJsonString.substring(
+                            0, cleanedJsonString.length - 1);
                       }
                       if (!cleanedJsonString.startsWith('[')) {
                         cleanedJsonString = '[$cleanedJsonString]';
                       }
                       final parsedList = jsonDecode(cleanedJsonString) as List;
-                      dataList = parsedList.map((json) => GisSurveyData.fromJson(json)).toList();
+                      dataList = parsedList
+                          .map((json) => GisSurveyData.fromJson(json))
+                          .toList();
                     } else if (jsonList is List) {
-                      dataList = jsonList.map((json) => GisSurveyData.fromJson(json)).toList();
+                      dataList = jsonList
+                          .map((json) => GisSurveyData.fromJson(json))
+                          .toList();
                     }
 
                     _workDetails.clear();
@@ -163,20 +172,23 @@ class WorkDetailsViewModel extends ChangeNotifier {
                   } catch (e, stackTrace) {
                     print("Error parsing objectJson: $e");
                     print("Stack trace: $stackTrace");
-                    showErrorDialog(context, "Failed to parse GIS data. Please contact support.");
+                    showErrorDialog(context,
+                        "Failed to parse GIS data. Please contact support.");
                   }
                 } else {
                   print("No objectJson found in response");
                   showAlertDialog(context, "No GIS data available.");
                 }
               } else {
-                showAlertDialog(context, responseData['message'] ?? "Operation failed");
+                showAlertDialog(
+                    context, responseData['message'] ?? "Operation failed");
               }
             } else {
               showSessionExpiredDialog(context);
             }
           } else {
-            showErrorDialog(context, "Request failed with status: ${response.statusCode}");
+            showErrorDialog(
+                context, "Request failed with status: ${response.statusCode}");
           }
         } else {
           showErrorDialog(context, "Unexpected response format.");
@@ -198,8 +210,6 @@ class WorkDetailsViewModel extends ChangeNotifier {
     }
   }
 
-
-
   // Action handlers
   void close(BuildContext context) {
     Navigator.pop(context);
@@ -214,6 +224,4 @@ class WorkDetailsViewModel extends ChangeNotifier {
     print("Edit action triggered");
     // Implement edit logic here
   }
-
-
 }

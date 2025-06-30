@@ -14,7 +14,7 @@ class Circle {
   }
 
   String getCircleId() {
-    return circleId != null ? circleId : circleCode;
+    return circleId ?? circleCode;
   }
 
   String getCircleName() {
@@ -46,9 +46,9 @@ class SubstationModel {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is SubstationModel &&
-              runtimeType == other.runtimeType &&
-              optionCode == other.optionCode;
+      other is SubstationModel &&
+          runtimeType == other.runtimeType &&
+          optionCode == other.optionCode;
 
   @override
   int get hashCode => optionCode.hashCode;
@@ -61,9 +61,9 @@ class SubstationModel {
   }
 
   Map<String, dynamic> toJson() => {
-    'optionCode': optionCode,
-    'optionName': optionName,
-  };
+        'optionCode': optionCode,
+        'optionName': optionName,
+      };
 }
 
 // Helper functions (only if needed)
@@ -72,4 +72,3 @@ SubstationModel substationModelFromJson(String str) =>
 
 String substationModelToJson(SubstationModel data) =>
     json.encode(data.toJson());
-

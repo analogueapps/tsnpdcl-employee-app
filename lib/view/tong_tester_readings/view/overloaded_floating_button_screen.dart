@@ -26,23 +26,23 @@ class OverloadedFloatingButtonView extends StatelessWidget {
               title: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                const Text(
-                  "Tong Tester Readings Entry",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Text(
-                  provider.section,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ]),
+                    const Text(
+                      "Tong Tester Readings Entry",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Text(
+                      provider.section,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ]),
               iconTheme: const IconThemeData(color: Colors.white),
             ),
             body: Consumer<OverloadedFloatingButtonProvider>(
@@ -75,7 +75,7 @@ class OverloadedFloatingButtonView extends StatelessWidget {
                               ? [
                                   DropdownMenuItem<String>(
                                     value: provider.section,
-                                    child: Text(provider.section!),
+                                    child: Text(provider.section),
                                   ),
                                 ]
                               : [
@@ -88,21 +88,21 @@ class OverloadedFloatingButtonView extends StatelessWidget {
                           disabledHint:
                               Text(provider.section ?? "No section selected"),
                         ),
-                        SizedBox(height: 6),
+                        const SizedBox(height: 6),
                         Align(
                             alignment: Alignment.topLeft,
                             child: Text(
                               "${provider.section} | ${provider.sectionCode}",
-                              style: TextStyle(color: Colors.green),
+                              style: const TextStyle(color: Colors.green),
                             )),
                         const SizedBox(height: 20),
 
-                        Align(
+                        const Align(
                           alignment: Alignment.centerLeft,
-                          child: const Text("SELECT STRUCTURE CODE",
+                          child: Text("SELECT STRUCTURE CODE",
                               style: TextStyle(fontSize: 16)),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 5,
                         ),
                         // Select Structure Dropdown (triggers dialog)
@@ -132,7 +132,7 @@ class OverloadedFloatingButtonView extends StatelessWidget {
                             ),
                           ),
                         ),
-                        SizedBox(height: 6),
+                        const SizedBox(height: 6),
                         Align(
                           alignment: Alignment.topLeft,
                           child: Text(
@@ -170,10 +170,8 @@ class OverloadedFloatingButtonView extends StatelessWidget {
                                     _buildStructureDetailsCard(structure),
                                     if (structure.dtrs != null &&
                                         structure.dtrs!.isNotEmpty)
-                                      ...structure.dtrs!
-                                          .map((dtr) =>
-                                              _buildDTRDetailsCard(dtr))
-                                          .toList(),
+                                      ...structure.dtrs!.map(
+                                          (dtr) => _buildDTRDetailsCard(dtr)),
                                   ],
                                 );
                               },
@@ -341,9 +339,9 @@ class OverloadedFloatingButtonView extends StatelessWidget {
                         ),
                         const SizedBox(height: 20),
 
-                        Align(
+                        const Align(
                           alignment: Alignment.centerLeft,
-                          child: const Text("READING DATE & TIME",
+                          child: Text("READING DATE & TIME",
                               style: TextStyle(fontSize: 16)),
                         ),
                         const SizedBox(height: 8),
@@ -396,7 +394,7 @@ class OverloadedFloatingButtonView extends StatelessWidget {
                           },
                         ),
                         // ================ END TONG TESTER READINGS SECTION ================
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         // Save Button
@@ -459,13 +457,13 @@ class OverloadedFloatingButtonView extends StatelessWidget {
                       child: ListView.builder(
                         shrinkWrap: true,
                         itemCount: provider.structures
-                            .where((item) => item.optionName!
+                            .where((item) => item.optionName
                                 .toLowerCase()
                                 .contains(searchQuery))
                             .length,
                         itemBuilder: (context, index) {
                           final filteredItems = provider.structures
-                              .where((item) => item.optionName!
+                              .where((item) => item.optionName
                                   .toLowerCase()
                                   .contains(searchQuery))
                               .toList();
@@ -510,57 +508,55 @@ class OverloadedFloatingButtonView extends StatelessWidget {
           children: [
             ViewDetailedLcTileWidget(
                 tileKey: 'Structure Code',
-                tileValue: "${structure.structureCode ?? "N/A"}"),
+                tileValue: structure.structureCode ?? "N/A"),
             ViewDetailedLcTileWidget(
-                tileKey: 'Landmark:',
-                tileValue: "${structure.landMark ?? "N/A"}"),
+                tileKey: 'Landmark:', tileValue: structure.landMark ?? "N/A"),
             ViewDetailedLcTileWidget(
                 tileKey: 'Distribution Name:',
                 tileValue: " ${structure.distributionName ?? "N/A"}"),
             ViewDetailedLcTileWidget(
-                tileKey: 'SS No:', tileValue: '${structure.ssNo ?? "N/A"}'),
+                tileKey: 'SS No:', tileValue: structure.ssNo ?? "N/A"),
             ViewDetailedLcTileWidget(
                 tileKey: 'Substation:',
                 tileValue: " ${structure.ssCode ?? "N/A"}"),
             ViewDetailedLcTileWidget(
-                tileKey: 'Feeder:',
-                tileValue: "${structure.feederCode ?? "N/A"}"),
+                tileKey: 'Feeder:', tileValue: structure.feederCode ?? "N/A"),
             ViewDetailedLcTileWidget(
                 tileKey: 'Structure Capacity:',
-                tileValue: "${structure.capacity ?? "N/A"}"),
+                tileValue: structure.capacity ?? "N/A"),
             ViewDetailedLcTileWidget(
                 tileKey: 'Structure Type: ',
-                tileValue: "${structure.structureType ?? "N/A"}"),
+                tileValue: structure.structureType ?? "N/A"),
             ViewDetailedLcTileWidget(
                 tileKey: 'Plinth Type: ',
-                tileValue: "${structure.plinthType ?? "N/A"}"),
+                tileValue: structure.plinthType ?? "N/A"),
             ViewDetailedLcTileWidget(
                 tileKey: 'AB Switch type:',
-                tileValue: "${structure.abSwitch ?? "N/A"}"),
+                tileValue: structure.abSwitch ?? "N/A"),
             ViewDetailedLcTileWidget(
                 tileKey: 'HG Fuse Sets:',
-                tileValue: "${structure.hgFuseSet ?? "N/A"}"),
+                tileValue: structure.hgFuseSet ?? "N/A"),
             ViewDetailedLcTileWidget(
                 tileKey: 'LT Fuse Sets:',
-                tileValue: "${structure.ltFuseSet ?? "N/A"}"),
+                tileValue: structure.ltFuseSet ?? "N/A"),
             ViewDetailedLcTileWidget(
                 tileKey: 'LT Fuse Type:',
                 tileValue: " ${structure.ltFuseType ?? "N/A"}"),
             ViewDetailedLcTileWidget(
                 tileKey: 'Load Pattern: ',
-                tileValue: "${structure.loadPattern ?? "N/A"}"),
+                tileValue: structure.loadPattern ?? "N/A"),
             ViewDetailedLcTileWidget(
                 tileKey: 'Latitude: ',
-                tileValue: "${structure.lat?.toString() ?? "N/A"}"),
+                tileValue: structure.lat?.toString() ?? "N/A"),
             ViewDetailedLcTileWidget(
                 tileKey: 'Longitude: ',
-                tileValue: "${structure.lon?.toString() ?? "N/A"}"),
+                tileValue: structure.lon?.toString() ?? "N/A"),
             ViewDetailedLcTileWidget(
                 tileKey: 'Date of Creation: ',
-                tileValue: "${structure.createdDate ?? "N/A"}"),
+                tileValue: structure.createdDate ?? "N/A"),
             ViewDetailedLcTileWidget(
                 tileKey: 'Employee ID: ',
-                tileValue: "${structure.createdBy ?? "N/A"}"),
+                tileValue: structure.createdBy ?? "N/A"),
           ],
         ),
       ),
@@ -592,7 +588,7 @@ class OverloadedFloatingButtonView extends StatelessWidget {
               width: 100,
               fit: BoxFit.cover,
             ),
-            SizedBox(width: 10),
+            const SizedBox(width: 10),
             Expanded(
               // Added to constrain the Column's width
               child: Column(

@@ -33,15 +33,16 @@ class DownloadFeederViewmodel extends ChangeNotifier {
   String? _selectedSubStation;
   String? get selectedSubStation => _selectedSubStation;
 
-  List<SubstationModel> _subStation = [];
+  final List<SubstationModel> _subStation = [];
 
   List<SubstationModel> get station => _subStation;
   void onListSubStationSelected(String? value) {
     _selectedSubStation = value;
-    _chooseFeeder=null;
+    _chooseFeeder = null;
     getFeeders();
     notifyListeners();
   }
+
   Future<void> getSubstations() async {
     _subStation.clear();
     if (_isLoading) return; // Prevent duplicate calls
@@ -51,8 +52,8 @@ class DownloadFeederViewmodel extends ChangeNotifier {
 
     try {
       final requestData = {
-        "authToken": SharedPreferenceHelper.getStringValue(
-            LoginSdkPrefs.tokenPrefKey),
+        "authToken":
+            SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
         "api": Apis.API_KEY,
       };
 
@@ -101,9 +102,7 @@ class DownloadFeederViewmodel extends ChangeNotifier {
 
       if (jsonList is String) {
         // Clean and parse JSON string
-        String cleanedJson = jsonList
-            .replaceAll(r'\"', '"')
-            .trim();
+        String cleanedJson = jsonList.replaceAll(r'\"', '"').trim();
 
         if (cleanedJson.endsWith(',')) {
           cleanedJson = cleanedJson.substring(0, cleanedJson.length - 1);
@@ -116,11 +115,9 @@ class DownloadFeederViewmodel extends ChangeNotifier {
         dataList = (jsonDecode(cleanedJson) as List)
             .map((json) => SubstationModel.fromJson(json))
             .toList();
-      }
-      else if (jsonList is List) {
-        dataList = jsonList
-            .map((json) => SubstationModel.fromJson(json))
-            .toList();
+      } else if (jsonList is List) {
+        dataList =
+            jsonList.map((json) => SubstationModel.fromJson(json)).toList();
       }
 
       _subStation.addAll(dataList);
@@ -134,7 +131,6 @@ class DownloadFeederViewmodel extends ChangeNotifier {
       notifyListeners();
     }
   }
-
 
 //3.feeder
   String? _chooseFeeder;
@@ -160,8 +156,9 @@ class DownloadFeederViewmodel extends ChangeNotifier {
 
     try {
       final requestData = {
-        "authToken": SharedPreferenceHelper.getStringValue(
-            LoginSdkPrefs.tokenPrefKey) ?? "",
+        "authToken":
+            SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ??
+                "",
         "api": Apis.API_KEY,
         "ss": _selectedSubStation ?? "",
       };
@@ -216,12 +213,12 @@ class DownloadFeederViewmodel extends ChangeNotifier {
         }
         dataList = (jsonDecode(cleanedJson) as List<dynamic>)
             .map((json) =>
-            SubstationModel.fromJson(json as Map<String, dynamic>))
+                SubstationModel.fromJson(json as Map<String, dynamic>))
             .toList();
       } else if (jsonList is List) {
-        dataList = (jsonList as List<dynamic>)
+        dataList = (jsonList)
             .map((json) =>
-            SubstationModel.fromJson(json as Map<String, dynamic>))
+                SubstationModel.fromJson(json as Map<String, dynamic>))
             .toList();
       }
 
@@ -242,28 +239,16 @@ class DownloadFeederViewmodel extends ChangeNotifier {
     }
   }
 
-
-
   Future<void> getCurrentLocation() async {
     try {
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
       );
 
-      if (position != null) {
-        _latitude = position.latitude.toString();
-        _longitude = position.longitude.toString();
-        isLocationGranted = true;
-        print("Geo Last known location: $_latitude , $_longitude");
-      } else {
-        // If no last known location, fetch current location
-        Position currentPosition = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high,
-        );
-        _latitude = currentPosition.latitude.toString();
-        _longitude = currentPosition.longitude.toString();
-        print("Geo Current location: $_latitude , $_longitude");
-      }
+      _latitude = position.latitude.toString();
+      _longitude = position.longitude.toString();
+      isLocationGranted = true;
+      print("Geo Last known location: $_latitude , $_longitude");
     } catch (e) {
       print("Error fetching location: $e");
       AlertUtils.showSnackBar(context, "Error fetching location", isTrue);
@@ -278,21 +263,21 @@ class DownloadFeederViewmodel extends ChangeNotifier {
 
       if (!validateForm()) {
         return;
-      }else{
+      } else {
         generateEquipmentNo();
       }
     }
   }
+
   bool validateForm() {
-    if (_selectedSubStation==''||_selectedSubStation==null) {
+    if (_selectedSubStation == '' || _selectedSubStation == null) {
       AlertUtils.showSnackBar(context, "Please select 33/11 KV SS", isTrue);
       print("Please select any one filter option");
       return false;
     }
-    if (_chooseFeeder==" " && _chooseFeeder==null ) { //not displaying error msg
-      AlertUtils.showSnackBar(
-          context, "Please choose Feeder",
-          isTrue);
+    if (_chooseFeeder == " " && _chooseFeeder == null) {
+      //not displaying error msg
+      AlertUtils.showSnackBar(context, "Please choose Feeder", isTrue);
       return false;
     }
     return true;
@@ -303,7 +288,8 @@ class DownloadFeederViewmodel extends ChangeNotifier {
     notifyListeners();
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
     };
 
@@ -329,7 +315,8 @@ class DownloadFeederViewmodel extends ChangeNotifier {
             responseData = jsonDecode(responseData);
           } catch (e) {
             print("Error decoding response data: $e");
-            showErrorDialog(context, "Invalid response format. Please try again.");
+            showErrorDialog(
+                context, "Invalid response format. Please try again.");
             return;
           }
         }
@@ -340,9 +327,13 @@ class DownloadFeederViewmodel extends ChangeNotifier {
               if (responseData['message'] != null) {
                 try {
                   final jsonMessage = responseData['message'];
-                  showSuccessDialog(context, jsonMessage, () {
-                    Navigation.instance.pushBack();
-                  },);
+                  showSuccessDialog(
+                    context,
+                    jsonMessage,
+                    () {
+                      Navigation.instance.pushBack();
+                    },
+                  );
                 } catch (e, stackTrace) {
                   print("Error parsing message: $e");
                   print("Stack trace: $stackTrace");
@@ -358,8 +349,8 @@ class DownloadFeederViewmodel extends ChangeNotifier {
             showSessionExpiredDialog(context);
           }
         } else {
-          showErrorDialog(context,
-              "Request failed with status: ${response.statusCode}");
+          showErrorDialog(
+              context, "Request failed with status: ${response.statusCode}");
         }
       }
     } catch (e) {
@@ -369,6 +360,4 @@ class DownloadFeederViewmodel extends ChangeNotifier {
       showErrorDialog(context, "An error occurred. Please try again.");
     }
   }
-
-
 }

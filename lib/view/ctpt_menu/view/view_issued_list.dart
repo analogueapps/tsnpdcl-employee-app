@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
@@ -15,7 +13,8 @@ class ViewIssuedList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => ViewFailureConfirmedViewmodel(context: context, status: "ADETRE_ISD"),
+      create: (_) =>
+          ViewFailureConfirmedViewmodel(context: context, status: "ADETRE_ISD"),
       child: Consumer<ViewFailureConfirmedViewmodel>(
         builder: (context, viewModel, child) {
           return Scaffold(
@@ -63,84 +62,84 @@ class ViewIssuedList extends StatelessWidget {
             body: viewModel.isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : ListView.builder(
-              itemCount: viewModel.failureReports.length,
-              itemBuilder: (context, index) {
-                if (viewModel.failureReports.isEmpty) {
-                  return const Center(child: Text("No data found"));
-                } else {
-                  final report = viewModel.failureReports[index];
-                  print("ctpt responsee: $report");
-                  return InkWell(
-                    onTap: () {
-                      // viewModel.navigateToIndividualReport();
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 10,
-                        horizontal: 10,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Reg No. ${report.data['reportId'] ?? 'N/A'}',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey.shade600,
-                                  fontSize: 18,
+                    itemCount: viewModel.failureReports.length,
+                    itemBuilder: (context, index) {
+                      if (viewModel.failureReports.isEmpty) {
+                        return const Center(child: Text("No data found"));
+                      } else {
+                        final report = viewModel.failureReports[index];
+                        print("ctpt responsee: $report");
+                        return InkWell(
+                          onTap: () {
+                            // viewModel.navigateToIndividualReport();
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 10,
+                              horizontal: 10,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Reg No. ${report.data['reportId'] ?? 'N/A'}',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey.shade600,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                    Text(
+                                      report.data['section'] ?? 'N/A',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: CommonColors.colorPrimary,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              Text(
-                                report.data['section'] ?? 'N/A',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: CommonColors.colorPrimary,
+                                Text(
+                                  'SC No. ${report.data['scNo'] ?? 'N/A'} ${report.data['cName'] != null && report.data['cName']!.isNotEmpty ? '(${report.data['cName']})' : ''}',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey.shade600,
+                                    fontSize: 18,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          Text(
-                            'SC No. ${report.data['scNo'] ?? 'N/A'} ${report.data['cName'] != null && report.data['cName']!.isNotEmpty ? '(${report.data['cName']})' : ''}',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey.shade600,
-                              fontSize: 18,
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      report.data['reportDate'] ?? 'N/A',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey.shade500,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    Text(
+                                      report.data['status'] ?? 'N/A',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+                                const Divider(color: Colors.grey, thickness: 1),
+                              ],
                             ),
                           ),
-                          Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                report.data['reportDate'] ?? 'N/A',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey.shade500,
-                                  fontSize: 12,
-                                ),
-                              ),
-                              Text(
-                                report.data['status'] ?? 'N/A',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.red,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          const Divider(color: Colors.grey, thickness: 1),
-                        ],
-                      ),
-                    ),
-                  );
-                }
-              },
-            ),
+                        );
+                      }
+                    },
+                  ),
           );
         },
       ),

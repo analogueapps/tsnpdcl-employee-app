@@ -32,9 +32,11 @@ class Middlepoles11kvViewmodel extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
   final Map<String, String> paramsHashMap = {};
   // final TextEditingController feederController = TextEditingController();
-  final TextEditingController workDescriptionController = TextEditingController();
+  final TextEditingController workDescriptionController =
+      TextEditingController();
   final TextEditingController sanctionNoController = TextEditingController();
-  final TextEditingController poleBLongitudeController = TextEditingController();
+  final TextEditingController poleBLongitudeController =
+      TextEditingController();
   final TextEditingController distanceController = TextEditingController();
   final TextEditingController remarksController = TextEditingController();
   final TextEditingController latPoleA11kv = TextEditingController();
@@ -60,7 +62,7 @@ class Middlepoles11kvViewmodel extends ChangeNotifier {
   }
 
   // Photo-related state
-  String _poleAPhoto11KV="";
+  String _poleAPhoto11KV = "";
   String get poleAPhoto11KV => _poleAPhoto11KV;
   final ImageUploader _poleA11ImageUploader = ImageUploader();
 
@@ -76,7 +78,8 @@ class Middlepoles11kvViewmodel extends ChangeNotifier {
                 ? 'Camera permission permanently denied. Enable in settings.'
                 : 'Camera permission denied'),
             action: status.isPermanentlyDenied
-                ? SnackBarAction(label: 'Settings', onPressed: openAppSettings)
+                ? const SnackBarAction(
+                    label: 'Settings', onPressed: openAppSettings)
                 : null,
           ),
         );
@@ -100,13 +103,15 @@ class Middlepoles11kvViewmodel extends ChangeNotifier {
       }
 
       // Upload photo if captured
-      ProcessDialogHelper.showProcessDialog(context, message: "Uploading image...");
+      ProcessDialogHelper.showProcessDialog(context,
+          message: "Uploading image...");
       notifyListeners();
-      final imageUrl = await _poleA11ImageUploader.uploadImage(context, File(photo.path));
+      final imageUrl =
+          await _poleA11ImageUploader.uploadImage(context, File(photo.path));
       print("middle poles 33kv: $imageUrl");
 
       if (imageUrl != null) {
-        _poleAPhoto11KV=imageUrl;
+        _poleAPhoto11KV = imageUrl;
         await _getCurrentLocation();
         print("Pole A Lat: $_latitude, Pole B Lon: $_longitude");
         if (_latitude != null && _longitude != null) {
@@ -117,7 +122,7 @@ class Middlepoles11kvViewmodel extends ChangeNotifier {
           print("calculating distance pole A");
           final double lat = double.tryParse(_latitude!) ?? 0.0;
           final double lon = double.tryParse(_longitude!) ?? 0.0;
-          capturePoleLocation("poleA",lat,lon );
+          capturePoleLocation("poleA", lat, lon);
         }
         notifyListeners();
         print("Image uploaded successfully: $imageUrl");
@@ -136,7 +141,7 @@ class Middlepoles11kvViewmodel extends ChangeNotifier {
   }
 
   //Pole B 11KV
-  String _poleB11PhotoPath="";
+  String _poleB11PhotoPath = "";
   String get poleB11PhotoPath => _poleB11PhotoPath;
   final ImageUploader _poleB11ImageUploader = ImageUploader();
 
@@ -152,7 +157,8 @@ class Middlepoles11kvViewmodel extends ChangeNotifier {
                 ? 'Camera permission permanently denied. Enable in settings.'
                 : 'Camera permission denied'),
             action: status.isPermanentlyDenied
-                ? SnackBarAction(label: 'Settings', onPressed: openAppSettings)
+                ? const SnackBarAction(
+                    label: 'Settings', onPressed: openAppSettings)
                 : null,
           ),
         );
@@ -176,19 +182,22 @@ class Middlepoles11kvViewmodel extends ChangeNotifier {
       }
 
       // Upload photo if captured
-      ProcessDialogHelper.showProcessDialog(context, message: "Uploading image...");
+      ProcessDialogHelper.showProcessDialog(context,
+          message: "Uploading image...");
       notifyListeners();
-      final imageUrl = await _poleB11ImageUploader.uploadImage(context, File(photo.path));
+      final imageUrl =
+          await _poleB11ImageUploader.uploadImage(context, File(photo.path));
       print("middle poles b 33kv: $imageUrl");
 
       if (imageUrl != null) {
-        _poleB11PhotoPath=imageUrl;
-        if((_longitude!=null&&_longitude!=null)||(_longitude==null&&_longitude==null)) {
+        _poleB11PhotoPath = imageUrl;
+        if ((_longitude != null && _longitude != null) ||
+            (_longitude == null && _longitude == null)) {
           _handleLocationIconClick();
           print("calculating distance pole B");
           final double lat = double.tryParse(_latitude!) ?? 0.0;
           final double lon = double.tryParse(_longitude!) ?? 0.0;
-          capturePoleLocation("poleB",lat, lon );
+          capturePoleLocation("poleB", lat, lon);
         }
         notifyListeners();
         print("Image uploaded successfully: $imageUrl");
@@ -218,10 +227,7 @@ class Middlepoles11kvViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-
-
   void _handleLocationIconClick() async {
-
     bool isLocationEnabled = await Geolocator.isLocationServiceEnabled();
     if (!isLocationEnabled) {
       // Show a dialog to enable location services
@@ -233,7 +239,8 @@ class Middlepoles11kvViewmodel extends ChangeNotifier {
             onWillPop: () async => false,
             child: AlertDialog(
               title: const Text("Location Service Disabled"),
-              content: const Text("Please enable location services to use this feature."),
+              content: const Text(
+                  "Please enable location services to use this feature."),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
@@ -257,7 +264,7 @@ class Middlepoles11kvViewmodel extends ChangeNotifier {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text("Location permissions are denied."),
           ),
         );
@@ -270,16 +277,17 @@ class Middlepoles11kvViewmodel extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text("Location Permission Required"),
-            content: Text("Location permissions are permanently denied. Please enable them in the app settings."),
+            title: const Text("Location Permission Required"),
+            content: const Text(
+                "Location permissions are permanently denied. Please enable them in the app settings."),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
-                child: Text("Cancel"),
+                child: const Text("Cancel"),
               ),
               TextButton(
                 onPressed: () => Navigator.of(context).pop(true),
-                child: Text("Open Settings"),
+                child: const Text("Open Settings"),
               ),
             ],
           );
@@ -292,16 +300,16 @@ class Middlepoles11kvViewmodel extends ChangeNotifier {
       }
     }
 
-    if (permission != LocationPermission.whileInUse && permission != LocationPermission.always) {
+    if (permission != LocationPermission.whileInUse &&
+        permission != LocationPermission.always) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text("Location permissions are still denied."),
         ),
       );
       return;
     }
     await _getCurrentLocation();
-
   }
 
   Future<void> _getCurrentLocation() async {
@@ -315,9 +323,9 @@ class Middlepoles11kvViewmodel extends ChangeNotifier {
       safeNotifyListeners();
     } catch (e) {
       print("Error fetching location: $e");
-
     }
   }
+
   bool _disposed = false;
   void safeNotifyListeners() {
     if (!_disposed) {
@@ -331,13 +339,13 @@ class Middlepoles11kvViewmodel extends ChangeNotifier {
   List<SubstationModel> _feeder = [];
   List<SubstationModel> get feeder => _feeder;
 
-
   void onListFeederSelected(String? value) {
     if (value != null && _feeder.any((item) => item.optionCode == value)) {
       _selectedFeeder = value;
       notifyListeners();
     }
   }
+
   Future<void> getFeeders() async {
     _isLoading = true;
     _feeder.clear();
@@ -346,9 +354,13 @@ class Middlepoles11kvViewmodel extends ChangeNotifier {
 
     try {
       final requestData = {
-        "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ?? "",
+        "authToken":
+            SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ??
+                "",
         "api": Apis.API_KEY,
-        "sdc": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.subDivisionPrefKey) ?? "",
+        "sdc": SharedPreferenceHelper.getStringValue(
+                LoginSdkPrefs.subDivisionPrefKey) ??
+            "",
       };
 
       final payload = {
@@ -369,7 +381,8 @@ class Middlepoles11kvViewmodel extends ChangeNotifier {
         }
 
         if (response.statusCode == successResponseCode) {
-          if (responseData['tokenValid'] == isTrue||responseData['tokenValid'] == isFalse) {
+          if (responseData['tokenValid'] == isTrue ||
+              responseData['tokenValid'] == isFalse) {
             if (responseData['success'] == isTrue) {
               if (responseData['objectJson'] != null) {
                 try {
@@ -378,10 +391,13 @@ class Middlepoles11kvViewmodel extends ChangeNotifier {
 
                   if (jsonList is String) {
                     final parsedList = jsonDecode(jsonList) as List;
-                    dataList = parsedList.map((json) => SubstationModel.fromJson(json)).toList();
-
+                    dataList = parsedList
+                        .map((json) => SubstationModel.fromJson(json))
+                        .toList();
                   } else if (jsonList is List) {
-                    dataList = jsonList.map((json) => SubstationModel.fromJson(json)).toList();
+                    dataList = jsonList
+                        .map((json) => SubstationModel.fromJson(json))
+                        .toList();
                   }
 
                   _feeder.clear();
@@ -389,12 +405,14 @@ class Middlepoles11kvViewmodel extends ChangeNotifier {
                   if (_feeder.isNotEmpty) {
                     _selectedFeeder = _feeder.first.optionCode;
                   }
-                      notifyListeners();
-                  print("feeder data in 11KV: ${_feeder.length} items loaded here");
+                  notifyListeners();
+                  print(
+                      "feeder data in 11KV: ${_feeder.length} items loaded here");
                 } catch (e, stackTrace) {
                   print("Error parsing objectJson: $e");
                   print("Stack trace: $stackTrace");
-                  showErrorDialog(context, "Failed to parse pending and finished data. Please contact support.");
+                  showErrorDialog(context,
+                      "Failed to parse pending and finished data. Please contact support.");
                 }
               } else {
                 _feeder = []; // Clear list if no data
@@ -408,8 +426,10 @@ class Middlepoles11kvViewmodel extends ChangeNotifier {
             showSessionExpiredDialog(context);
           }
         } else {
-          showAlertDialog(context, responseData['message'] ??
-              "Request failed with status ${response.statusCode}");
+          showAlertDialog(
+              context,
+              responseData['message'] ??
+                  "Request failed with status ${response.statusCode}");
         }
       } else {
         showAlertDialog(context, "No response received from server");
@@ -444,7 +464,8 @@ class Middlepoles11kvViewmodel extends ChangeNotifier {
     }
 
     // If both poles are captured, calculate the distance
-    if (paramsHashMap.containsKey("poleALat") && paramsHashMap.containsKey("poleBLat")) {
+    if (paramsHashMap.containsKey("poleALat") &&
+        paramsHashMap.containsKey("poleBLat")) {
       LatLng poleA = LatLng(
         double.parse(paramsHashMap["poleALat"]!),
         double.parse(paramsHashMap["poleALon"]!),
@@ -472,7 +493,7 @@ class Middlepoles11kvViewmodel extends ChangeNotifier {
     dist = acos(dist);
     dist = rad2deg(dist);
     dist = dist * 60 * 1.1515; // miles
-    double distanceInMeters = dist * 1000 * 1.609344;  // convert to meters
+    double distanceInMeters = dist * 1000 * 1.609344; // convert to meters
     return NumberFormat("0.00").format(distanceInMeters); // two decimal places
   }
 
@@ -492,12 +513,13 @@ class Middlepoles11kvViewmodel extends ChangeNotifier {
 
       if (!validateForm()) {
         return;
-      }else{
+      } else {
         updateForm();
         print("in else block");
       }
     }
   }
+
   bool validateForm() {
     // if (selectedFeeder==null||selectedFeeder=="") {
     //   AlertUtils.showSnackBar(
@@ -505,78 +527,73 @@ class Middlepoles11kvViewmodel extends ChangeNotifier {
     //       isTrue);
     //   return false;
     // }
-    if (selectedPoleType==null||selectedPoleType=="") {
-    AlertUtils.showSnackBar(
-    context, "Please enter pole type",
-    isTrue);
-    return false;
-    }else if (workDescriptionController.text=="") {
+    if (selectedPoleType == null || selectedPoleType == "") {
+      AlertUtils.showSnackBar(context, "Please enter pole type", isTrue);
+      return false;
+    } else if (workDescriptionController.text == "") {
       AlertUtils.showSnackBar(
-          context, "Please enter Work Description ",
+          context, "Please enter Work Description ", isTrue);
+      return false;
+    } else if (sanctionNoController.text == "") {
+      AlertUtils.showSnackBar(context, "Please enter sanction no", isTrue);
+      return false;
+    } else if (poleAPhoto11KV == "") {
+      AlertUtils.showSnackBar(
+          context, "Please capture pole A details photo ", isTrue);
+      return false;
+    } else if (poleB11PhotoPath == "") {
+      AlertUtils.showSnackBar(
+          context, "Please capture pole B details photo ", isTrue);
+      return false;
+    } else if ((latPoleA11kv.text == '') && (latPoleA11kv.text == '')) {
+      AlertUtils.showSnackBar(
+          context,
+          "Please wait until we capture your location, make sure you turn on your location",
           isTrue);
       return false;
-    }else if (sanctionNoController.text==null||sanctionNoController.text=="") {
+    } else if ((latPoleB11kv.text == '') && (logPoleB11kv.text == '')) {
       AlertUtils.showSnackBar(
-          context, "Please enter sanction no",
+          context,
+          "Please wait until we capture your location, make sure you turn on your location",
           isTrue);
       return false;
-    }
-    else if (poleAPhoto11KV==null||poleAPhoto11KV=="") {
+    } else if (distanceController.text == "") {
       AlertUtils.showSnackBar(
-          context, "Please capture pole A details photo ",
-          isTrue);
-      return false;
-    } else if (poleB11PhotoPath==null||poleB11PhotoPath=="") {
-      AlertUtils.showSnackBar(
-          context, "Please capture pole B details photo ",
-          isTrue);
-      return false;
-    }else if ((latPoleA11kv.text==''||logPoleA11kv.text==null)&&(latPoleA11kv.text==''||logPoleA11kv.text==null)) {
-      AlertUtils.showSnackBar(context, "Please wait until we capture your location, make sure you turn on your location", isTrue);
-      return false;
-    }else if ((latPoleB11kv.text==''||logPoleB11kv.text==null)&&(logPoleB11kv.text==''||logPoleB11kv.text==null)) {
-      AlertUtils.showSnackBar(context, "Please wait until we capture your location, make sure you turn on your location", isTrue);
-      return false;
-    }
-    else if (distanceController.text==null||distanceController.text=="") {
-      AlertUtils.showSnackBar(
-          context, "Please wait until we calculate distance ",
-          isTrue);
+          context, "Please wait until we calculate distance ", isTrue);
       return false;
     }
     return true;
   }
 
-  Map<String, dynamic>   getUpdateData( ) {
+  Map<String, dynamic> getUpdateData() {
     return {
-      "poleBLat":latPoleB11kv.text,
-      "poleBLon":logPoleB11kv.text,
-      "poleBImageUrl":poleB11PhotoPath,
-      "poleALon":logPoleA11kv.text,
-      "poleALat":latPoleA11kv.text,
-      "poleAImageUrl":poleAPhoto11KV,
-      "remarksBySurveyor":remarksController.text,
-      "workDescription":workDescriptionController.text,
-      "feederCode11kv":selectedFeeder=="00"?"":selectedFeeder,//feederName11kv
-      "poleType":selectedPoleType,
-      "sanctionNo":sanctionNoController.text,
-      "distance":distanceController.text,
+      "poleBLat": latPoleB11kv.text,
+      "poleBLon": logPoleB11kv.text,
+      "poleBImageUrl": poleB11PhotoPath,
+      "poleALon": logPoleA11kv.text,
+      "poleALat": latPoleA11kv.text,
+      "poleAImageUrl": poleAPhoto11KV,
+      "remarksBySurveyor": remarksController.text,
+      "workDescription": workDescriptionController.text,
+      "feederCode11kv":
+          selectedFeeder == "00" ? "" : selectedFeeder, //feederName11kv
+      "poleType": selectedPoleType,
+      "sanctionNo": sanctionNoController.text,
+      "distance": distanceController.text,
       //sectionnn: NAKKALAGUTTA
       // I/flutter (25728): subdivisionCode: 402911001
-
     };
   }
 
   Future<void> updateForm() async {
-    print("feederName11kv:${selectedFeeder=="00"?"":selectedFeeder}");
+    print("feederName11kv:${selectedFeeder == "00" ? "" : selectedFeeder}");
     print("${jsonEncode(getUpdateData())}:JsoonEncode data");
-
 
     final requestData = {
       "authToken":
-      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
-      "updateDataJson":jsonEncode(getUpdateData()),
+      "updateDataJson": jsonEncode(getUpdateData()),
     };
 
     final payload = {
@@ -593,7 +610,7 @@ class Middlepoles11kvViewmodel extends ChangeNotifier {
       print("load structure response: $response");
       if (response != null) {
         var responseData = response.data;
-        if(responseData!=null){
+        if (responseData != null) {
           Navigator.pop(context);
         }
         // if (responseData is String) {
@@ -631,5 +648,4 @@ class Middlepoles11kvViewmodel extends ChangeNotifier {
       showErrorDialog(context, "An error occurred. Please try again.");
     }
   }
-
 }

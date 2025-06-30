@@ -10,14 +10,14 @@ import 'package:tsnpdcl_employee/utils/alerts.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/view/schedules/models/33kv_model.dart';
-import 'package:tsnpdcl_employee/view/schedules/models/view_schedule_model.dart';
 
-class SsInspetionViewmodel extends ChangeNotifier{
+class SsInspetionViewmodel extends ChangeNotifier {
   SsInspetionViewmodel({required this.context, required this.data});
 
   final BuildContext context;
   final Map<String, dynamic> data;
-  final List<SSMaintenanceAttributesEntity> ssMaintenanceAttributesEntityList = [];
+  final List<SSMaintenanceAttributesEntity> ssMaintenanceAttributesEntityList =
+      [];
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -120,7 +120,7 @@ class SsInspetionViewmodel extends ChangeNotifier{
     InspectionItem('DAMAGED CONNECTOR'),
     InspectionItem('SLACKNESS'),
   ];
-  List<InspectionItem>KV11ctsItems = [
+  List<InspectionItem> KV11ctsItems = [
     InspectionItem('OK'),
     InspectionItem('OIL LEAKAGE'),
     InspectionItem('DAMAGED CONNECTING BUSH RODS'),
@@ -187,69 +187,88 @@ class SsInspetionViewmodel extends ChangeNotifier{
   void handleVcbCheck(int index, bool? value) {
     handleSectionCheck(vcbItems, index, value);
   }
+
   void handleCtsCheck(int index, bool? value) {
     handleSectionCheck(ctsItems, index, value);
   }
+
   void handlePoseTypeCheck(int index, bool? value) {
     handleSectionCheck(postTypeItems, index, value);
   }
+
   void handleHgFuseCheck(int index, bool? value) {
     handleSectionCheck(hgFuseItems, index, value);
   }
+
   void handleFuseWireCheck(int index, bool? value) {
     handleSectionCheck(fuseWireItems, index, value);
   }
+
   void handlePtsCheck(int index, bool? value) {
     handleSectionCheck(ptsItems, index, value);
   }
+
   void handlePtrCheck(int index, bool? value) {
     handleSectionCheck(ptrItems, index, value);
   }
+
   void handleGroupVcbCheck(int index, bool? value) {
     handleSectionCheck(groupVcbItems, index, value);
   }
+
   void handleGroupABSwitchCheck(int index, bool? value) {
     handleSectionCheckForGroupABSwitch(groupABSwitchItems, index, value);
   }
+
   void handleKV11BusCouplerCheck(int index, bool? value) {
     handleSectionCheck(KV11busCouplerItems, index, value);
   }
+
   void handleBusConnectorsCheck(int index, bool? value) {
     handleSectionCheck(busBarConnectorsItems, index, value);
   }
+
   void handleKV11CtsCheck(int index, bool? value) {
     handleSectionCheck(KV11ctsItems, index, value);
   }
+
   void handleKV11VcbCheck(int index, bool? value) {
     handleSectionCheck(KV11vcbItems, index, value);
   }
+
   void handleFdrABSwitchCheck(int index, bool? value) {
     handleSectionCheck(fdrABSwitchItems, index, value);
   }
+
   void handleKV11PtsCheck(int index, bool? value) {
     handleSectionCheck(KV11ptsItems, index, value);
   }
+
   void handleCapacitorCheckCheck(int index, bool? value) {
     handleSectionCheck(capacitorBankItems, index, value);
   }
+
   void handleStationDtrCheck(int index, bool? value) {
     handleSectionCheck(stationDtrItems, index, value);
   }
+
   void handleSsEarthingCheck(int index, bool? value) {
     handleSectionCheck(ssEarthingItems, index, value);
   }
+
   void handleYardLightingCheck(int index, bool? value) {
     handleSectionCheck(yardLightingItems, index, value);
   }
+
   void handleRedHotsCheck(int index, bool? value) {
     handleSectionCheck(redHotsItems, index, value);
   }
 
   void handleSectionCheck(
-      List<InspectionItem> items,
-      int index,
-      bool? value,
-      ) {
+    List<InspectionItem> items,
+    int index,
+    bool? value,
+  ) {
     if (index == 0) {
       if (value == true) {
         for (int i = 1; i < items.length; i++) {
@@ -267,18 +286,18 @@ class SsInspetionViewmodel extends ChangeNotifier{
   }
 
   void handleSectionCheckForGroupABSwitch(
-      List<InspectionItem> items,
-      int index,
-      bool? value,
-      ) {
+    List<InspectionItem> items,
+    int index,
+    bool? value,
+  ) {
     if (index == 0) {
       if (value == true) {
         for (int i = 1; i < items.length; i++) {
-          if(i==2 && items[2].isChecked == true ){
+          if (i == 2 && items[2].isChecked == true) {
             continue;
-          } else if(i==3 && items[3].isChecked == true ){
+          } else if (i == 3 && items[3].isChecked == true) {
             continue;
-          }else{
+          } else {
             items[i].isChecked = false;
           }
         }
@@ -294,10 +313,10 @@ class SsInspetionViewmodel extends ChangeNotifier{
   }
 
   void handleSectionCheckKV33Las(
-      List<InspectionItem> items,
-      int index,
-      bool? value,
-      ) {
+    List<InspectionItem> items,
+    int index,
+    bool? value,
+  ) {
     value = value ?? false;
 
     if (index == 0) {
@@ -308,8 +327,7 @@ class SsInspetionViewmodel extends ChangeNotifier{
       }
       items[0].isChecked = value;
       if (value) items[1].isChecked = false;
-    }
-    else if (index == 1) {
+    } else if (index == 1) {
       if (value) {
         for (int i = 2; i < items.length; i++) {
           items[i].isChecked = false;
@@ -317,8 +335,7 @@ class SsInspetionViewmodel extends ChangeNotifier{
         items[0].isChecked = false;
       }
       items[1].isChecked = value;
-    }
-    else {
+    } else {
       if (value) {
         items[0].isChecked = false;
         items[1].isChecked = false;
@@ -329,26 +346,28 @@ class SsInspetionViewmodel extends ChangeNotifier{
     notifyListeners();
   }
 
-  bool validateSection(List<InspectionItem> items, String sectionName,BuildContext context) {
+  bool validateSection(
+      List<InspectionItem> items, String sectionName, BuildContext context) {
     bool atLeastOneChecked = items.any((item) => item.isChecked);
     if (!atLeastOneChecked) {
-     // ScaffoldMessenger.of(context).showSnackBar(
-     //    SnackBar(
-     //      content: Text('Please select $sectionName status'),
-     //      duration: Duration(seconds: 2),
-     //    ),
-     //  );
-     AlertUtils.showSnackBar(context, 'Please select $sectionName status', isTrue);
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //    SnackBar(
+      //      content: Text('Please select $sectionName status'),
+      //      duration: Duration(seconds: 2),
+      //    ),
+      //  );
+      AlertUtils.showSnackBar(
+          context, 'Please select $sectionName status', isTrue);
       return false;
     }
     return true;
   }
 
   List<SSMaintenanceAttributesEntity> buildAttributes(
-      String attributeType,
-      List<InspectionItem> items,
-      String ssCode,
-      ) {
+    String attributeType,
+    List<InspectionItem> items,
+    String ssCode,
+  ) {
     return items.map((item) {
       return SSMaintenanceAttributesEntity(
         attributeType: attributeType,
@@ -363,34 +382,48 @@ class SsInspetionViewmodel extends ChangeNotifier{
   SSMaintenanceEntity buildSSMaintenanceEntity(String ssCode) {
     final allAttributes = <SSMaintenanceAttributesEntity>[];
 
-    allAttributes.addAll(buildAttributes("33KV AB SWITCH", abSwitchItems, ssCode));
-    allAttributes.addAll(buildAttributes("33KV BUS BAR CONNECTORS", busBarConnectorItems, ssCode));
-    allAttributes.addAll(buildAttributes("33KV BUS COUPLER", busCouplerItems, ssCode));
+    allAttributes
+        .addAll(buildAttributes("33KV AB SWITCH", abSwitchItems, ssCode));
+    allAttributes.addAll(buildAttributes(
+        "33KV BUS BAR CONNECTORS", busBarConnectorItems, ssCode));
+    allAttributes
+        .addAll(buildAttributes("33KV BUS COUPLER", busCouplerItems, ssCode));
 
     allAttributes.addAll(buildAttributes("33KV LA(S)", laItems, ssCode));
     allAttributes.addAll(buildAttributes("33KV VCB", vcbItems, ssCode));
     allAttributes.addAll(buildAttributes("33KV CT(S)", ctsItems, ssCode));
-    allAttributes.addAll(buildAttributes("33KV Post Type Insulator", postTypeItems, ssCode));
-    allAttributes.addAll(buildAttributes("33KV HG Fuse Sets", hgFuseItems, ssCode));
-    allAttributes.addAll(buildAttributes("33KV Fuse Wire", fuseWireItems, ssCode));
+    allAttributes.addAll(
+        buildAttributes("33KV Post Type Insulator", postTypeItems, ssCode));
+    allAttributes
+        .addAll(buildAttributes("33KV HG Fuse Sets", hgFuseItems, ssCode));
+    allAttributes
+        .addAll(buildAttributes("33KV Fuse Wire", fuseWireItems, ssCode));
     allAttributes.addAll(buildAttributes("33KV PT(S)", ptsItems, ssCode));
     allAttributes.addAll(buildAttributes("PTR", ptrItems, ssCode));
-    allAttributes.addAll(buildAttributes("Group VCB(S)", groupVcbItems, ssCode));
-    allAttributes.addAll(buildAttributes("11KV Group AB Switch", groupABSwitchItems, ssCode));
-    allAttributes.addAll(buildAttributes("11KV Bus Coupler", KV11busCouplerItems, ssCode));
-    allAttributes.addAll(buildAttributes("11KV Bus Bar Connectors", busBarConnectorsItems, ssCode));
+    allAttributes
+        .addAll(buildAttributes("Group VCB(S)", groupVcbItems, ssCode));
+    allAttributes.addAll(
+        buildAttributes("11KV Group AB Switch", groupABSwitchItems, ssCode));
+    allAttributes.addAll(
+        buildAttributes("11KV Bus Coupler", KV11busCouplerItems, ssCode));
+    allAttributes.addAll(buildAttributes(
+        "11KV Bus Bar Connectors", busBarConnectorsItems, ssCode));
     allAttributes.addAll(buildAttributes("11KV CT(S)", KV11ctsItems, ssCode));
     allAttributes.addAll(buildAttributes("11KV VCB", KV11vcbItems, ssCode));
-    allAttributes.addAll(buildAttributes("11KV FDR AB Switch", fdrABSwitchItems, ssCode));
+    allAttributes.addAll(
+        buildAttributes("11KV FDR AB Switch", fdrABSwitchItems, ssCode));
     allAttributes.addAll(buildAttributes("11KV PT(S)", KV11ptsItems, ssCode));
-    allAttributes.addAll(buildAttributes("Capacitor Bank", capacitorBankItems, ssCode));
-    allAttributes.addAll(buildAttributes("Station DTR", stationDtrItems, ssCode));
-    allAttributes.addAll(buildAttributes("SS Earthing", ssEarthingItems, ssCode));
-    allAttributes.addAll(buildAttributes("Yard Lights", yardLightingItems, ssCode));
+    allAttributes
+        .addAll(buildAttributes("Capacitor Bank", capacitorBankItems, ssCode));
+    allAttributes
+        .addAll(buildAttributes("Station DTR", stationDtrItems, ssCode));
+    allAttributes
+        .addAll(buildAttributes("SS Earthing", ssEarthingItems, ssCode));
+    allAttributes
+        .addAll(buildAttributes("Yard Lights", yardLightingItems, ssCode));
     allAttributes.addAll(buildAttributes("Red Hots", redHotsItems, ssCode));
     addBodyCurrentAttributes(ssCode, data['i_ng'] ?? '', data['i_bg'] ?? '');
     allAttributes.addAll(ssMaintenanceAttributesEntityList);
-
 
     return SSMaintenanceEntity(
       ssCode: ssCode,
@@ -403,49 +436,54 @@ class SsInspetionViewmodel extends ChangeNotifier{
     notifyListeners();
 
     final ssCode = data['ssCode'];
-    final scheduledId=data['scheduleId'];
+    final scheduledId = data['scheduleId'];
     print("SS Inspection $ssCode $scheduledId");
     final ssMaintenanceEntity = buildSSMaintenanceEntity(ssCode);
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployees",
-      "ssCode":ssCode,
+      "ssCode": ssCode,
       "data": jsonEncode(ssMaintenanceEntity.toJson()),
-      "scheduleId":data['scheduleId']
+      "scheduleId": data['scheduleId']
     };
     try {
-      var response = await ApiProvider(baseUrl: Apis.SS_END_POINT_BASE_URL).postApiCall(context, Apis.SAVE_INSPECTION, payload);
+      var response = await ApiProvider(baseUrl: Apis.SS_END_POINT_BASE_URL)
+          .postApiCall(context, Apis.SAVE_INSPECTION, payload);
 
       if (response != null) {
         if (response.data is String) {
           response.data = jsonDecode(response.data); // Parse string to JSON
         }
         if (response.statusCode == successResponseCode) {
-          if(response.data['sessionValid']==isTrue){
+          if (response.data['sessionValid'] == isTrue) {
             if (response.data['taskSuccess'] == isTrue) {
               if (response.data['message'] != null) {
-                showSuccessDialog(context, response.data['message'], (){Navigator.pop(context);});
+                showSuccessDialog(context, response.data['message'], () {
+                  Navigator.pop(context);
+                });
               }
             }
           } else {
             showAlertDialog(context, response.data['message']);
           }
         } else {
-          showAlertDialog(context,response.data['message']);
+          showAlertDialog(context, response.data['message']);
         }
       }
     } catch (e) {
       _isLoading = true;
       notifyListeners();
-      showErrorDialog(context,  "An error occurred. Please try again.");
+      showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
-    }finally {
+    } finally {
       _isLoading = false;
       notifyListeners();
     }
   }
 
-  void addBodyCurrentAttributes(String ssCode, String iNgValue, String iBgValue) {
+  void addBodyCurrentAttributes(
+      String ssCode, String iNgValue, String iBgValue) {
     final iNg = SSMaintenanceAttributesEntity(
       attributeType: "BODY CURRENT I(N-G)",
       attributeValue: iNgValue,

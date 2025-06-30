@@ -27,8 +27,7 @@ import 'package:tsnpdcl_employee/view/line_clearance/model/spinner_list.dart';
 import 'package:tsnpdcl_employee/view/rfss/database/mapping_agl_db/agl_databases/structure_code_db.dart';
 
 class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
-  Pole11kvFeederMarkViewmodel(
-      {required this.context, required this.args}){
+  Pole11kvFeederMarkViewmodel({required this.context, required this.args}) {
     startListening();
     _handleLocation();
     _initializeCameraPosition();
@@ -55,7 +54,6 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
 
   String get ssn => args['ssn'];
 
-
   double? latitude;
   double? longitude;
   double? totalAccuracy;
@@ -68,8 +66,10 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
   final TextEditingController particularsOfCrossing = TextEditingController();
   final TextEditingController remarksController = TextEditingController();
 
-  String empName=SharedPreferenceHelper.getStringValue(LoginSdkPrefs.empNameKey);
-  String empDesignation=SharedPreferenceHelper.getStringValue(LoginSdkPrefs.designationCodeKey);
+  String empName =
+      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.empNameKey);
+  String empDesignation =
+      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.designationCodeKey);
   PoleFeederEntity? poleData;
 
   List<int> undoStack = [];
@@ -96,7 +96,7 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
   CameraPosition? _cameraPosition;
 
   LatLng get currentLocation => _currentLocation;
-  LatLng humanLocation= const LatLng(0, 0);
+  LatLng humanLocation = const LatLng(0, 0);
 
   // Update to nullable getter and setter
   CameraPosition? get cameraPosition => _cameraPosition;
@@ -130,7 +130,7 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
   Future<void> _addHumanMarker() async {
     final humanIcon = await _bitmapDescriptorFromAsset(Assets.human);
     markers.add(Marker(
-      markerId:  MarkerId("$empName($empDesignation)"),
+      markerId: MarkerId("$empName($empDesignation)"),
       position: humanLocation,
       icon: humanIcon,
       infoWindow: InfoWindow(
@@ -141,7 +141,7 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
 
   Future<void> processMapData(bool drawHuman) async {
     if (poleFeederList.isEmpty) return;
-    if(followSwitch && humanLocation!= null){
+    if (followSwitch) {
       await _addHumanMarker();
       mapController?.animateCamera(CameraUpdate.newCameraPosition(
         CameraPosition(target: humanLocation, zoom: 18),
@@ -150,16 +150,21 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
 
     for (int i = 0; i < poleFeederList.length; i++) {
       final entity = poleFeederList[i];
-      maxId=max(poleFeederList[i].id,maxId);
+      maxId = max(poleFeederList[i].id, maxId);
       if (entity.sourceLat != null && entity.sourceLon != null) {
         final polyline = Polyline(
           polylineId: PolylineId('polyline_$i'),
           points: [
-            LatLng(double.parse(entity.sourceLat!), double.parse(entity.sourceLon!)),
+            LatLng(double.parse(entity.sourceLat!),
+                double.parse(entity.sourceLon!)),
             LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
           ],
           width: 4,
-          color: entity.tempSeries != null ? Colors.blue : entity.newProposalId != null ? Colors.red : Colors.black,
+          color: entity.tempSeries != null
+              ? Colors.blue
+              : entity.newProposalId != null
+                  ? Colors.red
+                  : Colors.black,
         );
         polylines.add(polyline);
 
@@ -190,12 +195,10 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
         addMarkerWithEntity(entity);
       }
 
-      if(!drawHuman){
+      if (!drawHuman) {
         _addSpecialMarkers(entity);
-
       }
       if (i == poleFeederList.length - 1) {
-
         _cameraPosition = CameraPosition(
           target: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
           zoom: 14.0,
@@ -218,7 +221,9 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
       markers.add(Marker(
         markerId: MarkerId('sourceType_${entity.id}'),
         position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
-        icon: entity.feederVolt == "33KV" ? await _bitmapDescriptorFromAsset(Assets.ss132Kv) : await _bitmapDescriptorFromAsset(Assets.ss33Kv),
+        icon: entity.feederVolt == "33KV"
+            ? await _bitmapDescriptorFromAsset(Assets.ss132Kv)
+            : await _bitmapDescriptorFromAsset(Assets.ss33Kv),
       ));
     }
 
@@ -227,21 +232,24 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
         case 'ss':
           markers.add(Marker(
             markerId: MarkerId('loadType_ss_${entity.id}'),
-            position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+            position:
+                LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
             icon: await _bitmapDescriptorFromAsset(Assets.ss33Kv),
           ));
           break;
         case 'dtr':
           markers.add(Marker(
             markerId: MarkerId('loadType_dtr_${entity.id}'),
-            position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+            position:
+                LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
             icon: await _bitmapDescriptorFromAsset(Assets.dtr),
           ));
           break;
         case 'ht':
           markers.add(Marker(
             markerId: MarkerId('loadType_ht_${entity.id}'),
-            position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+            position:
+                LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
             icon: await _bitmapDescriptorFromAsset(Assets.htService),
           ));
           break;
@@ -260,7 +268,6 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
         ),
       ),
       textDirection: ui.TextDirection.ltr,
-
     );
     textPainter.layout(minWidth: 0, maxWidth: double.infinity);
 
@@ -274,7 +281,7 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
     );
 
     // Center the text
-    textPainter.paint(canvas, Offset(0, 0)); // Adjust if necessary
+    textPainter.paint(canvas, const Offset(0, 0)); // Adjust if necessary
 
     final picture = recorder.endRecording();
     final img = await picture.toImage(
@@ -282,7 +289,8 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
       textPainter.height.toInt(),
     );
 
-    final ByteData? byteData = await img.toByteData(format: ui.ImageByteFormat.png);
+    final ByteData? byteData =
+        await img.toByteData(format: ui.ImageByteFormat.png);
     if (byteData != null) {
       final Uint8List uint8List = byteData.buffer.asUint8List();
       final bitmapDescriptor = BitmapDescriptor.fromBytes(uint8List);
@@ -300,7 +308,8 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
     }
   }
 
-  LatLng _calculateMidpoint(double lat1, double lon1, double lat2, double lon2) {
+  LatLng _calculateMidpoint(
+      double lat1, double lon1, double lat2, double lon2) {
     double midLat = (lat1 + lat2) / 2;
     double midLon = (lon1 + lon2) / 2;
     return LatLng(midLat, midLon);
@@ -313,9 +322,13 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
 
   Future<Uint8List> _getBytesFromAsset(String path, int width) async {
     ByteData byteData = await rootBundle.load(path);
-    ui.Codec codec = await ui.instantiateImageCodec(byteData.buffer.asUint8List());
+    ui.Codec codec =
+        await ui.instantiateImageCodec(byteData.buffer.asUint8List());
     ui.FrameInfo fi = await codec.getNextFrame();
-    final Uint8List resizedData = (await fi.image.toByteData(format: ui.ImageByteFormat.png))!.buffer.asUint8List();
+    final Uint8List resizedData =
+        (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
+            .buffer
+            .asUint8List();
     return resizedData;
   }
 
@@ -343,7 +356,7 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
       onTap: () {
         // poleSelectedOnMap();
         _onMarkerTap(markerId, entity);
-        poleData=entity;
+        poleData = entity;
       },
     );
 
@@ -393,9 +406,8 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
                     'voltage': entity.voltage,
                     'scheduleId': 0,
                   };
-                  Navigation.instance.navigateTo(
-                      Routes.pmiInspectionForm,
-                      args: argument);
+                  Navigation.instance
+                      .navigateTo(Routes.pmiInspectionForm, args: argument);
                 },
                 child: const Text("Enter PMI data"),
               ),
@@ -410,9 +422,8 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
                     'fn': feederName,
                     'digitalPoleId': entity.id,
                   };
-                  Navigation.instance.navigateTo(
-                      Routes.pmiList,
-                      args: argument);
+                  Navigation.instance
+                      .navigateTo(Routes.pmiList, args: argument);
                 },
                 child: const Text("View PMI History of this Pole"),
               ),
@@ -423,12 +434,10 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
                   child: const Text("CANCEL")),
             ],
           );
-        }
-          );
-    }
+        });
+  }
 
   void _handleLocation() async {
-
     bool isLocationEnabled = await Geolocator.isLocationServiceEnabled();
     if (!isLocationEnabled) {
       // Show a dialog to enable location services
@@ -440,7 +449,8 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
             onWillPop: () async => false,
             child: AlertDialog(
               title: const Text("Location Service Disabled"),
-              content: const Text("Please enable location services to use this feature."),
+              content: const Text(
+                  "Please enable location services to use this feature."),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
@@ -464,7 +474,7 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text("Location permissions are denied."),
           ),
         );
@@ -477,16 +487,17 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text("Location Permission Required"),
-            content: Text("Location permissions are permanently denied. Please enable them in the app settings."),
+            title: const Text("Location Permission Required"),
+            content: const Text(
+                "Location permissions are permanently denied. Please enable them in the app settings."),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
-                child: Text("Cancel"),
+                child: const Text("Cancel"),
               ),
               TextButton(
                 onPressed: () => Navigator.of(context).pop(true),
-                child: Text("Open Settings"),
+                child: const Text("Open Settings"),
               ),
             ],
           );
@@ -499,16 +510,16 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
       }
     }
 
-    if (permission != LocationPermission.whileInUse && permission != LocationPermission.always) {
+    if (permission != LocationPermission.whileInUse &&
+        permission != LocationPermission.always) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text("Location permissions are still denied."),
         ),
       );
       return;
     }
     await startListening();
-
   }
 
   StreamSubscription<Position>? _positionStream;
@@ -522,12 +533,12 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
     }
 
     _positionStream = Geolocator.getPositionStream(
-      locationSettings: LocationSettings(accuracy: LocationAccuracy.high),
+      locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
     ).listen((Position position) {
       latitude = position.latitude;
       longitude = position.longitude;
       totalAccuracy = position.accuracy; // <-- This is in meters
-      humanLocation=  LatLng(latitude!, longitude!);
+      humanLocation = LatLng(latitude!, longitude!);
       notifyListeners();
 
       if (_selectedPole == "" || _selectedPole == null) {
@@ -567,7 +578,7 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
 
   double _degToRad(double deg) => deg * pi / 180;
 
-  Future<void> poleSelectedOnMap()async{
+  Future<void> poleSelectedOnMap() async {
     // final entity = markerEntityMap[markerId];
     // print("markerEntityMap entity: $markerEntityMap");
     // if (entity == null) return;
@@ -594,41 +605,38 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
               child: const Text("Copy Pole Number?"),
             ),
             TextButton(
-              onPressed: (){
+              onPressed: () {
                 Navigator.pop(context);
 
                 var argument = {
                   'p': false,
                   'ssc': ssc,
-                  'ssn':ssn,
+                  'ssn': ssn,
                   'fc': feederCode,
-                  'fn':feederName,
+                  'fn': feederName,
                   'digitalPoleId': "",
                   'voltage': "",
                   'scheduleId': 0,
                   // "dtrId":""
                 };
-                Navigation.instance.navigateTo(
-                    Routes.pmiInspectionForm,
-                    args: argument);
+                Navigation.instance
+                    .navigateTo(Routes.pmiInspectionForm, args: argument);
               },
               child: const Text("Enter PMI data"),
             ),
             TextButton(
-              onPressed: (){
+              onPressed: () {
                 Navigator.pop(context);
                 var argument = {
                   'p': false,
                   'ssc': ssc,
                   'ssn': ssn,
                   'fc': feederCode,
-                  'fn':feederName,
+                  'fn': feederName,
                   'digitalPoleId': "",
                   // "dtrId":""
                 };
-                Navigation.instance.navigateTo(
-                    Routes.pmiList,
-                    args: argument);
+                Navigation.instance.navigateTo(Routes.pmiList, args: argument);
               },
               child: const Text("View PMI History of this Pole"),
             ),
@@ -682,12 +690,10 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
               child: const Text("SELECT FROM LIST"),
             ),
             TextButton(
-              onPressed: (){
+              onPressed: () {
                 Navigator.pop(context);
                 AlertUtils.showSnackBar(
-                    context,
-                    "Please tap the pole on the map",
-                    isFalse);
+                    context, "Please tap the pole on the map", isFalse);
               },
               child: const Text("SELECT ON MAP"),
             ),
@@ -711,10 +717,10 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
                 searchQuery = query;
                 filteredList = poleFeederList.where((item) {
                   final displayText =
-                  (item.tempSeries != null && item.tempSeries!.isNotEmpty
-                      ? '${item.tempSeries}-${item.poleNum}'
-                      : item.poleNum ?? '')
-                      .toLowerCase();
+                      (item.tempSeries != null && item.tempSeries!.isNotEmpty
+                              ? '${item.tempSeries}-${item.poleNum}'
+                              : item.poleNum ?? '')
+                          .toLowerCase();
                   return displayText.contains(query.toLowerCase());
                 }).toList();
               });
@@ -741,7 +747,7 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
                       itemBuilder: (context, index) {
                         final item = filteredList[index];
                         final displayText = item.tempSeries != null &&
-                            item.tempSeries!.isNotEmpty
+                                item.tempSeries!.isNotEmpty
                             ? '${item.tempSeries}-${item.poleNum}'
                             : item.poleNum ?? '';
 
@@ -766,6 +772,7 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
       },
     );
   }
+
   //Tapping from previous pole
   String? _selectedTappingPole;
 
@@ -774,7 +781,7 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
   void setSelectedTappingPole(String title) {
     _selectedTappingPole = title;
     print("$_selectedTappingPole:  tap selected");
-    if(selectedPole!="Origin Pole") {
+    if (selectedPole != "Origin Pole") {
       generatePoleNum(false);
     }
     if (_selectedTappingPole == "Left Tapping") {
@@ -840,7 +847,7 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
                     //       "Please choose Source Pole Num or check Source pole not mapped or origin Pole");
                     // }
                   },
-                  child: Text("OK")),
+                  child: const Text("OK")),
             ],
           );
         },
@@ -906,7 +913,6 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
 
     notifyListeners();
   }
-
 
   //pole height
   List<String> poleHeightData = [
@@ -984,19 +990,17 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
   Option? selectedCode;
   String? selectedCapacity;
 
-
-
   Future<void> loadStructureCodes() async {
-    final structures = await StructureDatabaseHelper.instance.getAllStructures();
+    final structures =
+        await StructureDatabaseHelper.instance.getAllStructures();
     structureCodes = structures
-        .where((e) => e.structureCode != null && e.capacity != null)
+        .where((e) => e.capacity != null)
         .map((e) => Option(
-      code: e.structureCode!,
-      capacity: e.capacity!,
-    ))
+              code: e.structureCode,
+              capacity: e.capacity,
+            ))
         .toList();
     print("Done loading data from DB Structure");
-
   }
 
   void setSelectedDtr(Option title) {
@@ -1005,6 +1009,7 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
     print("${selectedCode?.capacity}: selectedCode capacity");
     notifyListeners();
   }
+
 //Conductor Size
   String? _selectedConductor;
   String? get selectedConductor => _selectedConductor;
@@ -1018,7 +1023,6 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
   List<String> selectedPoleStatus = [];
 
   void setSelectedPoleStatus(String title) {
-
     if (selectedPoleStatus.contains(title)) {
       selectedPoleStatus.remove(title);
     } else {
@@ -1040,7 +1044,7 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
   String? get selectedConductorStatus => _selectedConductorStatus;
 
   void setSelectedConductorStatus(String title) {
-    _selectedConductorStatus=title;
+    _selectedConductorStatus = title;
     print("selectedConductorStatus: $selectedConductorStatus");
     notifyListeners();
   }
@@ -1050,7 +1054,7 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
   String? get selectedStudStayRequired => _selectedStudStayRequired;
 
   void setSelectedStudStayRequired(String title) {
-    _selectedStudStayRequired=title;
+    _selectedStudStayRequired = title;
     print("selectedStudStayRequired: $selectedStudStayRequired");
     notifyListeners();
   }
@@ -1060,13 +1064,13 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
   String? get selectedMiddlePolesRequired => _selectedMiddlePolesRequired;
 
   void setSelectedMiddlePolesRequired(String title) {
-    _selectedMiddlePolesRequired=title;
+    _selectedMiddlePolesRequired = title;
     print("selectedMiddlePolesRequired: $selectedMiddlePolesRequired");
     notifyListeners();
   }
 
   //Insulators/Discs
-  List<String> insulatorDiscType = ["Select","Discs","Insulators"];
+  List<String> insulatorDiscType = ["Select", "Discs", "Insulators"];
   String? selectedInsulatorDiscType;
 
   void onListInsulatorDiscType(String? value) {
@@ -1079,8 +1083,8 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
     }
   }
 
-
-  List<String> insulatorDiscQty = ["Select",
+  List<String> insulatorDiscQty = [
+    "Select",
     "1",
     "2",
     "3",
@@ -1089,7 +1093,8 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
     "6",
     "7",
     "8",
-    "9",];
+    "9",
+  ];
   String? selectedInsulatorDiscQty;
 
   void onListInsulatorDiscQty(String? value) {
@@ -1103,11 +1108,11 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
   }
 
   //cross arm status
-   String? _selectedCrossArmStatus;
+  String? _selectedCrossArmStatus;
   String? get selectedCrossArmStatus => _selectedCrossArmStatus;
 
   void setSelectedCrossArmStatus(String title) {
-    _selectedCrossArmStatus=title;
+    _selectedCrossArmStatus = title;
     print("selectedCrossArmStatus: $selectedCrossArmStatus");
     notifyListeners();
   }
@@ -1128,7 +1133,8 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
     );
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
     };
 
@@ -1139,7 +1145,8 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
       "data": jsonEncode(requestData),
     };
 
-    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -1150,25 +1157,27 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
           response.data = jsonDecode(response.data); // Parse string to JSON
         }
         if (response.statusCode == successResponseCode) {
-          if(response.data['tokenValid'] == isTrue) {
+          if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
-              if(response.data['objectJson'] != null) {
-                final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
-                final List<SpinnerList> listData = jsonList.map((json) => SpinnerList.fromJson(json)).toList();
+              if (response.data['objectJson'] != null) {
+                final List<dynamic> jsonList =
+                    jsonDecode(response.data['objectJson']);
+                final List<SpinnerList> listData =
+                    jsonList.map((json) => SpinnerList.fromJson(json)).toList();
                 listSubStationItem.addAll(listData);
               }
             } else {
-              showAlertDialog(context,response.data['message']);
+              showAlertDialog(context, response.data['message']);
             }
           } else {
             showSessionExpiredDialog(context);
           }
         } else {
-          showAlertDialog(context,response.data['message']);
+          showAlertDialog(context, response.data['message']);
         }
       }
     } catch (e) {
-      showErrorDialog(context,  "An error occurred. Please try again.");
+      showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
     }
 
@@ -1181,7 +1190,7 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
   String? get selectedABSwitch => _selectedABSwitch;
 
   void setSelectedABSwitch(String title) {
-    _selectedABSwitch=title;
+    _selectedABSwitch = title;
     print("selectedABSwitch: $selectedABSwitch");
     notifyListeners();
   }
@@ -1191,7 +1200,7 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
   String? get selectedLTFuse => _selectedLTFuse;
 
   void setSelectedLTFuse(String title) {
-    _selectedLTFuse=title;
+    _selectedLTFuse = title;
     print("selectedLTFuse: $selectedLTFuse");
     notifyListeners();
   }
@@ -1201,17 +1210,17 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
   String? get selectedHTFuse => _selectedHTFuse;
 
   void setSelectedHTFuse(String title) {
-    _selectedHTFuse=title;
+    _selectedHTFuse = title;
     print("selectedHTFuse: $selectedHTFuse");
     notifyListeners();
   }
 
   //DTR Plinth
   String? _selectedDTRPlinth;
-  String? get selectedDTRPlinth=> _selectedDTRPlinth;
+  String? get selectedDTRPlinth => _selectedDTRPlinth;
 
   void setSelectedDTRPlinth(String title) {
-    _selectedDTRPlinth=title;
+    _selectedDTRPlinth = title;
     print("selectedDTRPlinth: $selectedDTRPlinth");
     notifyListeners();
   }
@@ -1221,7 +1230,7 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
   String? get selectedDTREarth => _selectedDTREarth;
 
   void setSelectedDTREarth(String title) {
-    _selectedDTREarth=title;
+    _selectedDTREarth = title;
     print("selectedDTREarth: $selectedDTREarth");
     notifyListeners();
   }
@@ -1231,7 +1240,7 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
   String? get selectedEarthPipe => _selectedEarthPipe;
 
   void setSelectedEarthPipe(String title) {
-    _selectedEarthPipe=title;
+    _selectedEarthPipe = title;
     print("selectedEarthPipe: $selectedEarthPipe");
     notifyListeners();
   }
@@ -1241,23 +1250,20 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
   String? get selectedBiMetalic => _selectedBiMetalic;
 
   void setSelectedBiMetalic(String title) {
-    _selectedBiMetalic=title;
+    _selectedBiMetalic = title;
     print("selectedBiMetalic: $selectedBiMetalic");
     notifyListeners();
   }
-
 
   //Lightening Arrestors
   String? _selectedLighteningArr;
   String? get selectedLighteningArr => _selectedLighteningArr;
 
   void setSelectedLighteningArr(String title) {
-    _selectedLighteningArr=title;
+    _selectedLighteningArr = title;
     print("selectedLighteningArr: $selectedLighteningArr");
     notifyListeners();
   }
-
-
 
   List<PoleFeederEntity> poleFeederList = [];
   String? poleFeederSelected;
@@ -1290,7 +1296,7 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
 
     final requestData = {
       "authToken":
-      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "ssc": args["ssc"],
       "fc": args["fc"],
@@ -1317,7 +1323,7 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
             if (response.data['success'] == isTrue) {
               if (response.data['objectJson'] != null) {
                 final List<dynamic> jsonList =
-                jsonDecode(response.data['objectJson']);
+                    jsonDecode(response.data['objectJson']);
                 final List<PoleFeederEntity> listData = jsonList
                     .map((json) => PoleFeederEntity.fromJson(json))
                     .toList();
@@ -1360,7 +1366,7 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
 
       final requestData = {
         "authToken":
-        SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+            SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
         "api": Apis.API_KEY,
         "ssc": args["ssc"],
         "fc": args["fc"],
@@ -1368,8 +1374,8 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
         "tap": selectedTappingPole == "Straight Tapping"
             ? "s"
             : selectedTappingPole == "Left Tapping"
-            ? "l"
-            : "r",
+                ? "l"
+                : "r",
         "sid": poleID,
       };
 
@@ -1440,7 +1446,6 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
     poleNumber.text = (series != null ? "$series-$poleNum" : poleNum)!;
   }
 
-
   Future<void> submit33KVForm() async {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
@@ -1448,12 +1453,10 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
 
       if (!validateForm()) {
         return;
-      }
-      else if (totalAccuracy! > 15.0) {
+      } else if (totalAccuracy! > 15.0) {
         showAlertDialog(context,
             "Please wait until we reach minimum GPS accuracy i.e 15.0 mts");
-      }
-      else {
+      } else {
         savePolePoint();
         print("in else block");
       }
@@ -1468,7 +1471,7 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
       "loadLatestDataOnly": true,
       "maxId": maxId,
       "authToken":
-      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "fc": args["fc"],
       "ssc": args["ssc"],
@@ -1479,14 +1482,14 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
       "tap": selectedTappingPole == "Straight Tapping"
           ? "s"
           : selectedTappingPole == "Left Tapping"
-          ? "l"
-          : "r",
+              ? "l"
+              : "r",
       "pt": selectedFirstGroup.isNotEmpty ? selectedFirstGroup[0] : null,
       "ph": selectedPoleHeight,
       "nockt": selectedCircuits,
       "formation": selectedFormation,
       "typeOfPoint": selectedTypePoint,
-      "crossingText":particularsOfCrossing.text.trim(),
+      "crossingText": particularsOfCrossing.text.trim(),
       "polenum": poleNumber.text.isEmpty ? "0000" : poleNumber.text.trim(),
       "series": series,
       if (selectedPole == "" || selectedPole == null) ...{
@@ -1500,33 +1503,98 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
         "structCode": selectedCode?.code,
         "cap": selectedCode?.capacity,
       },
-      if(abCableSelected=="AB Cable")...{
-        "cs":"AB",
-        "ab_cable":"Y",
+      if (abCableSelected == "AB Cable") ...{
+        "cs": "AB",
+        "ab_cable": "Y",
       },
       "cs": selectedConductor,
-      "pole_broken":selectedPoleStatus=="Broken"?"Y":null,
-      "pole_rusted":selectedPoleStatus=="Rusted"?"Y":null,
-      "pole_leaned":selectedPoleStatus=="Leaned"?"Y":null,
-      "pole_replacement_with_t":selectedPoleStatus=="Pole Replacement with 9.1Mtr"?"Y":null,
-      "conductor_status":selectedConductorStatus=="Restring required"?"RESTRING":selectedConductorStatus=="Damaged"?"DAMAGED":null,
-      "middle_pole_required":selectedMiddlePolesRequired=="8.0 Mtr. Pole"?"8Mtr":selectedMiddlePolesRequired=="9.1 Mtr. Pole"?"9.1Mtr":null,
-      "stay_set_required":selectedStudStayRequired=="Stay Set"?"STAY":selectedStudStayRequired=="Stud Pole"?"STUD":null,
-      "insulators_type":selectedInsulatorDiscType??null,
-      "insulators_type_qty":selectedInsulatorDiscQty??null,
-      "cross_arms":selectedCrossArmStatus=="Bad"?"BAD":selectedCrossArmStatus=="Good"?"GOOD":null,
-      if(selectedConnected!="No Load")...{
-        "ab_switch":selectedABSwitch=="NO"?"NO":selectedABSwitch=="Yes, But bad condition"?"BAD":selectedABSwitch=="Yes(Good Condition)"?"GOOD":null,
-        "lt_fuse_set":selectedLTFuse=="NO"?"NO":selectedLTFuse=="Yes, But bad condition"?"BAD":selectedLTFuse=="Yes(Good Condition)"?"GOOD":null,
-        "ht_fuse_set":selectedHTFuse=="NO"?"NO":selectedHTFuse=="Yes, But bad condition"?"BAD":selectedHTFuse=="Yes(Good Condition)"?"GOOD":null,
-        "dtr_plinth":selectedDTRPlinth=="NO"?"NO":selectedDTRPlinth=="Yes, But bad condition"?"BAD":selectedDTRPlinth=="Yes(Good Condition)"?"GOOD":null,
-        "earthing_type":selectedDTREarth=="NO"?"NO":selectedDTREarth=="Yes, But bad condition"?"BAD":selectedDTREarth=="Yes(Good Condition)"?"GOOD":null,
-        "earthing_pipe_status":selectedEarthPipe=="NO"?"NO":selectedEarthPipe=="Yes, But bad condition"?"BAD":selectedEarthPipe=="Yes(Good Condition)"?"GOOD":null,
-        "bimetalic_exists":selectedBiMetalic=="NO"?"NO":selectedBiMetalic=="Yes, But bad condition"?"BAD":selectedBiMetalic=="Yes(Good Condition)"?"GOOD":null,
-        "lightening_arrrestors":selectedLighteningArr=="NO"?"NO":selectedLighteningArr=="Yes, But bad condition"?"BAD":selectedLighteningArr=="Yes(Good Condition)"?"GOOD":null,
+      "pole_broken": selectedPoleStatus == "Broken" ? "Y" : null,
+      "pole_rusted": selectedPoleStatus == "Rusted" ? "Y" : null,
+      "pole_leaned": selectedPoleStatus == "Leaned" ? "Y" : null,
+      "pole_replacement_with_t":
+          selectedPoleStatus == "Pole Replacement with 9.1Mtr" ? "Y" : null,
+      "conductor_status": selectedConductorStatus == "Restring required"
+          ? "RESTRING"
+          : selectedConductorStatus == "Damaged"
+              ? "DAMAGED"
+              : null,
+      "middle_pole_required": selectedMiddlePolesRequired == "8.0 Mtr. Pole"
+          ? "8Mtr"
+          : selectedMiddlePolesRequired == "9.1 Mtr. Pole"
+              ? "9.1Mtr"
+              : null,
+      "stay_set_required": selectedStudStayRequired == "Stay Set"
+          ? "STAY"
+          : selectedStudStayRequired == "Stud Pole"
+              ? "STUD"
+              : null,
+      "insulators_type": selectedInsulatorDiscType,
+      "insulators_type_qty": selectedInsulatorDiscQty,
+      "cross_arms": selectedCrossArmStatus == "Bad"
+          ? "BAD"
+          : selectedCrossArmStatus == "Good"
+              ? "GOOD"
+              : null,
+      if (selectedConnected != "No Load") ...{
+        "ab_switch": selectedABSwitch == "NO"
+            ? "NO"
+            : selectedABSwitch == "Yes, But bad condition"
+                ? "BAD"
+                : selectedABSwitch == "Yes(Good Condition)"
+                    ? "GOOD"
+                    : null,
+        "lt_fuse_set": selectedLTFuse == "NO"
+            ? "NO"
+            : selectedLTFuse == "Yes, But bad condition"
+                ? "BAD"
+                : selectedLTFuse == "Yes(Good Condition)"
+                    ? "GOOD"
+                    : null,
+        "ht_fuse_set": selectedHTFuse == "NO"
+            ? "NO"
+            : selectedHTFuse == "Yes, But bad condition"
+                ? "BAD"
+                : selectedHTFuse == "Yes(Good Condition)"
+                    ? "GOOD"
+                    : null,
+        "dtr_plinth": selectedDTRPlinth == "NO"
+            ? "NO"
+            : selectedDTRPlinth == "Yes, But bad condition"
+                ? "BAD"
+                : selectedDTRPlinth == "Yes(Good Condition)"
+                    ? "GOOD"
+                    : null,
+        "earthing_type": selectedDTREarth == "NO"
+            ? "NO"
+            : selectedDTREarth == "Yes, But bad condition"
+                ? "BAD"
+                : selectedDTREarth == "Yes(Good Condition)"
+                    ? "GOOD"
+                    : null,
+        "earthing_pipe_status": selectedEarthPipe == "NO"
+            ? "NO"
+            : selectedEarthPipe == "Yes, But bad condition"
+                ? "BAD"
+                : selectedEarthPipe == "Yes(Good Condition)"
+                    ? "GOOD"
+                    : null,
+        "bimetalic_exists": selectedBiMetalic == "NO"
+            ? "NO"
+            : selectedBiMetalic == "Yes, But bad condition"
+                ? "BAD"
+                : selectedBiMetalic == "Yes(Good Condition)"
+                    ? "GOOD"
+                    : null,
+        "lightening_arrrestors": selectedLighteningArr == "NO"
+            ? "NO"
+            : selectedLighteningArr == "Yes, But bad condition"
+                ? "BAD"
+                : selectedLighteningArr == "Yes(Good Condition)"
+                    ? "GOOD"
+                    : null,
       },
-      "extension":isExtensionSelected=="Is Extension Pole?"?true:false,
-      "remarks":remarksController.text.trim(),
+      "extension": isExtensionSelected == "Is Extension Pole?" ? true : false,
+      "remarks": remarksController.text.trim(),
       "lat": "$latitude",
       "lon": "$longitude",
     };
@@ -1578,7 +1646,9 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
                 if (digitalFeederEntityList.isNotEmpty) {
                   final lastItem = digitalFeederEntityList.last;
 
-                  if (lastItem.createdBy == SharedPreferenceHelper.getStringValue(LoginSdkPrefs.userIdPrefKey) ){
+                  if (lastItem.createdBy ==
+                      SharedPreferenceHelper.getStringValue(
+                          LoginSdkPrefs.userIdPrefKey)) {
                     if (undoStack.length > UNDO_STACK_SIZE) {
                       undoStack.removeLast();
                     }
@@ -1591,7 +1661,7 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
                   showSuccessDialog(
                     context,
                     response.data["message"],
-                        () {
+                    () {
                       Navigator.pop(context);
                       resetForm();
                     },
@@ -1604,8 +1674,7 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
                 showAlertDialog(context, "Unable to process your request!");
               }
             } else {
-              showAlertDialog(context,
-                  response.data['message']);
+              showAlertDialog(context, response.data['message']);
             }
           } else {
             showSessionExpiredDialog(context);
@@ -1634,7 +1703,7 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
       AlertUtils.showSnackBar(
           context, "Please select the source pole to the current pole", isTrue);
       return false;
-    } else if (poleNumber.text == "" ) {
+    } else if (poleNumber.text == "") {
       AlertUtils.showSnackBar(context, "Please enter Pole Number", isTrue);
       return false;
     } else if (selectedTappingPole == "" || selectedTappingPole == null) {
@@ -1663,7 +1732,7 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
           "Please select the type of point (Cut Point/End Point/Pin Point)",
           isTrue);
       return false;
-    } else if (selectedCrossings.isEmpty || selectedCrossings == null) {
+    } else if (selectedCrossings.isEmpty) {
       AlertUtils.showSnackBar(context, "Please select any crossing", isTrue);
       return false;
     } else if (selectedConnected == "" || selectedConnected == null) {
@@ -1671,7 +1740,7 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
           "Please select the any load connected on the current pole", isTrue);
       return false;
     } //DTR
-     else if (_selectedConductor == "" || _selectedConductor == null) {
+    else if (_selectedConductor == "" || _selectedConductor == null) {
       AlertUtils.showSnackBar(
           context,
           "Please select the conductor size from previous pole to this pole",
@@ -1700,7 +1769,7 @@ class Pole11kvFeederMarkViewmodel extends ChangeNotifier {
     _selectedTypePoint = "";
     selectedCrossings.clear();
     _selectedConnected = "";
-    listSubStationSelect="";
+    listSubStationSelect = "";
     _selectedConductor = "";
     longitude = null;
     latitude = null;

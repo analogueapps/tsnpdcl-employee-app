@@ -31,8 +31,7 @@ class ReportsScreen extends StatelessWidget {
                 style: const TextStyle(
                     color: Colors.white,
                     fontSize: titleSize,
-                    fontWeight: FontWeight.w700
-                ),
+                    fontWeight: FontWeight.w700),
               ),
               iconTheme: const IconThemeData(
                 color: Colors.white,
@@ -63,7 +62,8 @@ class ReportsScreen extends StatelessWidget {
                               child: Text(year),
                             );
                           }).toList(),
-                          onChanged: (value) => viewModel.onListYearSelected(value),
+                          onChanged: (value) =>
+                              viewModel.onListYearSelected(value),
                         ),
                       ),
                     ],
@@ -72,26 +72,28 @@ class ReportsScreen extends StatelessWidget {
                 const Divider(),
                 Expanded(
                   child: viewModel.isLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : viewModel.barGraphData.isEmpty
-                    ? const Center(child: Text("No data found."))
-                    : ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: viewModel.barGraphData.length,
-                        itemBuilder: (context, index) {
-                          final graphData = viewModel.barGraphData[index];
+                      ? const Center(child: CircularProgressIndicator())
+                      : viewModel.barGraphData.isEmpty
+                          ? const Center(child: Text("No data found."))
+                          : ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: viewModel.barGraphData.length,
+                              itemBuilder: (context, index) {
+                                final graphData = viewModel.barGraphData[index];
 
-                          if(graphData.typeOfGraph == "LINE_GRAPH"){
-                            return LineGraphWidget(graphData: graphData);
-                          }
-                          else if(graphData.typeOfGraph == "GROUPED_BAR_GRAPH"){
-                            return GroupedBarGraphWidget(graphData: graphData);
-                          }
-                          else if(graphData.typeOfGraph == "PIE_GRAPH"){
-                            return const SizedBox();
-                          }
-                        },
-                ),
+                                if (graphData.typeOfGraph == "LINE_GRAPH") {
+                                  return LineGraphWidget(graphData: graphData);
+                                } else if (graphData.typeOfGraph ==
+                                    "GROUPED_BAR_GRAPH") {
+                                  return GroupedBarGraphWidget(
+                                      graphData: graphData);
+                                } else if (graphData.typeOfGraph ==
+                                    "PIE_GRAPH") {
+                                  return const SizedBox();
+                                }
+                                return null;
+                              },
+                            ),
                 )
               ],
             ),

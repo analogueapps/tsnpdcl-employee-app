@@ -8,8 +8,6 @@ import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/general_assets.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
-import 'package:tsnpdcl_employee/view/auth/viewmodel/auth_viewmodel.dart';
-import 'package:tsnpdcl_employee/view/auth/viewmodel/change_pass_viewmodel.dart';
 import 'package:tsnpdcl_employee/view/auth/viewmodel/otp_verify_viewmodel.dart';
 import 'package:tsnpdcl_employee/widget/fill_text_form_field.dart';
 import 'package:tsnpdcl_employee/widget/primary_button.dart';
@@ -61,7 +59,8 @@ class OtpVerificationScreen extends StatelessWidget {
                 ),
               );
               if (shouldExit == true) {
-                Navigation.instance.pushAndRemoveUntil(Routes.employeeIdLoginScreen);
+                Navigation.instance
+                    .pushAndRemoveUntil(Routes.employeeIdLoginScreen);
               }
               return false;
             },
@@ -122,15 +121,16 @@ class OtpVerificationScreen extends StatelessWidget {
                                     'OTP',
                                     style: TextStyle(
                                       fontSize: normalSize,
-                                      fontWeight: FontWeight.w500,),
-                                    textAlign:
-                                    TextAlign.start,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    textAlign: TextAlign.start,
                                   ),
                                   const SizedBox(
                                     height: doubleTen,
                                   ),
                                   Pinput(
-                                    pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
+                                    pinputAutovalidateMode:
+                                        PinputAutovalidateMode.onSubmit,
                                     showCursor: isTrue,
                                     length: numSix,
                                     defaultPinTheme: PinTheme(
@@ -138,7 +138,8 @@ class OtpVerificationScreen extends StatelessWidget {
                                       height: doubleSixtyFour,
                                       decoration: BoxDecoration(
                                         color: CommonColors.textFieldColor,
-                                        borderRadius: BorderRadius.circular(doubleTen),
+                                        borderRadius:
+                                            BorderRadius.circular(doubleTen),
                                       ),
                                       textStyle: const TextStyle(
                                         fontSize: titleSize,
@@ -157,50 +158,45 @@ class OtpVerificationScreen extends StatelessWidget {
                                     visible: false,
                                     child: Center(
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
                                           const Flexible(
                                             child: Text(
                                               'Didn\'t receive the OTP ? ',
                                               style: TextStyle(
                                                   fontSize: normalSize,
-                                                  fontWeight:
-                                                  FontWeight.w500),
-                                              textAlign:
-                                              TextAlign.center,
+                                                  fontWeight: FontWeight.w500),
+                                              textAlign: TextAlign.center,
                                             ),
                                           ),
                                           viewModel.resendOtp == isTrue
                                               ? GestureDetector(
-                                            onTap: () {
-                                              //viewModel.resendOtpFromServer(context);
-                                            },
-                                            child: const Text(
-                                              'Resend OTP',
-                                              style: TextStyle(
-                                                  fontSize: normalSize,
-                                                  fontWeight:
-                                                  FontWeight
-                                                      .w500,
-                                                  color: CommonColors
-                                                      .colorPrimary),
-                                              textAlign:
-                                              TextAlign
-                                                  .start,
-                                            ),
-                                          )
-                                              : Flexible(child: Text(
-                                            'Resend OTP in ${viewModel.secondsRemaining} sec',
-                                            style: const TextStyle(
-                                                fontSize: normalSize,
-                                                fontWeight:
-                                                FontWeight
-                                                    .w500,
-                                                color: CommonColors
-                                                    .colorPrimary),
-                                            textAlign:
-                                            TextAlign.start,
-                                          )),
+                                                  onTap: () {
+                                                    //viewModel.resendOtpFromServer(context);
+                                                  },
+                                                  child: const Text(
+                                                    'Resend OTP',
+                                                    style: TextStyle(
+                                                        fontSize: normalSize,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: CommonColors
+                                                            .colorPrimary),
+                                                    textAlign: TextAlign.start,
+                                                  ),
+                                                )
+                                              : Flexible(
+                                                  child: Text(
+                                                  'Resend OTP in ${viewModel.secondsRemaining} sec',
+                                                  style: const TextStyle(
+                                                      fontSize: normalSize,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: CommonColors
+                                                          .colorPrimary),
+                                                  textAlign: TextAlign.start,
+                                                )),
                                         ],
                                       ),
                                     ),
@@ -211,8 +207,7 @@ class OtpVerificationScreen extends StatelessWidget {
                                         text: 'Verify',
                                         onPressed: () {
                                           viewModel.authenticateEmployee();
-                                        }
-                                    ),
+                                        }),
                                   ),
                                   const SizedBox(height: doubleSixteen),
                                 ],
@@ -230,13 +225,14 @@ class OtpVerificationScreen extends StatelessWidget {
                   return Padding(
                     padding: const EdgeInsets.all(doubleSixteen),
                     child: Text(
-                      viewModel.appVersion != "Unknown" ? "Version : ${viewModel.appVersion}" : "",
+                      viewModel.appVersion != "Unknown"
+                          ? "Version : ${viewModel.appVersion}"
+                          : "",
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                           color: Colors.white,
                           fontSize: regularTextSize,
-                          fontWeight: FontWeight.w400
-                      ),
+                          fontWeight: FontWeight.w400),
                     ),
                   );
                 },

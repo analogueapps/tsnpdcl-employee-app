@@ -12,23 +12,22 @@ import 'package:tsnpdcl_employee/view/dtr_master/model/dtr_feedet_distribution_m
 import 'package:tsnpdcl_employee/view/tong_tester_readings/model/dropdown_option.dart';
 import 'package:tsnpdcl_employee/view/tong_tester_readings/model/dtr_structure_entity.dart';
 
-
 class RepeatedDTRFailureViewModel extends ChangeNotifier {
-  RepeatedDTRFailureViewModel( {required this.context}) {
+  RepeatedDTRFailureViewModel({required this.context}) {
     // _fetchStructures();
   }
   final formKey = GlobalKey<FormState>();
   final sectionCode =
-  SharedPreferenceHelper.getStringValue(LoginSdkPrefs.sectionCodePrefKey);
+      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.sectionCodePrefKey);
   final section =
-  SharedPreferenceHelper.getStringValue(LoginSdkPrefs.sectionPrefKey);
+      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.sectionPrefKey);
   final BuildContext context;
-  List<DropdownOption> _structures = [];
+  final List<DropdownOption> _structures = [];
   DateTime? selectedDateTime;
   Map<String, dynamic>? _currentStructure;
   bool _isLoading = false;
-  bool _isLoadingStructures = false;
-  bool _isLoadingStructureDetails = false;
+  final bool _isLoadingStructures = false;
+  final bool _isLoadingStructureDetails = false;
   String? _selectedStructureId;
 
   List<DropdownOption> get structures => _structures;
@@ -38,9 +37,8 @@ class RepeatedDTRFailureViewModel extends ChangeNotifier {
   bool get isLoadingStructureDetails => _isLoadingStructureDetails;
   String? get selectedStructureId => _selectedStructureId;
 
-  List<FeederDisModel> _structureData = [];
+  final List<FeederDisModel> _structureData = [];
   List<FeederDisModel> get structureData => _structureData;
-
 
   //equipment code :
   final List<String> failedEquipmentList = ["--SELECT--"];
@@ -56,7 +54,6 @@ class RepeatedDTRFailureViewModel extends ChangeNotifier {
 
   String get getEstimateRequired => estimateRequired;
   String? get selectedStructureCode => _selectedStructureCode;
-
 
   void setSelectedStructureCode(String? value) {
     _selectedStructureCode = value;
@@ -76,10 +73,9 @@ class RepeatedDTRFailureViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-
   Future<void> setSelectedStructure(String? structureId) async {
     failedEquipmentList.clear();
-    _failedEquipmentCode=null;
+    _failedEquipmentCode = null;
     notifyListeners();
     _selectedStructureId = structureId;
     if (structureId != null) {
@@ -90,7 +86,6 @@ class RepeatedDTRFailureViewModel extends ChangeNotifier {
     }
     notifyListeners();
   }
-
 
   //Dtr failure reason
   List<String> failureReasons = [];
@@ -103,6 +98,7 @@ class RepeatedDTRFailureViewModel extends ChangeNotifier {
     }
     notifyListeners();
   }
+
   List<String> get getFailureReasons => failureReasons;
 
   //yes or no check box
@@ -123,9 +119,10 @@ class RepeatedDTRFailureViewModel extends ChangeNotifier {
     if (!validateForm()) {
       return;
     } else {
-      saveDTRFailure(failureReasons,getEstimateRequired,dateController.text,timeController.text, selectedStructureId!,_failedEquipmentCode!  );
-      print(SharedPreferenceHelper.getStringValue(
-          LoginSdkPrefs.sectionCodePrefKey) + "Section Code");
+      saveDTRFailure(failureReasons, getEstimateRequired, dateController.text,
+          timeController.text, selectedStructureId!, _failedEquipmentCode!);
+      print(
+          "${SharedPreferenceHelper.getStringValue(LoginSdkPrefs.sectionCodePrefKey)}Section Code");
       print('Equipment Code: $_failedEquipmentCode');
       print('Structure Code: $selectedStructureId');
       print('Date: ${dateController.text}');
@@ -136,46 +133,43 @@ class RepeatedDTRFailureViewModel extends ChangeNotifier {
   }
 
   bool validateForm() {
-    if ((dateController.text==''||dateController.text==null)&&(timeController.text==""||timeController.text==null)) {
-      AlertUtils.showSnackBar(context, "Please select DTR failure date and time", isTrue);
+    if ((dateController.text == '') && (timeController.text == "")) {
+      AlertUtils.showSnackBar(
+          context, "Please select DTR failure date and time", isTrue);
       print("Please select DTR failure date");
       return false;
-    }else if (dateController.text.isNotEmpty && timeController.text.isEmpty ) {
+    } else if (dateController.text.isNotEmpty && timeController.text.isEmpty) {
       AlertUtils.showSnackBar(
-          context, "Please select DTR failure time",
-          isTrue);
+          context, "Please select DTR failure time", isTrue);
       return false;
-    }else if (dateController.text.isEmpty && timeController.text.isNotEmpty ) {
+    } else if (dateController.text.isEmpty && timeController.text.isNotEmpty) {
       AlertUtils.showSnackBar(
-          context, "Please select DTR failure date",
-          isTrue);
+          context, "Please select DTR failure date", isTrue);
       return false;
-    }
-    else if (failureReasons.isEmpty || failureReasons==[] ) {
-      AlertUtils.showSnackBar(
-          context, "Please select at least one reason for the  DTR failure",
-          isTrue);
+    } else if (failureReasons.isEmpty || failureReasons == []) {
+      AlertUtils.showSnackBar(context,
+          "Please select at least one reason for the  DTR failure", isTrue);
       return false;
-    } else if (getEstimateRequired.isEmpty ) {
+    } else if (getEstimateRequired.isEmpty) {
       AlertUtils.showSnackBar(
-          context, "Please select Estimate Required Yes/No",
-          isTrue);
+          context, "Please select Estimate Required Yes/No", isTrue);
       return false;
-    }else if (_failedEquipmentCode==null ) {
+    } else if (_failedEquipmentCode == null) {
       AlertUtils.showSnackBar(
-          context, "Please select failed equipment code ",
-          isTrue);
+          context, "Please select failed equipment code ", isTrue);
       return false;
     }
     return true;
   }
 
-  Future<void> saveDTRFailure(List<String> reasons, String estimateRequired, String date, String time, String structCode, String equipmentCode) async {
+  Future<void> saveDTRFailure(List<String> reasons, String estimateRequired,
+      String date, String time, String structCode, String equipmentCode) async {
     _isLoading = isTrue;
     notifyListeners();
 
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
       "reasons": reasons,
       "estimateRequired": estimateRequired,
@@ -187,7 +181,8 @@ class RepeatedDTRFailureViewModel extends ChangeNotifier {
       "sapFailureCount": "INSPECTED",
     };
 
-    var response = await ApiProvider(baseUrl: Apis.DTR_END_POINT_BASE_URL).postApiCall(context, Apis.SAVE_DTR_FAILURE_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.DTR_END_POINT_BASE_URL)
+        .postApiCall(context, Apis.SAVE_DTR_FAILURE_URL, payload);
     _isLoading = isFalse;
 
     try {
@@ -198,29 +193,35 @@ class RepeatedDTRFailureViewModel extends ChangeNotifier {
         if (response.statusCode == successResponseCode) {
           if (response.data['sessionValid'] == true) {
             if (response.data['taskSuccess'] == true) {
-              if (response.data['message'] != null && (response.data['dataList'] == null || response.data['dataList'].isEmpty)) {
+              if (response.data['message'] != null &&
+                  (response.data['dataList'] == null ||
+                      response.data['dataList'].isEmpty)) {
                 showErrorDialog(context, response.data['message']);
               } else {
-                showSuccessDialog(context, response.data['message'] ?? 'Success', () {
+                showSuccessDialog(
+                    context, response.data['message'] ?? 'Success', () {
                   Navigator.pop(context);
                 });
               }
             } else {
-
-              showErrorDialog(context, response.data['message'] ?? 'Operation failed');
+              showErrorDialog(
+                  context, response.data['message'] ?? 'Operation failed');
             }
           } else {
             showSessionExpiredDialog(context);
           }
         } else {
-          showAlertDialog(context, response.data['message'] ?? 'Request failed with status: ${response.statusCode}');
-        }      }
+          showAlertDialog(
+              context,
+              response.data['message'] ??
+                  'Request failed with status: ${response.statusCode}');
+        }
+      }
     } catch (e) {
-      showErrorDialog(context,  "An error occurred. Please try again.");
+      showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
     }
 
     notifyListeners();
   }
-
 }

@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -15,7 +14,7 @@ class DtrHtMaintenanceEntryViewmodel extends ChangeNotifier {
   final bool _isLoading = isFalse;
   bool get isLoading => _isLoading;
 
-  DtrInspectionSheetEntity? dtrInspectionSheetEntity = null;
+  DtrInspectionSheetEntity? dtrInspectionSheetEntity;
 
   // AB SWITCH
   AbSwitch? abSwitch;
@@ -59,7 +58,6 @@ class DtrHtMaintenanceEntryViewmodel extends ChangeNotifier {
   OptionSpinner? spinnerHtBushRodsDamagedQty;
 
   //LT Bushes
-
 
   //lt bushes status
   Status? ltBushStatus;
@@ -147,7 +145,7 @@ class DtrHtMaintenanceEntryViewmodel extends ChangeNotifier {
 
   void selectLtFuseWireStatus(FuseWire? value) {
     if (value == null) return;
-    ltFuseWire= value;
+    ltFuseWire = value;
     notifyListeners();
   }
 
@@ -230,7 +228,7 @@ class DtrHtMaintenanceEntryViewmodel extends ChangeNotifier {
 
   //Earthing
   //Earth Pits
-EarthPits? earthPits;
+  EarthPits? earthPits;
   bool isEarthPitsDisabled = false;
 
   void selectEarthPitsStatus(EarthPits? value) {
@@ -333,7 +331,7 @@ EarthPits? earthPits;
   }
 
   //DTR Loading
-  DTROverLoaded?  dtrOverLoaded;
+  DTROverLoaded? dtrOverLoaded;
   bool isDtrOverLoadedDisabled = false;
 
   void selectDtrOverLoadedStatus(DTROverLoaded? value) {
@@ -343,111 +341,190 @@ EarthPits? earthPits;
   }
 
   //Toong Tester
-  TextEditingController rPhase= TextEditingController();
-  TextEditingController yPhase= TextEditingController();
-  TextEditingController bPhase= TextEditingController();
-  TextEditingController neutral= TextEditingController();
-
-
+  TextEditingController rPhase = TextEditingController();
+  TextEditingController yPhase = TextEditingController();
+  TextEditingController bPhase = TextEditingController();
+  TextEditingController neutral = TextEditingController();
 
   // Constructor to initialize the items
-  DtrHtMaintenanceEntryViewmodel( this.data) {
-    dtrInspectionSheetEntity = DtrInspectionSheetEntity.fromJson(jsonDecode(data));
-    spinnerAbSwitchContactsDamaged = getNumberSpinnerAdapter(includeZero: true, maxValue: 3);
-    spinnerAbSwitchPigTailDamaged = getNumberSpinnerAdapter(includeZero: true, maxValue: 3);
-    spinnerAbSwitchNylonBushesDamaged = getNumberSpinnerAdapter(includeZero: true, maxValue: 3);
-    spinner11HgFsHornsToReplaced = getNumberSpinnerAdapter(includeZero: true, maxValue: 3);
+  DtrHtMaintenanceEntryViewmodel(this.data) {
+    dtrInspectionSheetEntity =
+        DtrInspectionSheetEntity.fromJson(jsonDecode(data));
+    spinnerAbSwitchContactsDamaged =
+        getNumberSpinnerAdapter(includeZero: true, maxValue: 3);
+    spinnerAbSwitchPigTailDamaged =
+        getNumberSpinnerAdapter(includeZero: true, maxValue: 3);
+    spinnerAbSwitchNylonBushesDamaged =
+        getNumberSpinnerAdapter(includeZero: true, maxValue: 3);
+    spinner11HgFsHornsToReplaced =
+        getNumberSpinnerAdapter(includeZero: true, maxValue: 3);
     spinner11HgFsGapNotCorrect = getYesNoSpinner();
-    spinner11HgFsPostTypeInsulatorsDamaged = getNumberSpinnerAdapter(includeZero: true, maxValue: 3);
-    spinnerHtBushDamagedQty = getNumberSpinnerAdapter(includeZero: true, maxValue: 3);
-    spinnerHtBushRodsDamagedQty = getNumberSpinnerAdapter(includeZero: true, maxValue: 3);
+    spinner11HgFsPostTypeInsulatorsDamaged =
+        getNumberSpinnerAdapter(includeZero: true, maxValue: 3);
+    spinnerHtBushDamagedQty =
+        getNumberSpinnerAdapter(includeZero: true, maxValue: 3);
+    spinnerHtBushRodsDamagedQty =
+        getNumberSpinnerAdapter(includeZero: true, maxValue: 3);
     setData();
   }
-void setData(){
+  void setData() {
     print("Setting Data");
-    abSwitch= dtrInspectionSheetEntity!.abSwitchAvailable=="Y"?AbSwitch.Available: AbSwitch.NotAvailable;
-    isAbSwitchDisabled=true;
-    abSwitchType=dtrInspectionSheetEntity?.abSwitchType=="VERTICAL"?AbSwitchType.Vertical: AbSwitchType.Horizontal;
-    isAbSwitchTypeDisabled=true;
-    abSwitchStatus=dtrInspectionSheetEntity?.abSwitchStatus=="GOOD"?Status.Good: Status.Damaged;
-    isAbSwitchStatusDisabled=true;
-    kv11HgFuseSet=dtrInspectionSheetEntity?.hG11KvFuseSetAvailable=="Y"?AbSwitch.Available: AbSwitch.NotAvailable;
-    isKv11HgFuseSetDisabled=true;
-    hgFuseStatus=dtrInspectionSheetEntity?.hG11KvFuseSetAvailable=="Y"?Status.Good: Status.Damaged;
-    isHgFuseStatusDisabled=true;
+    abSwitch = dtrInspectionSheetEntity!.abSwitchAvailable == "Y"
+        ? AbSwitch.Available
+        : AbSwitch.NotAvailable;
+    isAbSwitchDisabled = true;
+    abSwitchType = dtrInspectionSheetEntity?.abSwitchType == "VERTICAL"
+        ? AbSwitchType.Vertical
+        : AbSwitchType.Horizontal;
+    isAbSwitchTypeDisabled = true;
+    abSwitchStatus = dtrInspectionSheetEntity?.abSwitchStatus == "GOOD"
+        ? Status.Good
+        : Status.Damaged;
+    isAbSwitchStatusDisabled = true;
+    kv11HgFuseSet = dtrInspectionSheetEntity?.hG11KvFuseSetAvailable == "Y"
+        ? AbSwitch.Available
+        : AbSwitch.NotAvailable;
+    isKv11HgFuseSetDisabled = true;
+    hgFuseStatus = dtrInspectionSheetEntity?.hG11KvFuseSetAvailable == "Y"
+        ? Status.Good
+        : Status.Damaged;
+    isHgFuseStatusDisabled = true;
     //LT SIDE:
-    ltBushStatus=dtrInspectionSheetEntity?.ltBushesDamageCount==0?Status.Good: Status.Damaged;
-    isLtBushStatusDisabled=true;
-    ltBushRodStatus=dtrInspectionSheetEntity?.ltBushRodsDamCount==0?Status.Good: Status.Damaged;
-    isLtBushRodStatusDisabled=true;
-    ltBiMetalicClamps=dtrInspectionSheetEntity?.ltBiMetalClampsAvailable=="Y"?AbSwitch.Available: AbSwitch.NotAvailable;
-    isLtBiMetalicClampsDisabled=true;
-    clampsStatus=dtrInspectionSheetEntity?.ltBiMetalClampsDamCount==0?Status.Good: Status.Damaged;
-    isClampsStatusDisabled=true;
-    ltBreaker=dtrInspectionSheetEntity?.ltBreaker=="y"?AbSwitch.Available: AbSwitch.NotAvailable;
-    isLtBreakerDisabled=true;
-    ltBreakerStatus=dtrInspectionSheetEntity?.ltBreakerStatus=="GOOD"?Status.Good: Status.Damaged;
-    isLtBreakerStatusDisabled=true;
-    ltFuseSet=dtrInspectionSheetEntity?.ltFuseSetAvailable=="Y"?AbSwitch.Available: AbSwitch.NotAvailable;
-    isLtFuseSetDisabled=true;
-    ltFuseSetStatus=dtrInspectionSheetEntity?.ltFuseSetStatus=="GOOD"?Status.Good: Status.Damaged;
-    isLtFuseSetStatusDisabled=true;
-    ltFuseWire=dtrInspectionSheetEntity?.ltFuseWire=="COPPER_OK"?FuseWire.Copper: FuseWire.Aluminium;
-    isLtFuseWireDisabled=true;
+    ltBushStatus = dtrInspectionSheetEntity?.ltBushesDamageCount == 0
+        ? Status.Good
+        : Status.Damaged;
+    isLtBushStatusDisabled = true;
+    ltBushRodStatus = dtrInspectionSheetEntity?.ltBushRodsDamCount == 0
+        ? Status.Good
+        : Status.Damaged;
+    isLtBushRodStatusDisabled = true;
+    ltBiMetalicClamps =
+        dtrInspectionSheetEntity?.ltBiMetalClampsAvailable == "Y"
+            ? AbSwitch.Available
+            : AbSwitch.NotAvailable;
+    isLtBiMetalicClampsDisabled = true;
+    clampsStatus = dtrInspectionSheetEntity?.ltBiMetalClampsDamCount == 0
+        ? Status.Good
+        : Status.Damaged;
+    isClampsStatusDisabled = true;
+    ltBreaker = dtrInspectionSheetEntity?.ltBreaker == "y"
+        ? AbSwitch.Available
+        : AbSwitch.NotAvailable;
+    isLtBreakerDisabled = true;
+    ltBreakerStatus = dtrInspectionSheetEntity?.ltBreakerStatus == "GOOD"
+        ? Status.Good
+        : Status.Damaged;
+    isLtBreakerStatusDisabled = true;
+    ltFuseSet = dtrInspectionSheetEntity?.ltFuseSetAvailable == "Y"
+        ? AbSwitch.Available
+        : AbSwitch.NotAvailable;
+    isLtFuseSetDisabled = true;
+    ltFuseSetStatus = dtrInspectionSheetEntity?.ltFuseSetStatus == "GOOD"
+        ? Status.Good
+        : Status.Damaged;
+    isLtFuseSetStatusDisabled = true;
+    ltFuseWire = dtrInspectionSheetEntity?.ltFuseWire == "COPPER_OK"
+        ? FuseWire.Copper
+        : FuseWire.Aluminium;
+    isLtFuseWireDisabled = true;
     // cfwStatus=dtrInspectionSheetEntity?.ltFuseWire.contains("OK")?WireStatus.OK: WireStatus.NotOK;
     // isCfwStatusDisabled=true;
-    ltPvcCable=dtrInspectionSheetEntity?.ltPvcCable=="Y"?AbSwitch.Available: AbSwitch.NotAvailable;
-    isLtPvcCableDisabled=true;
-    ltPvcCableStatus=dtrInspectionSheetEntity?.ltPvcCableStatus=="GOOD"?Status.Good: Status.Damaged;
-    isLtPvcCableStatusDisabled=true;
-    ltFuseSetStatus=dtrInspectionSheetEntity?.ltFuseSetStatus=="GOOD"?Status.Good: Status.Damaged;
-    isLtFuseSetStatusDisabled=true;
+    ltPvcCable = dtrInspectionSheetEntity?.ltPvcCable == "Y"
+        ? AbSwitch.Available
+        : AbSwitch.NotAvailable;
+    isLtPvcCableDisabled = true;
+    ltPvcCableStatus = dtrInspectionSheetEntity?.ltPvcCableStatus == "GOOD"
+        ? Status.Good
+        : Status.Damaged;
+    isLtPvcCableStatusDisabled = true;
+    ltFuseSetStatus = dtrInspectionSheetEntity?.ltFuseSetStatus == "GOOD"
+        ? Status.Good
+        : Status.Damaged;
+    isLtFuseSetStatusDisabled = true;
 
     //OIl
-    oilLevelValue=dtrInspectionSheetEntity?.oilShortageInLiters==0?OilLevel.Ok: OilLevel.Shortage;
-    isOilLevelDisabled=true;
+    oilLevelValue = dtrInspectionSheetEntity?.oilShortageInLiters == 0
+        ? OilLevel.Ok
+        : OilLevel.Shortage;
+    isOilLevelDisabled = true;
 
     //Earthing
-    earthPits=dtrInspectionSheetEntity?.earthPits==2?EarthPits.two: dtrInspectionSheetEntity?.earthPits==1?EarthPits.one:dtrInspectionSheetEntity?.earthPits==3?EarthPits.three: null;
-    isEarthPitsDisabled=true;
-    earthPips=dtrInspectionSheetEntity!.earthPipes.contains("GI")?EarthPipes.GIPipes: dtrInspectionSheetEntity!.earthPipes.contains("CI")?EarthPipes.CIPipes: null;
-    isEarthPipsDisabled=true;
-    doubleEarthing=dtrInspectionSheetEntity?.doubleEarthing=="Y"?AbSwitch.Available:dtrInspectionSheetEntity?.doubleEarthing=="N"? AbSwitch.NotAvailable: null;
-    isDoubleEarthingDisabled=true;
+    earthPits = dtrInspectionSheetEntity?.earthPits == 2
+        ? EarthPits.two
+        : dtrInspectionSheetEntity?.earthPits == 1
+            ? EarthPits.one
+            : dtrInspectionSheetEntity?.earthPits == 3
+                ? EarthPits.three
+                : null;
+    isEarthPitsDisabled = true;
+    earthPips = dtrInspectionSheetEntity!.earthPipes.contains("GI")
+        ? EarthPipes.GIPipes
+        : dtrInspectionSheetEntity!.earthPipes.contains("CI")
+            ? EarthPipes.CIPipes
+            : null;
+    isEarthPipsDisabled = true;
+    doubleEarthing = dtrInspectionSheetEntity?.doubleEarthing == "Y"
+        ? AbSwitch.Available
+        : dtrInspectionSheetEntity?.doubleEarthing == "N"
+            ? AbSwitch.NotAvailable
+            : null;
+    isDoubleEarthingDisabled = true;
 
     //LT Network
-    looseLinesONDtr=dtrInspectionSheetEntity?.noOfLooseLinesOnDtr==0?NoLooseLine.NoLooseLines:dtrInspectionSheetEntity?.noOfLooseLinesOnDtr!="0"? NoLooseLine.LooseLines: null;
-    isLooseLinesONDtrDisabled=true;
-    linesTreeCutting=dtrInspectionSheetEntity?.treeCuttingRequired==0?LTLineTreeCutting.NotRequired:dtrInspectionSheetEntity?.treeCuttingRequired!=0? LTLineTreeCutting.Required: null;
-    isLinesTreeCuttingDisabled=true;
+    looseLinesONDtr = dtrInspectionSheetEntity?.noOfLooseLinesOnDtr == 0
+        ? NoLooseLine.NoLooseLines
+        : dtrInspectionSheetEntity?.noOfLooseLinesOnDtr != "0"
+            ? NoLooseLine.LooseLines
+            : null;
+    isLooseLinesONDtrDisabled = true;
+    linesTreeCutting = dtrInspectionSheetEntity?.treeCuttingRequired == 0
+        ? LTLineTreeCutting.NotRequired
+        : dtrInspectionSheetEntity?.treeCuttingRequired != 0
+            ? LTLineTreeCutting.Required
+            : null;
+    isLinesTreeCuttingDisabled = true;
 
-    doubleEarthing=dtrInspectionSheetEntity?.doubleEarthing=="Y"?AbSwitch.Available:dtrInspectionSheetEntity?.doubleEarthing=="N"? AbSwitch.NotAvailable: null;
-    isLineOtherRectDisabled=true;
+    doubleEarthing = dtrInspectionSheetEntity?.doubleEarthing == "Y"
+        ? AbSwitch.Available
+        : dtrInspectionSheetEntity?.doubleEarthing == "N"
+            ? AbSwitch.NotAvailable
+            : null;
+    isLineOtherRectDisabled = true;
 
     //LA
-    lightingArrestors=dtrInspectionSheetEntity?.lightningArrestors=="Good"?AbSwitch.Available:dtrInspectionSheetEntity?.lightningArrestors=="BAD"? AbSwitch.NotAvailable: null;
-    isLightingArrestorsDisabled=true;
+    lightingArrestors = dtrInspectionSheetEntity?.lightningArrestors == "Good"
+        ? AbSwitch.Available
+        : dtrInspectionSheetEntity?.lightningArrestors == "BAD"
+            ? AbSwitch.NotAvailable
+            : null;
+    isLightingArrestorsDisabled = true;
 
     //DTR loading
-    dtrOverLoaded=dtrInspectionSheetEntity?.dtrAglLoadHp==0.0? DTROverLoaded.NotOverLoaded:dtrInspectionSheetEntity?.dtrAglLoadHp!=0.0? DTROverLoaded.OverLoaded: null;
-    isDtrOverLoadedDisabled=true;
+    dtrOverLoaded = dtrInspectionSheetEntity?.dtrAglLoadHp == 0.0
+        ? DTROverLoaded.NotOverLoaded
+        : dtrInspectionSheetEntity?.dtrAglLoadHp != 0.0
+            ? DTROverLoaded.OverLoaded
+            : null;
+    isDtrOverLoadedDisabled = true;
 
-  notifyListeners();
+    notifyListeners();
+  }
 
-}
   OptionSpinner getYesNoSpinner() {
     List<OptionList> optionList = [];
-    optionList.add(OptionList(optionId:"Yes", optionName: "Yes"));
-    optionList.add(OptionList(optionId:"No", optionName: "No"));
+    optionList.add(OptionList(optionId: "Yes", optionName: "Yes"));
+    optionList.add(OptionList(optionId: "No", optionName: "No"));
     return OptionSpinner(optionList);
   }
 
-  OptionSpinner getNumberSpinnerAdapter({required bool includeZero, required int maxValue}) {
+  OptionSpinner getNumberSpinnerAdapter(
+      {required bool includeZero, required int maxValue}) {
     //List<OptionList> optionList = [OptionList(optionId:"-1", optionName:"SELECT")];
     List<OptionList> optionList = [];
 
     for (int i = includeZero ? 0 : 1; i <= maxValue; i++) {
-      optionList.add(OptionList(optionId: i.toString(), optionName: i.toString()));
+      optionList
+          .add(OptionList(optionId: i.toString(), optionName: i.toString()));
     }
 
     return OptionSpinner(optionList);
@@ -535,164 +612,187 @@ void setData(){
     notifyListeners();
   }
 
-bool methodToCallOnSubmitDtrHtSideGroupControllerScreen(BuildContext context, bool promptError) {
-  if (abSwitch == null) {
-    if (promptError) {
-      showAlertDialog(context, "Please select AB Switch available or not");
+  bool methodToCallOnSubmitDtrHtSideGroupControllerScreen(
+      BuildContext context, bool promptError) {
+    if (abSwitch == null) {
+      if (promptError) {
+        showAlertDialog(context, "Please select AB Switch available or not");
+      }
+      return false;
+    } else if (abSwitch == AbSwitch.Available && abSwitchType == null) {
+      if (promptError) {
+        showAlertDialog(context, "Please select AB Switch type");
+      }
+      return false;
+    } else if (abSwitch == AbSwitch.Available && abSwitchStatus == null) {
+      if (promptError) {
+        showAlertDialog(context, "Please select AB Switch status");
+      }
+      return false;
+    } else if (abSwitch == AbSwitch.Available &&
+        abSwitchStatus == Status.Damaged &&
+        spinnerAbSwitchContactsDamagedValue == null) {
+      if (promptError) {
+        showAlertDialog(
+            context, "Please select AB Switch Contacts Damaged Quantity");
+      }
+      return false;
+    } else if (abSwitch == AbSwitch.Available &&
+        abSwitchStatus == Status.Damaged &&
+        spinnerAbSwitchPigTailDamagedValue == null) {
+      if (promptError) {
+        showAlertDialog(context,
+            "Please select AB Switch Copper Strips/Copper Pig tail damaged Quantity");
+      }
+      return false;
+    } else if (abSwitch == AbSwitch.Available &&
+        abSwitchStatus == Status.Damaged &&
+        spinnerAbSwitchNylonBushesDamagedValue == null) {
+      if (promptError) {
+        showAlertDialog(
+            context, "Please select AB Switch Nylon bushes damaged Quantity");
+      }
+      return false;
+    } else if (kv11HgFuseSet == null) {
+      if (promptError) {
+        showAlertDialog(context, "Please select HG fuse set available or not");
+      }
+      return false;
+    } else if (kv11HgFuseSet == AbSwitch.Available && hgFuseStatus == null) {
+      if (promptError) {
+        showAlertDialog(context, "Please select HG fuse set status");
+      }
+      return false;
+    } else if (kv11HgFuseSet == AbSwitch.Available &&
+        hgFuseStatus == Status.Damaged &&
+        spinner11HgFsHornsToReplacedValue == null) {
+      if (promptError) {
+        showAlertDialog(
+            context, "Please select HG fuse Horns to be replaced qty");
+      }
+      return false;
+    } else if (kv11HgFuseSet == AbSwitch.Available &&
+        hgFuseStatus == Status.Damaged &&
+        spinner11HgFsGapNotCorrectValue == null) {
+      if (promptError) {
+        showAlertDialog(context, "Please select HG fuse Gap is correct or not");
+      }
+      return false;
+    } else if (kv11HgFuseSet == AbSwitch.Available &&
+        hgFuseStatus == Status.Damaged &&
+        spinner11HgFsPostTypeInsulatorsDamagedValue == null) {
+      if (promptError) {
+        showAlertDialog(
+            context, "Please select HG fuse post type insulators damaged qty");
+      }
+      return false;
+    } else if (htBushStatus == null) {
+      if (promptError) {
+        showAlertDialog(context, "Please select HT bushes status");
+      }
+      return false;
+    } else if (htBushStatus == Status.Damaged &&
+        spinnerHtBushDamagedQtyValue == null) {
+      if (promptError) {
+        showAlertDialog(context, "Please select HT bushes damaged quantity");
+      }
+      return false;
+    } else if (htBushRodsStatus == null) {
+      if (promptError) {
+        showAlertDialog(context, "Please select HT bushes rods status");
+      }
+      return false;
+    } else if (htBushRodsStatus == Status.Damaged &&
+        spinnerHtBushRodsDamagedQtyValue == null) {
+      if (promptError) {
+        showAlertDialog(context, "Please select HT bush rods damaged quantity");
+      }
+      return false;
     }
-    return false;
-  } else if (abSwitch == AbSwitch.Available && abSwitchType == null) {
-    if (promptError) {
-      showAlertDialog(context, "Please select AB Switch type");
-    }
-    return false;
-  } else if (abSwitch == AbSwitch.Available && abSwitchStatus == null) {
-    if (promptError) {
-      showAlertDialog(context, "Please select AB Switch status");
-    }
-    return false;
-  } else if (abSwitch == AbSwitch.Available &&
-      abSwitchStatus == Status.Damaged &&
-      spinnerAbSwitchContactsDamagedValue == null) {
-    if (promptError) {
-      showAlertDialog(context, "Please select AB Switch Contacts Damaged Quantity");
-    }
-    return false;
-  } else if (abSwitch == AbSwitch.Available &&
-      abSwitchStatus == Status.Damaged &&
-      spinnerAbSwitchPigTailDamagedValue == null) {
-    if (promptError) {
-      showAlertDialog(context, "Please select AB Switch Copper Strips/Copper Pig tail damaged Quantity");
-    }
-    return false;
-  } else if (abSwitch == AbSwitch.Available &&
-      abSwitchStatus == Status.Damaged &&
-      spinnerAbSwitchNylonBushesDamagedValue == null) {
-    if (promptError) {
-      showAlertDialog(context, "Please select AB Switch Nylon bushes damaged Quantity");
-    }
-    return false;
-  } else if (kv11HgFuseSet == null) {
-    if (promptError) {
-      showAlertDialog(context, "Please select HG fuse set available or not");
-    }
-    return false;
-  } else if (kv11HgFuseSet == AbSwitch.Available && hgFuseStatus == null) {
-    if (promptError) {
-      showAlertDialog(context, "Please select HG fuse set status");
-    }
-    return false;
-  } else if (kv11HgFuseSet == AbSwitch.Available &&
-      hgFuseStatus == Status.Damaged &&
-      spinner11HgFsHornsToReplacedValue == null) {
-    if (promptError) {
-      showAlertDialog(context, "Please select HG fuse Horns to be replaced qty");
-    }
-    return false;
-  } else if (kv11HgFuseSet == AbSwitch.Available &&
-      hgFuseStatus == Status.Damaged &&
-      spinner11HgFsGapNotCorrectValue == null) {
-    if (promptError) {
-      showAlertDialog(context, "Please select HG fuse Gap is correct or not");
-    }
-    return false;
-  } else if (kv11HgFuseSet == AbSwitch.Available &&
-      hgFuseStatus == Status.Damaged &&
-      spinner11HgFsPostTypeInsulatorsDamagedValue == null) {
-    if (promptError) {
-      showAlertDialog(context, "Please select HG fuse post type insulators damaged qty");
-    }
-    return false;
-  } else if (htBushStatus == null) {
-    if (promptError) {
-      showAlertDialog(context, "Please select HT bushes status");
-    }
-    return false;
-  } else if (htBushStatus == Status.Damaged && spinnerHtBushDamagedQtyValue == null) {
-    if (promptError) {
-      showAlertDialog(context, "Please select HT bushes damaged quantity");
-    }
-    return false;
-  } else if (htBushRodsStatus == null) {
-    if (promptError) {
-      showAlertDialog(context, "Please select HT bushes rods status");
-    }
-    return false;
-  } else if (htBushRodsStatus == Status.Damaged && spinnerHtBushRodsDamagedQtyValue == null) {
-    if (promptError) {
-      showAlertDialog(context, "Please select HT bush rods damaged quantity");
-    }
-    return false;
-  }
-  return true;
-}
-
-void getData() {
-  HtSideGroupModel htSideGroupModel = HtSideGroupModel(
-    abSwitchAvailable: abSwitch == AbSwitch.Available ? true : false, // Boolean value from UI
-    contactsDamagedQty: 0,
-    brassStripsDamagedQty: 0,
-    nylonBushDamagedQty: 0,
-    hgFuseSet11KvAvailable: kv11HgFuseSet == AbSwitch.Available ? true : false, // Boolean value from UI
-    hornsToBeReplacedQty: 0,
-    gapIsNotCorrect: false,
-    postTypeInsulatorsDamagedQty: 0,
-    htBushDamagedQty: 0,
-    htBushRodsDamagedQty: 0,
-  );
-
-  if (abSwitch == AbSwitch.Available) {
-    htSideGroupModel.abSwitchType = abSwitchType;
-    htSideGroupModel.abSwitchStatus = abSwitchStatus;
-
-    if (abSwitchStatus == Status.Damaged) {
-      htSideGroupModel.contactsDamagedQty = int.tryParse(spinnerAbSwitchContactsDamagedValue!) ?? 0;
-      htSideGroupModel.brassStripsDamagedQty = int.tryParse(spinnerAbSwitchPigTailDamagedValue!) ?? 0;
-      htSideGroupModel.nylonBushDamagedQty = int.tryParse(spinnerAbSwitchNylonBushesDamagedValue!) ?? 0;
-    }
+    return true;
   }
 
-  if (kv11HgFuseSet == AbSwitch.Available) {
-    htSideGroupModel.hgFuseSet11KvAvailable = true;
-    htSideGroupModel.hgFuseStatus = abSwitchStatus;
+  void getData() {
+    HtSideGroupModel htSideGroupModel = HtSideGroupModel(
+      abSwitchAvailable: abSwitch == AbSwitch.Available
+          ? true
+          : false, // Boolean value from UI
+      contactsDamagedQty: 0,
+      brassStripsDamagedQty: 0,
+      nylonBushDamagedQty: 0,
+      hgFuseSet11KvAvailable: kv11HgFuseSet == AbSwitch.Available
+          ? true
+          : false, // Boolean value from UI
+      hornsToBeReplacedQty: 0,
+      gapIsNotCorrect: false,
+      postTypeInsulatorsDamagedQty: 0,
+      htBushDamagedQty: 0,
+      htBushRodsDamagedQty: 0,
+    );
 
-    if (hgFuseStatus == Status.Damaged) {
-      htSideGroupModel.hornsToBeReplacedQty = int.tryParse(spinner11HgFsHornsToReplacedValue!) ?? 0;
-      htSideGroupModel.postTypeInsulatorsDamagedQty = int.tryParse(spinner11HgFsPostTypeInsulatorsDamagedValue!) ?? 0;
-      htSideGroupModel.gapIsNotCorrect = spinner11HgFsGapNotCorrectValue!.toLowerCase() == 'yes';
+    if (abSwitch == AbSwitch.Available) {
+      htSideGroupModel.abSwitchType = abSwitchType;
+      htSideGroupModel.abSwitchStatus = abSwitchStatus;
+
+      if (abSwitchStatus == Status.Damaged) {
+        htSideGroupModel.contactsDamagedQty =
+            int.tryParse(spinnerAbSwitchContactsDamagedValue!) ?? 0;
+        htSideGroupModel.brassStripsDamagedQty =
+            int.tryParse(spinnerAbSwitchPigTailDamagedValue!) ?? 0;
+        htSideGroupModel.nylonBushDamagedQty =
+            int.tryParse(spinnerAbSwitchNylonBushesDamagedValue!) ?? 0;
+      }
     }
-  } else {
-    htSideGroupModel.hgFuseSet11KvAvailable = false;
+
+    if (kv11HgFuseSet == AbSwitch.Available) {
+      htSideGroupModel.hgFuseSet11KvAvailable = true;
+      htSideGroupModel.hgFuseStatus = abSwitchStatus;
+
+      if (hgFuseStatus == Status.Damaged) {
+        htSideGroupModel.hornsToBeReplacedQty =
+            int.tryParse(spinner11HgFsHornsToReplacedValue!) ?? 0;
+        htSideGroupModel.postTypeInsulatorsDamagedQty =
+            int.tryParse(spinner11HgFsPostTypeInsulatorsDamagedValue!) ?? 0;
+        htSideGroupModel.gapIsNotCorrect =
+            spinner11HgFsGapNotCorrectValue!.toLowerCase() == 'yes';
+      }
+    } else {
+      htSideGroupModel.hgFuseSet11KvAvailable = false;
+    }
+
+    htSideGroupModel.htBushesStatus = htBushStatus;
+    if (htBushStatus == Status.Damaged) {
+      htSideGroupModel.htBushDamagedQty =
+          int.tryParse(spinnerHtBushDamagedQtyValue!) ?? 0;
+    }
+
+    htSideGroupModel.htBushRodsStatus = htBushRodsStatus;
+    if (htBushRodsStatus == Status.Damaged) {
+      htSideGroupModel.htBushRodsDamagedQty =
+          int.tryParse(spinnerHtBushRodsDamagedQtyValue!) ?? 0;
+    }
+
+    //return htSideGroupModel;
+    print(htSideGroupModel.toString());
   }
 
-  htSideGroupModel.htBushesStatus = htBushStatus;
-  if (htBushStatus == Status.Damaged) {
-    htSideGroupModel.htBushDamagedQty = int.tryParse(spinnerHtBushDamagedQtyValue!) ?? 0;
-  }
-
-  htSideGroupModel.htBushRodsStatus = htBushRodsStatus;
-  if (htBushRodsStatus == Status.Damaged) {
-    htSideGroupModel.htBushRodsDamagedQty = int.tryParse(spinnerHtBushRodsDamagedQtyValue!) ?? 0;
-  }
-
-  //return htSideGroupModel;
-  print(htSideGroupModel.toString());
-
-
-}
   Map<String, bool Function()> get maintenanceCheckMap => {
-    "HT_SIDE": htIsMaintenanceRequired,
-    // "LT_SIDE": ltIsMaintenanceRequired,
-    // "OIL": oilMaintenanceRequired,
-    // "EARTHING":earthMaintenanceRequired,
-    // "LT_NETWORK": ltnMaintenanceRequired,
-    // "LA": laMaintenanceRequired,
-    // "DTR_LOADING": dtrMaintenanceRequired,
-    // "TONG": () => false,
-  };
+        "HT_SIDE": htIsMaintenanceRequired,
+        // "LT_SIDE": ltIsMaintenanceRequired,
+        // "OIL": oilMaintenanceRequired,
+        // "EARTHING":earthMaintenanceRequired,
+        // "LT_NETWORK": ltnMaintenanceRequired,
+        // "LA": laMaintenanceRequired,
+        // "DTR_LOADING": dtrMaintenanceRequired,
+        // "TONG": () => false,
+      };
 
-  bool htIsMaintenanceRequired(){
-    return abSwitch!=null&&abSwitchType!=null&&abSwitchStatus!=null&&kv11HgFuseSet!=null&&hgFuseStatus!=null;
+  bool htIsMaintenanceRequired() {
+    return abSwitch != null &&
+        abSwitchType != null &&
+        abSwitchStatus != null &&
+        kv11HgFuseSet != null &&
+        hgFuseStatus != null;
   }
 
 // bool ltIsMaintenanceRequired(){
@@ -722,6 +822,4 @@ void getData() {
 // bool dtrMaintenanceRequired(){
 //   return (dtrInspectionSheetEntity?.dtrAglLoadHp>0.0 || dtrInspectionSheetEntity?.domesticNonDomLoad >0.0 || dtrInspectionSheetEntity?.industrialLoadInHp>0.0 || dtrInspectionSheetEntity?.waterWorksLoadInHp>0.0 || dtrInspectionSheetEntity?.otherLoadInKw>0.0);
 // }
-
-
 }

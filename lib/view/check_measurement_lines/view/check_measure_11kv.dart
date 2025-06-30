@@ -51,7 +51,7 @@ class CheckMeasure11kv extends StatelessWidget {
                         },
                         child: const Text(
                           "EDIT",
-                          style: const TextStyle(
+                          style: TextStyle(
                               color: Colors.white,
                               fontSize: btnTextSize,
                               fontWeight: FontWeight.w700),
@@ -65,7 +65,9 @@ class CheckMeasure11kv extends StatelessWidget {
                       children: [
                         Expanded(
                           child: GoogleMap(
-                            initialCameraPosition: viewModel.cameraPosition ?? const CameraPosition(target: LatLng(0, 0), zoom: 10),
+                            initialCameraPosition: viewModel.cameraPosition ??
+                                const CameraPosition(
+                                    target: LatLng(0, 0), zoom: 10),
                             polylines: viewModel.polylines,
                             markers: viewModel.markers.toSet(),
                             myLocationEnabled: false,
@@ -124,22 +126,25 @@ class CheckMeasure11kv extends StatelessWidget {
                                             // labelText: 'Select an option',
                                             border: OutlineInputBorder(),
                                           ),
-                                          child: viewModel.poleNumber.text==""?Text(
-                                            viewModel.selectedPoleFeeder != null
-                                                ? (viewModel.selectedPoleFeeder!
-                                                                .tempSeries !=
-                                                            null &&
-                                                        viewModel
-                                                            .selectedPoleFeeder!
-                                                            .tempSeries!
-                                                            .isNotEmpty
-                                                    ? '${viewModel.selectedPoleFeeder!.tempSeries}-${viewModel.selectedPoleFeeder!.poleNum}'
-                                                    : viewModel
-                                                            .selectedPoleFeeder!
-                                                            .poleNum ??
-                                                        '')
-                                                : 'Tap to select',
-                                          ):Text(viewModel.poleNumber.text),
+                                          child: viewModel.poleNumber.text == ""
+                                              ? Text(
+                                                  viewModel.selectedPoleFeeder !=
+                                                          null
+                                                      ? (viewModel.selectedPoleFeeder!
+                                                                      .tempSeries !=
+                                                                  null &&
+                                                              viewModel
+                                                                  .selectedPoleFeeder!
+                                                                  .tempSeries!
+                                                                  .isNotEmpty
+                                                          ? '${viewModel.selectedPoleFeeder!.tempSeries}-${viewModel.selectedPoleFeeder!.poleNum}'
+                                                          : viewModel
+                                                                  .selectedPoleFeeder!
+                                                                  .poleNum ??
+                                                              '')
+                                                      : 'Tap to select',
+                                                )
+                                              : Text(viewModel.poleNumber.text),
                                         ),
                                       ),
                                     ]),
@@ -693,9 +698,8 @@ class CheckMeasure11kv extends StatelessWidget {
                                                 "Other Commun. Lines",
                                                 viewModel.selectedCrossings,
                                                 (bool? checked) {
-                                                  viewModel
-                                                      .setSelectedCrossings(
-                                                          "Other Commun. Lines");
+                                                  viewModel.setSelectedCrossings(
+                                                      "Other Commun. Lines");
                                                 },
                                                 true,
                                               ),
@@ -785,7 +789,7 @@ class CheckMeasure11kv extends StatelessWidget {
                                                 isExpanded: true,
                                                 value:
                                                     viewModel.selectedDtrPhase,
-                                                hint: Text("Select"),
+                                                hint: const Text("Select"),
                                                 items: viewModel.dtrPhase
                                                     .map((String value) {
                                                   return DropdownMenuItem<
@@ -936,12 +940,11 @@ class CheckMeasure11kv extends StatelessWidget {
                                           viewModel.onListLTSelected(newValue),
                                     ),
                                     Row(children: [
-                                      const Expanded(
-                                          child: const Text("Plint Type")),
+                                      const Expanded(child: Text("Plint Type")),
                                       Expanded(
                                         child: DropdownButtonFormField<String>(
                                           value: viewModel.selectedpLintType,
-                                          hint: Text("Select"),
+                                          hint: const Text("Select"),
                                           isExpanded: true,
                                           items: viewModel.pLintType
                                               .map((String value) {
@@ -967,7 +970,7 @@ class CheckMeasure11kv extends StatelessWidget {
                                                 DropdownButtonFormField<String>(
                                                   value: viewModel
                                                       .selectedEarthingType,
-                                                  hint: Text("Select"),
+                                                  hint: const Text("Select"),
                                                   isExpanded: true,
                                                   items: viewModel.earthingType
                                                       .map((String value) {
@@ -996,7 +999,7 @@ class CheckMeasure11kv extends StatelessWidget {
                                                 DropdownButtonFormField<String>(
                                                   value: viewModel
                                                       .selectedEarthPits,
-                                                  hint: Text("Select"),
+                                                  hint: const Text("Select"),
                                                   isExpanded: true,
                                                   items: viewModel.noOfEarthPits
                                                       .map((int value) {
@@ -1160,11 +1163,11 @@ class CheckMeasure11kv extends StatelessWidget {
                 onChanged: (_) => onCheckboxToggle(),
               ),
             ),
-            SizedBox(width: 10),
+            const SizedBox(width: 10),
             Expanded(
               child: DropdownButtonFormField<String>(
                 value: dropValue,
-                hint: Text("Select"),
+                hint: const Text("Select"),
                 isExpanded: true,
                 items: viewModel.poleQty.map((int value) {
                   final stringValue = value.toString();
@@ -1196,7 +1199,7 @@ class CheckMeasure11kv extends StatelessWidget {
           Expanded(
             child: DropdownButtonFormField<String>(
               value: selectedValue,
-              hint: Text("Select"),
+              hint: const Text("Select"),
               isExpanded: true,
               items: smQty.map((int value) {
                 final stringValue = value.toString();

@@ -20,7 +20,7 @@ class CTFailureReportViewModel extends ChangeNotifier {
   String? selectedMake;
   String? selectedCTPTRatio;
   List<SubstationModel> _substations = [];
-  List<String> _areas = []; // Store API-fetched areas
+  final List<String> _areas = []; // Store API-fetched areas
   List<String> _makes = []; // Store API-fetched makes
   List<String> _ctptRatios = []; // Store API-fetched CT/PT ratios
   bool _isLoading = false;
@@ -79,7 +79,7 @@ class CTFailureReportViewModel extends ChangeNotifier {
         "method": "POST",
         "data": jsonEncode({
           "authToken":
-          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+              SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
           "api": Apis.API_KEY,
         })
       };
@@ -110,12 +110,12 @@ class CTFailureReportViewModel extends ChangeNotifier {
             jsonList = [];
           }
 
-          _substations = jsonList
-              .map((json) => SubstationModel.fromJson(json))
-              .toList();
+          _substations =
+              jsonList.map((json) => SubstationModel.fromJson(json)).toList();
 
           if (_substations.isNotEmpty) {
-            selectedHTSC = '${_substations.first.newUscno}(${_substations.first.cname})';
+            selectedHTSC =
+                '${_substations.first.newUscno}(${_substations.first.cname})';
             notifyListeners(); // Notify listeners after setting selectedHTSC
             await fetchAreas(); // Call fetchAreas to get areas for default HTSC
           }
@@ -128,7 +128,8 @@ class CTFailureReportViewModel extends ChangeNotifier {
       } else {
         showAlertDialog(
           context,
-          responseData['message'] ?? "API returned status ${response.statusCode}",
+          responseData['message'] ??
+              "API returned status ${response.statusCode}",
         );
       }
     } catch (e) {
@@ -159,7 +160,7 @@ class CTFailureReportViewModel extends ChangeNotifier {
         }
       }
 
-      if (selectedSubstation == null || selectedSubstation.ebsSeccode == null) {
+      if (selectedSubstation == null) {
         showAlertDialog(context, "Invalid HT SC. NO. selected.");
         return;
       }
@@ -170,7 +171,7 @@ class CTFailureReportViewModel extends ChangeNotifier {
         "method": "POST",
         "data": jsonEncode({
           "authToken":
-          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+              SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
           "api": Apis.API_KEY,
           "ebssec": selectedSubstation.ebsSeccode,
         })
@@ -233,7 +234,8 @@ class CTFailureReportViewModel extends ChangeNotifier {
       } else {
         showAlertDialog(
           context,
-          responseData['message'] ?? "API returned status ${response.statusCode}",
+          responseData['message'] ??
+              "API returned status ${response.statusCode}",
         );
       }
     } catch (e) {
@@ -257,7 +259,7 @@ class CTFailureReportViewModel extends ChangeNotifier {
         "method": "POST",
         "data": jsonEncode({
           "authToken":
-          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+              SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
           "api": Apis.API_KEY,
         })
       };
@@ -308,7 +310,8 @@ class CTFailureReportViewModel extends ChangeNotifier {
       } else {
         showAlertDialog(
           context,
-          responseData['message'] ?? "API returned status ${response.statusCode}",
+          responseData['message'] ??
+              "API returned status ${response.statusCode}",
         );
       }
     } catch (e) {
@@ -332,7 +335,7 @@ class CTFailureReportViewModel extends ChangeNotifier {
         "method": "POST",
         "data": jsonEncode({
           "authToken":
-          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+              SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
           "api": Apis.API_KEY,
         })
       };
@@ -378,12 +381,14 @@ class CTFailureReportViewModel extends ChangeNotifier {
       } else {
         showAlertDialog(
           context,
-          responseData['message'] ?? "API returned status ${response.statusCode}",
+          responseData['message'] ??
+              "API returned status ${response.statusCode}",
         );
       }
     } catch (e) {
       print('Error in getCtPtRatios: $e'); // Debug log
-      showErrorDialog(context, "An error occurred while fetching CT/PT ratios: $e");
+      showErrorDialog(
+          context, "An error occurred while fetching CT/PT ratios: $e");
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -393,12 +398,13 @@ class CTFailureReportViewModel extends ChangeNotifier {
 
   List<String> get htscList => _substations.isNotEmpty
       ? _substations
-      .map((substation) => '${substation.newUscno}(${substation.cname})')
-      .toList()
+          .map((substation) => '${substation.newUscno}(${substation.cname})')
+          .toList()
       : ['Select HT SC. NO.'];
 
   // Replace villageList with API-fetched areas
-  List<String> get villageList => _areas.isNotEmpty ? _areas : ['Select Village'];
+  List<String> get villageList =>
+      _areas.isNotEmpty ? _areas : ['Select Village'];
 
   // Replace makeList with API-fetched makes
   List<String> get makeList => _makes.isNotEmpty ? _makes : ['Select Make'];
@@ -443,7 +449,8 @@ class CTFailureReportViewModel extends ChangeNotifier {
   // Update saveCtPtReport to use area code from map
   Future<void> saveCtPtReport() async {
     if (!_validateForm()) {
-      AlertUtils.showSnackBar(context, "Please fill all required fields.", isTrue);
+      AlertUtils.showSnackBar(
+          context, "Please fill all required fields.", isTrue);
       return;
     }
 
@@ -470,7 +477,7 @@ class CTFailureReportViewModel extends ChangeNotifier {
 
       final dataPayload = {
         "authToken":
-        SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+            SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
         "api": Apis.API_KEY,
         "an": selectedVillage ?? "",
         "ac": areaCode, // Use area code from map
@@ -504,15 +511,24 @@ class CTFailureReportViewModel extends ChangeNotifier {
       }
 
       if (response.statusCode == successResponseCode) {
-        if (responseData['tokenValid'] == true && responseData['success'] == true) {
-          AlertUtils.showSnackBar(context, responseData['message'] ?? "CT/PT report saved successfully!", isFalse);
+        if (responseData['tokenValid'] == true &&
+            responseData['success'] == true) {
+          AlertUtils.showSnackBar(
+              context,
+              responseData['message'] ?? "CT/PT report saved successfully!",
+              isFalse);
           _resetForm();
           Navigator.pop(context);
         } else {
-          AlertUtils.showSnackBar(context, responseData['message'] ?? "Failed to save CT/PT report", isTrue);
+          AlertUtils.showSnackBar(context,
+              responseData['message'] ?? "Failed to save CT/PT report", isTrue);
         }
       } else {
-        AlertUtils.showSnackBar(context, responseData['message'] ?? "API returned status ${response.statusCode}", isTrue);
+        AlertUtils.showSnackBar(
+            context,
+            responseData['message'] ??
+                "API returned status ${response.statusCode}",
+            isTrue);
       }
     } catch (e) {
       AlertUtils.showSnackBar(context, "An error occurred: $e", isTrue);

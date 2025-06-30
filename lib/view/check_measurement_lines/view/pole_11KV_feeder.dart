@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -43,7 +42,9 @@ class Pole11kvFeeder extends StatelessWidget {
                   children: [
                     Expanded(
                       child: GoogleMap(
-                        initialCameraPosition: viewModel.cameraPosition ?? const CameraPosition(target: LatLng(0, 0), zoom: 10),
+                        initialCameraPosition: viewModel.cameraPosition ??
+                            const CameraPosition(
+                                target: LatLng(0, 0), zoom: 10),
                         polylines: viewModel.polylines,
                         markers: viewModel.markers.toSet(),
                         myLocationEnabled: false,
@@ -54,7 +55,6 @@ class Pole11kvFeeder extends StatelessWidget {
                         },
                       ),
                     ),
-
 
                     // Fixed switch
                     SwitchListTile(

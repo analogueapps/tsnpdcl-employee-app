@@ -16,7 +16,9 @@ import 'package:tsnpdcl_employee/view/middle_poles/model/p_f_detail_model.dart';
 
 class ViewBriefDetailsPfViewmodel extends ChangeNotifier {
   ViewBriefDetailsPfViewmodel(
-      {required this.context, required this.surId, required this.individualStatus}) {
+      {required this.context,
+      required this.surId,
+      required this.individualStatus}) {
     init();
   }
 
@@ -32,14 +34,11 @@ class ViewBriefDetailsPfViewmodel extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   void init() {
-
     print("individualStatus $individualStatus");
     getData(surId);
   }
 
-
-
-  List<PFDetailModel> _workDetails = [];
+  final List<PFDetailModel> _workDetails = [];
   List<PFDetailModel> get workDetails => _workDetails;
 
   Future<void> getData(int surId) async {
@@ -54,7 +53,8 @@ class ViewBriefDetailsPfViewmodel extends ChangeNotifier {
 
     try {
       final requestData = {
-        "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+        "authToken":
+            SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
         "api": Apis.API_KEY,
         "_id": surId
       };
@@ -89,7 +89,8 @@ class ViewBriefDetailsPfViewmodel extends ChangeNotifier {
           const bool isTrue = true;
 
           if (response.statusCode == successResponseCode) {
-            if (responseData['tokenValid'] == isTrue || responseData['tokenValid'] == false) {
+            if (responseData['tokenValid'] == isTrue ||
+                responseData['tokenValid'] == false) {
               if (responseData['success'] == isTrue) {
                 if (responseData['objectJson'] != null) {
                   try {
@@ -102,18 +103,22 @@ class ViewBriefDetailsPfViewmodel extends ChangeNotifier {
                           .replaceAll(r'\u0026', '&')
                           .trim();
                       if (cleanedJsonString.endsWith(',')) {
-                        cleanedJsonString =
-                            cleanedJsonString.substring(0, cleanedJsonString.length - 1);
+                        cleanedJsonString = cleanedJsonString.substring(
+                            0, cleanedJsonString.length - 1);
                       }
                       if (!cleanedJsonString.startsWith('[')) {
                         cleanedJsonString = '[$cleanedJsonString]';
                       }
                       final parsedList = jsonDecode(cleanedJsonString) as List;
-                      dataList = parsedList.map((json) => PFDetailModel.fromJson(json)).toList();
+                      dataList = parsedList
+                          .map((json) => PFDetailModel.fromJson(json))
+                          .toList();
                     } else if (jsonList is List) {
-                      dataList = jsonList.map((json) => PFDetailModel.fromJson(json)).toList();
+                      dataList = jsonList
+                          .map((json) => PFDetailModel.fromJson(json))
+                          .toList();
                     }
-                      print("data is : $dataList");
+                    print("data is : $dataList");
                     _workDetails.clear();
                     _workDetails.addAll(dataList);
                     print("$_workDetails:workDetails");
@@ -121,20 +126,23 @@ class ViewBriefDetailsPfViewmodel extends ChangeNotifier {
                   } catch (e, stackTrace) {
                     print("Error parsing objectJson: $e");
                     print("Stack trace: $stackTrace");
-                    showErrorDialog(context, "Failed to parse GIS data. Please contact support.");
+                    showErrorDialog(context,
+                        "Failed to parse GIS data. Please contact support.");
                   }
                 } else {
                   print("No objectJson found in response");
                   showAlertDialog(context, "No GIS data available.");
                 }
               } else {
-                showAlertDialog(context, responseData['message'] ?? "Operation failed");
+                showAlertDialog(
+                    context, responseData['message'] ?? "Operation failed");
               }
             } else {
               showSessionExpiredDialog(context);
             }
           } else {
-            showErrorDialog(context, "Request failed with status: ${response.statusCode}");
+            showErrorDialog(
+                context, "Request failed with status: ${response.statusCode}");
           }
         } else {
           showErrorDialog(context, "Unexpected response format.");
@@ -155,5 +163,4 @@ class ViewBriefDetailsPfViewmodel extends ChangeNotifier {
       });
     }
   }
-
 }

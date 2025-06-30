@@ -9,7 +9,7 @@ class ForwardOrRejectIndentDialogViewModel extends ChangeNotifier {
   final BuildContext context;
   final PoleRequestIndentEntity poleRequestIndentEntity;
 
-  bool _isLoading = isFalse;
+  final bool _isLoading = isFalse;
   bool get isLoading => _isLoading;
 
   String? selectedCheckboxId;
@@ -19,7 +19,8 @@ class ForwardOrRejectIndentDialogViewModel extends ChangeNotifier {
   String? fysSelect;
 
   // Constructor to initialize the items
-  ForwardOrRejectIndentDialogViewModel({required this.context, required this.poleRequestIndentEntity}) {
+  ForwardOrRejectIndentDialogViewModel(
+      {required this.context, required this.poleRequestIndentEntity}) {
     getFinancialYear();
   }
 
@@ -37,7 +38,8 @@ class ForwardOrRejectIndentDialogViewModel extends ChangeNotifier {
 
     for (int i = 2020; i <= currentYear; i++) {
       String financialYear = '$i-${i + 1}';
-      fys.add(SpinnerList(optionCode: financialYear, optionName: financialYear));
+      fys.add(
+          SpinnerList(optionCode: financialYear, optionName: financialYear));
     }
 
     if (true) {
@@ -49,14 +51,11 @@ class ForwardOrRejectIndentDialogViewModel extends ChangeNotifier {
 
   void onListFysValueChange(String? value) {
     fysSelect = value;
-    if(value != null) {
+    if (value != null) {
       getPurchaseOrderOfFyAndStores(value);
     }
     notifyListeners();
   }
 
-  void getPurchaseOrderOfFyAndStores(String financialYear) {
-
-  }
-
+  void getPurchaseOrderOfFyAndStores(String financialYear) {}
 }

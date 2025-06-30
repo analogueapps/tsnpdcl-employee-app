@@ -18,7 +18,7 @@ class PoleTrackerSelectionViewSketchViewmodel extends ChangeNotifier {
   // Current View Context
   final BuildContext context;
 
-  bool _isLoading = isFalse;
+  final bool _isLoading = isFalse;
   bool get isLoading => _isLoading;
 
   String? selectedCheckboxId;
@@ -44,9 +44,9 @@ class PoleTrackerSelectionViewSketchViewmodel extends ChangeNotifier {
       selectedCheckboxId = null; // Uncheck if the same checkbox is clicked
     } else {
       selectedCheckboxId = id;
-      if(id == "33KV LINE"){
+      if (id == "33KV LINE") {
         get132KVSSLines();
-      } else if(id == "11KV LINE") {
+      } else if (id == "11KV LINE") {
         get33kVSsOfCircle();
       }
     }
@@ -60,7 +60,8 @@ class PoleTrackerSelectionViewSketchViewmodel extends ChangeNotifier {
     );
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
     };
 
@@ -71,7 +72,8 @@ class PoleTrackerSelectionViewSketchViewmodel extends ChangeNotifier {
       "data": jsonEncode(requestData),
     };
 
-    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -82,25 +84,27 @@ class PoleTrackerSelectionViewSketchViewmodel extends ChangeNotifier {
           response.data = jsonDecode(response.data); // Parse string to JSON
         }
         if (response.statusCode == successResponseCode) {
-          if(response.data['tokenValid'] == isTrue) {
+          if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
-              if(response.data['objectJson'] != null) {
-                final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
-                final List<SpinnerList> listData = jsonList.map((json) => SpinnerList.fromJson(json)).toList();
+              if (response.data['objectJson'] != null) {
+                final List<dynamic> jsonList =
+                    jsonDecode(response.data['objectJson']);
+                final List<SpinnerList> listData =
+                    jsonList.map((json) => SpinnerList.fromJson(json)).toList();
                 listSubStationItem.addAll(listData);
               }
             } else {
-              showAlertDialog(context,response.data['message']);
+              showAlertDialog(context, response.data['message']);
             }
           } else {
             showSessionExpiredDialog(context);
           }
         } else {
-          showAlertDialog(context,response.data['message']);
+          showAlertDialog(context, response.data['message']);
         }
       }
     } catch (e) {
-      showErrorDialog(context,  "An error occurred. Please try again.");
+      showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
     }
 
@@ -110,11 +114,11 @@ class PoleTrackerSelectionViewSketchViewmodel extends ChangeNotifier {
   void onListSubStationItemSelect(String? value) {
     listSubStationSelect = value;
     listSubStationSelectBottom = listSubStationSelect;
-    if(value != null) {
+    if (value != null) {
       clearList33KvFeederOf132kVssItem();
-      if(selectedCheckboxId == "33KV LINE") {
+      if (selectedCheckboxId == "33KV LINE") {
         get33KVFeederOf132KVSSLines(value);
-      } else if(selectedCheckboxId == "11KV LINE") {
+      } else if (selectedCheckboxId == "11KV LINE") {
         getFeeders(value);
       }
     }
@@ -128,7 +132,8 @@ class PoleTrackerSelectionViewSketchViewmodel extends ChangeNotifier {
     );
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "ss": ss,
     };
@@ -140,7 +145,8 @@ class PoleTrackerSelectionViewSketchViewmodel extends ChangeNotifier {
       "data": jsonEncode(requestData),
     };
 
-    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -151,26 +157,29 @@ class PoleTrackerSelectionViewSketchViewmodel extends ChangeNotifier {
           response.data = jsonDecode(response.data); // Parse string to JSON
         }
         if (response.statusCode == successResponseCode) {
-          if(response.data['tokenValid'] == isTrue) {
+          if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
-              if(response.data['objectJson'] != null) {
-                final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
-                final List<SpinnerList> listData = jsonList.map((json) => SpinnerList.fromJson(json)).toList();
-                listFeederItem.add(SpinnerList(optionCode: "NFP", optionName: "New Feeder Proposal"));
+              if (response.data['objectJson'] != null) {
+                final List<dynamic> jsonList =
+                    jsonDecode(response.data['objectJson']);
+                final List<SpinnerList> listData =
+                    jsonList.map((json) => SpinnerList.fromJson(json)).toList();
+                listFeederItem.add(SpinnerList(
+                    optionCode: "NFP", optionName: "New Feeder Proposal"));
                 listFeederItem.addAll(listData);
               }
             } else {
-              showAlertDialog(context,response.data['message']);
+              showAlertDialog(context, response.data['message']);
             }
           } else {
             showSessionExpiredDialog(context);
           }
         } else {
-          showAlertDialog(context,response.data['message']);
+          showAlertDialog(context, response.data['message']);
         }
       }
     } catch (e) {
-      showErrorDialog(context,  "An error occurred. Please try again.");
+      showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
     }
 
@@ -180,9 +189,10 @@ class PoleTrackerSelectionViewSketchViewmodel extends ChangeNotifier {
   void onListFeederItemSelect(String? value) {
     listFeederSelect = value;
     listFeederSelectBottom = listFeederSelect;
-    if(listFeederSelect == "NFP") {
-      Navigation.instance.navigateTo(Routes.newProposalScreen, args: listSubStationSelect,onReturn: (result) {
-        if(result != null) {
+    if (listFeederSelect == "NFP") {
+      Navigation.instance.navigateTo(Routes.newProposalScreen,
+          args: listSubStationSelect, onReturn: (result) {
+        if (result != null) {
           Map<String, dynamic> jsonMap = json.decode(result);
           newSketchPropEntity = NewSketchPropEntity.fromJson(jsonMap);
           notifyListeners();
@@ -200,7 +210,8 @@ class PoleTrackerSelectionViewSketchViewmodel extends ChangeNotifier {
     );
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
     };
 
@@ -211,7 +222,8 @@ class PoleTrackerSelectionViewSketchViewmodel extends ChangeNotifier {
       "data": jsonEncode(requestData),
     };
 
-    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -222,25 +234,27 @@ class PoleTrackerSelectionViewSketchViewmodel extends ChangeNotifier {
           response.data = jsonDecode(response.data); // Parse string to JSON
         }
         if (response.statusCode == successResponseCode) {
-          if(response.data['tokenValid'] == isTrue) {
+          if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
-              if(response.data['objectJson'] != null) {
-                final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
-                final List<SpinnerList> listData = jsonList.map((json) => SpinnerList.fromJson(json)).toList();
+              if (response.data['objectJson'] != null) {
+                final List<dynamic> jsonList =
+                    jsonDecode(response.data['objectJson']);
+                final List<SpinnerList> listData =
+                    jsonList.map((json) => SpinnerList.fromJson(json)).toList();
                 listSubStationItem.addAll(listData);
               }
             } else {
-              showAlertDialog(context,response.data['message']);
+              showAlertDialog(context, response.data['message']);
             }
           } else {
             showSessionExpiredDialog(context);
           }
         } else {
-          showAlertDialog(context,response.data['message']);
+          showAlertDialog(context, response.data['message']);
         }
       }
     } catch (e) {
-      showErrorDialog(context,  "An error occurred. Please try again.");
+      showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
     }
 
@@ -254,7 +268,8 @@ class PoleTrackerSelectionViewSketchViewmodel extends ChangeNotifier {
     );
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "ss": ss,
     };
@@ -266,7 +281,8 @@ class PoleTrackerSelectionViewSketchViewmodel extends ChangeNotifier {
       "data": jsonEncode(requestData),
     };
 
-    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -277,26 +293,29 @@ class PoleTrackerSelectionViewSketchViewmodel extends ChangeNotifier {
           response.data = jsonDecode(response.data); // Parse string to JSON
         }
         if (response.statusCode == successResponseCode) {
-          if(response.data['tokenValid'] == isTrue) {
+          if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
-              if(response.data['objectJson'] != null) {
-                final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
-                final List<SpinnerList> listData = jsonList.map((json) => SpinnerList.fromJson(json)).toList();
-                listFeederItem.add(SpinnerList(optionCode: "NFP", optionName: "New Feeder Proposal"));
+              if (response.data['objectJson'] != null) {
+                final List<dynamic> jsonList =
+                    jsonDecode(response.data['objectJson']);
+                final List<SpinnerList> listData =
+                    jsonList.map((json) => SpinnerList.fromJson(json)).toList();
+                listFeederItem.add(SpinnerList(
+                    optionCode: "NFP", optionName: "New Feeder Proposal"));
                 listFeederItem.addAll(listData);
               }
             } else {
-              showAlertDialog(context,response.data['message']);
+              showAlertDialog(context, response.data['message']);
             }
           } else {
             showSessionExpiredDialog(context);
           }
         } else {
-          showAlertDialog(context,response.data['message']);
+          showAlertDialog(context, response.data['message']);
         }
       }
     } catch (e) {
-      showErrorDialog(context,  "An error occurred. Please try again.");
+      showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
     }
 
@@ -323,11 +342,11 @@ class PoleTrackerSelectionViewSketchViewmodel extends ChangeNotifier {
   }
 
   Future<void> onNextClicked() async {
-    if(selectedCheckboxId != null) {
-      if (listSubStationSelect == null)  {
+    if (selectedCheckboxId != null) {
+      if (listSubStationSelect == null) {
         showAlertDialog(context, "Please select the Substation");
         return;
-      } else if (listFeederSelect == null)  {
+      } else if (listFeederSelect == null) {
         showAlertDialog(context, "Please select the Feeder");
         return;
       }
@@ -335,15 +354,18 @@ class PoleTrackerSelectionViewSketchViewmodel extends ChangeNotifier {
       var argument = {
         'd': json.encode(newSketchPropEntity),
         'ssc': listSubStationSelect,
-        'ssn': listSubStationItem.firstWhere((item) => item.optionCode == listSubStationSelect).optionName,
+        'ssn': listSubStationItem
+            .firstWhere((item) => item.optionCode == listSubStationSelect)
+            .optionName,
         'fc': listFeederSelect,
-        'fn': listFeederItem.firstWhere((item) => item.optionCode == listFeederSelect).optionName,
+        'fn': listFeederItem
+            .firstWhere((item) => item.optionCode == listFeederSelect)
+            .optionName,
       };
-      Navigation.instance.navigateTo(Routes.viewDigitalSketchScreen, args: argument);
-
+      Navigation.instance
+          .navigateTo(Routes.viewDigitalSketchScreen, args: argument);
     } else {
       showAlertDialog(context, "Please select the Line Voltage level");
     }
   }
-
 }

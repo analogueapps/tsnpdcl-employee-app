@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
@@ -44,7 +43,6 @@ class CheckMeasureViewModel extends ChangeNotifier {
   String? listSubStationSelect;
   String? listSubStationSelectBottom;
 
-
   List<SpinnerList> listFeederItem = [];
   String? listFeederSelect;
   String? listFeederSelectBottom;
@@ -56,7 +54,8 @@ class CheckMeasureViewModel extends ChangeNotifier {
     );
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "ss": ss,
     };
@@ -68,7 +67,8 @@ class CheckMeasureViewModel extends ChangeNotifier {
       "data": jsonEncode(requestData),
     };
 
-    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -79,42 +79,43 @@ class CheckMeasureViewModel extends ChangeNotifier {
           response.data = jsonDecode(response.data); // Parse string to JSON
         }
         if (response.statusCode == successResponseCode) {
-          if(response.data['tokenValid'] == isTrue) {
+          if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
-              if(response.data['objectJson'] != null) {
-                final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
-                final List<SpinnerList> listData = jsonList.map((json) => SpinnerList.fromJson(json)).toList();
+              if (response.data['objectJson'] != null) {
+                final List<dynamic> jsonList =
+                    jsonDecode(response.data['objectJson']);
+                final List<SpinnerList> listData =
+                    jsonList.map((json) => SpinnerList.fromJson(json)).toList();
                 // listFeederItem.add(SpinnerList(optionCode: "NFP", optionName: "New Feeder Proposal"));
                 listFeederItem.addAll(listData);
               }
             } else {
-              showAlertDialog(context,response.data['message']);
+              showAlertDialog(context, response.data['message']);
             }
           } else {
             showSessionExpiredDialog(context);
           }
         } else {
-          showAlertDialog(context,response.data['message']);
+          showAlertDialog(context, response.data['message']);
         }
       }
     } catch (e) {
-      showErrorDialog(context,  "An error occurred. Please try again.");
+      showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
     }
 
     notifyListeners();
   }
 
-
   void onListSubStationItemSelect(String? value) {
     listSubStationSelect = value;
     listSubStationSelectBottom = listSubStationSelect;
 
-      if(selectedCheckboxId == "33KV Line"){
-        get33KVFeederOf132KVSSLines(listSubStationSelect!);
-      } else if(selectedCheckboxId == "11 KV Line") {
-        getFeeders(listSubStationSelect!);
-      }
+    if (selectedCheckboxId == "33KV Line") {
+      get33KVFeederOf132KVSSLines(listSubStationSelect!);
+    } else if (selectedCheckboxId == "11 KV Line") {
+      getFeeders(listSubStationSelect!);
+    }
     listFeederItem.clear();
     listFeederSelect = null;
     listFeederSelectBottom = null;
@@ -139,16 +140,16 @@ class CheckMeasureViewModel extends ChangeNotifier {
       selectedCheckboxId = null; // Uncheck if the same checkbox is clicked
     } else {
       selectedCheckboxId = id;
-      if(id == "33KV Line"){
+      if (id == "33KV Line") {
         get132KVSSLines();
-      } else if(id == "11 KV Line") {
+      } else if (id == "11 KV Line") {
         get33kVSsOfCircle();
       }
     }
     notifyListeners(); // Notify the view about the change
   }
 
-  void selectPurposeCheckbox(String id) async{
+  void selectPurposeCheckbox(String id) async {
     if (listSubStationSelect == null) {
       showAlertDialog(context, "Please select the Substation first.!");
       return;
@@ -159,31 +160,29 @@ class CheckMeasureViewModel extends ChangeNotifier {
       selectedPurposeCheckboxId = null;
     } else {
       selectedPurposeCheckboxId = id;
-      if(selectedPurposeCheckboxId=="ECMD"){
-          Navigation.instance.navigateTo(Routes.docketScreen, args: listSubStationSelect, onReturn: (result) {
-            print("docket result: $result");
-          if (result != null ) {
+      if (selectedPurposeCheckboxId == "ECMD") {
+        Navigation.instance.navigateTo(Routes.docketScreen,
+            args: listSubStationSelect, onReturn: (result) {
+          print("docket result: $result");
+          if (result != null) {
             print("result from docket: ${result.worklDesc}");
             if (result != null && result is DocketEntity) {
-                  descriptionController.text = result.worklDesc ?? '';
-                  estimateController.text = result.estimateNo ?? '';
-                  _selectedEntity =  result;
-              }
-          }else {
-            selectedPurposeCheckboxId=null;
+              descriptionController.text = result.worklDesc ?? '';
+              estimateController.text = result.estimateNo ?? '';
+              _selectedEntity = result;
+            }
+          } else {
+            selectedPurposeCheckboxId = null;
             descriptionController.clear();
             estimateController.clear();
             _selectedEntity = null;
             notifyListeners();
-
           }
-        }
-        );
+        });
       }
     }
     notifyListeners();
   }
-
 
   void onListFeederItemSelect(String? value) {
     listFeederSelect = value;
@@ -200,7 +199,8 @@ class CheckMeasureViewModel extends ChangeNotifier {
     );
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
     };
 
@@ -211,7 +211,8 @@ class CheckMeasureViewModel extends ChangeNotifier {
       "data": jsonEncode(requestData),
     };
 
-    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -222,25 +223,27 @@ class CheckMeasureViewModel extends ChangeNotifier {
           response.data = jsonDecode(response.data); // Parse string to JSON
         }
         if (response.statusCode == successResponseCode) {
-          if(response.data['tokenValid'] == isTrue) {
+          if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
-              if(response.data['objectJson'] != null) {
-                final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
-                final List<SpinnerList> listData = jsonList.map((json) => SpinnerList.fromJson(json)).toList();
+              if (response.data['objectJson'] != null) {
+                final List<dynamic> jsonList =
+                    jsonDecode(response.data['objectJson']);
+                final List<SpinnerList> listData =
+                    jsonList.map((json) => SpinnerList.fromJson(json)).toList();
                 listSubStationItem.addAll(listData);
               }
             } else {
-              showAlertDialog(context,response.data['message']);
+              showAlertDialog(context, response.data['message']);
             }
           } else {
             showSessionExpiredDialog(context);
           }
         } else {
-          showAlertDialog(context,response.data['message']);
+          showAlertDialog(context, response.data['message']);
         }
       }
     } catch (e) {
-      showErrorDialog(context,  "An error occurred. Please try again.");
+      showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
     }
 
@@ -254,7 +257,8 @@ class CheckMeasureViewModel extends ChangeNotifier {
     );
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
     };
 
@@ -265,7 +269,8 @@ class CheckMeasureViewModel extends ChangeNotifier {
       "data": jsonEncode(requestData),
     };
 
-    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -276,25 +281,27 @@ class CheckMeasureViewModel extends ChangeNotifier {
           response.data = jsonDecode(response.data); // Parse string to JSON
         }
         if (response.statusCode == successResponseCode) {
-          if(response.data['tokenValid'] == isTrue) {
+          if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
-              if(response.data['objectJson'] != null) {
-                final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
-                final List<SpinnerList> listData = jsonList.map((json) => SpinnerList.fromJson(json)).toList();
+              if (response.data['objectJson'] != null) {
+                final List<dynamic> jsonList =
+                    jsonDecode(response.data['objectJson']);
+                final List<SpinnerList> listData =
+                    jsonList.map((json) => SpinnerList.fromJson(json)).toList();
                 listSubStationItem.addAll(listData);
               }
             } else {
-              showAlertDialog(context,response.data['message']);
+              showAlertDialog(context, response.data['message']);
             }
           } else {
             showSessionExpiredDialog(context);
           }
         } else {
-          showAlertDialog(context,response.data['message']);
+          showAlertDialog(context, response.data['message']);
         }
       }
     } catch (e) {
-      showErrorDialog(context,  "An error occurred. Please try again.");
+      showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
     }
 
@@ -308,7 +315,8 @@ class CheckMeasureViewModel extends ChangeNotifier {
     );
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "ss": ss,
     };
@@ -320,7 +328,8 @@ class CheckMeasureViewModel extends ChangeNotifier {
       "data": jsonEncode(requestData),
     };
 
-    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -331,25 +340,27 @@ class CheckMeasureViewModel extends ChangeNotifier {
           response.data = jsonDecode(response.data); // Parse string to JSON
         }
         if (response.statusCode == successResponseCode) {
-          if(response.data['tokenValid'] == isTrue) {
+          if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
-              if(response.data['objectJson'] != null) {
-                final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
-                final List<SpinnerList> listData = jsonList.map((json) => SpinnerList.fromJson(json)).toList();
+              if (response.data['objectJson'] != null) {
+                final List<dynamic> jsonList =
+                    jsonDecode(response.data['objectJson']);
+                final List<SpinnerList> listData =
+                    jsonList.map((json) => SpinnerList.fromJson(json)).toList();
                 listFeederItem.addAll(listData);
               }
             } else {
-              showAlertDialog(context,response.data['message']);
+              showAlertDialog(context, response.data['message']);
             }
           } else {
             showSessionExpiredDialog(context);
           }
         } else {
-          showAlertDialog(context,response.data['message']);
+          showAlertDialog(context, response.data['message']);
         }
       }
     } catch (e) {
-      showErrorDialog(context,  "An error occurred. Please try again.");
+      showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
     }
 
@@ -357,33 +368,38 @@ class CheckMeasureViewModel extends ChangeNotifier {
   }
 
   //PROCEED
-  Future<bool> proceed()async{
+  Future<bool> proceed() async {
     if (!validateForm2()) {
       return false;
-    }
-    else {
+    } else {
       if (selectedPurposeCheckboxId == "NCMD") {
         createNewCheckMeasureSession();
-      } else if(selectedPurposeCheckboxId == "ECMD"){
-        if(descriptionController.text.isNotEmpty&& descriptionController.text!=null||descriptionController.text==""){
-         String? desc=_selectedEntity?.worklDesc;
+      } else if (selectedPurposeCheckboxId == "ECMD") {
+        if (descriptionController.text.isNotEmpty ||
+            descriptionController.text == "") {
+          String? desc = _selectedEntity?.worklDesc;
           var argument = {
             'd': json.encode(_selectedEntity),
             'p': true,
             'ssc': listSubStationSelect,
-            'ssn': listSubStationItem.firstWhere((item) => item.optionCode == listSubStationSelect).optionName,
+            'ssn': listSubStationItem
+                .firstWhere((item) => item.optionCode == listSubStationSelect)
+                .optionName,
             'fc': listFeederSelect,
-            'fn': listFeederItem.firstWhere((item) => item.optionCode == listFeederSelect).optionName,
-            'cid':desc,
+            'fn': listFeederItem
+                .firstWhere((item) => item.optionCode == listFeederSelect)
+                .optionName,
+            'cid': desc,
           };
-         selectedCheckboxId=="11 KV Line"?
-         Navigation.instance.navigateTo(Routes.check11kvScreen, args: argument)
-             : Navigation.instance.navigateTo(Routes.check33kvScreen, args: argument);
-         resetDialogValues();
-
+          selectedCheckboxId == "11 KV Line"
+              ? Navigation.instance
+                  .navigateTo(Routes.check11kvScreen, args: argument)
+              : Navigation.instance
+                  .navigateTo(Routes.check33kvScreen, args: argument);
+          resetDialogValues();
         }
         print("check box is existing");
-      }else{
+      } else {
         print("navigate to NewProposalActivity");
       }
       return true;
@@ -391,18 +407,19 @@ class CheckMeasureViewModel extends ChangeNotifier {
   }
 
   bool validateForm2() {
-    if (selectedCheckboxId == "" || selectedCheckboxId==null) {
+    if (selectedCheckboxId == "" || selectedCheckboxId == null) {
       AlertUtils.showSnackBar(context, "Please choose line voltage", isTrue);
-      return  false;
-    }else if(listFeederSelect==""||listFeederSelect==null){
+      return false;
+    } else if (listFeederSelect == "" || listFeederSelect == null) {
       AlertUtils.showSnackBar(context, "Please select Substation", isTrue);
-      return  false;
-    }else if(listSubStationSelect==""||listSubStationSelect==null){
+      return false;
+    } else if (listSubStationSelect == "" || listSubStationSelect == null) {
       AlertUtils.showSnackBar(context, "Please select Substation", isTrue);
-      return  false;
-    }else if(selectedPurposeCheckboxId==""||selectedPurposeCheckboxId==null){
+      return false;
+    } else if (selectedPurposeCheckboxId == "" ||
+        selectedPurposeCheckboxId == null) {
       AlertUtils.showSnackBar(context, "Please select Substation", isTrue);
-      return  false;
+      return false;
     }
     // else if(selectedPurposeCheckboxId=="NCMD"&&(descriptionController.text==""||descriptionController.text.isEmpty)){
     //   AlertUtils.showSnackBar(context, "Please enter description", isTrue);
@@ -411,21 +428,27 @@ class CheckMeasureViewModel extends ChangeNotifier {
     return true;
   }
 
-  Future<bool> createNewCheckMeasureSession( ) async {
+  Future<bool> createNewCheckMeasureSession() async {
     _isLoading = isTrue;
     notifyListeners();
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
-      "estno":estimateController.text.isEmpty?"":estimateController.text.trim(),
-      "fc":listFeederSelect,
-      "fn":listFeederItem.firstWhere((item) => item.optionCode == listFeederSelect).optionName,
-      "v":selectedCheckboxId,
-      "pt":selectedPurposeCheckboxId=="NCMD"?"NFP":"LEP",
-      "pdc":descriptionController.text.trim(),
-      "ssn":listSubStationSelect,
-      "ssc":listSubStationItem.firstWhere((item) => item.optionCode == listSubStationSelect).optionName,
+      "estno":
+          estimateController.text.isEmpty ? "" : estimateController.text.trim(),
+      "fc": listFeederSelect,
+      "fn": listFeederItem
+          .firstWhere((item) => item.optionCode == listFeederSelect)
+          .optionName,
+      "v": selectedCheckboxId,
+      "pt": selectedPurposeCheckboxId == "NCMD" ? "NFP" : "LEP",
+      "pdc": descriptionController.text.trim(),
+      "ssn": listSubStationSelect,
+      "ssc": listSubStationItem
+          .firstWhere((item) => item.optionCode == listSubStationSelect)
+          .optionName,
     };
     final payload = {
       "path": "/createCheckMeasureSession",
@@ -433,7 +456,8 @@ class CheckMeasureViewModel extends ChangeNotifier {
       "method": "POST",
       "data": jsonEncode(requestData),
     };
-    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
 
     try {
       if (response != null) {
@@ -443,28 +467,39 @@ class CheckMeasureViewModel extends ChangeNotifier {
         if (response.statusCode == successResponseCode) {
           if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
-                if(response.data['objectJson'] != null) {
-                  final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
-                  final List<NewCheckMeasureModel> newData = jsonList.map((json) => NewCheckMeasureModel.fromJson(json)).toList();
-                  if(newData.isNotEmpty) {
-                    print("selectedCheckboxId $selectedCheckboxId");
-                    var argument = {
-                      'd': json.encode(newData[0]),
-                      'p': true,
-                      'ssc': listSubStationSelect,
-                      'ssn': listSubStationItem.firstWhere((item) => item.optionCode == listSubStationSelect).optionName,
-                      'fc': listFeederSelect,
-                      'fn': listFeederItem.firstWhere((item) => item.optionCode == listFeederSelect).optionName,
-                    };
-                    selectedCheckboxId=="11 KV Line"?
-                    Navigation.instance.navigateTo(Routes.pole11kvScreen, args: argument)
-                    : Navigation.instance.navigateTo(Routes.pole33kvScreen, args: argument);
-                    resetDialogValues();
-                  }else{
-                    showAlertDialog(context, "Unable to process your request!");
-                  }
+              if (response.data['objectJson'] != null) {
+                final List<dynamic> jsonList =
+                    jsonDecode(response.data['objectJson']);
+                final List<NewCheckMeasureModel> newData = jsonList
+                    .map((json) => NewCheckMeasureModel.fromJson(json))
+                    .toList();
+                if (newData.isNotEmpty) {
+                  print("selectedCheckboxId $selectedCheckboxId");
+                  var argument = {
+                    'd': json.encode(newData[0]),
+                    'p': true,
+                    'ssc': listSubStationSelect,
+                    'ssn': listSubStationItem
+                        .firstWhere(
+                            (item) => item.optionCode == listSubStationSelect)
+                        .optionName,
+                    'fc': listFeederSelect,
+                    'fn': listFeederItem
+                        .firstWhere(
+                            (item) => item.optionCode == listFeederSelect)
+                        .optionName,
+                  };
+                  selectedCheckboxId == "11 KV Line"
+                      ? Navigation.instance
+                          .navigateTo(Routes.pole11kvScreen, args: argument)
+                      : Navigation.instance
+                          .navigateTo(Routes.pole33kvScreen, args: argument);
+                  resetDialogValues();
+                } else {
+                  showAlertDialog(context, "Unable to process your request!");
                 }
-            }else{
+              }
+            } else {
               showErrorDialog(context, response.data['message']);
             }
           } else {
@@ -474,10 +509,10 @@ class CheckMeasureViewModel extends ChangeNotifier {
           showAlertDialog(context, response.data['message']);
         }
       }
-    }catch(e){
+    } catch (e) {
       throw Exception("Exception Occurred while Authenticating $e");
-    }finally{
-      _isLoading=false;
+    } finally {
+      _isLoading = false;
       notifyListeners();
     }
     return false;
@@ -488,19 +523,14 @@ class CheckMeasureViewModel extends ChangeNotifier {
     //                 // });
   }
 
-
-
-
-
-
   void resetDialogValues() {
     selectedCheckboxId = "";
-    listSubStationSelectBottom="";
-    listFeederSelectBottom="";
+    listSubStationSelectBottom = "";
+    listFeederSelectBottom = "";
     estimateController.text = "";
     listFeederSelect = "";
-    selectedPurposeCheckboxId="";
-    descriptionController.text="";
+    selectedPurposeCheckboxId = "";
+    descriptionController.text = "";
     listSubStationItem.clear();
     listFeederItem.clear();
     notifyListeners();

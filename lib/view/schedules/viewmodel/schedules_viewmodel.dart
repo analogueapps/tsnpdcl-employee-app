@@ -32,18 +32,42 @@ class ScheduleViewModel extends ChangeNotifier {
 
   String _getMonthName(int month) {
     const monthNames = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
     ];
     return monthNames[month - 1];
   }
 
   String getMonthNumeric(Map<String, dynamic>? selectedMonthYear) {
     const monthNames = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
     ];
 
     int monthIndex = monthNames.indexOf(selectedMonthYear?['month']);
-    return (monthIndex + 1).toString().padLeft(2, '0'); // Converts index to month number with leading zero
+    return (monthIndex + 1)
+        .toString()
+        .padLeft(2, '0'); // Converts index to month number with leading zero
   }
 
   void setSelectedMonthYear(String month, int year, BuildContext context) {
@@ -80,9 +104,8 @@ class ScheduleViewModel extends ChangeNotifier {
   String selectedSS = ''; // Currently selected value
   final List<SsDataModel> ssOptions = [];
 
-
-List<String> _allDays=[];
-List<String> get allDays=>_allDays;
+  List<String> _allDays = [];
+  List<String> get allDays => _allDays;
   Future<void> fetchScheduledData(
       BuildContext context, Map<String, dynamic>? dateMonth) async {
     _isLoading = true;
@@ -93,8 +116,8 @@ List<String> get allDays=>_allDays;
           SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
       "monthYear": dateMonth != null
-    ? '${getMonthNumeric(dateMonth)}${dateMonth['year']}'
-        : DateFormat('MM/yyyy').format(DateTime.now())
+          ? '${getMonthNumeric(dateMonth)}${dateMonth['year']}'
+          : DateFormat('MM/yyyy').format(DateTime.now())
     };
     try {
       var response = await ApiProvider(baseUrl: Apis.SS_END_POINT_BASE_URL)
@@ -122,7 +145,7 @@ List<String> get allDays=>_allDays;
                     .map((entry) => DataModel.fromJson(entry))
                     .toList();
                 _fetchedData = dataList;
-                print('${_fetchedData[0].date}');
+                print(_fetchedData[0].date);
                 _allDays = _fetchedData.map((data) {
                   return data.date.split('/')[0];
                 }).toList();
@@ -165,80 +188,82 @@ List<String> get allDays=>_allDays;
             //   return viewModel.isLocationGranted;
             // },
             onWillPop: null,
-            child:AlertDialog(
-          title: Text('Choose Option'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              InkWell(
-                onTap: () {
-                  // ssInfo(context, "substation");
-                  // Navigator.pop(context); // Close current dialog
-                  showScheduleSSMaintenceDialog(context, _selectedMonthYear);
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Image.asset(
-                        Assets.subStation,
-                        height: 30,
-                        width: 30,
+            child: AlertDialog(
+              title: const Text('Choose Option'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      // ssInfo(context, "substation");
+                      // Navigator.pop(context); // Close current dialog
+                      showScheduleSSMaintenceDialog(
+                          context, _selectedMonthYear);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Image.asset(
+                            Assets.subStation,
+                            height: 30,
+                            width: 30,
+                          ),
+                          const SizedBox(width: 10),
+                          const Text('SUBSTATION MAINTENANCE'),
+                        ],
                       ),
-                      const SizedBox(width: 10),
-                      const Text('SUBSTATION MAINTENANCE'),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-              const Divider(
-                color: Colors.grey,
-                thickness: 1,
-              ),
-              InkWell(
-                onTap: () {
-                  showScheduleLineMaintencePopUp(context,_selectedMonthYear);
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Image.asset(
-                        Assets.poloTracker,
-                        height: 30,
-                        width: 30,
+                  const Divider(
+                    color: Colors.grey,
+                    thickness: 1,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      showScheduleLineMaintencePopUp(
+                          context, _selectedMonthYear);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Image.asset(
+                            Assets.poloTracker,
+                            height: 30,
+                            width: 30,
+                          ),
+                          const SizedBox(width: 10),
+                          const Text('LINE MAINTENANCE'),
+                        ],
                       ),
-                      const SizedBox(width: 10),
-                      const Text('LINE MAINTENANCE'),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-              const Divider(
-                color: Colors.grey,
-                thickness: 1,
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.clear,
-                        size: 30,
-                        color: Colors.red,
+                  const Divider(
+                    color: Colors.grey,
+                    thickness: 1,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.clear,
+                            size: 30,
+                            color: Colors.red,
+                          ),
+                          SizedBox(width: 10),
+                          Text('CANCEL'),
+                        ],
                       ),
-                      SizedBox(width: 10),
-                      Text('CANCEL'),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
             ));
       },
     );

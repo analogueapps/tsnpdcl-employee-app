@@ -20,7 +20,7 @@ class DlistAttendViewmodel extends ChangeNotifier {
   final BuildContext context;
   final String data;
 
-  bool _isLoading = isFalse;
+  final bool _isLoading = isFalse;
 
   bool get isLoading => _isLoading;
 
@@ -49,7 +49,8 @@ class DlistAttendViewmodel extends ChangeNotifier {
   }
 
   Future<void> driveIconClicked() async {
-    final Uri googleMapsUri = Uri.parse('google.navigation:q=${parseLatLngFromString(dlistEntityRealmList!.latLong).latitude},${parseLatLngFromString(dlistEntityRealmList!.latLong).longitude}');
+    final Uri googleMapsUri = Uri.parse(
+        'google.navigation:q=${parseLatLngFromString(dlistEntityRealmList!.latLong).latitude},${parseLatLngFromString(dlistEntityRealmList!.latLong).longitude}');
 
     if (await canLaunchUrl(googleMapsUri)) {
       await launchUrl(
@@ -122,7 +123,7 @@ class DlistAttendViewmodel extends ChangeNotifier {
     }
   }
 
-  Future<void> nbsDateClicked() async{
+  Future<void> nbsDateClicked() async {
     final DateTime now = DateTime.now();
     final DateTime initialDate = _selectedNbsDate ?? now;
 
@@ -142,29 +143,38 @@ class DlistAttendViewmodel extends ChangeNotifier {
 
   void submitButtonClicked() {
     if (selectedCheckboxId == null) {
-      showAlertDialog(context, "Please select any option\nDisconnected\nOR\nAmount Paid\nOR\nUDC");
-    } else if (selectedCheckboxId == "Now Disconnected" && finalReadingKwh.text.isEmpty) {
+      showAlertDialog(context,
+          "Please select any option\nDisconnected\nOR\nAmount Paid\nOR\nUDC");
+    } else if (selectedCheckboxId == "Now Disconnected" &&
+        finalReadingKwh.text.isEmpty) {
       showAlertDialog(context, "Please enter the final reading KWH.");
-    } else if (selectedCheckboxId == "Now Disconnected" && disconnectionDate.text.isEmpty) {
+    } else if (selectedCheckboxId == "Now Disconnected" &&
+        disconnectionDate.text.isEmpty) {
       showAlertDialog(context, "Please enter the disconnection date.");
-    } else if (selectedCheckboxId == "Full Amount Paid" && fullAmount.text.isEmpty) {
+    } else if (selectedCheckboxId == "Full Amount Paid" &&
+        fullAmount.text.isEmpty) {
       showAlertDialog(context, "Please enter amount paid");
-    } else if (selectedCheckboxId == "Full Amount Paid" && prNumber.text.isEmpty) {
+    } else if (selectedCheckboxId == "Full Amount Paid" &&
+        prNumber.text.isEmpty) {
       showAlertDialog(context, "Please enter PR No");
-    } else if (selectedCheckboxId == "Full Amount Paid" && prDate.text.isEmpty) {
+    } else if (selectedCheckboxId == "Full Amount Paid" &&
+        prDate.text.isEmpty) {
       showAlertDialog(context, "Please enter PR date");
-    } else if (selectedCheckboxId == "Part Amount Paid" && nbsDate.text.isEmpty) {
+    } else if (selectedCheckboxId == "Part Amount Paid" &&
+        nbsDate.text.isEmpty) {
       showAlertDialog(context, "Please enter next installment promised date");
-    } else if (selectedCheckboxId == "Part Amount Paid" && fullAmount.text.isEmpty) {
+    } else if (selectedCheckboxId == "Part Amount Paid" &&
+        fullAmount.text.isEmpty) {
       showAlertDialog(context, "Please enter amount paid");
-    } else if (selectedCheckboxId == "Part Amount Paid" && prNumber.text.isEmpty) {
+    } else if (selectedCheckboxId == "Part Amount Paid" &&
+        prNumber.text.isEmpty) {
       showAlertDialog(context, "Please enter PR No");
-    } else if (selectedCheckboxId == "Part Amount Paid" && prDate.text.isEmpty) {
+    } else if (selectedCheckboxId == "Part Amount Paid" &&
+        prDate.text.isEmpty) {
       showAlertDialog(context, "Please enter PR date");
     } else {
       updateDlistService();
     }
-
   }
 
   Future<void> updateDlistService() async {
@@ -175,7 +185,8 @@ class DlistAttendViewmodel extends ChangeNotifier {
     notifyListeners();
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "uscno": dlistEntityRealmList!.dluan,
       "erocode": dlistEntityRealmList!.erocode,
@@ -185,25 +196,26 @@ class DlistAttendViewmodel extends ChangeNotifier {
       "dlisttype": selectedCheckboxId == "Full Amount Paid"
           ? "Paid"
           : selectedCheckboxId == "Part Amount Paid"
-          ? "Part Paid"
-          : selectedCheckboxId == "Court case"
-          ? "Courtcase"
-          : selectedCheckboxId == "Already UDC"
-          ? "Already UDC"
-          : selectedCheckboxId == "Now Disconnected"
-          ? "Now Disconnected"
-          : selectedCheckboxId == "Proposed for BS"
-          ? "Proposed for BS"
-          : "UNDER Correspondance"
+              ? "Part Paid"
+              : selectedCheckboxId == "Court case"
+                  ? "Courtcase"
+                  : selectedCheckboxId == "Already UDC"
+                      ? "Already UDC"
+                      : selectedCheckboxId == "Now Disconnected"
+                          ? "Now Disconnected"
+                          : selectedCheckboxId == "Proposed for BS"
+                              ? "Proposed for BS"
+                              : "UNDER Correspondance"
     };
 
-    if(selectedCheckboxId == "Now Disconnected") {
+    if (selectedCheckboxId == "Now Disconnected") {
       requestData['frkwh'] = finalReadingKwh.text;
       requestData['frkvah'] = finalReadingKvah.text;
       requestData['discdate'] = disconnectionDate.text;
     }
 
-    if(selectedCheckboxId == "Full Amount Paid" || selectedCheckboxId == "Part Amount Paid") {
+    if (selectedCheckboxId == "Full Amount Paid" ||
+        selectedCheckboxId == "Part Amount Paid") {
       requestData['pr'] = prNumber.text;
       requestData['prdate'] = prDate.text;
       requestData['pramt'] = fullAmount.text;
@@ -230,7 +242,8 @@ class DlistAttendViewmodel extends ChangeNotifier {
           if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
               showAlertDialog(context, response.data['message']);
-              Navigation.instance.navigateToReplacement(Routes.universalDashboardScreen);
+              Navigation.instance
+                  .navigateToReplacement(Routes.universalDashboardScreen);
             } else {
               showAlertDialog(context, response.data['message']);
             }
@@ -249,5 +262,3 @@ class DlistAttendViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 }
-
-

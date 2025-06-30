@@ -21,7 +21,8 @@ import 'package:tsnpdcl_employee/view/dtr_master/viewmodel/image_upload.dart';
 
 class MeterChangeEntryScreenViewModel extends ChangeNotifier {
   Map<String, dynamic> args;
-  MeterChangeEntryScreenViewModel({required BuildContext context, required this.args}) {
+  MeterChangeEntryScreenViewModel(
+      {required BuildContext context, required this.args}) {
     _loadMeterMake(context);
     _checkCameraPermissions(context);
   }
@@ -74,17 +75,16 @@ class MeterChangeEntryScreenViewModel extends ChangeNotifier {
   bool withBox = false;
   bool withoutBox = false;
   bool noDisplay = false;
-  bool oldMeterNoImageVisibility=false;
-  bool newMeterNoImageVisibility=false;
+  bool oldMeterNoImageVisibility = false;
+  bool newMeterNoImageVisibility = false;
   String? _errorMessage;
-  bool unableToScanOldMeterNo=false;
-  bool unableToScanNewMeterNo=false;
-  bool barCodeScanOnOld=false;
-  bool barCodeScanOnNew=false;
-  bool _isScanned = false;
+  bool unableToScanOldMeterNo = false;
+  bool unableToScanNewMeterNo = false;
+  bool barCodeScanOnOld = false;
+  bool barCodeScanOnNew = false;
+  final bool _isScanned = false;
   String? _code;
   // Barcode? barcode;
-
 
   List<String> meterTypeOptions = [
     "Mechanical",
@@ -97,7 +97,8 @@ class MeterChangeEntryScreenViewModel extends ChangeNotifier {
     notifyListeners();
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
     };
 
@@ -108,7 +109,8 @@ class MeterChangeEntryScreenViewModel extends ChangeNotifier {
       "data": jsonEncode(requestData),
     };
 
-    print('Meter make url : ${Apis.CHECK_BS_UDC_IP_PORT} --- ${Apis.METER_MAKE} --- /load/meterMakes');
+    print(
+        'Meter make url : ${Apis.CHECK_BS_UDC_IP_PORT} --- ${Apis.METER_MAKE} --- /load/meterMakes');
     var response = await ApiProvider(baseUrl: Apis.CHECK_BS_UDC_IP_PORT)
         .postApiCall(context, Apis.METER_MAKE, payload);
     print('Meter make response : $response');
@@ -171,7 +173,7 @@ class MeterChangeEntryScreenViewModel extends ChangeNotifier {
   void setNewSinglePhase(bool check) {
     newSinglePhase = check;
     newThreePhase = !check;
-    newMeterPhase =check ? "Single Phase":"";
+    newMeterPhase = check ? "Single Phase" : "";
     notifyListeners();
   }
 
@@ -195,7 +197,6 @@ class MeterChangeEntryScreenViewModel extends ChangeNotifier {
     oldMeterPhase = check ? "3 Phase" : "";
     notifyListeners();
   }
-
 
   void setWithBox(bool check) {
     withBox = check;
@@ -261,8 +262,8 @@ class MeterChangeEntryScreenViewModel extends ChangeNotifier {
     pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime(2010, 2, 1), // Initial date: Feb 1, 2010
-      firstDate: DateTime(2010, 2, 1),   // Minimum selectable date
-      lastDate: DateTime.now(),         // Maximum date: current date
+      firstDate: DateTime(2010, 2, 1), // Minimum selectable date
+      lastDate: DateTime.now(), // Maximum date: current date
     );
     if (pickedDate != null) {
       String formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate!);
@@ -271,7 +272,7 @@ class MeterChangeEntryScreenViewModel extends ChangeNotifier {
     }
   }
 
-  void showAttention(BuildContext context,String newOrOld){
+  void showAttention(BuildContext context, String newOrOld) {
     showDialog(
       context: context,
       builder: (BuildContext ctx) {
@@ -337,14 +338,12 @@ class MeterChangeEntryScreenViewModel extends ChangeNotifier {
     }
   }
 
-
   Future<void> captureMeterNo(BuildContext context, String type) async {
-
     if (status != null && status!.isGranted) {
       final XFile? image = await _picker.pickImage(source: ImageSource.camera);
       if (image != null) {
         if (type == "old") {
-          unableToScanOldMeterNo=isTrue;
+          unableToScanOldMeterNo = isTrue;
           captureOldImage = File(image.path);
           oldMeterNoImageVisibility = true;
           notifyListeners();
@@ -389,22 +388,28 @@ class MeterChangeEntryScreenViewModel extends ChangeNotifier {
       showErrorDialog(context, "Please enter old meter seal bit number");
       return false;
     } else if (newMeterNoController.text.isEmpty) {
-      showErrorDialog(context, "Please scan your new meter serial number barcode");
+      showErrorDialog(
+          context, "Please scan your new meter serial number barcode");
       return false;
     } else if (newMeterMakeName == null) {
-      showErrorDialog(context, "Please select new meter make");return false;
+      showErrorDialog(context, "Please select new meter make");
+      return false;
     } else if (newMeterPhase == null) {
-      showErrorDialog(context, "Please select new meter phase");return false;
+      showErrorDialog(context, "Please select new meter phase");
+      return false;
     } else if (newMeterSealBitNoController.text.isEmpty) {
-      showErrorDialog(context, "Please enter seal bit number");return false;
+      showErrorDialog(context, "Please enter seal bit number");
+      return false;
     } else if (boxPosition == null) {
       // print('Box position : $boxPosition');
-      showErrorDialog(context, "Please select new meter box position");return false;
+      showErrorDialog(context, "Please select new meter box position");
+      return false;
     } else if (meterType == null) {
-      showErrorDialog(context, "Please select new meter type");return false;
-    } else if (unableToScanOldMeterNo && captureOldImage==null ){
+      showErrorDialog(context, "Please select new meter type");
+      return false;
+    } else if (unableToScanOldMeterNo && captureOldImage == null) {
       showErrorDialog(context, 'Please capture old meter images');
-    } else if (unableToScanOldMeterNo && captureNewImage==null ){
+    } else if (unableToScanOldMeterNo && captureNewImage == null) {
       showErrorDialog(context, 'Please capture new meter images');
     }
     return true;
@@ -422,7 +427,8 @@ class MeterChangeEntryScreenViewModel extends ChangeNotifier {
     if (unableToScanOldMeterNo || unableToScanNewMeterNo) {
       print('Entered into the image Upload');
       if (captureOldImage != null) {
-        oldMeterImageUrl = await _imageUploader.uploadImage(context, captureOldImage!);
+        oldMeterImageUrl =
+            await _imageUploader.uploadImage(context, captureOldImage!);
         if (oldMeterImageUrl == null) {
           _errorMessage = 'Failed to upload old meter image';
           if (context.mounted) showErrorDialog(context, _errorMessage!);
@@ -433,7 +439,8 @@ class MeterChangeEntryScreenViewModel extends ChangeNotifier {
       }
 
       if (captureNewImage != null) {
-        newMeterImageUrl = await _imageUploader.uploadImage(context, captureNewImage!);
+        newMeterImageUrl =
+            await _imageUploader.uploadImage(context, captureNewImage!);
         if (newMeterImageUrl == null) {
           _errorMessage = 'Failed to upload new meter image';
           if (context.mounted) showErrorDialog(context, _errorMessage!);
@@ -453,15 +460,16 @@ class MeterChangeEntryScreenViewModel extends ChangeNotifier {
         "oldMtrNo": oldMeterNoController.text,
         "oldCap": oldMeterCapacityController.text,
         "newMtrNo": newMeterNoController.text,
-        "oldPhase": oldMeterPhase=="Single Phase" ?"1":"3",
+        "oldPhase": oldMeterPhase == "Single Phase" ? "1" : "3",
         "oldMtrFr": noDisplay ? "-1" : oldMeterFinalReadingController.text,
         "oldMake": oldMeterMakeName,
         "newMake": newMeterMakeName,
         "newMtrIr": newMeterInitialReadingController.text,
         "sealbit": newMeterSealBitNoController.text,
-        "newPhase": newMeterPhase=="Single Phase" ? "1" : "3",
+        "newPhase": newMeterPhase == "Single Phase" ? "1" : "3",
         "meterType": meterType,
-        "statusCode": args['st'].toString(), // Fixed: Removed .toInt() if status is string
+        "statusCode": args['st']
+            .toString(), // Fixed: Removed .toInt() if status is string
         "oldMtrSeal": oldMeterSealBitController.text,
         "box": withBox ? "BOX" : "NO BOX", // Explicit values like Android code
         "poNum": poNoController.text,
@@ -469,8 +477,9 @@ class MeterChangeEntryScreenViewModel extends ChangeNotifier {
         // Conditionally include images only if uploaded
         if (oldMeterImageUrl != null) "photo": oldMeterImageUrl,
         if (newMeterImageUrl != null) "newPhoto": newMeterImageUrl,
-        "authToken":SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
-        "api":Apis.API_KEY,
+        "authToken":
+            SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+        "api": Apis.API_KEY,
       };
 
       final payload = {
@@ -493,7 +502,9 @@ class MeterChangeEntryScreenViewModel extends ChangeNotifier {
 
           if (data['tokenValid'] == true) {
             if (data['success'] == true) {
-              showSuccessDialog(context, data['message'], (){Navigator.pop(context);});
+              showSuccessDialog(context, data['message'], () {
+                Navigator.pop(context);
+              });
             } else {
               showAlertDialog(context, data['message'] ?? "Task Failed");
             }
@@ -505,7 +516,6 @@ class MeterChangeEntryScreenViewModel extends ChangeNotifier {
               response.data['message'] ?? "Unexpected server response");
         }
       }
-
     } catch (e) {
       if (context.mounted) showErrorDialog(context, e.toString());
     } finally {
@@ -514,4 +524,3 @@ class MeterChangeEntryScreenViewModel extends ChangeNotifier {
     }
   }
 }
-

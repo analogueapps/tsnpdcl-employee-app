@@ -6,12 +6,8 @@ import 'package:tsnpdcl_employee/dialogs/process_dialog.dart';
 import 'package:tsnpdcl_employee/network/api_provider.dart';
 import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
-import 'package:tsnpdcl_employee/utils/alerts.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
-import 'package:tsnpdcl_employee/utils/general_routes.dart';
-import 'package:tsnpdcl_employee/utils/navigation_service.dart';
-import 'package:tsnpdcl_employee/view/consumer_details/model/dlist_form_response.dart';
 import 'package:tsnpdcl_employee/view/gruha_jyothi/model/gruha_jyothi_status.dart';
 
 class GruhaJyothiViewModel extends ChangeNotifier {
@@ -20,8 +16,8 @@ class GruhaJyothiViewModel extends ChangeNotifier {
 
   // Form Keys
   final formKey = GlobalKey<FormState>();
-   TextEditingController uscNoController = TextEditingController();
-   TextEditingController rationNoController = TextEditingController();
+  TextEditingController uscNoController = TextEditingController();
+  TextEditingController rationNoController = TextEditingController();
 
   // GruhaJyothiStatus model
   GruhaJyothiStatus? gruhaJyothiStatus;
@@ -33,16 +29,16 @@ class GruhaJyothiViewModel extends ChangeNotifier {
     String rationNo = rationNoController.text.trim();
 
     if (uscNo.isNotEmpty && rationNo.isNotEmpty) {
-      showAlertDialog(context,"Please provide only USCNO or RATION NO");
+      showAlertDialog(context, "Please provide only USCNO or RATION NO");
       return false;
     } else if (uscNo.isEmpty && rationNo.isEmpty) {
-      showAlertDialog(context,"Please provide USCNO or RATION NO");
+      showAlertDialog(context, "Please provide USCNO or RATION NO");
       return false;
     } else if (uscNo.isNotEmpty && uscNo.length < 8) {
-      showAlertDialog(context,"Please enter valid USCNO");
+      showAlertDialog(context, "Please enter valid USCNO");
       return false;
     } else if (rationNo.isNotEmpty && rationNo.length < 12) {
-      showAlertDialog(context,"Please enter valid RATION NO");
+      showAlertDialog(context, "Please enter valid RATION NO");
       return false;
     }
 
@@ -68,9 +64,12 @@ class GruhaJyothiViewModel extends ChangeNotifier {
       );
 
       final requestData = {
-        "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+        "authToken":
+            SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
         "api": Apis.API_KEY,
-        "input": uscNoController.text.isNotEmpty ? uscNoController.text.trim() : rationNoController.text.trim(),
+        "input": uscNoController.text.isNotEmpty
+            ? uscNoController.text.trim()
+            : rationNoController.text.trim(),
         "flag": uscNoController.text.isNotEmpty ? "U" : "R",
       };
 
@@ -81,7 +80,8 @@ class GruhaJyothiViewModel extends ChangeNotifier {
         "data": jsonEncode(requestData),
       };
 
-      var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+      var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+          .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
       if (context.mounted) {
         ProcessDialogHelper.closeDialog(context);
       }
@@ -106,11 +106,11 @@ class GruhaJyothiViewModel extends ChangeNotifier {
               showSessionExpiredDialog(context);
             }
           } else {
-            showAlertDialog(context,response.data['message']);
+            showAlertDialog(context, response.data['message']);
           }
         }
       } catch (e) {
-        showErrorDialog(context,  "An error occurred. Please try again.");
+        showErrorDialog(context, "An error occurred. Please try again.");
         rethrow;
       }
 

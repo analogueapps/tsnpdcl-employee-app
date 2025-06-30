@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
@@ -26,31 +25,28 @@ class DtrFailureReporting extends StatelessWidget {
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: ChangeNotifierProvider(
-    create: (_) => DTRFailureReports(context: context, fileStatus: 'PENDING', ),
-    child: Consumer<DTRFailureReports>(
-    builder: (context, viewModel, child) {
-      return Stack(
-          children: [
-            Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: TextField(
-                      controller: viewModel.searchController,
-                      decoration: const InputDecoration(
-                        prefixIcon: Icon(Icons.search),
-                        labelText: 'Search..',
-                      ),
-                    ),
+        create: (_) => DTRFailureReports(
+          context: context,
+          fileStatus: 'PENDING',
+        ),
+        child:
+            Consumer<DTRFailureReports>(builder: (context, viewModel, child) {
+          return Stack(children: [
+            Column(children: [
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: TextField(
+                  controller: viewModel.searchController,
+                  decoration: const InputDecoration(
+                    prefixIcon: Icon(Icons.search),
+                    labelText: 'Search..',
                   ),
-                ]
-            ),
-          ]
-      );
-    }
-    ),
-    ),
+                ),
+              ),
+            ]),
+          ]);
+        }),
+      ),
     );
-
   }
 }

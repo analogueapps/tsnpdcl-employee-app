@@ -19,7 +19,7 @@ import 'package:tsnpdcl_employee/view/dtr_master/viewmodel/image_upload.dart';
 class ViewWorkFloatingViewmodel extends ChangeNotifier {
   final BuildContext context;
   final String surveyID;
-  ViewWorkFloatingViewmodel({required this.context, required this.surveyID}){
+  ViewWorkFloatingViewmodel({required this.context, required this.surveyID}) {
     print("surveyID: $surveyID");
   }
 
@@ -55,7 +55,8 @@ class ViewWorkFloatingViewmodel extends ChangeNotifier {
             onWillPop: () async => false,
             child: AlertDialog(
               title: const Text("Location Service Disabled"),
-              content: const Text("Please enable location services to use this feature."),
+              content: const Text(
+                  "Please enable location services to use this feature."),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
@@ -112,7 +113,8 @@ class ViewWorkFloatingViewmodel extends ChangeNotifier {
       }
     }
 
-    if (permission != LocationPermission.whileInUse && permission != LocationPermission.always) {
+    if (permission != LocationPermission.whileInUse &&
+        permission != LocationPermission.always) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Location permissions are still denied.")),
       );
@@ -138,7 +140,7 @@ class ViewWorkFloatingViewmodel extends ChangeNotifier {
   }
 
   //capture image
-  String _viewWorkCapturedImage="";
+  String _viewWorkCapturedImage = "";
   String get viewWorkCapturedImage => _viewWorkCapturedImage;
   final ImageUploader _viewWorkImageUploader = ImageUploader();
 
@@ -178,17 +180,17 @@ class ViewWorkFloatingViewmodel extends ChangeNotifier {
       }
 
       // Upload photo if captured
-      ProcessDialogHelper.showProcessDialog(context, message: "Uploading images...");
+      ProcessDialogHelper.showProcessDialog(context,
+          message: "Uploading images...");
       notifyListeners();
-      final imageUrl = await _viewWorkImageUploader.uploadImage(context, File(photo.path));
+      final imageUrl =
+          await _viewWorkImageUploader.uploadImage(context, File(photo.path));
       print("view workfloating $imageUrl");
       if (imageUrl != null) {
-        _viewWorkCapturedImage=imageUrl;
-        if(_viewWorkCapturedImage!=null) {
-          latitudeController.text = _latitude!;
-          longitudeController.text = _longitude!;
-          notifyListeners();
-        }
+        _viewWorkCapturedImage = imageUrl;
+        latitudeController.text = _latitude!;
+        longitudeController.text = _longitude!;
+        notifyListeners();
         notifyListeners();
         print("Image uploaded successfully: $imageUrl");
         await _getCurrentLocation();
@@ -214,21 +216,22 @@ class ViewWorkFloatingViewmodel extends ChangeNotifier {
       _getCurrentLocation();
       if (!validateForm()) {
         return;
-      }else{
+      } else {
         submitData();
         print("in else block");
       }
     }
   }
+
   bool validateForm() {
-    if (_viewWorkCapturedImage==null||_viewWorkCapturedImage=="") {
-      AlertUtils.showSnackBar(
-          context, "Please capture the image",
-          isTrue);
+    if (_viewWorkCapturedImage == "") {
+      AlertUtils.showSnackBar(context, "Please capture the image", isTrue);
       return false;
     }
-    if ((_latitude==''||_latitude==null)&&(_longitude==''||_longitude==null)) {
-      AlertUtils.showSnackBar(context, "Please wait until we capture your location", isTrue);
+    if ((_latitude == '' || _latitude == null) &&
+        (_longitude == '' || _longitude == null)) {
+      AlertUtils.showSnackBar(
+          context, "Please wait until we capture your location", isTrue);
       return false;
     }
     return true;
@@ -236,24 +239,23 @@ class ViewWorkFloatingViewmodel extends ChangeNotifier {
 
   Map<String, dynamic> viewWorkData() {
     return {
-      "remarksBySurveyor":remarksController.text,
-      "afterLat":_latitude,
+      "remarksBySurveyor": remarksController.text,
+      "afterLat": _latitude,
       "afterLon": _longitude,
       "afterImageUrl": viewWorkCapturedImage,
-      "_id":surveyID,
-      "api":Apis.API_KEY
+      "_id": surveyID,
+      "api": Apis.API_KEY
     };
   }
 
   Future<void> submitData() async {
     print("${jsonEncode(viewWorkData())}:JsoonEncode data");
 
-
     final requestData = {
       "authToken":
-      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
-      "updateDataJson":jsonEncode(viewWorkData()),
+      "updateDataJson": jsonEncode(viewWorkData()),
     };
 
     final payload = {
@@ -276,10 +278,9 @@ class ViewWorkFloatingViewmodel extends ChangeNotifier {
             if (responseData['tokenValid'] == true) {
               if (responseData['success'] == true) {
                 if (responseData['message'] != null) {
-                  showSuccessDialog(context,responseData['message'] , () {
+                  showSuccessDialog(context, responseData['message'], () {
                     Navigator.pop(context);
                   });
-
                 }
               } else {
                 showAlertDialog(

@@ -644,7 +644,7 @@ class Pole11kvFeederMarkScreen extends StatelessWidget {
                                     Text("Select structure code".toUpperCase()),
                                     DropdownButton<Option>(
                                       value: viewModel.selectedCode,
-                                      hint: Text('Select Structure Code'),
+                                      hint: const Text('Select Structure Code'),
                                       isExpanded: true,
                                       items: viewModel.structureCodes
                                           .map((option) {
@@ -784,7 +784,7 @@ class Pole11kvFeederMarkScreen extends StatelessWidget {
                                   context,
                                   "Damaged",
                                   viewModel.selectedConductorStatus,
-                                    viewModel.setSelectedConductorStatus,
+                                  viewModel.setSelectedConductorStatus,
                                   isTrue,
                                 ),
                               ),
@@ -793,7 +793,7 @@ class Pole11kvFeederMarkScreen extends StatelessWidget {
                                   context,
                                   "Restring required",
                                   viewModel.selectedConductorStatus,
-                                    viewModel.setSelectedConductorStatus,
+                                  viewModel.setSelectedConductorStatus,
                                   isTrue,
                                 ),
                               ),
@@ -812,14 +812,16 @@ class Pole11kvFeederMarkScreen extends StatelessWidget {
                                     context,
                                     "9.1 Mtr. Pole",
                                     viewModel.selectedMiddlePolesRequired,
-                                  viewModel.setSelectedMiddlePolesRequired, isTrue),
+                                    viewModel.setSelectedMiddlePolesRequired,
+                                    isTrue),
                               ),
                               Expanded(
                                 child: checkbox(
                                     context,
                                     "8.0 Mtr. Pole",
                                     viewModel.selectedMiddlePolesRequired,
-                                  viewModel.setSelectedMiddlePolesRequired, isTrue),
+                                    viewModel.setSelectedMiddlePolesRequired,
+                                    isTrue),
                               ),
                             ]),
                             const SizedBox(
@@ -832,16 +834,20 @@ class Pole11kvFeederMarkScreen extends StatelessWidget {
                             const Text("Stud/Stay Required?"),
                             Row(children: [
                               Expanded(
-                                child: checkbox(context, "Stay Set",
+                                child: checkbox(
+                                    context,
+                                    "Stay Set",
                                     viewModel.selectedStudStayRequired,
-                                  viewModel
-                                      .setSelectedStudStayRequired, isTrue),
+                                    viewModel.setSelectedStudStayRequired,
+                                    isTrue),
                               ),
                               Expanded(
-                                child: checkbox(context, "Stud Pole",
+                                child: checkbox(
+                                    context,
+                                    "Stud Pole",
                                     viewModel.selectedStudStayRequired,
-                                  viewModel
-                                      .setSelectedStudStayRequired, isTrue),
+                                    viewModel.setSelectedStudStayRequired,
+                                    isTrue),
                               ),
                             ]),
                             const SizedBox(
@@ -858,7 +864,7 @@ class Pole11kvFeederMarkScreen extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
+                                      const Text(
                                         "Type",
                                         style: TextStyle(color: Colors.grey),
                                       ),
@@ -922,14 +928,20 @@ class Pole11kvFeederMarkScreen extends StatelessWidget {
                             const Text("Cross Arm Status?"),
                             Row(children: [
                               Expanded(
-                                child: checkbox(context, "Good",
+                                child: checkbox(
+                                    context,
+                                    "Good",
                                     viewModel.selectedCrossArmStatus,
-                                  viewModel.setSelectedCrossArmStatus, isTrue),
+                                    viewModel.setSelectedCrossArmStatus,
+                                    isTrue),
                               ),
                               Expanded(
-                                child: checkbox(context, "Bad",
+                                child: checkbox(
+                                    context,
+                                    "Bad",
                                     viewModel.selectedCrossArmStatus,
-                                  viewModel.setSelectedCrossArmStatus, isTrue),
+                                    viewModel.setSelectedCrossArmStatus,
+                                    isTrue),
                               ),
                             ]),
                             const Divider(

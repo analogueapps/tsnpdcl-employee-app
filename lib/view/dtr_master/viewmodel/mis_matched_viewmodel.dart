@@ -9,17 +9,17 @@ import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/model/mis_matched_model.dart';
 
-class MisMatchedViewModel extends ChangeNotifier{
+class MisMatchedViewModel extends ChangeNotifier {
   MisMatchedViewModel({required this.context}) {
     getMisMatched();
   }
 
   final BuildContext context;
-  
+
   bool _isLoading = true;
   bool get isLoading => _isLoading;
 
-  List<MisMatchedModel> _misMatchedEntity = [];
+  final List<MisMatchedModel> _misMatchedEntity = [];
   List<MisMatchedModel> get misMatchedStockEntityList => _misMatchedEntity;
 
   Future<void> getMisMatched() async {
@@ -27,8 +27,8 @@ class MisMatchedViewModel extends ChangeNotifier{
     notifyListeners();
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(
-          LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
     };
 
@@ -39,10 +39,9 @@ class MisMatchedViewModel extends ChangeNotifier{
       "data": jsonEncode(requestData),
     };
 
-
     try {
-      var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(
-          context, Apis.NPDCL_EMP_URL, payload);
+      var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+          .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
 
       _isLoading = false;
       notifyListeners();
@@ -73,11 +72,13 @@ class MisMatchedViewModel extends ChangeNotifier{
 
                   if (jsonList is String) {
                     // Clean the string JSON format by replacing escaped quotes
-                    String cleanedJsonString = jsonList.replaceAll(r'\"', '"').trim();
+                    String cleanedJsonString =
+                        jsonList.replaceAll(r'\"', '"').trim();
 
                     // Ensure it ends with a correct JSON format (either array or object)
                     if (cleanedJsonString.endsWith(',')) {
-                      cleanedJsonString = cleanedJsonString.substring(0, cleanedJsonString.length - 1);
+                      cleanedJsonString = cleanedJsonString.substring(
+                          0, cleanedJsonString.length - 1);
                     }
 
                     if (!cleanedJsonString.startsWith('[')) {
@@ -86,21 +87,27 @@ class MisMatchedViewModel extends ChangeNotifier{
 
                     // Now decode the cleaned string into JSON
                     final parsedList = jsonDecode(cleanedJsonString) as List;
-                    dataList = parsedList.map((json) => MisMatchedModel.fromJson(json)).toList();
+                    dataList = parsedList
+                        .map((json) => MisMatchedModel.fromJson(json))
+                        .toList();
                   } else if (jsonList is List) {
                     // If the response is already a List, just decode it
-                    dataList = jsonList.map((json) => MisMatchedModel.fromJson(json)).toList();
+                    dataList = jsonList
+                        .map((json) => MisMatchedModel.fromJson(json))
+                        .toList();
                   } else {
                     throw Exception('Unexpected format for objectJson.');
                   }
 
                   _misMatchedEntity.addAll(dataList);
-                  print("MisMatcheds data: ${_misMatchedEntity.length} items loaded");
+                  print(
+                      "MisMatcheds data: ${_misMatchedEntity.length} items loaded");
                   notifyListeners();
                 } catch (e, stackTrace) {
                   print("Error parsing objectJson: $e");
                   print("Stack trace: $stackTrace");
-                  showErrorDialog(context, "Failed to parse MisMatched data. Please contact support.");
+                  showErrorDialog(context,
+                      "Failed to parse MisMatched data. Please contact support.");
                 }
               } else {
                 print("objectJson is null");
@@ -120,5 +127,4 @@ class MisMatchedViewModel extends ChangeNotifier{
       showErrorDialog(context, "An error occurred. Please try again.");
     }
   }
-
 }

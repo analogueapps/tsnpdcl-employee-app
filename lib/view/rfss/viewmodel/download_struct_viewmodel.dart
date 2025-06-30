@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
 import 'package:tsnpdcl_employee/dialogs/process_dialog.dart';
@@ -8,11 +7,9 @@ import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
-import 'package:tsnpdcl_employee/view/dtr_master/model/dtr_feedet_distribution_model.dart';
 import 'package:tsnpdcl_employee/view/line_clearance/model/spinner_list.dart';
 import 'package:tsnpdcl_employee/view/rfss/database/mapping_agl_db/agl_databases/structure_code_db.dart';
 import 'package:tsnpdcl_employee/view/rfss/model/dtrStructureEntity.dart';
-
 
 class DownloadStructureViewModel extends ChangeNotifier {
   final BuildContext context;
@@ -57,8 +54,9 @@ class DownloadStructureViewModel extends ChangeNotifier {
 
     try {
       final requestData = {
-        "authToken": SharedPreferenceHelper.getStringValue(
-            LoginSdkPrefs.tokenPrefKey) ?? '',
+        "authToken":
+            SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ??
+                '',
         "api": Apis.API_KEY,
       };
 
@@ -69,8 +67,8 @@ class DownloadStructureViewModel extends ChangeNotifier {
         "data": jsonEncode(requestData),
       };
 
-      var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(
-          context, Apis.NPDCL_EMP_URL, payload);
+      var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+          .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
 
       // Close dialog safely
       if (context.mounted) {
@@ -87,10 +85,10 @@ class DownloadStructureViewModel extends ChangeNotifier {
           if (response.data['tokenValid'] == true) {
             if (response.data['success'] == true) {
               if (response.data['objectJson'] != null) {
-                final List<dynamic> jsonList = jsonDecode(
-                    response.data['objectJson']);
-                final List<SpinnerList> listData = jsonList.map((json) =>
-                    SpinnerList.fromJson(json)).toList();
+                final List<dynamic> jsonList =
+                    jsonDecode(response.data['objectJson']);
+                final List<SpinnerList> listData =
+                    jsonList.map((json) => SpinnerList.fromJson(json)).toList();
                 list33kVSsOfCircleItem.clear(); // Clear existing data
                 list33kVSsOfCircleItem.addAll(listData);
               } else {
@@ -112,8 +110,10 @@ class DownloadStructureViewModel extends ChangeNotifier {
           }
         } else {
           if (context.mounted) {
-            showAlertDialog(context, response.data['message'] ??
-                'Request failed with status: ${response.statusCode}');
+            showAlertDialog(
+                context,
+                response.data['message'] ??
+                    'Request failed with status: ${response.statusCode}');
           }
         }
       } else {
@@ -145,7 +145,6 @@ class DownloadStructureViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-
   Future<void> getFeedersData(String ss) async {
     listFeederItem.clear();
     listFeederSelect = null;
@@ -157,8 +156,8 @@ class DownloadStructureViewModel extends ChangeNotifier {
     );
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(
-          LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "ss": ss,
     };
@@ -170,8 +169,8 @@ class DownloadStructureViewModel extends ChangeNotifier {
       "data": jsonEncode(requestData),
     };
 
-    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(
-        context, Apis.NPDCL_EMP_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -185,10 +184,10 @@ class DownloadStructureViewModel extends ChangeNotifier {
           if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
               if (response.data['objectJson'] != null) {
-                final List<dynamic> jsonList = jsonDecode(
-                    response.data['objectJson']);
-                final List<SpinnerList> listData = jsonList.map((json) =>
-                    SpinnerList.fromJson(json)).toList();
+                final List<dynamic> jsonList =
+                    jsonDecode(response.data['objectJson']);
+                final List<SpinnerList> listData =
+                    jsonList.map((json) => SpinnerList.fromJson(json)).toList();
                 listFeederItem.addAll(listData);
               }
             } else {
@@ -218,7 +217,9 @@ class DownloadStructureViewModel extends ChangeNotifier {
           onWillPop: () async => false,
           child: AlertDialog(
             title: const Text(
-              "Success", style: TextStyle(fontSize: doubleEighteen),),
+              "Success",
+              style: TextStyle(fontSize: doubleEighteen),
+            ),
             content: const Text(
                 "DTR structure codes downloaded and made available for offline!"),
             actions: [
@@ -242,7 +243,6 @@ class DownloadStructureViewModel extends ChangeNotifier {
     );
   }
 
-
   void onListFeederValueChange(String? value) {
     listFeederSelect = value;
     if (value != null) {
@@ -258,68 +258,68 @@ class DownloadStructureViewModel extends ChangeNotifier {
       message: "Loading...",
     );
 
-      final requestFData = {
-        "authToken": SharedPreferenceHelper.getStringValue(
-            LoginSdkPrefs.tokenPrefKey) ?? "",
-        "api": Apis.API_KEY,
-        "fc": feederValue,
-        "status": "",
-        "ignoreSection": "true"
-      };
+    final requestFData = {
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ??
+              "",
+      "api": Apis.API_KEY,
+      "fc": feederValue,
+      "status": "",
+      "ignoreSection": "true"
+    };
 
+    final payload = {
+      "path": "/getStructuresOfFeederOrDistribution",
+      "apiVersion": "1.0",
+      "method": "POST",
+      "data": jsonEncode(requestFData),
+    };
 
-      final payload = {
-        "path": "/getStructuresOfFeederOrDistribution",
-        "apiVersion": "1.0",
-        "method": "POST",
-        "data": jsonEncode(requestFData),
-      };
-
-      final response = await ApiProvider(baseUrl: Apis.ROOT_URL)
-          .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    final response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
 
-      try {
-        if (response != null) {
-          if (response.data is String) {
-            response.data = jsonDecode(response.data);
-          }
-          if (response.statusCode == successResponseCode) {
-            if (response.data['tokenValid'] == isTrue) {
-              if (response.data['success'] == isTrue) {
-                if (response.data['message'] != "[]") {
-                  // Parse the message field which contains the list of structures
-                  final List<dynamic> structures = jsonDecode(response.data['message']);
-                  final dbHelper = StructureDatabaseHelper.instance;
-                  print("Structure insertions starting...");
+    try {
+      if (response != null) {
+        if (response.data is String) {
+          response.data = jsonDecode(response.data);
+        }
+        if (response.statusCode == successResponseCode) {
+          if (response.data['tokenValid'] == isTrue) {
+            if (response.data['success'] == isTrue) {
+              if (response.data['message'] != "[]") {
+                // Parse the message field which contains the list of structures
+                final List<dynamic> structures =
+                    jsonDecode(response.data['message']);
+                final dbHelper = StructureDatabaseHelper.instance;
+                print("Structure insertions starting...");
 
-                  for (var json in structures) {
-                    final structure = DTRStructureEntity.fromJson(json);
-                    await dbHelper.insertStructure(structure);
-                  }
-
-
-                  print("Structure insertions done.");
-                  downloadAnother();
+                for (var json in structures) {
+                  final structure = DTRStructureEntity.fromJson(json);
+                  await dbHelper.insertStructure(structure);
                 }
-              } else {
-                showAlertDialog(context, response.data['message']);
+
+                print("Structure insertions done.");
+                downloadAnother();
               }
             } else {
-              showSessionExpiredDialog(context);
+              showAlertDialog(context, response.data['message']);
             }
           } else {
-            showAlertDialog(context, response.data['message']);
+            showSessionExpiredDialog(context);
           }
+        } else {
+          showAlertDialog(context, response.data['message']);
         }
-      } catch (e) {
-        // showErrorDialog(context, "An error occurred. Please try again.");
-        showErrorDialog(context, "$e");
-        print("Stacktrace: $e");
-        rethrow;
       }
-      notifyListeners();
+    } catch (e) {
+      // showErrorDialog(context, "An error occurred. Please try again.");
+      showErrorDialog(context, "$e");
+      print("Stacktrace: $e");
+      rethrow;
     }
+    notifyListeners();
   }
+}

@@ -1,10 +1,8 @@
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
-import 'package:tsnpdcl_employee/view/line_clearance/viewmodel/add_induction_point_viewmodel.dart';
 import 'package:tsnpdcl_employee/view/pole_tracker/viewmodel/pole_tracker_selection_view_sketch_viewmodel.dart';
 import 'package:tsnpdcl_employee/widget/primary_button.dart';
 
@@ -25,15 +23,15 @@ class PoleTrackerSelectionViewSketchScreen extends StatelessWidget {
           style: const TextStyle(
               color: Colors.white,
               fontSize: toolbarTitleSize,
-              fontWeight: FontWeight.w700
-          ),
+              fontWeight: FontWeight.w700),
         ),
         iconTheme: const IconThemeData(
           color: Colors.white,
         ),
       ),
       body: ChangeNotifierProvider(
-        create: (_) => PoleTrackerSelectionViewSketchViewmodel(context: context),
+        create: (_) =>
+            PoleTrackerSelectionViewSketchViewmodel(context: context),
         child: Consumer<PoleTrackerSelectionViewSketchViewmodel>(
           builder: (context, viewModel, child) {
             return SingleChildScrollView(
@@ -57,7 +55,9 @@ class PoleTrackerSelectionViewSketchScreen extends StatelessWidget {
                           controlAffinity: ListTileControlAffinity.leading,
                           title: const Text(
                             "33KV LINE",
-                            style: TextStyle(fontSize: normalSize, fontWeight: FontWeight.w500),
+                            style: TextStyle(
+                                fontSize: normalSize,
+                                fontWeight: FontWeight.w500),
                           ),
                           value: viewModel.isSelected("33KV LINE"),
                           onChanged: (value) {
@@ -70,7 +70,9 @@ class PoleTrackerSelectionViewSketchScreen extends StatelessWidget {
                           controlAffinity: ListTileControlAffinity.leading,
                           title: const Text(
                             "11KV LINE",
-                            style: TextStyle(fontSize: normalSize, fontWeight: FontWeight.w500),
+                            style: TextStyle(
+                                fontSize: normalSize,
+                                fontWeight: FontWeight.w500),
                           ),
                           value: viewModel.isSelected("11KV LINE"),
                           onChanged: (value) {
@@ -98,9 +100,9 @@ class PoleTrackerSelectionViewSketchScreen extends StatelessWidget {
                         value: viewModel.listSubStationSelect,
                         items: viewModel.listSubStationItem
                             .map((item) => DropdownMenuItem<String>(
-                          value: item.optionCode,
-                          child: Text(item.optionName!),
-                        ))
+                                  value: item.optionCode,
+                                  child: Text(item.optionName!),
+                                ))
                             .toList(),
                         onChanged: (value) {
                           viewModel.onListSubStationItemSelect(value);
@@ -132,9 +134,9 @@ class PoleTrackerSelectionViewSketchScreen extends StatelessWidget {
                         value: viewModel.listFeederSelect,
                         items: viewModel.listFeederItem
                             .map((item) => DropdownMenuItem<String>(
-                          value: item.optionCode,
-                          child: Text(item.optionName!),
-                        ))
+                                  value: item.optionCode,
+                                  child: Text(item.optionName!),
+                                ))
                             .toList(),
                         onChanged: (value) {
                           viewModel.onListFeederItemSelect(value);
@@ -162,7 +164,8 @@ class PoleTrackerSelectionViewSketchScreen extends StatelessWidget {
                         ),
                         TextFormField(
                           //controller: widget.controller,
-                          initialValue: viewModel.newSketchPropEntity?.proposalDesc,
+                          initialValue:
+                              viewModel.newSketchPropEntity?.proposalDesc,
                           keyboardType: TextInputType.none,
                           enabled: isFalse,
                           maxLines: 5,
@@ -174,9 +177,7 @@ class PoleTrackerSelectionViewSketchScreen extends StatelessWidget {
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: CommonColors.colorPrimary
-                                )
-                            ),
+                                    color: CommonColors.colorPrimary)),
                             labelStyle: TextStyle(fontFamily: appFontFamily),
                             hintStyle: TextStyle(fontFamily: appFontFamily),
                           ),
@@ -190,7 +191,8 @@ class PoleTrackerSelectionViewSketchScreen extends StatelessWidget {
                         ),
                         TextFormField(
                           //controller: widget.controller,
-                          initialValue: viewModel.newSketchPropEntity?.estimateNo,
+                          initialValue:
+                              viewModel.newSketchPropEntity?.estimateNo,
                           keyboardType: TextInputType.none,
                           enabled: isFalse,
                           style: const TextStyle(
@@ -201,11 +203,8 @@ class PoleTrackerSelectionViewSketchScreen extends StatelessWidget {
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: CommonColors.colorPrimary
-                                )
-                            ),
+                                    color: CommonColors.colorPrimary)),
                             labelStyle: TextStyle(fontFamily: appFontFamily),
-
                             hintStyle: TextStyle(fontFamily: appFontFamily),
                           ),
                         ),
@@ -218,8 +217,7 @@ class PoleTrackerSelectionViewSketchScreen extends StatelessWidget {
                       text: "NEXT",
                       onPressed: () {
                         viewModel.onNextClicked();
-                      }
-                  ),
+                      }),
                 ],
               ),
             );
@@ -228,6 +226,4 @@ class PoleTrackerSelectionViewSketchScreen extends StatelessWidget {
       ),
     );
   }
-
-
 }

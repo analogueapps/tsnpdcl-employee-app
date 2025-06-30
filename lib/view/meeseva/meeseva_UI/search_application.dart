@@ -2,9 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tsnpdcl_employee/view/meeseva/meeseva_UI/showDialog_gps.dart';
 
-
 class SearchApplication extends StatefulWidget {
-
   final String regNo;
 
   const SearchApplication({super.key, required this.regNo});
@@ -14,7 +12,6 @@ class SearchApplication extends StatefulWidget {
 }
 
 class _SearchApplicationState extends State<SearchApplication> {
-
   @override
   void initState() {
     // TODO: implement initState
@@ -26,50 +23,56 @@ class _SearchApplicationState extends State<SearchApplication> {
 
   @override
   Widget build(BuildContext context) {
-
-    Map<String,String> consumerDetailsMap={
-      "SURENAME":"MOHAMMED",
-      "NAME":"DILAWAR ASIF ALI"
+    Map<String, String> consumerDetailsMap = {
+      "SURENAME": "MOHAMMED",
+      "NAME": "DILAWAR ASIF ALI"
     };
-    Map<String,String> applicationDetailsMAP={
-      "APPLICATION ID":"123",
-      "APPLICATION DATE":"12 Oct 2022 16:48:39"
+    Map<String, String> applicationDetailsMAP = {
+      "APPLICATION ID": "123",
+      "APPLICATION DATE": "12 Oct 2022 16:48:39"
     };
-    Map<String,String> omStaffApplicarionMap={
-      "O&M STAFF ":"B.SHAILENDER REDDY,LM",
-      "ALLOTMENT DATE":"14 Oct 2022 12:51:44"
+    Map<String, String> omStaffApplicarionMap = {
+      "O&M STAFF ": "B.SHAILENDER REDDY,LM",
+      "ALLOTMENT DATE": "14 Oct 2022 12:51:44"
     };
-    Map<String,String> feasibilityMap={
-      "FEASIBILITY BY LM":"FEASIBLE",
-      "FEASIBILITY BY AE":"FEASIBLE"
+    Map<String, String> feasibilityMap = {
+      "FEASIBILITY BY LM": "FEASIBLE",
+      "FEASIBILITY BY AE": "FEASIBLE"
     };
-    Map<String,String> supplyFeedingDetails={
-      "SUBSTATION":"0005-33KV SS-SHAYAMPET",
-      "FEEDER CODE":"0005-11KV VANAVIGNANII"
+    Map<String, String> supplyFeedingDetails = {
+      "SUBSTATION": "0005-33KV SS-SHAYAMPET",
+      "FEEDER CODE": "0005-11KV VANAVIGNANII"
     };
-    Map<String,String> consumerReadinessReportMap={
-      "FEASIBILITY BY LM":"FEASIBLE",
-      "FEASIBILITY BY AE":"FEASIBLE"
+    Map<String, String> consumerReadinessReportMap = {
+      "FEASIBILITY BY LM": "FEASIBLE",
+      "FEASIBILITY BY AE": "FEASIBLE"
     };
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('${widget.regNo}',style: TextStyle(color: Colors.white),),
+        title: Text(
+          widget.regNo,
+          style: const TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.blue,
         actions: [
-          IconButton(onPressed: (){}, icon: Icon(Icons.folder_outlined,color: Colors.white,),)
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(
+              Icons.folder_outlined,
+              color: Colors.white,
+            ),
+          )
         ],
       ),
-      body:SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Column(
           children: [
             Container(
               width: double.infinity,
-              decoration:BoxDecoration(
-                  color: Colors.grey.shade300
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
+              decoration: BoxDecoration(color: Colors.grey.shade300),
+              child: const Padding(
+                padding: EdgeInsets.all(10.0),
                 child: Text('Consumer Details'),
               ),
             ),
@@ -90,8 +93,10 @@ class _SearchApplicationState extends State<SearchApplication> {
             ),
             Table(
               border: TableBorder(
-                horizontalInside: BorderSide(color: Colors.grey.shade400, width: 1),
-                verticalInside: BorderSide(color: Colors.grey.shade400, width: 1),
+                horizontalInside:
+                    BorderSide(color: Colors.grey.shade400, width: 1),
+                verticalInside:
+                    BorderSide(color: Colors.grey.shade400, width: 1),
               ),
               columnWidths: const <int, TableColumnWidth>{
                 0: FlexColumnWidth(),
@@ -102,38 +107,39 @@ class _SearchApplicationState extends State<SearchApplication> {
                   return TableRow(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.all( 10.0),
+                        padding: const EdgeInsets.all(10.0),
                         child: Text(
                           entry.key,
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w500),
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.all( 10.0),
+                        padding: const EdgeInsets.all(10.0),
                         child: Text(
                           entry.value,
-                          style: TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 16),
                         ),
                       ),
                     ],
                   );
-                }).toList(),
+                }),
               ],
             ),
             Container(
               width: double.infinity,
-              decoration:BoxDecoration(
-                  color: Colors.grey.shade300
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
+              decoration: BoxDecoration(color: Colors.grey.shade300),
+              child: const Padding(
+                padding: EdgeInsets.all(10.0),
                 child: Text('APPLICATION DETAILS'),
               ),
             ),
             Table(
               border: TableBorder(
-                horizontalInside: BorderSide(color: Colors.grey.shade400, width: 1),
-                verticalInside: BorderSide(color: Colors.grey.shade400, width: 1),
+                horizontalInside:
+                    BorderSide(color: Colors.grey.shade400, width: 1),
+                verticalInside:
+                    BorderSide(color: Colors.grey.shade400, width: 1),
               ),
               columnWidths: const <int, TableColumnWidth>{
                 0: FlexColumnWidth(),
@@ -144,38 +150,39 @@ class _SearchApplicationState extends State<SearchApplication> {
                   return TableRow(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.all( 10.0),
+                        padding: const EdgeInsets.all(10.0),
                         child: Text(
                           entry.key,
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w500),
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.all( 10.0),
+                        padding: const EdgeInsets.all(10.0),
                         child: Text(
                           entry.value,
-                          style: TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 16),
                         ),
                       ),
                     ],
                   );
-                }).toList(),
+                }),
               ],
             ),
             Container(
               width: double.infinity,
-              decoration:BoxDecoration(
-                  color: Colors.grey.shade300
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
+              decoration: BoxDecoration(color: Colors.grey.shade300),
+              child: const Padding(
+                padding: EdgeInsets.all(10.0),
                 child: Text('O&M STAFF ALLOTMENT'),
               ),
             ),
             Table(
               border: TableBorder(
-                horizontalInside: BorderSide(color: Colors.grey.shade400, width: 1),
-                verticalInside: BorderSide(color: Colors.grey.shade400, width: 1),
+                horizontalInside:
+                    BorderSide(color: Colors.grey.shade400, width: 1),
+                verticalInside:
+                    BorderSide(color: Colors.grey.shade400, width: 1),
               ),
               columnWidths: const <int, TableColumnWidth>{
                 0: FlexColumnWidth(),
@@ -186,39 +193,39 @@ class _SearchApplicationState extends State<SearchApplication> {
                   return TableRow(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.all( 10.0),
+                        padding: const EdgeInsets.all(10.0),
                         child: Text(
                           entry.key,
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w500),
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.all( 10.0),
+                        padding: const EdgeInsets.all(10.0),
                         child: Text(
                           entry.value,
-                          style: TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 16),
                         ),
                       ),
                     ],
                   );
-                }).toList(),
+                }),
               ],
             ),
-
             Container(
               width: double.infinity,
-              decoration:BoxDecoration(
-                  color: Colors.grey.shade300
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
+              decoration: BoxDecoration(color: Colors.grey.shade300),
+              child: const Padding(
+                padding: EdgeInsets.all(10.0),
                 child: Text('FEASIBILITY'),
               ),
             ),
             Table(
               border: TableBorder(
-                horizontalInside: BorderSide(color: Colors.grey.shade400, width: 1),
-                verticalInside: BorderSide(color: Colors.grey.shade400, width: 1),
+                horizontalInside:
+                    BorderSide(color: Colors.grey.shade400, width: 1),
+                verticalInside:
+                    BorderSide(color: Colors.grey.shade400, width: 1),
               ),
               columnWidths: const <int, TableColumnWidth>{
                 0: FlexColumnWidth(),
@@ -229,38 +236,39 @@ class _SearchApplicationState extends State<SearchApplication> {
                   return TableRow(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.all( 10.0),
+                        padding: const EdgeInsets.all(10.0),
                         child: Text(
                           entry.key,
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w500),
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.all( 10.0),
+                        padding: const EdgeInsets.all(10.0),
                         child: Text(
                           entry.value,
-                          style: TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 16),
                         ),
                       ),
                     ],
                   );
-                }).toList(),
+                }),
               ],
             ),
             Container(
               width: double.infinity,
-              decoration:BoxDecoration(
-                  color: Colors.grey.shade300
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
+              decoration: BoxDecoration(color: Colors.grey.shade300),
+              child: const Padding(
+                padding: EdgeInsets.all(10.0),
                 child: Text('SUPPLY FEEDING DETAIS'),
               ),
             ),
             Table(
               border: TableBorder(
-                horizontalInside: BorderSide(color: Colors.grey.shade400, width: 1),
-                verticalInside: BorderSide(color: Colors.grey.shade400, width: 1),
+                horizontalInside:
+                    BorderSide(color: Colors.grey.shade400, width: 1),
+                verticalInside:
+                    BorderSide(color: Colors.grey.shade400, width: 1),
               ),
               columnWidths: const <int, TableColumnWidth>{
                 0: FlexColumnWidth(),
@@ -271,38 +279,39 @@ class _SearchApplicationState extends State<SearchApplication> {
                   return TableRow(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.all( 10.0),
+                        padding: const EdgeInsets.all(10.0),
                         child: Text(
                           entry.key,
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w500),
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.all( 10.0),
+                        padding: const EdgeInsets.all(10.0),
                         child: Text(
                           entry.value,
-                          style: TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 16),
                         ),
                       ),
                     ],
                   );
-                }).toList(),
+                }),
               ],
             ),
             Container(
               width: double.infinity,
-              decoration:BoxDecoration(
-                  color: Colors.grey.shade300
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
+              decoration: BoxDecoration(color: Colors.grey.shade300),
+              child: const Padding(
+                padding: EdgeInsets.all(10.0),
                 child: Text('CONSUMER READINESS REPORT'),
               ),
             ),
             Table(
               border: TableBorder(
-                horizontalInside: BorderSide(color: Colors.grey.shade400, width: 1),
-                verticalInside: BorderSide(color: Colors.grey.shade400, width: 1),
+                horizontalInside:
+                    BorderSide(color: Colors.grey.shade400, width: 1),
+                verticalInside:
+                    BorderSide(color: Colors.grey.shade400, width: 1),
               ),
               columnWidths: const <int, TableColumnWidth>{
                 0: FlexColumnWidth(),
@@ -313,32 +322,35 @@ class _SearchApplicationState extends State<SearchApplication> {
                   return TableRow(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.all( 10.0),
+                        padding: const EdgeInsets.all(10.0),
                         child: Text(
                           entry.key,
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w500),
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.all( 10.0),
+                        padding: const EdgeInsets.all(10.0),
                         child: Text(
                           entry.value,
-                          style: TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 16),
                         ),
                       ),
                     ],
                   );
-                }).toList(),
+                }),
               ],
             ),
           ],
         ),
-      ) ,
-      floatingActionButton: FloatingActionButton(
-          onPressed: (){},
-          backgroundColor: Colors.blue,
-          child: Icon(Icons.edit,color: Colors.white,)
       ),
+      floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          backgroundColor: Colors.blue,
+          child: const Icon(
+            Icons.edit,
+            color: Colors.white,
+          )),
     );
   }
 }

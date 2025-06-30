@@ -11,21 +11,17 @@ import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/model/dtr_feedet_distribution_model.dart';
 
-
 class MappedDtrViewmodel extends ChangeNotifier {
-  MappedDtrViewmodel({required this.context}){
-
-  }
+  MappedDtrViewmodel({required this.context});
 
   // Current View Context
   final BuildContext context;
-
 
   bool _isLoading = true;
 
   bool get isLoading => _isLoading;
 
-  List<FeederDisModel> _structureData = [];
+  final List<FeederDisModel> _structureData = [];
 
   List<FeederDisModel> get structureData => _structureData;
 
@@ -34,12 +30,10 @@ class MappedDtrViewmodel extends ChangeNotifier {
     _structureData.clear();
     notifyListeners();
 
-
-
     final requestData = {
       "authToken":
-      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ??
-          "",
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ??
+              "",
       "api": Apis.API_KEY,
       "structureCode": structCode,
     };
@@ -93,8 +87,7 @@ class MappedDtrViewmodel extends ChangeNotifier {
                   print(
                       "Structure data: ${_structureData.length} items loaded");
                   print(
-                      "Structure details: ${_structureData.map((e) =>
-                          e.toJson())}");
+                      "Structure details: ${_structureData.map((e) => e.toJson())}");
                   Navigation.instance.navigateTo(
                     Routes.dtrStructure,
                     args: _structureData,
@@ -114,8 +107,8 @@ class MappedDtrViewmodel extends ChangeNotifier {
             showSessionExpiredDialog(context);
           }
         } else {
-          showErrorDialog(context,
-              "Request failed with status: ${response.statusCode}");
+          showErrorDialog(
+              context, "Request failed with status: ${response.statusCode}");
         }
       }
     } catch (e) {

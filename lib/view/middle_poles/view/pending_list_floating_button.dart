@@ -10,7 +10,8 @@ import 'package:tsnpdcl_employee/view/middle_poles/viewmodel/pending_list_floati
 
 class PendingListFloatingButton extends StatelessWidget {
   static const id = Routes.pendingListFloatingButton;
-  const PendingListFloatingButton({super.key, required this.surveyID, required this.status});
+  const PendingListFloatingButton(
+      {super.key, required this.surveyID, required this.status});
   final int surveyID;
   final String status;
 
@@ -18,7 +19,8 @@ class PendingListFloatingButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) {
-        final viewModel = PendingListFloatingButtonViewmodel(context: context, surId: surveyID, individualStatus: status );
+        final viewModel = PendingListFloatingButtonViewmodel(
+            context: context, surId: surveyID, individualStatus: status);
         viewModel.initialize();
         return viewModel;
       },
@@ -63,24 +65,22 @@ class PendingListFloatingButton extends StatelessWidget {
             body: SingleChildScrollView(
               child: Form(
                 key: viewModel.formKey,
-                child:Column(
-                children: [
-                  _buildPoleSection(
-                    photoPath: viewModel.middlePhotoPath,
-                    onCapturePressed: viewModel.middlePoleCapturePhoto
-                  ),
-                  const SizedBox(height: 10),
-                  _reusableLastRow(
-                      label: "MIDDLE POLE LATITUDE",
-                      controller: viewModel.middlePoleLatController),
-                  _reusableLastRow(
-                      label: "MIDDLE POLE LONGITUDE",
-                      controller: viewModel.middlePoleLanController),
-                  const SizedBox(height: 10),
-
-                ],
+                child: Column(
+                  children: [
+                    _buildPoleSection(
+                        photoPath: viewModel.middlePhotoPath,
+                        onCapturePressed: viewModel.middlePoleCapturePhoto),
+                    const SizedBox(height: 10),
+                    _reusableLastRow(
+                        label: "MIDDLE POLE LATITUDE",
+                        controller: viewModel.middlePoleLatController),
+                    _reusableLastRow(
+                        label: "MIDDLE POLE LONGITUDE",
+                        controller: viewModel.middlePoleLanController),
+                    const SizedBox(height: 10),
+                  ],
+                ),
               ),
-            ),
             ),
             floatingActionButton: FloatingActionButton(
               onPressed: () {
@@ -88,14 +88,14 @@ class PendingListFloatingButton extends StatelessWidget {
                 // Add your action here, e.g., navigate to an edit screen or show a dialog
                 print("Pencil FAB pressed");
               },
-              backgroundColor: CommonColors.colorPrimary, // Match your app theme
+              backgroundColor:
+                  CommonColors.colorPrimary, // Match your app theme
               shape: const CircleBorder(), // Makes it round
               child: const Icon(
                 Icons.edit, // Pencil icon
                 color: Colors.white,
               ),
             ),
-
           );
         },
       ),
@@ -115,11 +115,11 @@ class PendingListFloatingButton extends StatelessWidget {
         child: photoPath.isEmpty
             ? const Icon(Icons.image, size: 50)
             : Image.network(
-          Apis.NPDCL_STORAGE_SERVER_IP +photoPath,
-          fit: BoxFit.cover,
-          height: 180,
-          width: double.infinity,
-        ),
+                Apis.NPDCL_STORAGE_SERVER_IP + photoPath,
+                fit: BoxFit.cover,
+                height: 180,
+                width: double.infinity,
+              ),
       ),
     );
   }
@@ -146,7 +146,8 @@ class PendingListFloatingButton extends StatelessWidget {
               decoration: InputDecoration(
                 hintText: label,
                 hintStyle: TextStyle(color: Colors.grey[200]),
-                contentPadding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                contentPadding:
+                    const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               ),
             ),
           ),
@@ -164,19 +165,20 @@ class PendingListFloatingButton extends StatelessWidget {
       children: [
         _buildPlaceholder(photoPath!),
         const Padding(
-          padding: const EdgeInsets.only(left: 8),
+          padding: EdgeInsets.only(left: 8),
           child: SizedBox(
             width: double.infinity,
-            child: Text("MIDDLE POLE PHOTO", style: const TextStyle(fontWeight: FontWeight.w700)),
+            child: Text("MIDDLE POLE PHOTO",
+                style: TextStyle(fontWeight: FontWeight.w700)),
           ),
         ),
         const Padding(
-          padding: const EdgeInsets.only(top: 10.0, left: 8),
+          padding: EdgeInsets.only(top: 10.0, left: 8),
           child: SizedBox(
             width: double.infinity,
             child: Text(
               "PLEASE TAKE THE PHOTO OF ERRECTED MIDDLE POLE",
-              style: const TextStyle(fontSize: 13, color: Colors.grey),
+              style: TextStyle(fontSize: 13, color: Colors.grey),
             ),
           ),
         ),
@@ -187,10 +189,12 @@ class PendingListFloatingButton extends StatelessWidget {
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.deepOrangeAccent,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5)),
               ),
               onPressed: onCapturePressed,
-              child: const Text("CAPTURE MIDDLE POLE PHOTO", style: const TextStyle(color: Colors.white)),
+              child: const Text("CAPTURE MIDDLE POLE PHOTO",
+                  style: TextStyle(color: Colors.white)),
             ),
           ),
         ),

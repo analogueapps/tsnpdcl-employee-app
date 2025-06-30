@@ -4,16 +4,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
-import 'package:tsnpdcl_employee/dialogs/process_dialog.dart';
 import 'package:tsnpdcl_employee/network/api_provider.dart';
 import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
-import 'package:tsnpdcl_employee/utils/alerts.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 
 class NameAndAddressChangeListViewmodel extends ChangeNotifier {
-  NameAndAddressChangeListViewmodel({required this.context, required this.status}){
+  NameAndAddressChangeListViewmodel(
+      {required this.context, required this.status}) {
     final now = DateTime.now();
     _selectedMonthYear = {
       'month': _getMonthName(now.month),
@@ -61,21 +60,24 @@ class NameAndAddressChangeListViewmodel extends ChangeNotifier {
     return monthNames[month - 1];
   }
 
-  Future<void> getNameAndAddressCorrectionRequests(Map<String, dynamic>? dateMonth)async{
+  Future<void> getNameAndAddressCorrectionRequests(
+      Map<String, dynamic>? dateMonth) async {
     _isLoading = true;
     notifyListeners();
 
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
-      "monthYear":dateMonth != null
-    ? '${dateMonth['month']}${dateMonth['year']}'
-        : DateFormat('MMMyyyy').format(DateTime.now()),
-      "status":status
+      "monthYear": dateMonth != null
+          ? '${dateMonth['month']}${dateMonth['year']}'
+          : DateFormat('MMMyyyy').format(DateTime.now()),
+      "status": status
     };
 
     var response = await ApiProvider(baseUrl: Apis.ERO_CORRESPONDENCE_URL)
-        .postApiCall(context, Apis.NAME_AND_ADDRESS_CORRECTION_REQUEST, payload);
+        .postApiCall(
+            context, Apis.NAME_AND_ADDRESS_CORRECTION_REQUEST, payload);
     _isLoading = false;
     notifyListeners();
     try {
@@ -86,9 +88,10 @@ class NameAndAddressChangeListViewmodel extends ChangeNotifier {
         if (response.statusCode == successResponseCode) {
           if (response.data['sessionValid'] == isTrue) {
             if (response.data['taskSuccess'] == isTrue) {
-               if (response.data['dataList'] is List||response.data['dataList'] ==null ) {
-                  // jsonList = response.data['dataList'];
-                  showAlertDialog(context, response.data['message']);
+              if (response.data['dataList'] is List ||
+                  response.data['dataList'] == null) {
+                // jsonList = response.data['dataList'];
+                showAlertDialog(context, response.data['message']);
                 // else {
                 //   jsonList = [];
                 // }
@@ -100,7 +103,7 @@ class NameAndAddressChangeListViewmodel extends ChangeNotifier {
                 // storeConsumerDetails();
                 // notifyListeners();
                 // print("data is there in getConsumerWithUscNo");
-              }else{
+              } else {
                 showAlertDialog(context, response.data['message']);
               }
             } else {
@@ -118,5 +121,4 @@ class NameAndAddressChangeListViewmodel extends ChangeNotifier {
       rethrow;
     }
   }
-
 }

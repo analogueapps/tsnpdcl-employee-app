@@ -4,16 +4,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
-import 'package:tsnpdcl_employee/dialogs/process_dialog.dart';
 import 'package:tsnpdcl_employee/network/api_provider.dart';
 import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
-import 'package:tsnpdcl_employee/utils/alerts.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 
 class RevokingOfServicesRequestListViewmodel extends ChangeNotifier {
-  RevokingOfServicesRequestListViewmodel({required this.context, required this.status}){
+  RevokingOfServicesRequestListViewmodel(
+      {required this.context, required this.status}) {
     final now = DateTime.now();
     _selectedMonthYear = {
       'month': _getMonthName(now.month),
@@ -61,17 +60,19 @@ class RevokingOfServicesRequestListViewmodel extends ChangeNotifier {
     return monthNames[month - 1];
   }
 
-  Future<void> getNameAndAddressCorrectionRequests(Map<String, dynamic>? dateMonth)async{
+  Future<void> getNameAndAddressCorrectionRequests(
+      Map<String, dynamic>? dateMonth) async {
     _isLoading = true;
     notifyListeners();
 
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
-      "monthYear":dateMonth != null
+      "monthYear": dateMonth != null
           ? '${dateMonth['month']}${dateMonth['year']}'
           : DateFormat('MMMyyyy').format(DateTime.now()),
-      "status":status
+      "status": status
     };
 
     var response = await ApiProvider(baseUrl: Apis.ERO_CORRESPONDENCE_URL)
@@ -86,7 +87,8 @@ class RevokingOfServicesRequestListViewmodel extends ChangeNotifier {
         if (response.statusCode == successResponseCode) {
           if (response.data['sessionValid'] == isTrue) {
             if (response.data['taskSuccess'] == isTrue) {
-              if (response.data['dataList'] is List||response.data['dataList'] ==null ) {
+              if (response.data['dataList'] is List ||
+                  response.data['dataList'] == null) {
                 // jsonList = response.data['dataList'];
                 showAlertDialog(context, response.data['message']);
                 // else {
@@ -100,7 +102,7 @@ class RevokingOfServicesRequestListViewmodel extends ChangeNotifier {
                 // storeConsumerDetails();
                 // notifyListeners();
                 // print("data is there in getConsumerWithUscNo");
-              }else{
+              } else {
                 showAlertDialog(context, response.data['message']);
               }
             } else {
@@ -118,5 +120,4 @@ class RevokingOfServicesRequestListViewmodel extends ChangeNotifier {
       rethrow;
     }
   }
-
 }

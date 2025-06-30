@@ -12,7 +12,6 @@ import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/view/auth/model/npdcl_user.dart';
 import 'package:tsnpdcl_employee/view/filter/model/filter_label_model_list.dart';
-import 'package:tsnpdcl_employee/view/pdms/model/pole_dispatch_instructions_entity.dart';
 import 'package:tsnpdcl_employee/view/pdms/model/pole_dumped_location_entity.dart';
 
 class ViewPoleDumpedLocationViewmodel extends ChangeNotifier {
@@ -25,21 +24,25 @@ class ViewPoleDumpedLocationViewmodel extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   final List<PoleDumpedLocationEntity> _poleDumpedLocationEntityList = [];
-  List<PoleDumpedLocationEntity> get poleDumpedLocationEntityList => _poleDumpedLocationEntityList;
+  List<PoleDumpedLocationEntity> get poleDumpedLocationEntityList =>
+      _poleDumpedLocationEntityList;
 
   // Filter list
   final List<FilterLabelModelList> filterLabelModelList = [];
 
   // Constructor to initialize the items
-  ViewPoleDumpedLocationViewmodel({required this.context, required this.status}) {
+  ViewPoleDumpedLocationViewmodel(
+      {required this.context, required this.status}) {
     _loadUser();
     getDumpLocationsWithStatus();
   }
 
   void _loadUser() {
-    String? prefJson = SharedPreferenceHelper.getStringValue(LoginSdkPrefs.npdclUserPrefKey);
+    String? prefJson =
+        SharedPreferenceHelper.getStringValue(LoginSdkPrefs.npdclUserPrefKey);
     final List<dynamic> jsonList = jsonDecode(prefJson);
-    final List<NpdclUser> user = jsonList.map((json) => NpdclUser.fromJson(json)).toList();
+    final List<NpdclUser> user =
+        jsonList.map((json) => NpdclUser.fromJson(json)).toList();
     npdclUser = user[0];
   }
 
@@ -48,19 +51,23 @@ class ViewPoleDumpedLocationViewmodel extends ChangeNotifier {
     _isLoading = isTrue;
     notifyListeners();
 
-    String? prefJson = SharedPreferenceHelper.getStringValue(LoginSdkPrefs.npdclUserPrefKey);
+    String? prefJson =
+        SharedPreferenceHelper.getStringValue(LoginSdkPrefs.npdclUserPrefKey);
     final List<dynamic> jsonList = jsonDecode(prefJson);
-    final List<NpdclUser> user = jsonList.map((json) => NpdclUser.fromJson(json)).toList();
+    final List<NpdclUser> user =
+        jsonList.map((json) => NpdclUser.fromJson(json)).toList();
     NpdclUser npdclUser = user[0];
 
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
       "circleId": npdclUser.secMasterEntity!.circleId,
       "status": status.toUpperCase()
     };
 
-    var response = await ApiProvider(baseUrl: Apis.PDMS_END_POINT_BASE_URL).postApiCall(context, Apis.GET_POLE_DUMPED_LOCATION_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.PDMS_END_POINT_BASE_URL)
+        .postApiCall(context, Apis.GET_POLE_DUMPED_LOCATION_URL, payload);
     _isLoading = isFalse;
 
     try {
@@ -71,7 +78,7 @@ class ViewPoleDumpedLocationViewmodel extends ChangeNotifier {
         if (response.statusCode == successResponseCode) {
           //if(response.data['sessionValid'] == isTrue) {
           if (response.data['taskSuccess'] == isTrue) {
-            if(response.data['dataList'] != null) {
+            if (response.data['dataList'] != null) {
               // final List<dynamic> jsonList = jsonDecode(response.data['dataList']);
               List<dynamic> jsonList;
 
@@ -81,9 +88,12 @@ class ViewPoleDumpedLocationViewmodel extends ChangeNotifier {
               } else if (response.data['dataList'] is List) {
                 jsonList = response.data['dataList'];
               } else {
-                jsonList = [];  // Fallback to empty list if the type is unexpected
+                jsonList =
+                    []; // Fallback to empty list if the type is unexpected
               }
-              final List<PoleDumpedLocationEntity> dataList = jsonList.map((json) => PoleDumpedLocationEntity.fromJson(json)).toList();
+              final List<PoleDumpedLocationEntity> dataList = jsonList
+                  .map((json) => PoleDumpedLocationEntity.fromJson(json))
+                  .toList();
               _poleDumpedLocationEntityList.addAll(dataList);
               notifyListeners();
             }
@@ -92,11 +102,11 @@ class ViewPoleDumpedLocationViewmodel extends ChangeNotifier {
           //   showSessionExpiredDialog(context);
           // }
         } else {
-          showAlertDialog(context,response.data['message']);
+          showAlertDialog(context, response.data['message']);
         }
       }
     } catch (e) {
-      showErrorDialog(context,  "An error occurred. Please try again.");
+      showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
     }
 
@@ -104,7 +114,7 @@ class ViewPoleDumpedLocationViewmodel extends ChangeNotifier {
   }
 
   void filterFabClicked() {
-    if(filterLabelModelList.isNotEmpty) {
+    if (filterLabelModelList.isNotEmpty) {
       moveToFilterScreen();
     } else {
       getFilterData();
@@ -118,12 +128,14 @@ class ViewPoleDumpedLocationViewmodel extends ChangeNotifier {
     );
 
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
       "circleId": npdclUser.secMasterEntity!.circleId
     };
 
-    var response = await ApiProvider(baseUrl: Apis.PDMS_END_POINT_BASE_URL).postApiCall(context, Apis.GET_INDENTS_FILTER_DATA_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.PDMS_END_POINT_BASE_URL)
+        .postApiCall(context, Apis.GET_INDENTS_FILTER_DATA_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -135,7 +147,7 @@ class ViewPoleDumpedLocationViewmodel extends ChangeNotifier {
         }
         if (response.statusCode == successResponseCode) {
           if (response.data['taskSuccess'] == isTrue) {
-            if(response.data['dataList'] != null) {
+            if (response.data['dataList'] != null) {
               // final List<dynamic> jsonList = jsonDecode(response.data['dataList']);
               List<dynamic> jsonList;
 
@@ -145,9 +157,12 @@ class ViewPoleDumpedLocationViewmodel extends ChangeNotifier {
               } else if (response.data['dataList'] is List) {
                 jsonList = response.data['dataList'];
               } else {
-                jsonList = [];  // Fallback to empty list if the type is unexpected
+                jsonList =
+                    []; // Fallback to empty list if the type is unexpected
               }
-              final List<FilterLabelModelList> dataList = jsonList.map((json) => FilterLabelModelList.fromJson(json)).toList();
+              final List<FilterLabelModelList> dataList = jsonList
+                  .map((json) => FilterLabelModelList.fromJson(json))
+                  .toList();
               filterLabelModelList.addAll(dataList);
               notifyListeners();
               moveToFilterScreen();
@@ -156,18 +171,19 @@ class ViewPoleDumpedLocationViewmodel extends ChangeNotifier {
             showAlertDialog(context, response.data['message']);
           }
         } else {
-          showAlertDialog(context,response.data['message']);
+          showAlertDialog(context, response.data['message']);
         }
       }
     } catch (e) {
-      showErrorDialog(context,  "An error occurred. Please try again.");
+      showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
     }
   }
 
   void moveToFilterScreen() {
-    Navigation.instance.navigateTo(Routes.filterScreen, args: jsonEncode(filterLabelModelList),onReturn: (result) {
-      if(result != null) {
+    Navigation.instance.navigateTo(Routes.filterScreen,
+        args: jsonEncode(filterLabelModelList), onReturn: (result) {
+      if (result != null) {
         //getDisWithFilter(result);
       }
     });
@@ -235,5 +251,4 @@ class ViewPoleDumpedLocationViewmodel extends ChangeNotifier {
   //
   //   notifyListeners();
   // }
-
 }

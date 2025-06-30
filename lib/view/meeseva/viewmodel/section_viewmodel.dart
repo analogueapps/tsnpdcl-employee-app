@@ -1,6 +1,7 @@
 import 'dart:convert';
 
-import 'package:adaptive_dialog/adaptive_dialog.dart' show DialogTextField, showTextInputDialog;
+import 'package:adaptive_dialog/adaptive_dialog.dart'
+    show DialogTextField, showTextInputDialog;
 import 'package:flutter/material.dart';
 import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
 import 'package:tsnpdcl_employee/network/api_provider.dart';
@@ -30,7 +31,8 @@ class SectionViewmodel extends ChangeNotifier {
 
   // Constructor to initialize the items
   SectionViewmodel({required this.context}) {
-    String? prefJson = SharedPreferenceHelper.getStringValue(LoginSdkPrefs.npdclUserPrefKey);
+    String? prefJson =
+        SharedPreferenceHelper.getStringValue(LoginSdkPrefs.npdclUserPrefKey);
     final List<dynamic> jsonList = jsonDecode(prefJson);
     _user = jsonList.map((json) => NpdclUser.fromJson(json)).toList();
     getSections();
@@ -51,7 +53,8 @@ class SectionViewmodel extends ChangeNotifier {
       "data": jsonEncode(requestData),
     };
 
-    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
     _isLoading = false;
     notifyListeners();
     try {
@@ -62,9 +65,11 @@ class SectionViewmodel extends ChangeNotifier {
         if (response.statusCode == successResponseCode) {
           if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
-              if(response.data['objectJson'] != null) {
-                final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
-                final List<OptionList> dataList = jsonList.map((json) => OptionList.fromJson(json)).toList();
+              if (response.data['objectJson'] != null) {
+                final List<dynamic> jsonList =
+                    jsonDecode(response.data['objectJson']);
+                final List<OptionList> dataList =
+                    jsonList.map((json) => OptionList.fromJson(json)).toList();
                 _sectionList = dataList;
                 notifyListeners();
               } else {
@@ -77,11 +82,11 @@ class SectionViewmodel extends ChangeNotifier {
             showSessionExpiredDialog(context);
           }
         } else {
-          showAlertDialog(context,response.data['message']);
+          showAlertDialog(context, response.data['message']);
         }
       }
     } catch (e) {
-      showErrorDialog(context,  "An error occurred. Please try again.");
+      showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
     }
 
@@ -92,7 +97,8 @@ class SectionViewmodel extends ChangeNotifier {
     final result = await showTextInputDialog(
       context: context,
       title: 'Enter Np. Of Days',
-      message: 'Enter no. of days from date of registration/repayment Enter zero (0) to get regular abstract',
+      message:
+          'Enter no. of days from date of registration/repayment Enter zero (0) to get regular abstract',
       okLabel: 'LOAD ABSTRACT',
       cancelLabel: 'CANCEL',
       isDestructiveAction: true,
@@ -105,9 +111,7 @@ class SectionViewmodel extends ChangeNotifier {
       ],
     );
 
-    if (result != null &&
-        result[0] != null &&
-        result[0] is String) {
+    if (result != null) {
       // Get the service number from the dialog result
       String serviceNumber = result[0];
 
@@ -116,9 +120,8 @@ class SectionViewmodel extends ChangeNotifier {
         "sc": sectionList.optionId,
       };
 
-      Navigation.instance.navigateTo(
-          Routes.meeSevaAbstractScreen, args: argument);
+      Navigation.instance
+          .navigateTo(Routes.meeSevaAbstractScreen, args: argument);
     }
   }
-
 }

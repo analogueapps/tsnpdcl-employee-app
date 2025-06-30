@@ -42,10 +42,9 @@ class MiddlePole11kv extends StatelessWidget {
                 IconButton(
                     icon: const Icon(Icons.save_outlined),
                     color: Colors.white,
-                    onPressed: (){
+                    onPressed: () {
                       viewModel.submitForm();
-                    }
-                ),
+                    }),
                 IconButton(
                   icon: const Icon(Icons.folder_outlined),
                   color: Colors.white,
@@ -60,156 +59,179 @@ class MiddlePole11kv extends StatelessWidget {
               ),
               automaticallyImplyLeading: false,
             ),
-            body:viewModel.isLoading
+            body: viewModel.isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : Form(
-          key: viewModel.formKey,
-          child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  // _reusableLastRow(
-                  //     label: "11KV FEEDER", controller: viewModel.feederController, status: isFalse),
-                  SizedBox(height: doubleTen,),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Expanded(
-                        flex: 3,
-                        child: Text(
-                          " 11KV FEEDER",
-                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                          textAlign: TextAlign.start,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 3,
-                        child: DropdownButtonFormField<String>(
-                          value: viewModel.feeder.any((f) => f.optionCode == viewModel.selectedFeeder)
-                              ? viewModel.selectedFeeder
-                              : null,
-                          isExpanded: true,
-                          onChanged: (String? newValue) {
-                            viewModel.onListFeederSelected(newValue);
-                          },
-                          items: viewModel.feeder.map((feeder) {
-                            return DropdownMenuItem<String>(
-                              value: feeder.optionCode,
-                              child: Text(feeder.optionName),
-                            );
-                          }).toList(),
-                          // decoration: InputDecoration(
-                          //   hintText:"label",
-                          //   hintStyle: TextStyle(color: Colors.grey[200]),
-                          //   contentPadding:
-                          //   const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                          //   border: const OutlineInputBorder(),
-                          // ),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                    ],
-                  ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 15.0, left: 10, right: 10),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Expanded(
-                        flex: 1, // Half screen for label
-                        child: Text(
-                          "POLE TYPE",
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                          textAlign: TextAlign.start,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1, // Half screen for dropdown
-                        child: DropdownButton<String>(
-                          isExpanded: true,
-                          value: viewModel.selectedPoleType,
-                          hint: const Text(""),
-                          items: const [
-                            DropdownMenuItem<String>(
-                              value: "SELECT",
-                              child: Text("SELECT"),
+                    key: viewModel.formKey,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          // _reusableLastRow(
+                          //     label: "11KV FEEDER", controller: viewModel.feederController, status: isFalse),
+                          const SizedBox(
+                            height: doubleTen,
+                          ),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Expanded(
+                                flex: 3,
+                                child: Text(
+                                  " 11KV FEEDER",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500),
+                                  textAlign: TextAlign.start,
+                                ),
+                              ),
+                              Expanded(
+                                flex: 3,
+                                child: DropdownButtonFormField<String>(
+                                  value: viewModel.feeder.any((f) =>
+                                          f.optionCode ==
+                                          viewModel.selectedFeeder)
+                                      ? viewModel.selectedFeeder
+                                      : null,
+                                  isExpanded: true,
+                                  onChanged: (String? newValue) {
+                                    viewModel.onListFeederSelected(newValue);
+                                  },
+                                  items: viewModel.feeder.map((feeder) {
+                                    return DropdownMenuItem<String>(
+                                      value: feeder.optionCode,
+                                      child: Text(feeder.optionName),
+                                    );
+                                  }).toList(),
+                                  // decoration: InputDecoration(
+                                  //   hintText:"label",
+                                  //   hintStyle: TextStyle(color: Colors.grey[200]),
+                                  //   contentPadding:
+                                  //   const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                                  //   border: const OutlineInputBorder(),
+                                  // ),
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 15.0, left: 10, right: 10),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const Expanded(
+                                  flex: 1, // Half screen for label
+                                  child: Text(
+                                    "POLE TYPE",
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500),
+                                    textAlign: TextAlign.start,
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1, // Half screen for dropdown
+                                  child: DropdownButton<String>(
+                                    isExpanded: true,
+                                    value: viewModel.selectedPoleType,
+                                    hint: const Text(""),
+                                    items: const [
+                                      DropdownMenuItem<String>(
+                                        value: "SELECT",
+                                        child: Text("SELECT"),
+                                      ),
+                                      DropdownMenuItem<String>(
+                                        value: "11KV",
+                                        child: Text("11KV"),
+                                      ),
+                                      DropdownMenuItem<String>(
+                                        value: "LT",
+                                        child: Text("LT"),
+                                      ),
+                                    ],
+                                    onChanged: (value) {
+                                      viewModel.setPoleType(value);
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                              ],
                             ),
-                            DropdownMenuItem<String>(
-                              value: "11KV",
-                              child: Text("11KV"),
+                          ),
+                          _reusableLastRow(
+                              label: "WORK DESCRIPTION",
+                              controller: viewModel.workDescriptionController,
+                              status: isFalse),
+                          _reusableLastRow(
+                              label: "SANCTION NO.",
+                              controller: viewModel.sanctionNoController,
+                              status: isFalse),
+                          const SizedBox(height: 7),
+                          _buildPoleSection(
+                            title: "POLE A DETAILS",
+                            photoPath: viewModel.poleAPhoto11KV != ""
+                                ? Apis.NPDCL_STORAGE_SERVER_IP +
+                                    viewModel.poleAPhoto11KV
+                                : "",
+                            onCapturePressed: () {
+                              viewModel.capturePoleA11Photo();
+                            },
+                          ),
+                          const SizedBox(height: 10),
+                          _reusableLastRow(
+                              label: "POLE - A LATITUDE",
+                              controller: viewModel.latPoleA11kv,
+                              status: isTrue),
+                          _reusableLastRow(
+                              label: "POLE - A LONGITUDE",
+                              controller: viewModel.logPoleA11kv,
+                              status: isTrue),
+                          const SizedBox(height: 10),
+                          _buildPoleSection(
+                            title: "POLE B DETAILS",
+                            photoPath: viewModel.poleB11PhotoPath != ""
+                                ? Apis.NPDCL_STORAGE_SERVER_IP +
+                                    viewModel.poleB11PhotoPath
+                                : "",
+                            onCapturePressed: () {
+                              viewModel.capturePoleB11Photo();
+                            },
+                          ),
+                          _reusableLastRow(
+                              label: "POLE-B LATITUDE",
+                              controller: viewModel.latPoleB11kv,
+                              status: isTrue),
+                          _reusableLastRow(
+                              label: "POLE-B LONGITUDE",
+                              controller: viewModel.latPoleB11kv,
+                              status: isTrue),
+                          _reusableLastRow(
+                              label: "DISTANCE B/W A&B",
+                              controller: viewModel.distanceController,
+                              status: isTrue),
+                          const SizedBox(height: 10),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 8, bottom: 20, left: 20, right: 20),
+                            child: TextFormField(
+                              controller: viewModel.remarksController,
+                              decoration: const InputDecoration(
+                                labelText: 'REMARKS(If Any)',
+                                border: UnderlineInputBorder(),
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.grey),
+                                ),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.blue),
+                                ),
+                              ),
                             ),
-                            DropdownMenuItem<String>(
-                              value: "LT",
-                              child: Text("LT"),
-                            ),
-                          ],
-                          onChanged: (value) {
-                            viewModel.setPoleType(value);
-                          },
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                    ],
-                  ),
-                ),
-                  _reusableLastRow(
-                      label: "WORK DESCRIPTION",
-                      controller: viewModel.workDescriptionController, status: isFalse),
-                  _reusableLastRow(
-                      label: "SANCTION NO.",
-                      controller: viewModel.sanctionNoController, status: isFalse),
-                  const SizedBox(height: 7),
-                  _buildPoleSection(
-                    title: "POLE A DETAILS",
-                    photoPath: viewModel.poleAPhoto11KV!=""? Apis.NPDCL_STORAGE_SERVER_IP +viewModel.poleAPhoto11KV:"",
-                    onCapturePressed: () {
-                      viewModel.capturePoleA11Photo();
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  _reusableLastRow(
-                      label: "POLE - A LATITUDE",
-                      controller: viewModel.latPoleA11kv, status: isTrue),
-                  _reusableLastRow(
-                      label: "POLE - A LONGITUDE",
-                      controller: viewModel.logPoleA11kv, status: isTrue),
-                  const SizedBox(height: 10),
-                  _buildPoleSection(
-                    title: "POLE B DETAILS",
-                    photoPath: viewModel.poleB11PhotoPath!=""? Apis.NPDCL_STORAGE_SERVER_IP +viewModel.poleB11PhotoPath:"",
-                    onCapturePressed: () {
-                      viewModel.capturePoleB11Photo();
-                    },
-                  ),
-                  _reusableLastRow(
-                      label: "POLE-B LATITUDE",
-                      controller: viewModel.latPoleB11kv, status: isTrue),
-                  _reusableLastRow(
-                      label: "POLE-B LONGITUDE",
-                      controller: viewModel.latPoleB11kv, status: isTrue),
-                  _reusableLastRow(
-                      label: "DISTANCE B/W A&B",
-                      controller: viewModel.distanceController, status: isTrue),
-                  const SizedBox(height: 10),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8, bottom: 20, left: 20, right: 20),
-                    child: TextFormField(
-                      controller: viewModel.remarksController,
-                      decoration: const InputDecoration(
-                        labelText: 'REMARKS(If Any)',
-                        border: UnderlineInputBorder(),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.blue),
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                ],
-              ),
-            ),
-            ),
           );
         },
       ),
@@ -227,11 +249,12 @@ class MiddlePole11kv extends StatelessWidget {
       ),
       child: photoPath.isEmpty
           ? const Icon(Icons.image, size: 50)
-          : Image.network( photoPath,
-        fit: BoxFit.cover,
-        height: 180,
-        width: double.infinity,
-      ),
+          : Image.network(
+              photoPath,
+              fit: BoxFit.cover,
+              height: 180,
+              width: double.infinity,
+            ),
     );
   }
 
@@ -240,15 +263,15 @@ class MiddlePole11kv extends StatelessWidget {
       padding: const EdgeInsets.only(top: 15.0, bottom: 15.0, left: 8),
       color: Colors.grey[200],
       width: double.infinity,
-      child: Text(label.toUpperCase(), style: const TextStyle(fontWeight: FontWeight.w700)),
+      child: Text(label.toUpperCase(),
+          style: const TextStyle(fontWeight: FontWeight.w700)),
     );
   }
 
-  Widget _reusableLastRow({
-    required String label,
-    required TextEditingController controller,
-    required bool status
-  }) {
+  Widget _reusableLastRow(
+      {required String label,
+      required TextEditingController controller,
+      required bool status}) {
     return Container(
       padding: const EdgeInsets.only(top: 15.0, left: 10),
       child: Row(
@@ -268,7 +291,8 @@ class MiddlePole11kv extends StatelessWidget {
               decoration: InputDecoration(
                 hintText: label,
                 hintStyle: TextStyle(color: Colors.grey[200]),
-                contentPadding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                contentPadding:
+                    const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               ),
             ),
           ),
@@ -291,7 +315,8 @@ class MiddlePole11kv extends StatelessWidget {
           padding: const EdgeInsets.only(left: 8),
           child: SizedBox(
             width: double.infinity,
-            child: Text("$title PHOTO", style: const TextStyle(fontWeight: FontWeight.w700)),
+            child: Text("$title PHOTO",
+                style: const TextStyle(fontWeight: FontWeight.w700)),
           ),
         ),
         Padding(
@@ -311,10 +336,12 @@ class MiddlePole11kv extends StatelessWidget {
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.deepOrangeAccent,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5)),
               ),
-              child: Text("CAPTURE $title PHOTO", style: const TextStyle(color: Colors.white)),
               onPressed: onCapturePressed,
+              child: Text("CAPTURE $title PHOTO",
+                  style: const TextStyle(color: Colors.white)),
             ),
           ),
         ),

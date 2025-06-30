@@ -19,11 +19,12 @@ class ServicesAppListViewmodel extends ChangeNotifier {
   bool _isLoading = isFalse;
   bool get isLoading => _isLoading;
 
-  List<LoadApplicationsList> _loadApplicationsList = [];
+  final List<LoadApplicationsList> _loadApplicationsList = [];
   List<LoadApplicationsList> get loadApplicationsList => _loadApplicationsList;
 
-  List<LoadApplicationsList> _filterApplicationsList = [];
-  List<LoadApplicationsList> get filterApplicationsList => _filterApplicationsList;
+  final List<LoadApplicationsList> _filterApplicationsList = [];
+  List<LoadApplicationsList> get filterApplicationsList =>
+      _filterApplicationsList;
 
   ServicesAppListViewmodel({required this.context, required this.data}) {
     loadApplications();
@@ -38,15 +39,16 @@ class ServicesAppListViewmodel extends ChangeNotifier {
     print(data['lmEmp']);
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "fromDate": "123456",
       "toDate": "12342134",
       "ncflag": data['ncflag'],
       "status": data['s'],
     };
-    
-    if(data['sc'] != null) {
+
+    if (data['sc'] != null) {
       requestData['sc'] = data['sc'];
     }
 
@@ -57,7 +59,8 @@ class ServicesAppListViewmodel extends ChangeNotifier {
       "data": jsonEncode(requestData),
     };
 
-    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
     _isLoading = false;
     notifyListeners();
     try {
@@ -69,21 +72,25 @@ class ServicesAppListViewmodel extends ChangeNotifier {
           if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
               if (response.data['objectJson'] != null) {
-                final List<dynamic> jsonList = jsonDecode(
-                    response.data['objectJson']);
-                final List<LoadApplicationsList> responseList = jsonList.map((
-                    json) => LoadApplicationsList.fromJson(json)).toList();
+                final List<dynamic> jsonList =
+                    jsonDecode(response.data['objectJson']);
+                final List<LoadApplicationsList> responseList = jsonList
+                    .map((json) => LoadApplicationsList.fromJson(json))
+                    .toList();
                 _loadApplicationsList.addAll(responseList);
-                if(data['filterLm'] != null && data['lmEmp'] != null) {
-                  for (var applications in _loadApplicationsList){
-                    if(data['name'] != null) {
-                      if (data['name'].toLowerCase() == "ae" || data['name'].toLowerCase() == "ade/op") {
+                if (data['filterLm'] != null && data['lmEmp'] != null) {
+                  for (var applications in _loadApplicationsList) {
+                    if (data['name'] != null) {
+                      if (data['name'].toLowerCase() == "ae" ||
+                          data['name'].toLowerCase() == "ade/op") {
                         _filterApplicationsList.add(applications);
                       }
                     }
 
-                    if ((applications.aAllotLmEmp != null && applications.aAllotLmEmp!.empId == data['lmEmp']) ||
-                        (applications.fAllotLmEmp != null && applications.fAllotLmEmp!.empId == data['lmEmp'])) {
+                    if ((applications.aAllotLmEmp != null &&
+                            applications.aAllotLmEmp!.empId == data['lmEmp']) ||
+                        (applications.fAllotLmEmp != null &&
+                            applications.fAllotLmEmp!.empId == data['lmEmp'])) {
                       _filterApplicationsList.add(applications);
                     }
                   }
@@ -99,15 +106,14 @@ class ServicesAppListViewmodel extends ChangeNotifier {
             showSessionExpiredDialog(context);
           }
         } else {
-          showAlertDialog(context,response.data['message']);
+          showAlertDialog(context, response.data['message']);
         }
       }
     } catch (e) {
-      showErrorDialog(context,  "An error occurred. Please try again.");
+      showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
     }
 
     notifyListeners();
   }
-
 }

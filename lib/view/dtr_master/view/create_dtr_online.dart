@@ -875,7 +875,7 @@ class CreateDtrOnline extends StatelessWidget {
                 color: Colors.grey,
               )
             : Image.file(
-                image!,
+                image,
                 fit: BoxFit.cover, // Adjust fit as needed
                 height: 180,
                 width: double.infinity,

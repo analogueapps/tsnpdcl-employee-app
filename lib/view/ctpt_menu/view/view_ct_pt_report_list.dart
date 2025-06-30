@@ -62,87 +62,89 @@ class FailureReportedList extends StatelessWidget {
               ],
             ),
             body: viewModel.isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : ListView.builder(
-            itemCount: viewModel.failureReports.length,
-            itemBuilder: (context, index) {
-              if (viewModel.failureReports.isEmpty) {
-                return const Center(child: Text("No data found"));
-              } else {
-                final report = viewModel.failureReports[index];
-                print("ctpt responsee: $report");
-                return InkWell(
-                  onTap: () {
-                    Navigation.instance.navigateTo(
-                      Routes.viewDetailedCtptReport,
-                      args: report,
-                    );
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 10,
-                      horizontal: 10,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Reg No. ${report.data['reportId'] ?? 'N/A'}',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15,
-                              ),
+                ? const Center(child: CircularProgressIndicator())
+                : ListView.builder(
+                    itemCount: viewModel.failureReports.length,
+                    itemBuilder: (context, index) {
+                      if (viewModel.failureReports.isEmpty) {
+                        return const Center(child: Text("No data found"));
+                      } else {
+                        final report = viewModel.failureReports[index];
+                        print("ctpt responsee: $report");
+                        return InkWell(
+                          onTap: () {
+                            Navigation.instance.navigateTo(
+                              Routes.viewDetailedCtptReport,
+                              args: report,
+                            );
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 10,
+                              horizontal: 10,
                             ),
-                            Text(
-                              report.data['section'] ?? 'N/A',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: CommonColors.colorPrimary,
-                              ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Reg No. ${report.data['reportId'] ?? 'N/A'}',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                    Text(
+                                      report.data['section'] ?? 'N/A',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: CommonColors.colorPrimary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Text(
+                                  'SC No. ${report.data['htScno'] ?? 'N/A'} \n ${report.data['cName'] != null && report.data['cName']!.isNotEmpty ? '(${report.data['cName']})' : ''}',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: doubleTen,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      report.data['reportDate'] ?? 'N/A',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    Text(
+                                      report.data['status'] ?? 'N/A',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+                                const Divider(color: Colors.grey, thickness: 1),
+                              ],
                             ),
-                          ],
-                        ),
-                        Text(
-                          'SC No. ${report.data['htScno'] ?? 'N/A'} \n ${report.data['cName'] != null && report.data['cName']!.isNotEmpty ? '(${report.data['cName']})' : ''}',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
                           ),
-                        ),
-                        const SizedBox(height: doubleTen,),
-                        Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              report.data['reportDate'] ?? 'N/A',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12,
-                              ),
-                            ),
-                            Text(
-                              report.data['status'] ?? 'N/A',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.red,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        const Divider(color: Colors.grey, thickness: 1),
-                      ],
-                    ),
+                        );
+                      }
+                    },
                   ),
-                );
-              }
-            },
-          ),
           );
         },
       ),

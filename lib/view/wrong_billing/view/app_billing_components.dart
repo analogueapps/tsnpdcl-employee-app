@@ -36,413 +36,515 @@ class AppBillingComponents extends StatelessWidget {
         ),
       ),
       body: ChangeNotifierProvider(
-        create: (_) => AppBillingComponentsViewmodel(context: context,),
+        create: (_) => AppBillingComponentsViewmodel(
+          context: context,
+        ),
         child: Consumer<AppBillingComponentsViewmodel>(
             builder: (context, viewModel, child) {
-              return Stack(
-                  children:[
-                    SingleChildScrollView(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top:doubleEleven, left: doubleEleven,right: doubleEleven, bottom: doubleTwentyFive),
-                        child: Form(
-                          key:viewModel.formKey,
-                          child:Column(
+          return Stack(children: [
+            SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    top: doubleEleven,
+                    left: doubleEleven,
+                    right: doubleEleven,
+                    bottom: doubleTwentyFive),
+                child: Form(
+                  key: viewModel.formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "USCNO",
+                        style: TextStyle(color: Color(0xff5ba55e)),
+                      ),
+                      TextField(
+                        controller: viewModel.uscNo,
+                        maxLength: 8,
+                        readOnly: viewModel.uscnoReadOnly,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        decoration: const InputDecoration(
+                          counterText: "",
+                          hintText: "USCNO",
+                          border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 12),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: TextButton(
+                          onPressed: () {
+                            if (viewModel.uscnoReadOnly == isFalse &&
+                                viewModel.uscNo.text.length < 8) {
+                              AlertUtils.showSnackBar(
+                                  context, "Please enter valid USCNO", isTrue);
+                            } else {
+                              viewModel
+                                  .getConsumerWithUscNo(viewModel.uscNo.text);
+                            }
+                          },
+                          child: const Text(
+                            "Fetch Details",
+                            style: TextStyle(color: Colors.indigo),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: double.infinity,
+                        height: 40,
+                        alignment: Alignment.centerLeft,
+                        color: Colors.blueGrey[50],
+                        child: const Text(
+                          "CONSUMER DETAILS",
+                          style: TextStyle(color: CommonColors.deepBlue),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: doubleTen,
+                      ),
+                      Table(
+                          // border:TableBorder.all(width: 1.5,color:CommonColors.lightGrey),
+                          border: const TableBorder.symmetric(
+                            inside: BorderSide(
+                              width: 1.5,
+                              color: CommonColors.lightGrey,
+                            ),
+                          ),
+                          columnWidths: const {
+                            0: FlexColumnWidth(0.4), // 40% of the width
+                            1: FlexColumnWidth(0.6), // 60% of the width
+                          },
+                          children: [
+                            TableRow(
+                              children: [
+                                Visibility(
+                                  visible:
+                                      viewModel.fetchDetailsClicked == isTrue,
+                                  child: const Padding(
+                                    padding: EdgeInsets.only(top: 20),
+                                    child: Text('USCNO'),
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: doubleEight),
+                                  child: TextField(
+                                    controller: viewModel.consumerWithUscNo,
+                                    readOnly: true,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            TableRow(
+                              children: [
+                                Visibility(
+                                  visible:
+                                      viewModel.fetchDetailsClicked == isTrue,
+                                  child: const Padding(
+                                    padding: EdgeInsets.only(top: 20),
+                                    child: Text('SCNO/CAT'),
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: doubleEight),
+                                  child: TextField(
+                                    controller: viewModel.scNoCat,
+                                    readOnly: true,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            TableRow(
+                              children: [
+                                Visibility(
+                                  visible:
+                                      viewModel.fetchDetailsClicked == isTrue,
+                                  child: const Padding(
+                                    padding: EdgeInsets.only(top: 20),
+                                    child: Text('CONSUMER NAME'),
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: doubleEight),
+                                  child: TextField(
+                                    controller: viewModel.consumerName,
+                                    readOnly: true,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            TableRow(
+                              children: [
+                                Visibility(
+                                  visible:
+                                      viewModel.fetchDetailsClicked == isTrue,
+                                  child: const Padding(
+                                    padding: EdgeInsets.only(top: 20),
+                                    child: Text('ADDRESS LINE 1'),
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: doubleEight),
+                                  child: TextField(
+                                    controller: viewModel.addressLine1,
+                                    readOnly: true,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            TableRow(
+                              children: [
+                                Visibility(
+                                  visible:
+                                      viewModel.fetchDetailsClicked == isTrue,
+                                  child: const Padding(
+                                    padding: EdgeInsets.only(top: 20),
+                                    child: Text('ADDRESS LINE 2'),
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: doubleEight),
+                                  child: TextField(
+                                    controller: viewModel.addressLine2,
+                                    readOnly: true,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            TableRow(
+                              children: [
+                                Visibility(
+                                  visible:
+                                      viewModel.fetchDetailsClicked == isTrue,
+                                  child: const Padding(
+                                    padding: EdgeInsets.only(top: 20),
+                                    child: Text('ADDRESS LINE 3'),
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: doubleEight),
+                                  child: TextField(
+                                    controller: viewModel.addressLine3,
+                                    readOnly: true,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            TableRow(
+                              children: [
+                                Visibility(
+                                  visible:
+                                      viewModel.fetchDetailsClicked == isTrue,
+                                  child: const Padding(
+                                    padding: EdgeInsets.only(top: 20),
+                                    child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text('ADDRESS LINE 4'),
+                                          Divider(),
+                                        ]),
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: doubleEight),
+                                  child: TextField(
+                                    controller: viewModel.addressLine4,
+                                    readOnly: true,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ]),
+                      const SizedBox(
+                        height: doubleTen,
+                      ),
+                      Container(
+                        width: double.infinity,
+                        height: 40,
+                        color: Colors.blueGrey[50],
+                        alignment: Alignment.centerLeft,
+                        child: const Text(
+                          "COMPLAINT TYPE",
+                          style: TextStyle(color: CommonColors.deepBlue),
+                        ),
+                      ),
+                      Column(
+                        children: [
+                          CheckboxListTile(
+                            controlAffinity: ListTileControlAffinity.leading,
+                            contentPadding: EdgeInsets.zero,
+                            title: const Text(
+                              "WRONG BILLING DUE TO EXCESS READING",
+                              style: TextStyle(
+                                  fontSize: normalSize,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                            value: viewModel.isSelected(
+                                "WRONG BILLING DUE TO EXCESS READING"),
+                            onChanged: (value) {
+                              viewModel.selectCheckbox(
+                                  "WRONG BILLING DUE TO EXCESS READING");
+                            },
+                          ),
+                          const Divider(),
+                          CheckboxListTile(
+                            controlAffinity: ListTileControlAffinity.leading,
+                            contentPadding: EdgeInsets.zero,
+                            title: const Text(
+                              "EXCESS AVG. BILLED DURING METER DEFECTIVE PERIOD",
+                              style: TextStyle(
+                                  fontSize: normalSize,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                            value: viewModel.isSelected(
+                                "EXCESS AVG. BILLED DURING METER DEFECTIVE PERIOD"),
+                            onChanged: (value) {
+                              viewModel.selectCheckbox(
+                                  "EXCESS AVG. BILLED DURING METER DEFECTIVE PERIOD");
+                            },
+                          ),
+                          const Divider(),
+                          CheckboxListTile(
+                            controlAffinity: ListTileControlAffinity.leading,
+                            contentPadding: EdgeInsets.zero,
+                            title: const Text(
+                              "AT S TIME BILLING",
+                              style: TextStyle(
+                                fontSize: normalSize,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            value: viewModel.isSelected("AT A TIME BILLING"),
+                            onChanged: (value) {
+                              viewModel.selectCheckbox("AT A TIME BILLING");
+                            },
+                          ),
+                          const Divider(),
+                          CheckboxListTile(
+                            controlAffinity: ListTileControlAffinity.leading,
+                            contentPadding: EdgeInsets.zero,
+                            title: const Text(
+                              "BILLED WITH WRONG STATUS",
+                              style: TextStyle(
+                                  fontSize: normalSize,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                            value: viewModel
+                                .isSelected("BILLED WITH WRONG STATUS"),
+                            onChanged: (value) {
+                              viewModel
+                                  .selectCheckbox("BILLED WITH WRONG STATUS");
+                            },
+                          ),
+                          const Divider(),
+                        ],
+                      ),
+                      const Divider(),
+                      Container(
+                        width: double.infinity,
+                        height: 40,
+                        color: Colors.blueGrey[50],
+                        // padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              "METER AVAILABLE",
+                              style: TextStyle(color: CommonColors.deepBlue),
+                            ),
+                            Switch(
+                              value: viewModel.meterAvailableSwitch,
+                              onChanged: (value) {
+                                viewModel.meterAvailable = value;
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      Visibility(
+                        visible: viewModel.meterAvailableSwitch == isTrue,
+                        child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("USCNO",style: const TextStyle(color:  Color(0xff5ba55e) ), ),
-                              TextField(
-                                controller: viewModel.uscNo,
-                                maxLength: 8,
-                                readOnly:viewModel.uscnoReadOnly ,
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                                decoration: const InputDecoration(
-                                  counterText: "",
-                                  hintText: "USCNO",
-                                  border: OutlineInputBorder(),
-                                  contentPadding:
-                                  EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-                                ),),
-                              Align(
-                                alignment: Alignment.bottomRight,
-                                child: TextButton(onPressed:() {
-                                  if(viewModel.uscnoReadOnly==isFalse&&viewModel.uscNo.text.length<8){
-                                    AlertUtils.showSnackBar(
-                                        context, "Please enter valid USCNO",
-                                        isTrue);
-                                  }else {
-                                    viewModel.getConsumerWithUscNo(
-                                        viewModel.uscNo.text);
-                                  }
-                                }, child: Text("Fetch Details", style: TextStyle(color:Colors.indigo),),),
+                              const Text(
+                                "MAKE",
+                                style: TextStyle(color: Color(0xff5ba55e)),
                               ),
-                              Container(
-                                width: double.infinity,
-                                height: 40,
-                                alignment: Alignment.centerLeft,
-                                color: Colors.blueGrey[50],
-                                child: const Text("CONSUMER DETAILS", style: TextStyle(color: CommonColors.deepBlue),),
-                              ),
-                              const SizedBox(height: doubleTen,),
-                              Table(
-                                // border:TableBorder.all(width: 1.5,color:CommonColors.lightGrey),
-                                  border: const TableBorder.symmetric(
-                                    inside: BorderSide(
-                                      width: 1.5,
-                                      color: CommonColors.lightGrey,
-                                    ),
-
-                                  ),
-                                  columnWidths: const {
-                                    0: FlexColumnWidth(0.4), // 40% of the width
-                                    1: FlexColumnWidth(0.6), // 60% of the width
-                                  },
-                                  children: [
-                                    TableRow(
-                                      children: [
-                                        Visibility(
-                                          visible:viewModel.fetchDetailsClicked==isTrue ,
-                                          child: const Padding(
-                                            padding: EdgeInsets.only(top: 20),
-                                            child: Text('USCNO'),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(left: doubleEight),
-                                          child: TextField(
-                                            controller: viewModel.consumerWithUscNo,
-                                            readOnly: true,
-                                          ),
-                                        ),
-                                      ],
-                                    ),TableRow(
-                                      children: [
-                                        Visibility(
-                                          visible:viewModel.fetchDetailsClicked==isTrue   ,
-                                          child: const Padding(
-                                            padding: EdgeInsets.only(top: 20),
-                                            child: Text('SCNO/CAT'),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(left: doubleEight),
-                                          child: TextField(
-                                            controller: viewModel.scNoCat,
-                                            readOnly: true,
-                                          ),
-                                        ),
-                                      ],
-                                    ),TableRow(
-                                      children: [
-                                        Visibility(
-                                          visible:viewModel.fetchDetailsClicked==isTrue  ,
-                                          child: const Padding(
-                                            padding: EdgeInsets.only(top: 20),
-                                            child: Text('CONSUMER NAME'),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(left: doubleEight),
-                                          child: TextField(
-                                            controller: viewModel.consumerName,
-                                            readOnly: true,
-                                          ),
-                                        ),
-                                      ],
-                                    ),TableRow(
-                                      children: [
-                                        Visibility(
-                                          visible:viewModel.fetchDetailsClicked==isTrue ,
-                                          child: const Padding(
-                                            padding: EdgeInsets.only(top: 20),
-                                            child: Text('ADDRESS LINE 1'),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(left: doubleEight),
-                                          child: TextField(
-                                            controller: viewModel.addressLine1,
-                                            readOnly: true,
-                                          ),
-                                        ),
-                                      ],
-                                    ),TableRow(
-                                      children: [
-                                        Visibility(
-                                          visible:viewModel.fetchDetailsClicked==isTrue  ,
-                                          child:const Padding(
-                                            padding: EdgeInsets.only(top: 20),
-                                            child: Text('ADDRESS LINE 2'),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(left: doubleEight),
-                                          child: TextField(
-                                            controller: viewModel.addressLine2,
-                                            readOnly: true,
-                                          ),
-                                        ),
-                                      ],
-                                    ),TableRow(
-                                      children: [
-                                        Visibility(
-                                          visible:viewModel.fetchDetailsClicked==isTrue ,
-                                          child: const Padding(
-                                            padding: EdgeInsets.only(top: 20),
-                                            child: Text('ADDRESS LINE 3'),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(left: doubleEight),
-                                          child: TextField(
-                                            controller: viewModel.addressLine3,
-                                            readOnly: true,
-                                          ),
-                                        ),
-                                      ],
-                                    ),TableRow(
-                                      children: [
-                                        Visibility(
-                                          visible:viewModel.fetchDetailsClicked==isTrue ,
-                                          child: const Padding(
-                                            padding: EdgeInsets.only(top: 20),
-                                            child: Column(
-                                                crossAxisAlignment:CrossAxisAlignment.start,
-                                                children: [Text('ADDRESS LINE 4'),
-                                                  Divider(),
-                                                ]
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding:const EdgeInsets.only(left: doubleEight),
-                                          child: TextField(
-                                            controller: viewModel.addressLine4,
-                                            readOnly: true,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ]
-                              ),
-                              const SizedBox( height: doubleTen,),
-                              Container(
-                                width: double.infinity,
-                                height: 40,
-                                color: Colors.blueGrey[50],
-                                alignment: Alignment.centerLeft,
-                                child:const Text("COMPLAINT TYPE", style: TextStyle(color: CommonColors.deepBlue),),
-                              ),
-                              Column(
-                                children: [
-                                  CheckboxListTile(
-                                    controlAffinity: ListTileControlAffinity.leading,
-                                    contentPadding: EdgeInsets.zero,
-                                    title: const Text(
-                                      "WRONG BILLING DUE TO EXCESS READING",
-                                      style: TextStyle(fontSize: normalSize, fontWeight: FontWeight.w500),
-                                    ),
-                                    value: viewModel.isSelected("WRONG BILLING DUE TO EXCESS READING"),
-                                    onChanged: (value) {
-                                      viewModel.selectCheckbox("WRONG BILLING DUE TO EXCESS READING");
-                                    },
-                                  ),
-                                  Divider(),
-                                  CheckboxListTile(
-                                    controlAffinity: ListTileControlAffinity.leading,
-                                    contentPadding: EdgeInsets.zero,
-                                    title: const Text(
-                                      "EXCESS AVG. BILLED DURING METER DEFECTIVE PERIOD",
-                                      style: TextStyle(fontSize: normalSize, fontWeight: FontWeight.w500),
-                                    ),
-                                    value: viewModel.isSelected("EXCESS AVG. BILLED DURING METER DEFECTIVE PERIOD"),
-                                    onChanged: (value) {
-                                      viewModel.selectCheckbox("EXCESS AVG. BILLED DURING METER DEFECTIVE PERIOD");
-                                    },
-                                  ),
-                                  Divider(),
-                                  CheckboxListTile(
-                                    controlAffinity: ListTileControlAffinity.leading,
-                                    contentPadding: EdgeInsets.zero,
-                                    title: const Text(
-                                      "AT S TIME BILLING",
-                                      style: TextStyle(fontSize: normalSize, fontWeight: FontWeight.w500, ),
-                                    ),
-                                    value: viewModel.isSelected("AT A TIME BILLING"),
-                                    onChanged: (value) {
-                                      viewModel.selectCheckbox("AT A TIME BILLING");
-                                    },
-                                  ),
-                                  Divider(),
-                                  CheckboxListTile(
-                                    controlAffinity: ListTileControlAffinity.leading,
-                                    contentPadding: EdgeInsets.zero,
-                                    title: const Text(
-                                      "BILLED WITH WRONG STATUS",
-                                      style: TextStyle(fontSize: normalSize, fontWeight: FontWeight.w500),
-                                    ),
-                                    value: viewModel.isSelected("BILLED WITH WRONG STATUS"),
-                                    onChanged: (value) {
-                                      viewModel.selectCheckbox("BILLED WITH WRONG STATUS");
-                                    },
-                                  ),
-                                  Divider(),
-                                ],
-                              ),
-                              const Divider(),
-                              Container(
-                                width: double.infinity,
-                                height: 40,
-                                color: Colors.blueGrey[50],
-                                // padding: const EdgeInsets.symmetric(horizontal: 16),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text("METER AVAILABLE", style: TextStyle(color: CommonColors.deepBlue),),
-                                    Switch(
-                                      value: viewModel.meterAvailableSwitch,
-                                      onChanged: (value) {
-                                        viewModel.meterAvailable = value;
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Visibility(
-                                visible: viewModel.meterAvailableSwitch==isTrue,
-                                child:
-                                Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const Text("MAKE",style: TextStyle(color:  Color(0xff5ba55e)),),
-                                      DropdownButtonFormField<String>(
-                                        value: viewModel.meterMakeName,
-                                        hint:  viewModel.meterMakesMap.isNotEmpty?const Text("Select an option"): const Text(""),
-                                        isExpanded: true,
-                                        items: viewModel.meterMakesMap.map((item) =>
-                                            DropdownMenuItem<String>(
-                                              value: item.optionId,
-                                              child: Text(item.optionName!),
-                                            ))
-                                            .toList(),
-                                        decoration: const InputDecoration(
-                                            border: OutlineInputBorder(
-                                              borderSide:
-                                              BorderSide(width: 1, color: Colors.grey),
-                                            )),
-                                        onChanged: (newValue) {
-                                          viewModel.updateOldMeterMake(newValue!);
-                                        },
-                                      ),
-                                      const SizedBox(height: doubleTen,),
-                                      const Text("SERIAL NO", style: TextStyle(color:  Color(
-                                          0xff5ba55e)),),
-                                      TextField(
-                                        controller: viewModel.serialNo,
-                                        maxLength: 30,
-                                        keyboardType: TextInputType.text,
-                                        decoration: const InputDecoration(
-                                          counterText: "",
-                                          border: OutlineInputBorder(),
-                                          contentPadding:
-                                          EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-                                        ),
-                                      ),
-                                      const SizedBox(height: doubleTen,),
-                                       Text("capacity".toUpperCase(), style: TextStyle(color:  Color(
-                                          0xff5ba55e)),),
-                                      TextField(
-                                        controller: viewModel.capacity,
-                                        maxLength: 15,
-                                        keyboardType: TextInputType.text,
-                                        decoration: const InputDecoration(
-                                          counterText: "",
-                                          border: OutlineInputBorder(),
-                                          contentPadding:
-                                          EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-                                        ),
-                                      ),
-                                      // FillTextFormField(controller: viewModel.capacity, labelText: "CAPACITY", keyboardType: TextInputType.text),
-                                      const SizedBox(height: doubleTen,),
-                                      Row(children: [
-                                        Expanded(child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                          const Text("KWH", style: TextStyle(color:  Color(
-                                              0xff5ba55e)),),
-                                          TextField(
-                                            controller: viewModel.kwh,
-                                            maxLength: 16,
-                                            keyboardType: TextInputType.text,
-                                            decoration: const InputDecoration(
-                                              counterText: "",
-                                              border: OutlineInputBorder(),
-                                              contentPadding:
-                                              EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-                                            ),
-                                          ),
-                                        ],)),
-                                        const SizedBox(width: doubleTen,),
-                                        Expanded(child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            const Text("KVAH", style: TextStyle(color:  Color(
-                                                0xff5ba55e)),),
-                                            TextField(
-                                              controller: viewModel.kvah,
-                                              maxLength: 20,
-                                              keyboardType: TextInputType.text,
-                                              decoration: const InputDecoration(
-                                                counterText: "",
-                                                border: OutlineInputBorder(),
-                                                contentPadding:
-                                                EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-                                              ),
-                                            ),
-                                          ],
-                                        )),
-                                        // SizedBox(height: doubleTen,),
-                                      ]
-                                      ),
-                                    ]
-                                ),
-                              ),
-                              const Divider(),
-                              Container(
-                                width: double.infinity,
-                                height: 40,
-                                color: Colors.blueGrey[50],
-                                alignment: Alignment.centerLeft,
-                                child:const Text("BILL REVISION PROPOSAL", style: TextStyle(color: CommonColors.deepBlue),),
-                              ),
-                              const Text("METER_STATUS", style: TextStyle(color:  Color(0xff5ba55e)),),
                               DropdownButtonFormField<String>(
-                                value: viewModel.meterStatusName,
-                                hint:  viewModel.meterStatus.isNotEmpty?const Text("Select an option"): const Text(""),
+                                value: viewModel.meterMakeName,
+                                hint: viewModel.meterMakesMap.isNotEmpty
+                                    ? const Text("Select an option")
+                                    : const Text(""),
                                 isExpanded: true,
-                                items: viewModel.meterStatus.map((item) =>
-                                    DropdownMenuItem<String>(
-                                      value: item.optionId,
-                                      child: Text(item.optionName!),
-                                    ))
+                                items: viewModel.meterMakesMap
+                                    .map((item) => DropdownMenuItem<String>(
+                                          value: item.optionId,
+                                          child: Text(item.optionName),
+                                        ))
                                     .toList(),
                                 decoration: const InputDecoration(
                                     border: OutlineInputBorder(
-                                      borderSide:
+                                  borderSide:
                                       BorderSide(width: 1, color: Colors.grey),
-                                    )),
+                                )),
                                 onChanged: (newValue) {
-                                  viewModel.updateMeterStatus(newValue!);
+                                  viewModel.updateOldMeterMake(newValue!);
                                 },
                               ),
-                         const Divider(),
-                          Visibility(
-                            visible:viewModel.selectedCheckboxId=="EXCESS AVG. BILLED DURING METER DEFECTIVE PERIOD" ,
-                            child:Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const SizedBox(height: doubleTen,),
-                               Text("proposed average units".toUpperCase(), style: TextStyle(color:  Color(0xff5ba55e)),),
+                              const SizedBox(
+                                height: doubleTen,
+                              ),
+                              const Text(
+                                "SERIAL NO",
+                                style: TextStyle(color: Color(0xff5ba55e)),
+                              ),
+                              TextField(
+                                controller: viewModel.serialNo,
+                                maxLength: 30,
+                                keyboardType: TextInputType.text,
+                                decoration: const InputDecoration(
+                                  counterText: "",
+                                  border: OutlineInputBorder(),
+                                  contentPadding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 12),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: doubleTen,
+                              ),
+                              Text(
+                                "capacity".toUpperCase(),
+                                style:
+                                    const TextStyle(color: Color(0xff5ba55e)),
+                              ),
+                              TextField(
+                                controller: viewModel.capacity,
+                                maxLength: 15,
+                                keyboardType: TextInputType.text,
+                                decoration: const InputDecoration(
+                                  counterText: "",
+                                  border: OutlineInputBorder(),
+                                  contentPadding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 12),
+                                ),
+                              ),
+                              // FillTextFormField(controller: viewModel.capacity, labelText: "CAPACITY", keyboardType: TextInputType.text),
+                              const SizedBox(
+                                height: doubleTen,
+                              ),
+                              Row(children: [
+                                Expanded(
+                                    child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      "KWH",
+                                      style:
+                                          TextStyle(color: Color(0xff5ba55e)),
+                                    ),
+                                    TextField(
+                                      controller: viewModel.kwh,
+                                      maxLength: 16,
+                                      keyboardType: TextInputType.text,
+                                      decoration: const InputDecoration(
+                                        counterText: "",
+                                        border: OutlineInputBorder(),
+                                        contentPadding: EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 12),
+                                      ),
+                                    ),
+                                  ],
+                                )),
+                                const SizedBox(
+                                  width: doubleTen,
+                                ),
+                                Expanded(
+                                    child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      "KVAH",
+                                      style:
+                                          TextStyle(color: Color(0xff5ba55e)),
+                                    ),
+                                    TextField(
+                                      controller: viewModel.kvah,
+                                      maxLength: 20,
+                                      keyboardType: TextInputType.text,
+                                      decoration: const InputDecoration(
+                                        counterText: "",
+                                        border: OutlineInputBorder(),
+                                        contentPadding: EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 12),
+                                      ),
+                                    ),
+                                  ],
+                                )),
+                                // SizedBox(height: doubleTen,),
+                              ]),
+                            ]),
+                      ),
+                      const Divider(),
+                      Container(
+                        width: double.infinity,
+                        height: 40,
+                        color: Colors.blueGrey[50],
+                        alignment: Alignment.centerLeft,
+                        child: const Text(
+                          "BILL REVISION PROPOSAL",
+                          style: TextStyle(color: CommonColors.deepBlue),
+                        ),
+                      ),
+                      const Text(
+                        "METER_STATUS",
+                        style: TextStyle(color: Color(0xff5ba55e)),
+                      ),
+                      DropdownButtonFormField<String>(
+                        value: viewModel.meterStatusName,
+                        hint: viewModel.meterStatus.isNotEmpty
+                            ? const Text("Select an option")
+                            : const Text(""),
+                        isExpanded: true,
+                        items: viewModel.meterStatus
+                            .map((item) => DropdownMenuItem<String>(
+                                  value: item.optionId,
+                                  child: Text(item.optionName),
+                                ))
+                            .toList(),
+                        decoration: const InputDecoration(
+                            border: OutlineInputBorder(
+                          borderSide: BorderSide(width: 1, color: Colors.grey),
+                        )),
+                        onChanged: (newValue) {
+                          viewModel.updateMeterStatus(newValue!);
+                        },
+                      ),
+                      const Divider(),
+                      Visibility(
+                        visible: viewModel.selectedCheckboxId ==
+                            "EXCESS AVG. BILLED DURING METER DEFECTIVE PERIOD",
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(
+                                height: doubleTen,
+                              ),
+                              Text(
+                                "proposed average units".toUpperCase(),
+                                style:
+                                    const TextStyle(color: Color(0xff5ba55e)),
+                              ),
                               TextField(
                                 controller: viewModel.proposedAvg,
                                 maxLength: 8,
@@ -451,127 +553,151 @@ class AppBillingComponents extends StatelessWidget {
                                   counterText: "",
                                   hintText: "PROPOSED AVERAGE UNITS",
                                   border: OutlineInputBorder(),
-                                  contentPadding:
-                                  EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-                                ),),
-                              ]
+                                  contentPadding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 12),
+                                ),
+                              ),
+                            ]),
+                      ),
+                      const SizedBox(
+                        height: doubleTen,
+                      ),
+                      // const Divider(),
+                      const Text(
+                        "BILL REVISION",
+                        style: TextStyle(color: Color(0xff5ba55e)),
+                      ),
+                      const SizedBox(
+                        height: doubleTen,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("from date".toUpperCase()),
+                                TextField(
+                                  controller: viewModel.fromDate,
+                                  onTap: () async {
+                                    DateTime? pickedDate = await showDatePicker(
+                                      context: context,
+                                      initialDate: DateTime.now(),
+                                      firstDate: DateTime(2000),
+                                      lastDate: DateTime.now(),
+                                    );
+                                    if (pickedDate != null) {
+                                      final formattedDate =
+                                          DateFormat('dd/MM/yyyy').format(
+                                              pickedDate); // e.g., "14/04/2025"
+                                      viewModel.setFromDate(formattedDate);
+                                    }
+                                  },
+                                  decoration: InputDecoration(
+                                    filled: true,
+                                    hintText: "TAP HERE",
+                                    fillColor: Colors.grey[200],
+                                    border: InputBorder.none,
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        vertical: 12, horizontal: 12),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                              const SizedBox(height: doubleTen,),
-                              // const Divider(),
-                              const Text("BILL REVISION", style: TextStyle(color:  Color(0xff5ba55e)),),
-                              const SizedBox(height: doubleTen,),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text("from date".toUpperCase()),
-                                        TextField(
-                                          controller: viewModel.fromDate,
-                                          onTap: () async {
-                                            DateTime? pickedDate = await showDatePicker(
-                                              context: context,
-                                              initialDate: DateTime.now(),
-                                              firstDate: DateTime(2000),
-                                              lastDate: DateTime.now(),
-                                            );
-                                            if (pickedDate != null) {
-                                              final formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate); // e.g., "14/04/2025"
-                                              viewModel.setFromDate(formattedDate);
-                                            }
-                                          },
-                                          decoration: InputDecoration(
-                                            filled: true,
-                                            hintText: "TAP HERE",
-                                            fillColor: Colors.grey[200],
-                                            border: InputBorder.none,
-                                            contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(width: doubleTen,),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text("to date".toUpperCase()),
-                                        TextField(
-                                          controller: viewModel.toDate,
-                                          onTap: () async {
-                                            DateTime? pickedDate = await showDatePicker(
-                                              context: context,
-                                              initialDate: DateTime.now(),
-                                              firstDate: DateTime(2000),
-                                              lastDate: DateTime.now(),
-                                            );
-                                            if (pickedDate != null) {
-                                              final formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate); // e.g., "14/04/2025"
-                                              viewModel.setToDate(formattedDate);
-                                            }
-                                          },
-                                          decoration: InputDecoration(
-                                            filled: true,
-                                            hintText: "TAP HERE",
-                                            fillColor: Colors.grey[200],
-                                            border: InputBorder.none,
-                                            contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const Divider(),
-                              const SizedBox(height: doubleTen,),
-
-                              const SizedBox(height: doubleTen,),
-                              const Text("UPLOAD CONSUMER REPRESENTATION", style: TextStyle(color:  Color(
-                                  0xff5ba55e)),),
-                              TextField(
-                                readOnly: true,
-                                controller: TextEditingController(text: viewModel.fileName),
-                                decoration: InputDecoration(
-                                  suffixIcon: IconButton(
-                                    icon: const Icon(Icons.upload_file, size: doubleForty,),
-                                    onPressed: viewModel.pickDocument,
-                                  ),
-                                  border: OutlineInputBorder(),
-                                ),
-                              ),
-                              const SizedBox(height: doubleTen,),
-                              SizedBox(
-                                width: double.infinity,
-                                child: PrimaryButton(
-                                    text: "SUBMIT",
-                                    onPressed: (){
-                                      viewModel.submitForm();
+                          const SizedBox(
+                            width: doubleTen,
+                          ),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("to date".toUpperCase()),
+                                TextField(
+                                  controller: viewModel.toDate,
+                                  onTap: () async {
+                                    DateTime? pickedDate = await showDatePicker(
+                                      context: context,
+                                      initialDate: DateTime.now(),
+                                      firstDate: DateTime(2000),
+                                      lastDate: DateTime.now(),
+                                    );
+                                    if (pickedDate != null) {
+                                      final formattedDate =
+                                          DateFormat('dd/MM/yyyy').format(
+                                              pickedDate); // e.g., "14/04/2025"
+                                      viewModel.setToDate(formattedDate);
                                     }
+                                  },
+                                  decoration: InputDecoration(
+                                    filled: true,
+                                    hintText: "TAP HERE",
+                                    fillColor: Colors.grey[200],
+                                    border: InputBorder.none,
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        vertical: 12, horizontal: 12),
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
+                        ],
+                      ),
+                      const Divider(),
+                      const SizedBox(
+                        height: doubleTen,
+                      ),
+
+                      const SizedBox(
+                        height: doubleTen,
+                      ),
+                      const Text(
+                        "UPLOAD CONSUMER REPRESENTATION",
+                        style: TextStyle(color: Color(0xff5ba55e)),
+                      ),
+                      TextField(
+                        readOnly: true,
+                        controller:
+                            TextEditingController(text: viewModel.fileName),
+                        decoration: InputDecoration(
+                          suffixIcon: IconButton(
+                            icon: const Icon(
+                              Icons.upload_file,
+                              size: doubleForty,
+                            ),
+                            onPressed: viewModel.pickDocument,
+                          ),
+                          border: const OutlineInputBorder(),
                         ),
                       ),
-                    ),
-                    if(viewModel.isLoading)
-                      Positioned.fill(
-                        child: Container(
-                          color: Colors.black.withOpacity(0.3),
-                          // Optional: dim background
-                          child: const Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                        ),
+                      const SizedBox(
+                        height: doubleTen,
                       ),
-                  ]
-              );
-            }
-        ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: PrimaryButton(
+                            text: "SUBMIT",
+                            onPressed: () {
+                              viewModel.submitForm();
+                            }),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            if (viewModel.isLoading)
+              Positioned.fill(
+                child: Container(
+                  color: Colors.black.withOpacity(0.3),
+                  // Optional: dim background
+                  child: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+              ),
+          ]);
+        }),
       ),
     );
   }

@@ -25,7 +25,7 @@ class GroupedBarGraphWidget extends StatelessWidget {
         // Look for the bar entry matching the group index.
         // (Assumes x values start at 1 and are sequential.)
         BarEntriesList? entry = dataSet.barEntriesList!.firstWhere(
-                (e) => e.x!.toInt() == i + 1,
+            (e) => e.x!.toInt() == i + 1,
             orElse: () => BarEntriesList(x: i.toDouble(), y: 0));
         rods.add(BarChartRodData(
           toY: entry.y!,
@@ -45,12 +45,12 @@ class GroupedBarGraphWidget extends StatelessWidget {
           children: [
             Text(graphData.title!,
                 style:
-                const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
             SizedBox(
               height: 300,
               child: BarChart(
-                duration: Duration(milliseconds: 150),
+                duration: const Duration(milliseconds: 150),
                 curve: Curves.slowMiddle,
                 BarChartData(
                   barGroups: groups,
@@ -61,7 +61,8 @@ class GroupedBarGraphWidget extends StatelessWidget {
                         reservedSize: 40,
                         getTitlesWidget: (value, meta) {
                           int index = value.toInt();
-                          if (index >= 0 && index < graphData.xAxisValues!.length) {
+                          if (index >= 0 &&
+                              index < graphData.xAxisValues!.length) {
                             return Text(graphData.xAxisValues![index],
                                 style: const TextStyle(fontSize: 12));
                           }

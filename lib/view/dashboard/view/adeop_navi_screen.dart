@@ -1,18 +1,13 @@
-import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/general_assets.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/global_constants.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
-import 'package:tsnpdcl_employee/utils/url_constants.dart';
 import 'package:tsnpdcl_employee/view/dashboard/viewmodel/adeop_navi_viewmodel.dart';
-import 'package:tsnpdcl_employee/view/dashboard/viewmodel/navi_dashboard_viewmodel.dart';
-import 'package:tsnpdcl_employee/view/dashboard/viewmodel/universal_dashboard_viewmodel.dart';
 
 class AdeopNaviScreen extends StatefulWidget {
   static const id = Routes.adeopNaviScreen;
@@ -85,24 +80,26 @@ class _AdeopNaviScreenState extends State<AdeopNaviScreen> {
                   children: <Widget>[
                     UserAccountsDrawerHeader(
                       decoration:
-                      const BoxDecoration(color: CommonColors.colorPrimary),
-                      accountName: Text(
-                          viewModel.npdclUser != null ? "${viewModel.npdclUser!.empName}(${viewModel.npdclUser!.designation}/${viewModel.npdclUser!.secMasterEntity!.section})".toUpperCase() : appName.toUpperCase()
-                      ),
+                          const BoxDecoration(color: CommonColors.colorPrimary),
+                      accountName: Text(viewModel.npdclUser != null
+                          ? "${viewModel.npdclUser!.empName}(${viewModel.npdclUser!.designation}/${viewModel.npdclUser!.secMasterEntity!.section})"
+                              .toUpperCase()
+                          : appName.toUpperCase()),
                       accountEmail: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            viewModel.npdclUser != null ? "EMP ID:${viewModel.npdclUser!.empId}|SEC.ID:${viewModel.npdclUser!.secMasterEntity!.sectionId}".toUpperCase() : appName.toUpperCase(),
-                            style: const TextStyle(
-                                color: Colors.grey
-                            ),
+                            viewModel.npdclUser != null
+                                ? "EMP ID:${viewModel.npdclUser!.empId}|SEC.ID:${viewModel.npdclUser!.secMasterEntity!.sectionId}"
+                                    .toUpperCase()
+                                : appName.toUpperCase(),
+                            style: const TextStyle(color: Colors.grey),
                           ),
                           Text(
-                            viewModel.npdclUser != null ? "Ph:${viewModel.npdclUser!.personalMobileNo}" : appName.toUpperCase(),
-                            style: const TextStyle(
-                                color: Colors.grey
-                            ),
+                            viewModel.npdclUser != null
+                                ? "Ph:${viewModel.npdclUser!.personalMobileNo}"
+                                : appName.toUpperCase(),
+                            style: const TextStyle(color: Colors.grey),
                           ),
                         ],
                       ),
@@ -131,7 +128,8 @@ class _AdeopNaviScreenState extends State<AdeopNaviScreen> {
                       title: const Text(GlobalConstants.logoutTitle),
                       onTap: () {
                         Navigator.pop(context);
-                        viewModel.menuItemClicked(context, GlobalConstants.logoutTitle, "");
+                        viewModel.menuItemClicked(
+                            context, GlobalConstants.logoutTitle, "");
                       },
                     ),
                   ],
@@ -149,7 +147,7 @@ class _AdeopNaviScreenState extends State<AdeopNaviScreen> {
                         controller: viewModel.searchController,
                         onChanged: (query) {
                           Provider.of<AdeopNaviViewmodel>(context,
-                              listen: false)
+                                  listen: false)
                               .filterItems(query);
                         },
                         keyboardType: TextInputType.text,
@@ -162,13 +160,13 @@ class _AdeopNaviScreenState extends State<AdeopNaviScreen> {
                             hintText: "Search Menu...",
                             suffixIcon: GestureDetector(
                               onTap: () {
-                                if (viewModel.searchController.text.isNotEmpty) {
+                                if (viewModel
+                                    .searchController.text.isNotEmpty) {
                                   viewModel.searchController.clear();
                                   FocusScope.of(context).unfocus();
                                   // Trigger the onChanged logic with an empty string
-                                  Provider.of<AdeopNaviViewmodel>(
-                                      context,
-                                      listen: false)
+                                  Provider.of<AdeopNaviViewmodel>(context,
+                                          listen: false)
                                       .filterItems("");
                                 }
                               },
@@ -178,7 +176,7 @@ class _AdeopNaviScreenState extends State<AdeopNaviScreen> {
                                   width: doubleTwentyFour,
                                   decoration: BoxDecoration(
                                     borderRadius:
-                                    BorderRadius.circular(doubleEight),
+                                        BorderRadius.circular(doubleEight),
                                     color: CommonColors.colorPrimary,
                                   ),
                                   child: const Center(
@@ -189,8 +187,7 @@ class _AdeopNaviScreenState extends State<AdeopNaviScreen> {
                                   ),
                                 ),
                               ),
-                            )
-                        ),
+                            )),
                         style: const TextStyle(
                           fontSize: titleSize,
                           fontFamily: appFontFamily,
@@ -204,70 +201,72 @@ class _AdeopNaviScreenState extends State<AdeopNaviScreen> {
                   ),
                   viewModel.filteredItems.isNotEmpty
                       ? Expanded(
-                    child: GridView.builder(
-                      padding: const EdgeInsets.all(8.0),
-                      gridDelegate:
-                      const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: numThree, // Number of columns
-                        childAspectRatio: 1,
-                      ),
-                      itemCount: viewModel.filteredItems.length,
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        final item = viewModel.filteredItems[index];
-                        return GestureDetector(
-                          onTap: () async {
-                            FocusScope.of(context).unfocus();
-                            viewModel.menuItemClicked(context, item.title, item.routeName);
-                          },
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(14.0),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  shape: BoxShape.rectangle,
-                                  borderRadius: BorderRadius.circular(12.0),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(1),
-                                      blurRadius: 4,
-                                      offset: const Offset(0, 4),
+                          child: GridView.builder(
+                            padding: const EdgeInsets.all(8.0),
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: numThree, // Number of columns
+                              childAspectRatio: 1,
+                            ),
+                            itemCount: viewModel.filteredItems.length,
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              final item = viewModel.filteredItems[index];
+                              return GestureDetector(
+                                onTap: () async {
+                                  FocusScope.of(context).unfocus();
+                                  viewModel.menuItemClicked(
+                                      context, item.title, item.routeName);
+                                },
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(14.0),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        shape: BoxShape.rectangle,
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(1),
+                                            blurRadius: 4,
+                                            offset: const Offset(0, 4),
+                                          ),
+                                        ],
+                                      ),
+                                      child: RepaintBoundary(
+                                        child: Image.asset(
+                                          item.imageAsset,
+                                          height: 40.0,
+                                          width: 40.0,
+                                          filterQuality: FilterQuality.low,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                        height:
+                                            doubleEight), // Add spacing between the image and text
+                                    Text(
+                                      item.title.toUpperCase(),
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                        fontSize:
+                                            regularTextSize, // Specify a font size for better consistency
+                                      ),
                                     ),
                                   ],
                                 ),
-                                child: RepaintBoundary(
-                                  child: Image.asset(
-                                    item.imageAsset,
-                                    height: 40.0,
-                                    width: 40.0,
-                                    filterQuality: FilterQuality.low,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                  height:
-                                  doubleEight), // Add spacing between the image and text
-                              Text(
-                                item.title.toUpperCase(),
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w800,
-                                  fontSize:
-                                  regularTextSize, // Specify a font size for better consistency
-                                ),
-                              ),
-                            ],
+                              );
+                            },
                           ),
-                        );
-                      },
-                    ),
-                  )
+                        )
                       : const Expanded(
-                      child: Center(
-                        child: Text("No menu matches your search."),
-                      ))
+                          child: Center(
+                          child: Text("No menu matches your search."),
+                        ))
                 ],
               ),
             );

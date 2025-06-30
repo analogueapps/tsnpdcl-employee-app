@@ -13,29 +13,31 @@ class WrongCatConfirmation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            backgroundColor: CommonColors.colorPrimary,
-            title: const Text('Wrong Cat Confirmations', style: TextStyle(
+      appBar: AppBar(
+          backgroundColor: CommonColors.colorPrimary,
+          title: const Text(
+            'Wrong Cat Confirmations',
+            style: TextStyle(
                 color: Colors.white,
                 fontSize: titleSize,
-                fontWeight: FontWeight.w700),),
-            iconTheme: const IconThemeData(
-              color: Colors.white,
-            ),
-            leading:
-            IconButton(onPressed: () {
-              Navigator.of(context).pop();
-            }, icon: const Icon(Icons.arrow_back))
-
-        ),
-        body:  ChangeNotifierProvider(
-    create: (_)=>WrongCatConfirmationViewmodel( context: context, args: args),
-    child: Consumer<WrongCatConfirmationViewmodel>(
-    builder: (context,viewModel,child){
-    return Text("");//
-    }
-    ),
-        ),
+                fontWeight: FontWeight.w700),
+          ),
+          iconTheme: const IconThemeData(
+            color: Colors.white,
+          ),
+          leading: IconButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: const Icon(Icons.arrow_back))),
+      body: ChangeNotifierProvider(
+        create: (_) =>
+            WrongCatConfirmationViewmodel(context: context, args: args),
+        child: Consumer<WrongCatConfirmationViewmodel>(
+            builder: (context, viewModel, child) {
+          return const Text(""); //
+        }),
+      ),
     );
   }
 }

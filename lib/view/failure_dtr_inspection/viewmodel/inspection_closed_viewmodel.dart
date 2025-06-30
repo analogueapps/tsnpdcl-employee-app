@@ -5,12 +5,11 @@ import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
 import 'package:tsnpdcl_employee/network/api_provider.dart';
 import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
-import 'package:tsnpdcl_employee/utils/alerts.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 
-class InspectionClosedViewmodel extends ChangeNotifier{
-  InspectionClosedViewmodel( {required this.context, required this.fileStatus}) {
+class InspectionClosedViewmodel extends ChangeNotifier {
+  InspectionClosedViewmodel({required this.context, required this.fileStatus}) {
     getDtrFailureReports(fileStatus);
   }
 
@@ -40,19 +39,20 @@ class InspectionClosedViewmodel extends ChangeNotifier{
     notifyListeners();
   }
 
-
   Future<void> getDtrFailureReports(String status) async {
     _isLoading = isTrue;
     notifyListeners();
 
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
       "status": status,
       "sapFailures": "true"
     };
 
-    var response = await ApiProvider(baseUrl: Apis.DTR_END_POINT_BASE_URL).postApiCall(context, Apis.GET_DTR_REPORTS_FR, payload);
+    var response = await ApiProvider(baseUrl: Apis.DTR_END_POINT_BASE_URL)
+        .postApiCall(context, Apis.GET_DTR_REPORTS_FR, payload);
     _isLoading = isFalse;
 
     try {
@@ -63,30 +63,36 @@ class InspectionClosedViewmodel extends ChangeNotifier{
         if (response.statusCode == successResponseCode) {
           if (response.data['sessionValid'] == true) {
             if (response.data['taskSuccess'] == true) {
-              if (response.data['message'] != null && (response.data['dataList'] == null || response.data['dataList'].isEmpty)) {
+              if (response.data['message'] != null &&
+                  (response.data['dataList'] == null ||
+                      response.data['dataList'].isEmpty)) {
                 showErrorDialog(context, response.data['message']);
               } else {
-                showSuccessDialog(context, response.data['message'] ?? 'Success', () {
+                showSuccessDialog(
+                    context, response.data['message'] ?? 'Success', () {
                   Navigator.pop(context);
                 });
                 print("dtr_failure_reports: ${response.data['dataList']}");
               }
             } else {
-
-              showErrorDialog(context, response.data['message'] ?? 'Operation failed');
+              showErrorDialog(
+                  context, response.data['message'] ?? 'Operation failed');
             }
           } else {
             showSessionExpiredDialog(context);
           }
         } else {
-          showAlertDialog(context, response.data['message'] ?? 'Request failed with status: ${response.statusCode}');
-        }      }
+          showAlertDialog(
+              context,
+              response.data['message'] ??
+                  'Request failed with status: ${response.statusCode}');
+        }
+      }
     } catch (e) {
-      showErrorDialog(context,  "An error occurred. Please try again.");
+      showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
     }
 
     notifyListeners();
   }
-
 }

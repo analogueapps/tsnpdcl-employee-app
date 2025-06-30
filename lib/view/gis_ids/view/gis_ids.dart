@@ -18,7 +18,7 @@ class GISIDsScreen extends StatelessWidget {
         backgroundColor: CommonColors.colorPrimary,
         title: const Text(
           "GIS IDs",
-          style: const TextStyle(
+          style: TextStyle(
               color: Colors.white,
               fontSize: toolbarTitleSize,
               fontWeight: FontWeight.w700),
@@ -27,127 +27,136 @@ class GISIDsScreen extends StatelessWidget {
           color: Colors.white,
         ),
       ),
-      body:  ChangeNotifierProvider(
-    create: (_) => GISIDsViewModel(context: context),
-    child: Consumer<GISIDsViewModel>(
-        builder: (context, viewModel, child) {
-          return Stack(
-              children: [
-                Column(
-          children: [
-          Padding(
-          padding: const EdgeInsets.all(10),
-    child: TextField(
-    controller: viewModel.searchController,
-    decoration: const InputDecoration(
-    prefixIcon: Icon(Icons.search),
-    labelText: 'Search..',
-    ),
-    ),
-    ),
-    Expanded(
-    child: Padding(
-    padding: const EdgeInsets.all(10),
-    child: ListView.builder(
-    itemCount: viewModel.gisData.length,
-    itemBuilder: (context, index) {
-    final item = viewModel.gisData[index];
-    return Column(
-    children: [
-        InkWell(
-        onTap: () {
-      Navigation.instance.navigateTo(Routes.gisIndividual, args: item.gisId);
-    },
-      child: Container(
-      width: double.infinity, // Ensure the Column takes full width
-      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
-      child: Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-      Text(
-      'GIS ID: ${item.regNum}',
-      style: const TextStyle(fontWeight: FontWeight.bold),
-      ),
-      Text('Work Description: ${item.workDescription}'),
-      Text('EMP ID: ${item.empId}'),
-      ],
-      ),
-      ),
-      ),
-    Align(
-    alignment: Alignment.bottomRight,
-    child: Row(children:[
-      ElevatedButton(
-    style: ElevatedButton.styleFrom(
-    backgroundColor: Colors.grey.shade200,
-    foregroundColor: Colors.black,
-    shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(5),
-    ),
-    ),
-    onPressed: () {
-    viewModel.saveForOffline(item.regNum!);
-    },
-    child: const Text('SAVE FOR OFFLINE'),
-    ),
-     const SizedBox(
-        width: 10,
-      ),
-      Visibility(
-      visible:item.sapUploadFlag=="F"||item.sapUploadFlag!.isEmpty,
-      child:
-      ElevatedButton(
-      style: ElevatedButton.styleFrom(
-      backgroundColor: Colors.green,
-      foregroundColor: Colors.black,
-      shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(5),
-      ),
-      ),
-      onPressed: () {
-      viewModel.postGisIDtoSAP(item.gisId!);
-      },
-      child: const Text('POST TO SAP', style:TextStyle(color: Colors.white),),
-      ),
-      ),
-      ]
-    ),
-    ),
-    Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 0),
-    child: Divider(color: Colors.grey.shade400),
-    ),
-    ],
-    );
-    },
-    ),
-    ),
-    ),
-    ],
-          ),
-                if (viewModel.isLoading)
-                  Positioned.fill(
-                    child:  Container(
-                      color: Colors.black.withOpacity(0.3),
-                      child: const Center(
-                        child: CircularProgressIndicator(),
+      body: ChangeNotifierProvider(
+        create: (_) => GISIDsViewModel(context: context),
+        child: Consumer<GISIDsViewModel>(
+          builder: (context, viewModel, child) {
+            return Stack(children: [
+              Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: TextField(
+                      controller: viewModel.searchController,
+                      decoration: const InputDecoration(
+                        prefixIcon: Icon(Icons.search),
+                        labelText: 'Search..',
                       ),
                     ),
                   ),
-          ]
-    );
-    },
-    ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: ListView.builder(
+                        itemCount: viewModel.gisData.length,
+                        itemBuilder: (context, index) {
+                          final item = viewModel.gisData[index];
+                          return Column(
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  Navigation.instance.navigateTo(
+                                      Routes.gisIndividual,
+                                      args: item.gisId);
+                                },
+                                child: Container(
+                                  width: double
+                                      .infinity, // Ensure the Column takes full width
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 8.0, horizontal: 4.0),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'GIS ID: ${item.regNum}',
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                          'Work Description: ${item.workDescription}'),
+                                      Text('EMP ID: ${item.empId}'),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment.bottomRight,
+                                child: Row(children: [
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.grey.shade200,
+                                      foregroundColor: Colors.black,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      viewModel.saveForOffline(item.regNum!);
+                                    },
+                                    child: const Text('SAVE FOR OFFLINE'),
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Visibility(
+                                    visible: item.sapUploadFlag == "F" ||
+                                        item.sapUploadFlag!.isEmpty,
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.green,
+                                        foregroundColor: Colors.black,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        viewModel.postGisIDtoSAP(item.gisId!);
+                                      },
+                                      child: const Text(
+                                        'POST TO SAP',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                  ),
+                                ]),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 0),
+                                child: Divider(color: Colors.grey.shade400),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              if (viewModel.isLoading)
+                Positioned.fill(
+                  child: Container(
+                    color: Colors.black.withOpacity(0.3),
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                ),
+            ]);
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.red,
         foregroundColor: Colors.white,
-        shape: CircleBorder(),
-        onPressed: (){
+        shape: const CircleBorder(),
+        onPressed: () {
           Navigation.instance.navigateTo(Routes.createGisIds);
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }

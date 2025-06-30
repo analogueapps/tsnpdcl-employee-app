@@ -30,9 +30,11 @@ class MiddlePoles33kvViewModel extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
   final Map<String, String> paramsHashMap = {};
   final TextEditingController feederController = TextEditingController();
-  final TextEditingController workDescriptionController = TextEditingController();
+  final TextEditingController workDescriptionController =
+      TextEditingController();
   final TextEditingController sanctionNoController = TextEditingController();
-  final TextEditingController poleBLongitudeController = TextEditingController();
+  final TextEditingController poleBLongitudeController =
+      TextEditingController();
   final TextEditingController distanceController = TextEditingController();
   final TextEditingController remarksController = TextEditingController();
   final TextEditingController latPoleA = TextEditingController();
@@ -43,9 +45,8 @@ class MiddlePoles33kvViewModel extends ChangeNotifier {
   String? _latitude;
   String? _longitude;
 
-
   //pole A Image Upload
-  String _poleAPhotoPath="";
+  String _poleAPhotoPath = "";
   String get poleAPhotoPath => _poleAPhotoPath;
   final ImageUploader _poleAImageUploader = ImageUploader();
 
@@ -61,7 +62,8 @@ class MiddlePoles33kvViewModel extends ChangeNotifier {
                 ? 'Camera permission permanently denied. Enable in settings.'
                 : 'Camera permission denied'),
             action: status.isPermanentlyDenied
-                ? SnackBarAction(label: 'Settings', onPressed: openAppSettings)
+                ? const SnackBarAction(
+                    label: 'Settings', onPressed: openAppSettings)
                 : null,
           ),
         );
@@ -85,13 +87,15 @@ class MiddlePoles33kvViewModel extends ChangeNotifier {
       }
 
       // Upload photo if captured
-      ProcessDialogHelper.showProcessDialog(context, message: "Uploading image...");
+      ProcessDialogHelper.showProcessDialog(context,
+          message: "Uploading image...");
       notifyListeners();
-      final imageUrl = await _poleAImageUploader.uploadImage(context, File(photo.path));
+      final imageUrl =
+          await _poleAImageUploader.uploadImage(context, File(photo.path));
       print("middle poles 33kv: $imageUrl");
 
       if (imageUrl != null) {
-        _poleAPhotoPath=imageUrl;
+        _poleAPhotoPath = imageUrl;
         await _getCurrentLocation();
         print("Pole A Lat: $_latitude, Pole B Lon: $_longitude");
         if (_latitude != null && _longitude != null) {
@@ -102,7 +106,7 @@ class MiddlePoles33kvViewModel extends ChangeNotifier {
           print("calculating distance pole A");
           final double lat = double.tryParse(_latitude!) ?? 0.0;
           final double lon = double.tryParse(_longitude!) ?? 0.0;
-          capturePoleLocation("poleA",lat,lon );
+          capturePoleLocation("poleA", lat, lon);
         }
         notifyListeners();
         print("Image uploaded successfully: $imageUrl");
@@ -121,7 +125,7 @@ class MiddlePoles33kvViewModel extends ChangeNotifier {
   }
 
   //Pole B Image Upload
-  String _poleBPhotoPath="";
+  String _poleBPhotoPath = "";
   String get poleBPhotoPath => _poleBPhotoPath;
   final ImageUploader _poleBImageUploader = ImageUploader();
 
@@ -137,7 +141,8 @@ class MiddlePoles33kvViewModel extends ChangeNotifier {
                 ? 'Camera permission permanently denied. Enable in settings.'
                 : 'Camera permission denied'),
             action: status.isPermanentlyDenied
-                ? SnackBarAction(label: 'Settings', onPressed: openAppSettings)
+                ? const SnackBarAction(
+                    label: 'Settings', onPressed: openAppSettings)
                 : null,
           ),
         );
@@ -161,19 +166,22 @@ class MiddlePoles33kvViewModel extends ChangeNotifier {
       }
 
       // Upload photo if captured
-      ProcessDialogHelper.showProcessDialog(context, message: "Uploading image...");
+      ProcessDialogHelper.showProcessDialog(context,
+          message: "Uploading image...");
       notifyListeners();
-      final imageUrl = await _poleBImageUploader.uploadImage(context, File(photo.path));
+      final imageUrl =
+          await _poleBImageUploader.uploadImage(context, File(photo.path));
       print("middle poles b 33kv: $imageUrl");
 
       if (imageUrl != null) {
-        _poleBPhotoPath=imageUrl;
-        if((_longitude!=null&&_longitude!=null)||(_longitude==null&&_longitude==null)) {
+        _poleBPhotoPath = imageUrl;
+        if ((_longitude != null && _longitude != null) ||
+            (_longitude == null && _longitude == null)) {
           _handleLocationIconClick();
           print("calculating distance pole B");
           final double lat = double.tryParse(_latitude!) ?? 0.0;
           final double lon = double.tryParse(_longitude!) ?? 0.0;
-          capturePoleLocation("poleB",lat, lon );
+          capturePoleLocation("poleB", lat, lon);
         }
         notifyListeners();
         print("Image uploaded successfully: $imageUrl");
@@ -193,7 +201,6 @@ class MiddlePoles33kvViewModel extends ChangeNotifier {
     }
   }
 
-
   @override
   void dispose() {
     feederController.dispose();
@@ -201,13 +208,11 @@ class MiddlePoles33kvViewModel extends ChangeNotifier {
     sanctionNoController.dispose();
     poleBLongitudeController.dispose();
     distanceController.dispose();
-   remarksController.dispose();
+    remarksController.dispose();
     super.dispose();
   }
 
-
   void _handleLocationIconClick() async {
-
     bool isLocationEnabled = await Geolocator.isLocationServiceEnabled();
     if (!isLocationEnabled) {
       // Show a dialog to enable location services
@@ -219,7 +224,8 @@ class MiddlePoles33kvViewModel extends ChangeNotifier {
             onWillPop: () async => false,
             child: AlertDialog(
               title: const Text("Location Service Disabled"),
-              content: const Text("Please enable location services to use this feature."),
+              content: const Text(
+                  "Please enable location services to use this feature."),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
@@ -243,7 +249,7 @@ class MiddlePoles33kvViewModel extends ChangeNotifier {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text("Location permissions are denied."),
           ),
         );
@@ -256,16 +262,17 @@ class MiddlePoles33kvViewModel extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text("Location Permission Required"),
-            content: Text("Location permissions are permanently denied. Please enable them in the app settings."),
+            title: const Text("Location Permission Required"),
+            content: const Text(
+                "Location permissions are permanently denied. Please enable them in the app settings."),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
-                child: Text("Cancel"),
+                child: const Text("Cancel"),
               ),
               TextButton(
                 onPressed: () => Navigator.of(context).pop(true),
-                child: Text("Open Settings"),
+                child: const Text("Open Settings"),
               ),
             ],
           );
@@ -278,16 +285,16 @@ class MiddlePoles33kvViewModel extends ChangeNotifier {
       }
     }
 
-    if (permission != LocationPermission.whileInUse && permission != LocationPermission.always) {
+    if (permission != LocationPermission.whileInUse &&
+        permission != LocationPermission.always) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text("Location permissions are still denied."),
         ),
       );
       return;
     }
     await _getCurrentLocation();
-
   }
 
   Future<void> _getCurrentLocation() async {
@@ -301,7 +308,6 @@ class MiddlePoles33kvViewModel extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       print("Error fetching location: $e");
-
     }
   }
 
@@ -310,37 +316,38 @@ class MiddlePoles33kvViewModel extends ChangeNotifier {
   void capturePoleLocation(String poleId, double lat, double lon) {
     print("capturePoleLocation started");
     // Simulating captured location
-      paramsHashMap["${poleId}Lat"] = lat.toString();
-      paramsHashMap["${poleId}Lon"] = lon.toString();
+    paramsHashMap["${poleId}Lat"] = lat.toString();
+    paramsHashMap["${poleId}Lon"] = lon.toString();
 
-      // Optionally fill text fields
-      if (poleId == "poleA") {
-        latPoleA.text = lat.toString();
-        logPoleA.text = lon.toString();
-        print("capturePoleLocation  pole A");
-        notifyListeners();
-      } else {
-        latPoleB.text = lat.toString();
-        logPoleB.text = lon.toString();
-        print("capturePoleLocation pole B");
-        notifyListeners();
-      }
+    // Optionally fill text fields
+    if (poleId == "poleA") {
+      latPoleA.text = lat.toString();
+      logPoleA.text = lon.toString();
+      print("capturePoleLocation  pole A");
+      notifyListeners();
+    } else {
+      latPoleB.text = lat.toString();
+      logPoleB.text = lon.toString();
+      print("capturePoleLocation pole B");
+      notifyListeners();
+    }
 
-      // If both poles are captured, calculate the distance
-      if (paramsHashMap.containsKey("poleALat") && paramsHashMap.containsKey("poleBLat")) {
-        LatLng poleA = LatLng(
-          double.parse(paramsHashMap["poleALat"]!),
-          double.parse(paramsHashMap["poleALon"]!),
-        );
-        LatLng poleB = LatLng(
-          double.parse(paramsHashMap["poleBLat"]!),
-          double.parse(paramsHashMap["poleBLon"]!),
-        );
-        String dist = calculateDistance(poleA, poleB);
-        paramsHashMap["distance"] = dist;
-        distanceController.text = dist;
-        notifyListeners();
-      }
+    // If both poles are captured, calculate the distance
+    if (paramsHashMap.containsKey("poleALat") &&
+        paramsHashMap.containsKey("poleBLat")) {
+      LatLng poleA = LatLng(
+        double.parse(paramsHashMap["poleALat"]!),
+        double.parse(paramsHashMap["poleALon"]!),
+      );
+      LatLng poleB = LatLng(
+        double.parse(paramsHashMap["poleBLat"]!),
+        double.parse(paramsHashMap["poleBLon"]!),
+      );
+      String dist = calculateDistance(poleA, poleB);
+      paramsHashMap["distance"] = dist;
+      distanceController.text = dist;
+      notifyListeners();
+    }
     print("capturePoleLocation ended");
   }
 
@@ -355,7 +362,7 @@ class MiddlePoles33kvViewModel extends ChangeNotifier {
     dist = acos(dist);
     dist = rad2deg(dist);
     dist = dist * 60 * 1.1515; // miles
-    double distanceInMeters = dist * 1000 * 1.609344;  // convert to meters
+    double distanceInMeters = dist * 1000 * 1.609344; // convert to meters
     return NumberFormat("0.00").format(distanceInMeters); // two decimal places
   }
 
@@ -375,81 +382,77 @@ class MiddlePoles33kvViewModel extends ChangeNotifier {
 
       if (!validateForm()) {
         return;
-      }else{
+      } else {
         updateForm();
         print("in else block");
       }
     }
   }
+
   bool validateForm() {
-    if (feederController.text==null||feederController.text=="") {
-      AlertUtils.showSnackBar(
-          context, "Please enter 33KV FEEDER",
-          isTrue);
+    if (feederController.text == "") {
+      AlertUtils.showSnackBar(context, "Please enter 33KV FEEDER", isTrue);
       return false;
     }
-    if (poleAPhotoPath==null||poleAPhotoPath=="") {
+    if (poleAPhotoPath == "") {
       AlertUtils.showSnackBar(
-          context, "Please capture pole A details photo ",
+          context, "Please capture pole A details photo ", isTrue);
+      return false;
+    } else if (poleBPhotoPath == "") {
+      AlertUtils.showSnackBar(
+          context, "Please capture pole B details photo ", isTrue);
+      return false;
+    } else if ((latPoleA.text == '') && (latPoleA.text == '')) {
+      AlertUtils.showSnackBar(
+          context,
+          "Please wait until we capture your location, make sure you turn on your location",
           isTrue);
       return false;
-    } else if (poleBPhotoPath==null||poleBPhotoPath=="") {
+    } else if ((latPoleB.text == '') && (latPoleB.text == '')) {
       AlertUtils.showSnackBar(
-          context, "Please capture pole B details photo ",
+          context,
+          "Please wait until we capture your location, make sure you turn on your location",
           isTrue);
       return false;
-    }else if ((latPoleA.text==''||logPoleA.text==null)&&(latPoleA.text==''||logPoleA.text==null)) {
-      AlertUtils.showSnackBar(context, "Please wait until we capture your location, make sure you turn on your location", isTrue);
+    } else if (sanctionNoController.text == "") {
+      AlertUtils.showSnackBar(context, "Please select voltage level", isTrue);
       return false;
-    }else if ((latPoleB.text==''||logPoleB.text==null)&&(latPoleB.text==''||logPoleB.text==null)) {
-      AlertUtils.showSnackBar(context, "Please wait until we capture your location, make sure you turn on your location", isTrue);
-      return false;
-    }else if (sanctionNoController.text==null||sanctionNoController.text=="") {
+    } else if (distanceController.text == "") {
       AlertUtils.showSnackBar(
-          context, "Please select voltage level",
-          isTrue);
+          context, "Please wait until we calculate Distance ", isTrue);
       return false;
-    }
-    else if (distanceController.text==null||distanceController.text=="") {
+    } else if (workDescriptionController.text == "") {
       AlertUtils.showSnackBar(
-          context, "Please wait until we calculate Distance ",
-          isTrue);
-      return false;
-    } else if (workDescriptionController.text=="") {
-      AlertUtils.showSnackBar(
-          context, "Please enter Work Description ",
-          isTrue);
+          context, "Please enter Work Description ", isTrue);
       return false;
     }
     return true;
   }
 
-  Map<String, dynamic>   getUpdateData( ) {
+  Map<String, dynamic> getUpdateData() {
     return {
-      "poleBLat":latPoleB.text,
-      "poleBLon":logPoleB.text,
-      "poleBImageUrl":poleBPhotoPath,
-      "poleALon":logPoleA.text,
-      "poleALat":latPoleA.text,
-      "poleAImageUrl":poleAPhotoPath,
-      "remarksBySurveyor":remarksController.text,
-      "workDescription":workDescriptionController.text,
-      "feederName":feederController.text,
-      "sanctionNo":sanctionNoController.text,
-      "distance":distanceController.text,
-
+      "poleBLat": latPoleB.text,
+      "poleBLon": logPoleB.text,
+      "poleBImageUrl": poleBPhotoPath,
+      "poleALon": logPoleA.text,
+      "poleALat": latPoleA.text,
+      "poleAImageUrl": poleAPhotoPath,
+      "remarksBySurveyor": remarksController.text,
+      "workDescription": workDescriptionController.text,
+      "feederName": feederController.text,
+      "sanctionNo": sanctionNoController.text,
+      "distance": distanceController.text,
     };
   }
 
   Future<void> updateForm() async {
     print("${jsonEncode(getUpdateData())}:JsoonEncode data");
 
-
     final requestData = {
       "authToken":
-      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
-      "updateDataJson":jsonEncode(getUpdateData()),
+      "updateDataJson": jsonEncode(getUpdateData()),
     };
 
     final payload = {
@@ -481,7 +484,8 @@ class MiddlePoles33kvViewModel extends ChangeNotifier {
           if (responseData['tokenValid'] == true) {
             if (responseData['success'] == true) {
               if (responseData['message'] != null) {
-                AlertUtils.showSnackBar(context,responseData['message'] , isFalse);
+                AlertUtils.showSnackBar(
+                    context, responseData['message'], isFalse);
                 Navigator.pop(context);
               }
             } else {
@@ -492,8 +496,8 @@ class MiddlePoles33kvViewModel extends ChangeNotifier {
             showSessionExpiredDialog(context);
           }
         } else {
-          showErrorDialog(context,
-              "Request failed with status: ${response.statusCode}");
+          showErrorDialog(
+              context, "Request failed with status: ${response.statusCode}");
         }
       }
     } catch (e) {
@@ -501,5 +505,4 @@ class MiddlePoles33kvViewModel extends ChangeNotifier {
       showErrorDialog(context, "An error occurred. Please try again.");
     }
   }
-
 }

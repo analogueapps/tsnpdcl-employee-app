@@ -85,7 +85,7 @@ class InterruptionsEntryViewmodel extends ChangeNotifier {
 
   String? get selectedStation => _selectedStation;
 
-  List<InterruptionsModel> _stations = [];
+  final List<InterruptionsModel> _stations = [];
 
   List<InterruptionsModel> get stations => _stations;
 
@@ -238,7 +238,9 @@ class InterruptionsEntryViewmodel extends ChangeNotifier {
   bool shouldShowReason() {
     if (selectedOption == "LV" || selectedOption == "ISF") return true;
     if (selectedInterruptionType == null ||
-        selectedInterruptionType == "Select") return false;
+        selectedInterruptionType == "Select") {
+      return false;
+    }
     final index = interruptionTypes.indexOf(selectedInterruptionType!);
     return index == 1 || index == 2 || index == 5 || index == 6;
   }
@@ -345,34 +347,33 @@ class InterruptionsEntryViewmodel extends ChangeNotifier {
     selectedFeeders.clear();
     notifyListeners();
 
-      final requestData = {
-        "authToken":
-            SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
-        "api": Apis.API_KEY,
-        "ss": substationCode
-      };
+    final requestData = {
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "api": Apis.API_KEY,
+      "ss": substationCode
+    };
 
-      final payload = {
-        "path": "/load/feeders",
-        "apiVersion": "1.0",
-        "method": "POST",
-        "data": jsonEncode(requestData),
-      };
+    final payload = {
+      "path": "/load/feeders",
+      "apiVersion": "1.0",
+      "method": "POST",
+      "data": jsonEncode(requestData),
+    };
 
-      final response = await ApiProvider(baseUrl: Apis.ROOT_URL)
-          .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    final response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
 
-      try{
-        if (response != null) {
-          if (response.data is String) {
-            response.data = jsonDecode(response.data); // Parse string to JSON
-          }
-          if (response.statusCode == successResponseCode) {
-            if (response.data['tokenValid'] == isTrue) {
-              if (response.data['success'] == isTrue) {
-                if (response.data['objectJson'] != null) {
-                final jsonList = jsonDecode(
-                    response.data['objectJson']);
+    try {
+      if (response != null) {
+        if (response.data is String) {
+          response.data = jsonDecode(response.data); // Parse string to JSON
+        }
+        if (response.statusCode == successResponseCode) {
+          if (response.data['tokenValid'] == isTrue) {
+            if (response.data['success'] == isTrue) {
+              if (response.data['objectJson'] != null) {
+                final jsonList = jsonDecode(response.data['objectJson']);
                 List<InterruptionsModel> dataList = [];
 
                 if (jsonList is String) {
@@ -380,7 +381,8 @@ class InterruptionsEntryViewmodel extends ChangeNotifier {
                   String cleanedJson = jsonList.replaceAll(r'\"', '"').trim();
 
                   if (cleanedJson.endsWith(',')) {
-                    cleanedJson = cleanedJson.substring(0, cleanedJson.length - 1);
+                    cleanedJson =
+                        cleanedJson.substring(0, cleanedJson.length - 1);
                   }
 
                   if (!cleanedJson.startsWith('[')) {
@@ -391,28 +393,29 @@ class InterruptionsEntryViewmodel extends ChangeNotifier {
                       .map((json) => InterruptionsModel.fromJson(json))
                       .toList();
                 } else if (jsonList is List) {
-                  dataList =
-                      jsonList.map((json) => InterruptionsModel.fromJson(json)).toList();
+                  dataList = jsonList
+                      .map((json) => InterruptionsModel.fromJson(json))
+                      .toList();
                 }
 
-              feeders.addAll(dataList);
-              print("Successfully loaded ${feeders.length} feeders");
+                feeders.addAll(dataList);
+                print("Successfully loaded ${feeders.length} feeders");
 
-              // If ISF is selected, automatically select all feeders
-              if (selectedOption == "ISF") {
-                selectedFeeders = feeders.map((f) => f.optionCode).toList();
-              }
+                // If ISF is selected, automatically select all feeders
+                if (selectedOption == "ISF") {
+                  selectedFeeders = feeders.map((f) => f.optionCode).toList();
                 }
-              } else {
-                showAlertDialog(context, response.data['message']);
               }
             } else {
-              showSessionExpiredDialog(context);
+              showAlertDialog(context, response.data['message']);
             }
           } else {
-            showAlertDialog(context, response.data['message']);
+            showSessionExpiredDialog(context);
           }
+        } else {
+          showAlertDialog(context, response.data['message']);
         }
+      }
     } catch (e, stackTrace) {
       print("Error fetching feeders: $e\n$stackTrace");
       showErrorDialog(context, "Failed to load feeders: ${e.toString()}");

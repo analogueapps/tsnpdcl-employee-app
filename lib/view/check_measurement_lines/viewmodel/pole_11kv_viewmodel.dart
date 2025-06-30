@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:ui' as ui;
 
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
@@ -47,9 +46,11 @@ class Pole11kvViewmodel extends ChangeNotifier {
   final BuildContext context;
   final Map<String, dynamic> args;
   double MINIMUM_GPS_ACCURACY_REQUIRED = 15.0;
-  int maxId =0; //From Map initially OL
-  String empName=SharedPreferenceHelper.getStringValue(LoginSdkPrefs.empNameKey);
-  String empDesignation=SharedPreferenceHelper.getStringValue(LoginSdkPrefs.designationCodeKey);
+  int maxId = 0; //From Map initially OL
+  String empName =
+      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.empNameKey);
+  String empDesignation =
+      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.designationCodeKey);
 
   double? latitude;
   double? longitude;
@@ -105,7 +106,7 @@ class Pole11kvViewmodel extends ChangeNotifier {
     final humanIcon = await _bitmapDescriptorFromAsset(Assets.human);
     print("employee name = $empName");
     markers.add(Marker(
-      markerId:  MarkerId("$empName($empDesignation)"),
+      markerId: MarkerId("$empName($empDesignation)"),
       position: _currentLocation,
       icon: humanIcon,
       infoWindow: InfoWindow(
@@ -116,7 +117,7 @@ class Pole11kvViewmodel extends ChangeNotifier {
 
   Future<void> processMapData(bool drawHuman) async {
     if (poleFeederList.isEmpty) return;
-    if (followSwitch && currentLocation != null) {
+    if (followSwitch) {
       await _addHumanMarker();
 
       mapController?.animateCamera(CameraUpdate.newCameraPosition(
@@ -126,17 +127,22 @@ class Pole11kvViewmodel extends ChangeNotifier {
 
     for (int i = 0; i < poleFeederList.length; i++) {
       final entity = poleFeederList[i];
-        maxId=max(poleFeederList[i].id,maxId);
-        print("MaxId in pole11kv is 9752778 : $maxId");
+      maxId = max(poleFeederList[i].id, maxId);
+      print("MaxId in pole11kv is 9752778 : $maxId");
       if (entity.sourceLat != null && entity.sourceLon != null) {
         final polyline = Polyline(
           polylineId: PolylineId('polyline_$i'),
           points: [
-            LatLng(double.parse(entity.sourceLat!), double.parse(entity.sourceLon!)),
+            LatLng(double.parse(entity.sourceLat!),
+                double.parse(entity.sourceLon!)),
             LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
           ],
           width: 4,
-          color: entity.tempSeries != null ? Colors.blue : entity.newProposalId != null ? Colors.red : Colors.black,
+          color: entity.tempSeries != null
+              ? Colors.blue
+              : entity.newProposalId != null
+                  ? Colors.red
+                  : Colors.black,
         );
         polylines.add(polyline);
 
@@ -167,7 +173,6 @@ class Pole11kvViewmodel extends ChangeNotifier {
         addMarkerWithEntity(entity);
       }
 
-
       if (!drawHuman) {
         _addSpecialMarkers(entity);
       }
@@ -189,13 +194,14 @@ class Pole11kvViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-
   Future<void> _addSpecialMarkers(PoleFeederEntity entity) async {
     if (entity.sourceType?.toLowerCase() == 'ss') {
       markers.add(Marker(
         markerId: MarkerId('sourceType_${entity.id}'),
         position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
-        icon: entity.feederVolt == "33KV" ? await _bitmapDescriptorFromAsset(Assets.ss132Kv) : await _bitmapDescriptorFromAsset(Assets.ss33Kv),
+        icon: entity.feederVolt == "33KV"
+            ? await _bitmapDescriptorFromAsset(Assets.ss132Kv)
+            : await _bitmapDescriptorFromAsset(Assets.ss33Kv),
       ));
     }
 
@@ -204,21 +210,24 @@ class Pole11kvViewmodel extends ChangeNotifier {
         case 'ss':
           markers.add(Marker(
             markerId: MarkerId('loadType_ss_${entity.id}'),
-            position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+            position:
+                LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
             icon: await _bitmapDescriptorFromAsset(Assets.ss33Kv),
           ));
           break;
         case 'dtr':
           markers.add(Marker(
             markerId: MarkerId('loadType_dtr_${entity.id}'),
-            position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+            position:
+                LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
             icon: await _bitmapDescriptorFromAsset(Assets.dtr),
           ));
           break;
         case 'ht':
           markers.add(Marker(
             markerId: MarkerId('loadType_ht_${entity.id}'),
-            position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+            position:
+                LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
             icon: await _bitmapDescriptorFromAsset(Assets.htService),
           ));
           break;
@@ -250,7 +259,7 @@ class Pole11kvViewmodel extends ChangeNotifier {
     );
 
     // Center the text
-    textPainter.paint(canvas, Offset(0, 0)); // Adjust if necessary
+    textPainter.paint(canvas, const Offset(0, 0)); // Adjust if necessary
 
     final picture = recorder.endRecording();
     final img = await picture.toImage(
@@ -258,7 +267,8 @@ class Pole11kvViewmodel extends ChangeNotifier {
       textPainter.height.toInt(),
     );
 
-    final ByteData? byteData = await img.toByteData(format: ui.ImageByteFormat.png);
+    final ByteData? byteData =
+        await img.toByteData(format: ui.ImageByteFormat.png);
     if (byteData != null) {
       final Uint8List uint8List = byteData.buffer.asUint8List();
       final bitmapDescriptor = BitmapDescriptor.fromBytes(uint8List);
@@ -276,7 +286,8 @@ class Pole11kvViewmodel extends ChangeNotifier {
     }
   }
 
-  LatLng _calculateMidpoint(double lat1, double lon1, double lat2, double lon2) {
+  LatLng _calculateMidpoint(
+      double lat1, double lon1, double lat2, double lon2) {
     double midLat = (lat1 + lat2) / 2;
     double midLon = (lon1 + lon2) / 2;
     return LatLng(midLat, midLon);
@@ -293,12 +304,15 @@ class Pole11kvViewmodel extends ChangeNotifier {
     }
   }
 
-
   Future<Uint8List> _getBytesFromAsset(String path, int width) async {
     ByteData byteData = await rootBundle.load(path);
-    ui.Codec codec = await ui.instantiateImageCodec(byteData.buffer.asUint8List());
+    ui.Codec codec =
+        await ui.instantiateImageCodec(byteData.buffer.asUint8List());
     ui.FrameInfo fi = await codec.getNextFrame();
-    final Uint8List resizedData = (await fi.image.toByteData(format: ui.ImageByteFormat.png))!.buffer.asUint8List();
+    final Uint8List resizedData =
+        (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
+            .buffer
+            .asUint8List();
     return resizedData;
   }
 
@@ -391,12 +405,11 @@ class Pole11kvViewmodel extends ChangeNotifier {
     }
 
     _positionStream = Geolocator.getPositionStream(
-      locationSettings: LocationSettings(accuracy: LocationAccuracy.high),
+      locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
     ).listen((Position position) {
       latitude = position.latitude;
       longitude = position.longitude;
       totalAccuracy = position.accuracy; // <-- This is in meters
-
 
       notifyListeners();
 
@@ -531,7 +544,7 @@ class Pole11kvViewmodel extends ChangeNotifier {
         selectedFirstGroup.clear();
       }
 
-      final limit = 2;
+      const limit = 2;
 
       if (selectedSecondGroup.length < limit) {
         selectedSecondGroup.add(val);
@@ -1044,7 +1057,7 @@ class Pole11kvViewmodel extends ChangeNotifier {
           "Please select the type of point (Cut Point/End Point/Pin Point)",
           isTrue);
       return false;
-    } else if (selectedCrossings.isEmpty || selectedCrossings == null) {
+    } else if (selectedCrossings.isEmpty) {
       AlertUtils.showSnackBar(context, "Please select any crossing", isTrue);
       return false;
     } else if (selectedConnected == "" || selectedConnected == null) {
@@ -1052,8 +1065,7 @@ class Pole11kvViewmodel extends ChangeNotifier {
           "Please select the any load connected on the current pole", isTrue);
       return false;
     } //DTR
-    else if (selectedConnected == "DTR" &&
-        (dtrStructure.text == "" || dtrStructure.text == null)) {
+    else if (selectedConnected == "DTR" && (dtrStructure.text == "")) {
       AlertUtils.showSnackBar(
           context, "Please enter the DTR Structure code ", isTrue);
       return false;

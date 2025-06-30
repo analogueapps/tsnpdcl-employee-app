@@ -1,5 +1,3 @@
-
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
@@ -30,7 +28,6 @@ class Check11kvEditViewmodel extends ChangeNotifier {
     _initializeCameraPosition();
     loadStructureCodes();
     getPolesOnFeeder();
-
   }
   final BuildContext context;
   final Map<String, dynamic> args;
@@ -46,7 +43,7 @@ class Check11kvEditViewmodel extends ChangeNotifier {
   bool _isLoading = isFalse;
   bool get isLoading => _isLoading;
 
-  bool deleteOrEdit= isFalse;
+  bool deleteOrEdit = isFalse;
   final TextEditingController poleNumber = TextEditingController();
   final TextEditingController particularsOfCrossing = TextEditingController();
   final TextEditingController remarks = TextEditingController();
@@ -59,7 +56,7 @@ class Check11kvEditViewmodel extends ChangeNotifier {
   bool distanceDisplay = false;
   double? distanceBtnPoles;
   double MINIMUM_GPS_ACCURACY_REQUIRED = 15.0;
-  int maxId=0;
+  int maxId = 0;
 
   StreamSubscription<Position>? _positionStream;
 
@@ -72,7 +69,7 @@ class Check11kvEditViewmodel extends ChangeNotifier {
     }
 
     _positionStream = Geolocator.getPositionStream(
-      locationSettings: LocationSettings(accuracy: LocationAccuracy.high),
+      locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
     ).listen((Position position) {
       latitude = position.latitude;
       longitude = position.longitude;
@@ -80,19 +77,16 @@ class Check11kvEditViewmodel extends ChangeNotifier {
 
       notifyListeners();
 
-        if (poleID != null) {
-          distanceDisplay = isTrue;
-          distanceBtnPoles = calculateDistance(
-              latitude!, longitude!,
-              double.parse(poleLat!),
-              double.parse(poleLon!)
-          );
-          print("distanceBtnPoles: $distanceBtnPoles");
-          notifyListeners();
-        } else {
-          distanceDisplay = false;
-          notifyListeners();
-        }
+      if (poleID != null) {
+        distanceDisplay = isTrue;
+        distanceBtnPoles = calculateDistance(latitude!, longitude!,
+            double.parse(poleLat!), double.parse(poleLon!));
+        print("distanceBtnPoles: $distanceBtnPoles");
+        notifyListeners();
+      } else {
+        distanceDisplay = false;
+        notifyListeners();
+      }
     });
   }
 
@@ -132,23 +126,28 @@ class Check11kvEditViewmodel extends ChangeNotifier {
 
   Future<void> processMapData() async {
     if (poleFeederList.isEmpty) return;
-      // await _addHumanMarker();
-      // mapController?.animateCamera(CameraUpdate.newCameraPosition(
-      //   CameraPosition(target: humanLocation, zoom: 18),
-      // ));
+    // await _addHumanMarker();
+    // mapController?.animateCamera(CameraUpdate.newCameraPosition(
+    //   CameraPosition(target: humanLocation, zoom: 18),
+    // ));
 
     for (int i = 0; i < poleFeederList.length; i++) {
       final entity = poleFeederList[i];
-      maxId=max(poleFeederList[i].id,maxId);
+      maxId = max(poleFeederList[i].id, maxId);
       if (entity.sourceLat != null && entity.sourceLon != null) {
         final polyline = Polyline(
           polylineId: PolylineId('polyline_$i'),
           points: [
-            LatLng(double.parse(entity.sourceLat!), double.parse(entity.sourceLon!)),
+            LatLng(double.parse(entity.sourceLat!),
+                double.parse(entity.sourceLon!)),
             LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
           ],
           width: 4,
-          color: entity.tempSeries != null ? Colors.blue : entity.newProposalId != null ? Colors.red : Colors.black,
+          color: entity.tempSeries != null
+              ? Colors.blue
+              : entity.newProposalId != null
+                  ? Colors.red
+                  : Colors.black,
         );
         polylines.add(polyline);
 
@@ -179,7 +178,7 @@ class Check11kvEditViewmodel extends ChangeNotifier {
         addMarkerWithEntity(entity);
       }
 
-        _addSpecialMarkers(entity);
+      _addSpecialMarkers(entity);
       if (i == poleFeederList.length - 1) {
         _cameraPosition = CameraPosition(
           target: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
@@ -198,13 +197,14 @@ class Check11kvEditViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-
   Future<void> _addSpecialMarkers(PoleFeederEntity entity) async {
     if (entity.sourceType?.toLowerCase() == 'ss') {
       markers.add(Marker(
         markerId: MarkerId('sourceType_${entity.id}'),
         position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
-        icon: entity.feederVolt == "33KV" ? await _bitmapDescriptorFromAsset(Assets.ss132Kv) : await _bitmapDescriptorFromAsset(Assets.ss33Kv),
+        icon: entity.feederVolt == "33KV"
+            ? await _bitmapDescriptorFromAsset(Assets.ss132Kv)
+            : await _bitmapDescriptorFromAsset(Assets.ss33Kv),
       ));
     }
 
@@ -213,21 +213,24 @@ class Check11kvEditViewmodel extends ChangeNotifier {
         case 'ss':
           markers.add(Marker(
             markerId: MarkerId('loadType_ss_${entity.id}'),
-            position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+            position:
+                LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
             icon: await _bitmapDescriptorFromAsset(Assets.ss33Kv),
           ));
           break;
         case 'dtr':
           markers.add(Marker(
             markerId: MarkerId('loadType_dtr_${entity.id}'),
-            position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+            position:
+                LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
             icon: await _bitmapDescriptorFromAsset(Assets.dtr),
           ));
           break;
         case 'ht':
           markers.add(Marker(
             markerId: MarkerId('loadType_ht_${entity.id}'),
-            position: LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
+            position:
+                LatLng(double.parse(entity.lat!), double.parse(entity.lon!)),
             icon: await _bitmapDescriptorFromAsset(Assets.htService),
           ));
           break;
@@ -259,7 +262,7 @@ class Check11kvEditViewmodel extends ChangeNotifier {
     );
 
     // Center the text
-    textPainter.paint(canvas, Offset(0, 0)); // Adjust if necessary
+    textPainter.paint(canvas, const Offset(0, 0)); // Adjust if necessary
 
     final picture = recorder.endRecording();
     final img = await picture.toImage(
@@ -267,7 +270,8 @@ class Check11kvEditViewmodel extends ChangeNotifier {
       textPainter.height.toInt(),
     );
 
-    final ByteData? byteData = await img.toByteData(format: ui.ImageByteFormat.png);
+    final ByteData? byteData =
+        await img.toByteData(format: ui.ImageByteFormat.png);
     if (byteData != null) {
       final Uint8List uint8List = byteData.buffer.asUint8List();
       final bitmapDescriptor = BitmapDescriptor.fromBytes(uint8List);
@@ -285,7 +289,8 @@ class Check11kvEditViewmodel extends ChangeNotifier {
     }
   }
 
-  LatLng _calculateMidpoint(double lat1, double lon1, double lat2, double lon2) {
+  LatLng _calculateMidpoint(
+      double lat1, double lon1, double lat2, double lon2) {
     double midLat = (lat1 + lat2) / 2;
     double midLon = (lon1 + lon2) / 2;
     return LatLng(midLat, midLon);
@@ -302,12 +307,15 @@ class Check11kvEditViewmodel extends ChangeNotifier {
     }
   }
 
-
   Future<Uint8List> _getBytesFromAsset(String path, int width) async {
     ByteData byteData = await rootBundle.load(path);
-    ui.Codec codec = await ui.instantiateImageCodec(byteData.buffer.asUint8List());
+    ui.Codec codec =
+        await ui.instantiateImageCodec(byteData.buffer.asUint8List());
     ui.FrameInfo fi = await codec.getNextFrame();
-    final Uint8List resizedData = (await fi.image.toByteData(format: ui.ImageByteFormat.png))!.buffer.asUint8List();
+    final Uint8List resizedData =
+        (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
+            .buffer
+            .asUint8List();
     return resizedData;
   }
 
@@ -335,7 +343,7 @@ class Check11kvEditViewmodel extends ChangeNotifier {
       onTap: () {
         onClickOfMap(entity);
         print(" Entity object is: $entity");
-        poleData=entity;
+        poleData = entity;
       },
     );
 
@@ -362,8 +370,7 @@ class Check11kvEditViewmodel extends ChangeNotifier {
 
   double _degToRad(double deg) => deg * pi / 180;
 
-
-  void onClickOfMap(PoleFeederEntity entity){
+  void onClickOfMap(PoleFeederEntity entity) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -374,21 +381,23 @@ class Check11kvEditViewmodel extends ChangeNotifier {
           actions: [
             TextButton(
                 onPressed: () {
-                Navigator.pop(context);
-                deletePoleDialog(poleData!.id);
+                  Navigator.pop(context);
+                  deletePoleDialog(poleData!.id);
                 },
                 child: const Text("DELETE")),
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                deleteOrEdit=isTrue;
+                deleteOrEdit = isTrue;
                 notifyListeners();
                 initialValuesFromPole();
               },
               child: const Text("EDIT THIS POLE DATA"),
             ),
             TextButton(
-              onPressed: (){ Navigator.pop(context);},
+              onPressed: () {
+                Navigator.pop(context);
+              },
               child: const Text("CANCEL"),
             ),
           ],
@@ -397,8 +406,12 @@ class Check11kvEditViewmodel extends ChangeNotifier {
     );
   }
 
-  void initialValuesFromPole(){
-    _selectedTappingPole=poleData!.tapping=='r'?'Right Tapping':poleData!.tapping=='l'?'Left Tapping':'Straight Tapping';
+  void initialValuesFromPole() {
+    _selectedTappingPole = poleData!.tapping == 'r'
+        ? 'Right Tapping'
+        : poleData!.tapping == 'l'
+            ? 'Left Tapping'
+            : 'Straight Tapping';
     if (_selectedTappingPole == "Straight Tapping" ||
         _selectedTappingPole == "Left Tapping") {
       showDialog(
@@ -424,7 +437,7 @@ class Check11kvEditViewmodel extends ChangeNotifier {
                     showAlertDialog(context,
                         "Please choose Source Pole Num or check Source pole not mapped or origin Pole");
                   },
-                  child: Text("OK")),
+                  child: const Text("OK")),
             ],
           );
         },
@@ -440,7 +453,7 @@ class Check11kvEditViewmodel extends ChangeNotifier {
                 const Text(
                   "Please be sure your field condition resemble to below show scenario for selecting",
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Image.asset(Assets.check11KvRight),
@@ -453,18 +466,18 @@ class Check11kvEditViewmodel extends ChangeNotifier {
                     showAlertDialog(context,
                         "Please choose Source Pole Num or check Source pole not mapped or origin Pole");
                   },
-                  child: Text("OK")),
+                  child: const Text("OK")),
             ],
           );
         },
       );
     }
-    _selectedPoleHeight=poleData!.poleHeight;
-    _selectedPoleHeight=poleData!.poleHeight;
-    _selectedCircuits=poleData!.noOfCkts;
-    _selectedFormation=poleData!.formation;
-    _selectedTypePoint=poleData!.typeOfPoint;
-    String poleCrossings= poleData!.crossing??"";
+    _selectedPoleHeight = poleData!.poleHeight;
+    _selectedPoleHeight = poleData!.poleHeight;
+    _selectedCircuits = poleData!.noOfCkts;
+    _selectedFormation = poleData!.formation;
+    _selectedTypePoint = poleData!.typeOfPoint;
+    String poleCrossings = poleData!.crossing ?? "";
     List<String> crossings = poleCrossings
         .split('|')
         .map((e) => e.trim())
@@ -472,8 +485,8 @@ class Check11kvEditViewmodel extends ChangeNotifier {
         .toList();
 
     selectedCrossings = crossings;
-    _selectedConductor=poleData!.condSize;
-    String poleTypes= poleData!.poleType??"";
+    _selectedConductor = poleData!.condSize;
+    String poleTypes = poleData!.poleType ?? "";
     setInitialPoleType(poleTypes);
     notifyListeners();
   }
@@ -484,7 +497,7 @@ class Check11kvEditViewmodel extends ChangeNotifier {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text("Delete Pole?"),
-          content:  const Text(
+          content: const Text(
             "Delete 0000 pole? \n You can revert this action!",
           ),
           actions: [
@@ -519,7 +532,7 @@ class Check11kvEditViewmodel extends ChangeNotifier {
       poleID = value.id.toString() ?? "";
       poleLat = value.lat.toString() ?? "";
       poleLon = value.lon.toString() ?? "";
-      AlertUtils.showSnackBar(context, poleFeederSelected! , isFalse);
+      AlertUtils.showSnackBar(context, poleFeederSelected!, isFalse);
 
       print("POle Num: $poleFeederSelected");
       print("Pole ID: $poleID");
@@ -536,7 +549,7 @@ class Check11kvEditViewmodel extends ChangeNotifier {
 
     final requestData = {
       "authToken":
-      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "ssc": args["ssc"], //poleData!.ssCode
       "fc": args["fc"], //PoleData!.feederCode
@@ -563,7 +576,7 @@ class Check11kvEditViewmodel extends ChangeNotifier {
             if (response.data['success'] == isTrue) {
               if (response.data['objectJson'] != null) {
                 final List<dynamic> jsonList =
-                jsonDecode(response.data['objectJson']);
+                    jsonDecode(response.data['objectJson']);
                 final List<PoleFeederEntity> listData = jsonList
                     .map((json) => PoleFeederEntity.fromJson(json))
                     .toList();
@@ -592,14 +605,13 @@ class Check11kvEditViewmodel extends ChangeNotifier {
   }
 
   Future<void> deletePole(int id) async {
-
     _isLoading = isTrue;
 
     final requestData = {
       "authToken":
-      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
-      "poleId":id, // from map
+      "poleId": id, // from map
       "ssc": args["ssc"],
       "fc": args["fc"],
     };
@@ -651,7 +663,7 @@ class Check11kvEditViewmodel extends ChangeNotifier {
 
   String? get selectedPole => _selectedPole;
 
-  void showPoleFeederDropdown(String  filterString ) {
+  void showPoleFeederDropdown(String filterString) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -659,9 +671,10 @@ class Check11kvEditViewmodel extends ChangeNotifier {
 
         // ✅ Initial filtered list showing only items starting with "ARE"
         List<PoleFeederEntity> filteredList = poleFeederList.where((item) {
-          final displayText = (item.tempSeries != null && item.tempSeries!.isNotEmpty
-              ? '${item.tempSeries}-${item.poleNum}'
-              : item.poleNum ?? '');
+          final displayText =
+              (item.tempSeries != null && item.tempSeries!.isNotEmpty
+                  ? '${item.tempSeries}-${item.poleNum}'
+                  : item.poleNum ?? '');
           return displayText.startsWith('ARE'); // lowercase for consistency
         }).toList();
 
@@ -671,11 +684,11 @@ class Check11kvEditViewmodel extends ChangeNotifier {
               setState(() {
                 searchQuery = query;
                 filteredList = poleFeederList.where((item) {
-                  final displayText = (item.tempSeries != null &&
-                      item.tempSeries!.isNotEmpty
-                      ? '${item.tempSeries}-${item.poleNum}'
-                      : item.poleNum ?? '')
-                      .toLowerCase();
+                  final displayText =
+                      (item.tempSeries != null && item.tempSeries!.isNotEmpty
+                              ? '${item.tempSeries}-${item.poleNum}'
+                              : item.poleNum ?? '')
+                          .toLowerCase();
                   return displayText.contains(query.toLowerCase());
                 }).toList();
               });
@@ -702,7 +715,7 @@ class Check11kvEditViewmodel extends ChangeNotifier {
                       itemBuilder: (context, index) {
                         final item = filteredList[index];
                         final displayText = item.tempSeries != null &&
-                            item.tempSeries!.isNotEmpty
+                                item.tempSeries!.isNotEmpty
                             ? '${item.tempSeries}-${item.poleNum}'
                             : item.poleNum ?? '';
 
@@ -726,7 +739,6 @@ class Check11kvEditViewmodel extends ChangeNotifier {
       },
     );
   }
-
 
   void setSelectedPole(String title) {
     _selectedPole = title;
@@ -754,7 +766,7 @@ class Check11kvEditViewmodel extends ChangeNotifier {
 
       final requestData = {
         "authToken":
-        SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+            SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
         "api": Apis.API_KEY,
         "ssc": args["ssc"],
         "fc": args["fc"],
@@ -762,8 +774,8 @@ class Check11kvEditViewmodel extends ChangeNotifier {
         "tap": selectedTappingPole == "Straight Tapping"
             ? "s"
             : selectedTappingPole == "Left Tapping"
-            ? "l"
-            : "r",
+                ? "l"
+                : "r",
         "sid": poleID,
       };
 
@@ -831,12 +843,12 @@ class Check11kvEditViewmodel extends ChangeNotifier {
   }
 
   void setPoleNum() {
-    if(selectedTappingPole=="Is Extension Pole?"){
-      poleNumber.text = (series != null ? "$series-$poleNum (EP)" : "$poleNum(EP)" )!;
+    if (selectedTappingPole == "Is Extension Pole?") {
+      poleNumber.text =
+          (series != null ? "$series-$poleNum (EP)" : "$poleNum(EP)");
     }
     poleNumber.text = (series != null ? "$series-$poleNum" : poleNum)!;
   }
-
 
   //Tapping from previous pole
   String? _selectedTappingPole;
@@ -872,7 +884,7 @@ class Check11kvEditViewmodel extends ChangeNotifier {
                     showAlertDialog(context,
                         "Please choose Source Pole Num or check Source pole not mapped or origin Pole");
                   },
-                  child: Text("OK")),
+                  child: const Text("OK")),
             ],
           );
         },
@@ -888,7 +900,7 @@ class Check11kvEditViewmodel extends ChangeNotifier {
                 const Text(
                   "Please be sure your field condition resemble to below show scenario for selecting",
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Image.asset(Assets.check11KvRight),
@@ -901,19 +913,19 @@ class Check11kvEditViewmodel extends ChangeNotifier {
                     showAlertDialog(context,
                         "Please choose Source Pole Num or check Source pole not mapped or origin Pole");
                   },
-                  child: Text("OK")),
+                  child: const Text("OK")),
             ],
           );
         },
       );
     }
-    if(_selectedTappingPole!=null && _selectedTappingPole!.isNotEmpty){
-  generatePoleNum(serverCheck);
-}
+    if (_selectedTappingPole != null && _selectedTappingPole!.isNotEmpty) {
+      generatePoleNum(serverCheck);
+    }
   }
 
   //Is Extension Pole
-String? isExtensionSelected;
+  String? isExtensionSelected;
 
   void setSelectedExtension(String value) {
     isExtensionSelected = value;
@@ -927,14 +939,16 @@ String? isExtensionSelected;
   List<String> selectedSecondGroup = [];
 
   final List<String> firstGroupOptions = [
-    "Spun Pole", "RS joist", "PSSC Pole", "Tower(M+3)", "Tower(M+6)", "Tower(M+9)", "Tower(M+12)"
+    "Spun Pole",
+    "RS joist",
+    "PSSC Pole",
+    "Tower(M+3)",
+    "Tower(M+6)",
+    "Tower(M+9)",
+    "Tower(M+12)"
   ];
 
-  final List<String> secondGroupOptions = [
-    "Tubular", "Joist", "Rail Pole"
-  ];
-
-
+  final List<String> secondGroupOptions = ["Tubular", "Joist", "Rail Pole"];
 
   void setInitialPoleType(String value) {
     if (firstGroupOptions.contains(value)) {
@@ -970,7 +984,7 @@ String? isExtensionSelected;
         selectedFirstGroup.clear();
       }
 
-      final limit = 2;
+      const limit = 2;
 
       if (selectedSecondGroup.length < limit) {
         selectedSecondGroup.add(val);
@@ -984,7 +998,6 @@ String? isExtensionSelected;
   }
 
   bool get isSecondGroupEnabled => true;
-
 
   //Pole Height
   List<String> poleHeightData = [
@@ -1076,13 +1089,12 @@ String? isExtensionSelected;
   List<String> selectedPoleStatus = [];
 
   void setSelectedPoleStatus(String title) {
-
-      if (selectedPoleStatus.contains(title)) {
-        selectedPoleStatus.remove(title);
-      } else {
-        selectedPoleStatus.add(title);
-      }
-      print("setSelectedPoleStatus: $selectedPoleStatus");
+    if (selectedPoleStatus.contains(title)) {
+      selectedPoleStatus.remove(title);
+    } else {
+      selectedPoleStatus.add(title);
+    }
+    print("setSelectedPoleStatus: $selectedPoleStatus");
     notifyListeners();
   }
 
@@ -1099,19 +1111,17 @@ String? isExtensionSelected;
   Option? selectedCode;
   String? selectedCapacity;
 
-
-
   Future<void> loadStructureCodes() async {
-    final structures = await StructureDatabaseHelper.instance.getAllStructures();
+    final structures =
+        await StructureDatabaseHelper.instance.getAllStructures();
     structureCodes = structures
-        .where((e) => e.structureCode != null && e.capacity != null)
+        .where((e) => e.capacity != null)
         .map((e) => Option(
-      code: e.structureCode!,
-      capacity: e.capacity!,
-    ))
+              code: e.structureCode,
+              capacity: e.capacity,
+            ))
         .toList();
     print("Done loading data from DB Structure");
-
   }
 
   void setSelectedDtr(Option title) {
@@ -1120,9 +1130,6 @@ String? isExtensionSelected;
     print("${selectedCode?.capacity}: selectedCode capacity");
     notifyListeners();
   }
-
-
-
 
   String? _selectedConductor;
 
@@ -1145,7 +1152,6 @@ String? isExtensionSelected;
   List<String> selectedConductorStatus = [];
 
   void setSelectedConductorStatus(String title) {
-
     if (selectedConductorStatus.contains(title)) {
       selectedConductorStatus.remove(title);
     } else {
@@ -1159,7 +1165,6 @@ String? isExtensionSelected;
   List<String> selectedStudStayRequired = [];
 
   void setSelectedStudStayRequired(String title) {
-
     if (selectedStudStayRequired.contains(title)) {
       selectedStudStayRequired.remove(title);
     } else {
@@ -1173,7 +1178,6 @@ String? isExtensionSelected;
   List<String> selectedMiddlePolesRequired = [];
 
   void setSelectedMiddlePolesRequired(String title) {
-
     if (selectedMiddlePolesRequired.contains(title)) {
       selectedMiddlePolesRequired.remove(title);
     } else {
@@ -1187,7 +1191,6 @@ String? isExtensionSelected;
   List<String> selectedCrossArmStatus = [];
 
   void setSelectedCrossArmStatus(String title) {
-
     if (selectedCrossArmStatus.contains(title)) {
       selectedCrossArmStatus.remove(title);
     } else {
@@ -1198,7 +1201,7 @@ String? isExtensionSelected;
   }
 
   //Insulators/Discs
-  List<String> insulatorDiscType = ["Select","Discs","Insulators"];
+  List<String> insulatorDiscType = ["Select", "Discs", "Insulators"];
   String? selectedInsulatorDiscType;
 
   void onListInsulatorDiscType(String? value) {
@@ -1211,8 +1214,8 @@ String? isExtensionSelected;
     }
   }
 
-
-  List<String> insulatorDiscQty = ["Select",
+  List<String> insulatorDiscQty = [
+    "Select",
     "1",
     "2",
     "3",
@@ -1221,7 +1224,8 @@ String? isExtensionSelected;
     "6",
     "7",
     "8",
-    "9",];
+    "9",
+  ];
   String? selectedInsulatorDiscQty;
 
   void onListInsulatorDiscQty(String? value) {
@@ -1234,13 +1238,11 @@ String? isExtensionSelected;
     }
   }
 
-
   //DTR Details
   //AB
   List<String> selectedABSwitch = [];
 
   void setSelectedABSwitch(String title) {
-
     if (selectedABSwitch.contains(title)) {
       selectedABSwitch.remove(title);
     } else {
@@ -1254,7 +1256,6 @@ String? isExtensionSelected;
   List<String> selectedLTFuse = [];
 
   void setSelectedLTFuse(String title) {
-
     if (selectedLTFuse.contains(title)) {
       selectedLTFuse.remove(title);
     } else {
@@ -1268,7 +1269,6 @@ String? isExtensionSelected;
   List<String> selectedHTFuse = [];
 
   void setSelectedHTFuse(String title) {
-
     if (selectedHTFuse.contains(title)) {
       selectedHTFuse.remove(title);
     } else {
@@ -1282,7 +1282,6 @@ String? isExtensionSelected;
   List<String> selectedDTRPlinth = [];
 
   void setSelectedDTRPlinth(String title) {
-
     if (selectedDTRPlinth.contains(title)) {
       selectedDTRPlinth.remove(title);
     } else {
@@ -1296,7 +1295,6 @@ String? isExtensionSelected;
   List<String> selectedDTREarth = [];
 
   void setSelectedDTREarth(String title) {
-
     if (selectedDTREarth.contains(title)) {
       selectedDTREarth.remove(title);
     } else {
@@ -1310,7 +1308,6 @@ String? isExtensionSelected;
   List<String> selectedEarthPipe = [];
 
   void setSelectedEarthPipe(String title) {
-
     if (selectedEarthPipe.contains(title)) {
       selectedEarthPipe.remove(title);
     } else {
@@ -1324,7 +1321,6 @@ String? isExtensionSelected;
   List<String> selectedBiMetalic = [];
 
   void setSelectedBiMetalic(String title) {
-
     if (selectedBiMetalic.contains(title)) {
       selectedBiMetalic.remove(title);
     } else {
@@ -1334,12 +1330,10 @@ String? isExtensionSelected;
     notifyListeners();
   }
 
-
   //Lightening Arrestors
   List<String> selectedLighteningArr = [];
 
   void setSelectedLighteningArr(String title) {
-
     if (selectedLighteningArr.contains(title)) {
       selectedLighteningArr.remove(title);
     } else {
@@ -1348,7 +1342,6 @@ String? isExtensionSelected;
     print("selectedLighteningArr: $selectedLighteningArr");
     notifyListeners();
   }
-
 
   Future<void> submitCheck11KVForm() async {
     if (formKey.currentState!.validate()) {
@@ -1373,7 +1366,7 @@ String? isExtensionSelected;
       "loadLatestDataOnly": true,
       "maxId": maxId,
       "authToken":
-      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "fc": args["fc"],
       "ssc": args["ssc"],
@@ -1384,8 +1377,8 @@ String? isExtensionSelected;
       "tap": selectedTappingPole == "Straight Tapping"
           ? "s"
           : selectedTappingPole == "Left Tapping"
-          ? "l"
-          : "r",
+              ? "l"
+              : "r",
       "pt": selectedSecondGroup.isNotEmpty
           ? selectedSecondGroup[0]
           : (selectedFirstGroup.isNotEmpty ? selectedFirstGroup[0] : null),
@@ -1407,11 +1400,11 @@ String? isExtensionSelected;
         "structCode": selectedCode?.code,
         "cap": selectedCode?.capacity,
       },
-      "cs": _selectedConductor==""?abCableSelected:_selectedConductor,
+      "cs": _selectedConductor == "" ? abCableSelected : _selectedConductor,
 
-      "lat": poleData!.lat.toString(),//d.getLat()
+      "lat": poleData!.lat.toString(), //d.getLat()
       "lon": poleData!.lon.toString(),
-      "digitalID":poleData!.id,
+      "digitalID": poleData!.id,
     };
 
     print("requestData: $requestData");
@@ -1441,7 +1434,7 @@ String? isExtensionSelected;
                   showSuccessDialog(
                     context,
                     response.data["message"], //Missing mandatory params
-                        () {
+                    () {
                       Navigator.pop(context);
                     },
                   );
@@ -1450,8 +1443,7 @@ String? isExtensionSelected;
                 showAlertDialog(context, "Unable to process your request!");
               }
             } else {
-              showAlertDialog(context,
-                  response.data['message']);
+              showAlertDialog(context, response.data['message']);
             }
           } else {
             showSessionExpiredDialog(context);
@@ -1462,7 +1454,7 @@ String? isExtensionSelected;
         }
       }
     } catch (e) {
-        showErrorDialog(context, "An error occurred. Please try again.");
+      showErrorDialog(context, "An error occurred. Please try again.");
       _isLoading = false;
       notifyListeners();
     }
@@ -1471,8 +1463,9 @@ String? isExtensionSelected;
   }
 
   bool validateForm() {
-    if (poleFeederSelected==null||poleFeederSelected=="") {
-      AlertUtils.showSnackBar(context, "Please select previous pole number", isTrue);
+    if (poleFeederSelected == null || poleFeederSelected == "") {
+      AlertUtils.showSnackBar(
+          context, "Please select previous pole number", isTrue);
       return false;
     } else if (selectedTappingPole == "" || selectedTappingPole == null) {
       AlertUtils.showSnackBar(
@@ -1500,16 +1493,16 @@ String? isExtensionSelected;
           "Please select the type of point (Cut Point/End Point/Pin Point)",
           isTrue);
       return false;
-    }else if (selectedCrossings.isEmpty || selectedCrossings == null) {
+    } else if (selectedCrossings.isEmpty) {
       AlertUtils.showSnackBar(context, "Please select any crossing", isTrue);
       return false;
     } else if (selectedConnected == "" || selectedConnected == null) {
       AlertUtils.showSnackBar(context,
           "Please select the any load connected on the current pole", isTrue);
       return false;
-    }else if (selectedConnected == "DTR" &&( selectedCode == null||selectedCode=="")) {
-      AlertUtils.showSnackBar(context,
-          "Please select structure code", isTrue);
+    } else if (selectedConnected == "DTR" &&
+        (selectedCode == null || selectedCode == "")) {
+      AlertUtils.showSnackBar(context, "Please select structure code", isTrue);
       return false;
     } else if (_selectedConductor == "" || _selectedConductor == null) {
       AlertUtils.showSnackBar(
@@ -1520,7 +1513,4 @@ String? isExtensionSelected;
     }
     return true;
   }
-
-
 }
-

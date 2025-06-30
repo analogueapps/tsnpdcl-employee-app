@@ -13,7 +13,7 @@ import 'package:tsnpdcl_employee/view/interruptions/model/substation_model.dart'
 
 class Breakdown33kvViewmodel extends ChangeNotifier {
   final BuildContext context;
-  List<SubstationModel> _substations = [];
+  final List<SubstationModel> _substations = [];
   String? selectedOptionId; // Store the selected optionId
   String? selectedSubstation;
   List<FeederModel> _feeders = [];
@@ -43,7 +43,8 @@ class Breakdown33kvViewmodel extends ChangeNotifier {
     _isLoading = true; // Set loading state to true
     notifyListeners();
     final payload = {
-      "token": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "token":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
     };
     var response = await ApiProvider(

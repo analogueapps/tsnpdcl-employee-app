@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
@@ -8,162 +7,176 @@ import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/view/gis_ids/model/gis_individual_model.dart';
 import 'package:tsnpdcl_employee/view/gis_ids/viewModel/view_work_viewmodel.dart';
 
-
 class WorkDetailsPage extends StatelessWidget {
   static const id = Routes.viewWorkScreen;
-  const WorkDetailsPage({super.key, required this.surveyID, required this.status});
+  const WorkDetailsPage(
+      {super.key, required this.surveyID, required this.status});
   final int surveyID;
   final String status;
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => WorkDetailsViewModel(context: context, surId: surveyID, individualStatus: status),
-      child:Consumer<WorkDetailsViewModel>(
-        builder: (context, viewModel, child) {
-          return WillPopScope
-            (
-            onWillPop: () async => false,
-            child: Scaffold(
-              appBar: AppBar(
-                backgroundColor: CommonColors.colorPrimary,
-                title: const Text('View Work Details',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: toolbarTitleSize,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                leading: IconButton(
-                  icon: const Icon(Icons.close, color: Colors.white,),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
+      create: (_) => WorkDetailsViewModel(
+          context: context, surId: surveyID, individualStatus: status),
+      child:
+          Consumer<WorkDetailsViewModel>(builder: (context, viewModel, child) {
+        return WillPopScope(
+          onWillPop: () async => false,
+          child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: CommonColors.colorPrimary,
+              title: const Text(
+                'View Work Details',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: toolbarTitleSize,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
-              body:  Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: ListView.builder(
-                    itemCount: viewModel.workDetails.length,
-                    itemBuilder: (context, index) {
-                      final data =viewModel.workDetails[index];
-                      return data==null
-                          ?
-                      const Center(child:Text("Please try again")):
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Before Details
-                          const SizedBox(height: 10),
-                          const Text('MAINTENANCE DETAILS',
-                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                          const SizedBox(height: 8),
-                          _buildTwoColumnTable(_getBeforeDetails(data)),
+              leading: IconButton(
+                icon: const Icon(
+                  Icons.close,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ),
+            body: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: ListView.builder(
+                itemCount: viewModel.workDetails.length,
+                itemBuilder: (context, index) {
+                  final data = viewModel.workDetails[index];
+                  return data == null
+                      ? const Center(child: Text("Please try again"))
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Before Details
+                            const SizedBox(height: 10),
+                            const Text('MAINTENANCE DETAILS',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 16)),
+                            const SizedBox(height: 8),
+                            _buildTwoColumnTable(_getBeforeDetails(data)),
 
-                          const SizedBox(height: 20),
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(12),
-                            color: Colors.grey.shade300,
-                            child: const Text(
-                             'NOW PROPOSED DETAILS',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
+                            const SizedBox(height: 20),
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(12),
+                              color: Colors.grey.shade300,
+                              child: const Text(
+                                'NOW PROPOSED DETAILS',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
                               ),
                             ),
-                          ),
-                          const SizedBox(height: 11),
+                            const SizedBox(height: 11),
 
-                          const Text(
-                            'BEFORE WORK DETAILS',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
-                          Container(
-                            width: double.infinity,
-                            height: 200,
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey),
-                              borderRadius: BorderRadius.circular(8),
+                            const Text(
+                              'BEFORE WORK DETAILS',
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
                             ),
-                            child: Image.network(
-                              data.beforeImageUrl != null
-                                  ? data.beforeImageUrl!
-                                  : 'https://example.com/placeholder.jpg',
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return const Center(
-                                  child: Icon(Icons.broken_image, color: Colors.grey, size: 50),
-                                );
-                              },
+                            Container(
+                              width: double.infinity,
+                              height: 200,
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Image.network(
+                                data.beforeImageUrl != null
+                                    ? data.beforeImageUrl!
+                                    : 'https://example.com/placeholder.jpg',
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return const Center(
+                                    child: Icon(Icons.broken_image,
+                                        color: Colors.grey, size: 50),
+                                  );
+                                },
+                              ),
                             ),
-                          ),
 
-                          const SizedBox(height: 10),
-                          const Text(
-                            'BEFORE WORK. PHOTO',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 21),
+                            const SizedBox(height: 10),
+                            const Text(
+                              'BEFORE WORK. PHOTO',
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 21),
 
-                          // Proposed Details
-                         data.status=='PENDING' ?_buildTwoColumnTable(_getPendingProposedDetails(data)):_buildTwoColumnTable(_getProposedDetails(data)),
+                            // Proposed Details
+                            data.status == 'PENDING'
+                                ? _buildTwoColumnTable(
+                                    _getPendingProposedDetails(data))
+                                : _buildTwoColumnTable(
+                                    _getProposedDetails(data)),
 
-                          Visibility(
-                              visible: data.status=="FINISHED",
-                              child:
-                              Column(
-                                children: [
-                                  Container(
-                                    width: double.infinity,
-                                    height: 200,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.grey),
-                                      borderRadius: BorderRadius.circular(8),
+                            Visibility(
+                                visible: data.status == "FINISHED",
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      width: double.infinity,
+                                      height: 200,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.grey),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Image.network(
+                                        data.afterImageUrl != null
+                                            ? data.afterImageUrl!
+                                            : 'https://example.com/placeholder.jpg',
+                                        fit: BoxFit.cover,
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                          return const Center(
+                                            child: Icon(Icons.broken_image,
+                                                color: Colors.grey, size: 50),
+                                          );
+                                        },
+                                      ),
                                     ),
-                                    child: Image.network(
-                                      data.afterImageUrl != null
-                                          ? data.afterImageUrl!
-                                          : 'https://example.com/placeholder.jpg',
-                                      fit: BoxFit.cover,
-                                      errorBuilder: (context, error, stackTrace) {
-                                        return const Center(
-                                          child: Icon(Icons.broken_image, color: Colors.grey, size: 50),
-                                        );
-                                      },
+                                    const SizedBox(
+                                      height: 20,
                                     ),
-                                  ),
-                                  SizedBox(height: 20,),
-                                  _buildTwoColumnTable(_afterUploadDetails(data)),
-                                ],
-                              )
-                          )
-                        ],
-                      );
-                    },
-                  ),
-                ),
-              floatingActionButton:
-                   Visibility(
-                    visible:viewModel.workDetails.any((item) => item.status == "PENDING"),
-                  child:  FloatingActionButton(
-                      onPressed: () {
-                        Navigation.instance.navigateTo(
-                            Routes.viewWorkFloatButtonScreen,args:viewModel.workDetails[0].surveyId.toString() );
-                      },
-                      backgroundColor: Colors.pinkAccent,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                    ),
-                      child: const Icon(Icons.edit),
+                                    _buildTwoColumnTable(
+                                        _afterUploadDetails(data)),
+                                  ],
+                                ))
+                          ],
+                        );
+                },
               ),
             ),
+            floatingActionButton: Visibility(
+              visible:
+                  viewModel.workDetails.any((item) => item.status == "PENDING"),
+              child: FloatingActionButton(
+                onPressed: () {
+                  Navigation.instance.navigateTo(
+                      Routes.viewWorkFloatButtonScreen,
+                      args: viewModel.workDetails[0].surveyId.toString());
+                },
+                backgroundColor: Colors.pinkAccent,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: const Icon(Icons.edit),
+              ),
             ),
-          );
-        }
-        ),
+          ),
+        );
+      }),
     );
   }
 
@@ -173,7 +186,7 @@ class WorkDetailsPage extends StatelessWidget {
       // {'label': 'Survey ID', 'value': work.surveyId.toString()},
       {'label': 'Work Description', 'value': work.workDescription ?? '-'},
       {'label': 'Status', 'value': work.status ?? '-'},
-      {'label': 'SUBSTATION CODE', 'value':  ''},
+      {'label': 'SUBSTATION CODE', 'value': ''},
       {'label': '11KV Feeder Name', 'value': work.feederName ?? '-'},
       {'label': 'DTR SS NO', 'value': '-'},
       // {'label': 'Feeder Code', 'value': work.feederCode ?? '-'},
@@ -189,9 +202,15 @@ class WorkDetailsPage extends StatelessWidget {
   List<Map<String, String>> _getProposedDetails(GisSurveyData work) {
     return [
       {'label': 'Before Latitude', 'value': work.beforeLat?.toString() ?? '-'},
-      {'label': 'Before Longitude', 'value': work.pbeforeLon?.toString() ?? '-'},
+      {
+        'label': 'Before Longitude',
+        'value': work.pbeforeLon?.toString() ?? '-'
+      },
       {'label': 'Uploaded By EMP ID', 'value': work.surveyorId.toString()},
-      {'label': 'Date of Before Marked', 'value': work.dateOfBeforeMarked ?? '-'},
+      {
+        'label': 'Date of Before Marked',
+        'value': work.dateOfBeforeMarked ?? '-'
+      },
       // {'label': 'SAP Upload Flag', 'value': work.sapUploadFlag ?? '-'},
       // {'label': 'Point Voltage', 'value': work.pointVoltage ?? '-'},
     ];
@@ -200,14 +219,20 @@ class WorkDetailsPage extends StatelessWidget {
   List<Map<String, String>> _getPendingProposedDetails(GisSurveyData work) {
     return [
       {'label': 'Before Latitude', 'value': work.beforeLat?.toString() ?? '-'},
-      {'label': 'Before Longitude', 'value': work.pbeforeLon?.toString() ?? '-'},
+      {
+        'label': 'Before Longitude',
+        'value': work.pbeforeLon?.toString() ?? '-'
+      },
       {'label': 'Uploaded By EMP ID', 'value': work.surveyorId.toString()},
       {'label': 'Time of Survey', 'value': work.timeOfSurveyor ?? '-'},
-      {'label': 'Date of Before Marked', 'value': work.dateOfBeforeMarked ?? '-'},
-      {'label': 'FINISHED DATE', 'value':  ''},
-      {'label': 'Remarks', 'value': work.remarksBySurveyor.toString()??'-'},
-      {'label': 'MON/YEAR', 'value': work.monthYear.toString()??''},
-      {'label': 'Village Code', 'value':''},
+      {
+        'label': 'Date of Before Marked',
+        'value': work.dateOfBeforeMarked ?? '-'
+      },
+      {'label': 'FINISHED DATE', 'value': ''},
+      {'label': 'Remarks', 'value': work.remarksBySurveyor.toString() ?? '-'},
+      {'label': 'MON/YEAR', 'value': work.monthYear.toString() ?? ''},
+      {'label': 'Village Code', 'value': ''},
       // {'label': 'SAP Upload Flag', 'value': work.sapUploadFlag ?? '-'},
       // {'label': 'Point Voltage', 'value': work.pointVoltage ?? '-'},
     ];
@@ -217,18 +242,21 @@ class WorkDetailsPage extends StatelessWidget {
     return [
       {'label': 'After Latitude', 'value': work.afterLat?.toString() ?? '-'},
       {'label': 'After Longitude', 'value': work.afterLon?.toString() ?? '-'},
-      {'label': 'Before work Date', 'value': work.dateOfBeforeMarked.toString()},
+      {
+        'label': 'Before work Date',
+        'value': work.dateOfBeforeMarked.toString()
+      },
       {'label': 'After work Date', 'value': work.dateOfAfterMarked.toString()},
-      {'label': 'Remarks', 'value': work.remarksBySurveyor.toString()??''},
-      {'label': 'Purpose', 'value':  ''},
-      {'label': 'Village code', 'value':  ''},
-      {'label': 'Village name', 'value':  ''},
-      {'label': 'Defect Code', 'value':  ''},
+      {'label': 'Remarks', 'value': work.remarksBySurveyor.toString() ?? ''},
+      {'label': 'Purpose', 'value': ''},
+      {'label': 'Village code', 'value': ''},
+      {'label': 'Village name', 'value': ''},
+      {'label': 'Defect Code', 'value': ''},
       {'label': 'Defect ', 'value': ''},
-      {'label': 'EMP code of person present', 'value':  ''},
-      {'label': 'Npdcl emp name', 'value':  ''},
-      {'label': 'Designation', 'value':  ''},
-      {'label': 'Name of Panchayat Person', 'value':  ''},
+      {'label': 'EMP code of person present', 'value': ''},
+      {'label': 'Npdcl emp name', 'value': ''},
+      {'label': 'Designation', 'value': ''},
+      {'label': 'Name of Panchayat Person', 'value': ''},
       {'label': 'Designation of Panchayat person', 'value': ''},
     ];
   }

@@ -16,7 +16,7 @@ import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/model/create_online_card_model.dart';
 
-class OfflineDtrViewmodel extends ChangeNotifier{
+class OfflineDtrViewmodel extends ChangeNotifier {
   OfflineDtrViewmodel({required this.context}) {
     init();
     notifyListeners();
@@ -37,19 +37,19 @@ class OfflineDtrViewmodel extends ChangeNotifier{
 
     _ssnoOffline = List.generate(
       999,
-          (index) => (index + 1).toString().padLeft(3, '0'),
+      (index) => (index + 1).toString().padLeft(3, '0'),
     );
     sapDTRStructCodeOffline.text = "SELECT-SS-0001";
     getMake();
-
   }
 
   final formKey = GlobalKey<FormState>();
-  final TextEditingController sapDTRStructCodeOffline= TextEditingController();
-  final TextEditingController dtrLocatLandMarkOffline= TextEditingController();
-  final TextEditingController serialNoOffline= TextEditingController();
-  final TextEditingController first_time_charged_dateOffline= TextEditingController();
-  final TextEditingController sap_dtrOffline= TextEditingController();
+  final TextEditingController sapDTRStructCodeOffline = TextEditingController();
+  final TextEditingController dtrLocatLandMarkOffline = TextEditingController();
+  final TextEditingController serialNoOffline = TextEditingController();
+  final TextEditingController first_time_charged_dateOffline =
+      TextEditingController();
+  final TextEditingController sap_dtrOffline = TextEditingController();
 
   List<DtrCardData> dtrCardData = [];
 
@@ -61,13 +61,11 @@ class OfflineDtrViewmodel extends ChangeNotifier{
     notifyListeners();
   }
 
-
-
   // 1.Distribution
   String? _selectedDistributionOffline;
   String? get selectedDistributionOffline => _selectedDistributionOffline;
 
-  List<SubstationModel> _distributionsOffline = [];
+  final List<SubstationModel> _distributionsOffline = [];
   List<SubstationModel> get distributionsOffline => _distributionsOffline;
 
   Future<void> getDistributions() async {
@@ -79,8 +77,8 @@ class OfflineDtrViewmodel extends ChangeNotifier{
 
     try {
       final requestData = {
-        "authToken": SharedPreferenceHelper.getStringValue(
-            LoginSdkPrefs.tokenPrefKey),
+        "authToken":
+            SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
         "api": Apis.API_KEY,
       };
 
@@ -129,9 +127,7 @@ class OfflineDtrViewmodel extends ChangeNotifier{
 
       if (jsonList is String) {
         // Clean and parse JSON string
-        String cleanedJson = jsonList
-            .replaceAll(r'\"', '"')
-            .trim();
+        String cleanedJson = jsonList.replaceAll(r'\"', '"').trim();
 
         if (cleanedJson.endsWith(',')) {
           cleanedJson = cleanedJson.substring(0, cleanedJson.length - 1);
@@ -144,11 +140,9 @@ class OfflineDtrViewmodel extends ChangeNotifier{
         dataList = (jsonDecode(cleanedJson) as List)
             .map((json) => SubstationModel.fromJson(json))
             .toList();
-      }
-      else if (jsonList is List) {
-        dataList = jsonList
-            .map((json) => SubstationModel.fromJson(json))
-            .toList();
+      } else if (jsonList is List) {
+        dataList =
+            jsonList.map((json) => SubstationModel.fromJson(json)).toList();
       }
 
       _distributionsOffline.addAll(dataList);
@@ -172,10 +166,10 @@ class OfflineDtrViewmodel extends ChangeNotifier{
   }
 
   //2.SS No
-  String? _selectedSSNoOffline="001";
-  String? get selectedSSNoOffline=> _selectedSSNoOffline;
+  String? _selectedSSNoOffline = "001";
+  String? get selectedSSNoOffline => _selectedSSNoOffline;
 
-  List _ssnoOffline= [];
+  List _ssnoOffline = [];
   List get ssnoOffline => _ssnoOffline;
 
   void onListSSNoSelectedOffline(String? value) {
@@ -184,7 +178,7 @@ class OfflineDtrViewmodel extends ChangeNotifier{
   }
 
   //3.Circle
-  String? _selectedCircleOffline='000';
+  String? _selectedCircleOffline = '000';
   String? get selectedCircleOffline => _selectedCircleOffline;
 
   // List<Option> _circles = [];
@@ -205,7 +199,8 @@ class OfflineDtrViewmodel extends ChangeNotifier{
     Circle("413", "KAMAREDDY"),
     Circle("414", "NIRMAL"),
     Circle("415", "ASIFABAD"),
-    Circle("416", "MANCHERIAL"),];
+    Circle("416", "MANCHERIAL"),
+  ];
   List<Circle> get circleOffline => _circleOffline;
 
   void onListCircleSelectedOffline(String? value) {
@@ -220,7 +215,7 @@ class OfflineDtrViewmodel extends ChangeNotifier{
   String? _selectedStationOffline;
   String? get selectedStation => _selectedStationOffline;
 
-  List<SubstationModel> _stationOffline = [];
+  final List<SubstationModel> _stationOffline = [];
 
   List<SubstationModel> get stationOffline => _stationOffline;
 
@@ -233,8 +228,8 @@ class OfflineDtrViewmodel extends ChangeNotifier{
 
     try {
       final requestData = {
-        "authToken": SharedPreferenceHelper.getStringValue(
-            LoginSdkPrefs.tokenPrefKey),
+        "authToken":
+            SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
         "api": Apis.API_KEY,
         "circleCode": _selectedCircleOffline
       };
@@ -284,9 +279,7 @@ class OfflineDtrViewmodel extends ChangeNotifier{
 
       if (jsonList is String) {
         // Clean and parse JSON string
-        String cleanedJson = jsonList
-            .replaceAll(r'\"', '"')
-            .trim();
+        String cleanedJson = jsonList.replaceAll(r'\"', '"').trim();
 
         if (cleanedJson.endsWith(',')) {
           cleanedJson = cleanedJson.substring(0, cleanedJson.length - 1);
@@ -299,11 +292,9 @@ class OfflineDtrViewmodel extends ChangeNotifier{
         dataList = (jsonDecode(cleanedJson) as List)
             .map((json) => SubstationModel.fromJson(json))
             .toList();
-      }
-      else if (jsonList is List) {
-        dataList = jsonList
-            .map((json) => SubstationModel.fromJson(json))
-            .toList();
+      } else if (jsonList is List) {
+        dataList =
+            jsonList.map((json) => SubstationModel.fromJson(json)).toList();
       }
 
       _stationOffline.addAll(dataList);
@@ -318,10 +309,9 @@ class OfflineDtrViewmodel extends ChangeNotifier{
     }
   }
 
-
   void onListStationSelectedOffline(String? value) {
     _selectedStationOffline = value;
-    _selectedFeederOffline=null;
+    _selectedFeederOffline = null;
     getFeeders();
     notifyListeners();
   }
@@ -343,8 +333,9 @@ class OfflineDtrViewmodel extends ChangeNotifier{
 
     try {
       final requestData = {
-        "authToken": SharedPreferenceHelper.getStringValue(
-            LoginSdkPrefs.tokenPrefKey) ?? "",
+        "authToken":
+            SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ??
+                "",
         "api": Apis.API_KEY,
         "ss": _selectedStationOffline ?? "",
       };
@@ -399,20 +390,22 @@ class OfflineDtrViewmodel extends ChangeNotifier{
         }
         dataList = (jsonDecode(cleanedJson) as List<dynamic>)
             .map((json) =>
-            SubstationModel.fromJson(json as Map<String, dynamic>))
+                SubstationModel.fromJson(json as Map<String, dynamic>))
             .toList();
       } else if (jsonList is List) {
-        dataList = (jsonList as List<dynamic>)
+        dataList = (jsonList)
             .map((json) =>
-            SubstationModel.fromJson(json as Map<String, dynamic>))
+                SubstationModel.fromJson(json as Map<String, dynamic>))
             .toList();
       }
 
-      _feederOffline = dataList.toSet().toList(); // Deduplicate based on optionCode
+      _feederOffline =
+          dataList.toSet().toList(); // Deduplicate based on optionCode
       print(
           "Feeder option codes: ${_feederOffline.map((f) => f.optionCode).toList()}");
       if (_feederOffline.isNotEmpty) {
-        _selectedFeederOffline = _feederOffline.first.optionCode; // Default to first feeder
+        _selectedFeederOffline =
+            _feederOffline.first.optionCode; // Default to first feeder
       }
       print("Successfully loaded ${_feederOffline.length} feeders");
     } catch (e, stackTrace) {
@@ -425,7 +418,6 @@ class OfflineDtrViewmodel extends ChangeNotifier{
     }
   }
 
-
   void onListFeederSelectedOffline(String? value) {
     _selectedFeederOffline = value;
     notifyListeners();
@@ -435,7 +427,8 @@ class OfflineDtrViewmodel extends ChangeNotifier{
   String? _selectedCapacityOffline;
   String? get selectedCapacityOffline => _selectedCapacityOffline;
 
-  final List<SubstationModel> _capacityOffline = [SubstationModel(optionCode: "0", optionName: "SELECT"),
+  final List<SubstationModel> _capacityOffline = [
+    SubstationModel(optionCode: "0", optionName: "SELECT"),
     SubstationModel(optionCode: "1", optionName: "1x10(L)"),
     SubstationModel(optionCode: "1", optionName: "1x10KVA(AGL)"),
     SubstationModel(optionCode: "3", optionName: "1x63+2x15KVA"),
@@ -490,7 +483,8 @@ class OfflineDtrViewmodel extends ChangeNotifier{
 
   void onListCapacitySelectedOffline(int? index) {
     _selectedCapacityIndex = index;
-    _selectedCapacityOffline = index != null ? _capacityOffline[index].optionCode : null;
+    _selectedCapacityOffline =
+        index != null ? _capacityOffline[index].optionCode : null;
     print("$_selectedCapacityOffline: selected Capacity ");
 
     // Reset all DTR Details fields when capacity changes
@@ -500,8 +494,8 @@ class OfflineDtrViewmodel extends ChangeNotifier{
     _selectedPhaseOffline = null;
     _selectedRatioOffline = null;
     _selectedTypeOfMeterOffline = null;
-    first_time_charged_dateOffline.text="";
-    serialNoOffline.text="";
+    first_time_charged_dateOffline.text = "";
+    serialNoOffline.text = "";
 
     notifyListeners();
   }
@@ -510,7 +504,7 @@ class OfflineDtrViewmodel extends ChangeNotifier{
   String? _selectedDTRTypeOffline;
   String? get selectedDTRTypeOffline => _selectedDTRTypeOffline;
 
-  List _dTRtypeOffline = ["SELECT", "Single Pole", "Double Pole"];
+  final List _dTRtypeOffline = ["SELECT", "Single Pole", "Double Pole"];
   List get dTRtypeOffline => _dTRtypeOffline;
 
   void onListDTRTypeSelectedOffline(String? value) {
@@ -522,12 +516,14 @@ class OfflineDtrViewmodel extends ChangeNotifier{
   String? _selectedPlintTypeOffline;
   String? get selectedPlintTypeOffline => _selectedPlintTypeOffline;
 
-  List _plintTypeOffline= ["Select",
+  final List _plintTypeOffline = [
+    "Select",
     "Mounting Arrangements",
     "Rings",
     "Rock Plinth",
-    "Pillar Type"];
-  List get plintTypeOffline=> _plintTypeOffline;
+    "Pillar Type"
+  ];
+  List get plintTypeOffline => _plintTypeOffline;
 
   void onListPlintTypeSelectedOffline(String? value) {
     _selectedPlintTypeOffline = value;
@@ -538,7 +534,12 @@ class OfflineDtrViewmodel extends ChangeNotifier{
   String? _selectedABSwitchOffline;
   String? get selectedABSwitchOffline => _selectedABSwitchOffline;
 
-  List _aBSwitchOffline = ["Select", "Horizontal", "Vertical", "Not Available"];
+  final List _aBSwitchOffline = [
+    "Select",
+    "Horizontal",
+    "Vertical",
+    "Not Available"
+  ];
   List get aBSwitchOffline => _aBSwitchOffline;
 
   void onListABSwitchSelectedOffline(String? value) {
@@ -550,7 +551,12 @@ class OfflineDtrViewmodel extends ChangeNotifier{
   String? _selectedHGFuseOffline;
   String? get selectedHGFuseOffline => _selectedHGFuseOffline;
 
-  List _hGFuseOffline = ["Select", "Horizontal", "Vertical", "Not Available"];
+  final List _hGFuseOffline = [
+    "Select",
+    "Horizontal",
+    "Vertical",
+    "Not Available"
+  ];
   List get hGFuseOffline => _hGFuseOffline;
 
   void onListHGFuseSelectedOffline(String? value) {
@@ -562,7 +568,12 @@ class OfflineDtrViewmodel extends ChangeNotifier{
   String? _selectedLTFuseSetOffline;
   String? get selectedLTFuseSetOffline => _selectedLTFuseSetOffline;
 
-  List _lTFuseSetOffline = ["Select", "Available and OK", "Available but Parallel", "Not Available"];
+  final List _lTFuseSetOffline = [
+    "Select",
+    "Available and OK",
+    "Available but Parallel",
+    "Not Available"
+  ];
   List get lTFuseSetOffline => _lTFuseSetOffline;
 
   void onListLTFuseSelectedOffline(String? value) {
@@ -574,7 +585,12 @@ class OfflineDtrViewmodel extends ChangeNotifier{
   String? _selectedLTFuseTypeOffline;
   String? get selectedLTFuseTypeOffline => _selectedLTFuseTypeOffline;
 
-  List _lTTypeOffline = ["Select", "Not Available", "Distribution Box", "LT Fuse Set"];
+  final List _lTTypeOffline = [
+    "Select",
+    "Not Available",
+    "Distribution Box",
+    "LT Fuse Set"
+  ];
   List get lTTypeOffline => _lTTypeOffline;
 
   void onListLTFuseTypeSelectedOffline(String? value) {
@@ -586,7 +602,8 @@ class OfflineDtrViewmodel extends ChangeNotifier{
   String? _selectedLoadPatternOffline;
   String? get selectedLoadPatternOffline => _selectedLoadPatternOffline;
 
-  List _loadPatternOffline = [ "Select",
+  final List _loadPatternOffline = [
+    "Select",
     "Idle",
     "Dedicated PWS",
     "Dedicated LI",
@@ -601,11 +618,12 @@ class OfflineDtrViewmodel extends ChangeNotifier{
     "Pure Domestic",
     "Pure Non Domestic",
     "Mixed without AGL",
-    "Substation DTR "];
+    "Substation DTR "
+  ];
   List get loadPatternOffline => _loadPatternOffline;
 
   void onListLoadPatternSelectedOffline(String? value) {
-    _selectedLoadPatternOffline= value;
+    _selectedLoadPatternOffline = value;
     notifyListeners();
   }
 
@@ -627,7 +645,9 @@ class OfflineDtrViewmodel extends ChangeNotifier{
 
     try {
       final requestData = {
-        "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ?? "",
+        "authToken":
+            SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ??
+                "",
         "api": Apis.API_KEY,
       };
 
@@ -650,8 +670,10 @@ class OfflineDtrViewmodel extends ChangeNotifier{
         responseData = jsonDecode(responseData);
       }
 
-      if (response.statusCode != 200) { // Use a constant for success code
-        throw Exception(responseData['message'] ?? "Request failed with status ${response.statusCode}");
+      if (response.statusCode != 200) {
+        // Use a constant for success code
+        throw Exception(responseData['message'] ??
+            "Request failed with status ${response.statusCode}");
       }
 
       if (responseData['tokenValid'] != true) {
@@ -671,11 +693,13 @@ class OfflineDtrViewmodel extends ChangeNotifier{
       List<SubstationModel> dataList;
       if (jsonList is List) {
         dataList = jsonList
-            .map((json) => SubstationModel.fromJson(json as Map<String, dynamic>))
+            .map((json) =>
+                SubstationModel.fromJson(json as Map<String, dynamic>))
             .toList();
       } else if (jsonList is String) {
         dataList = (jsonDecode(jsonList) as List<dynamic>)
-            .map((json) => SubstationModel.fromJson(json as Map<String, dynamic>))
+            .map((json) =>
+                SubstationModel.fromJson(json as Map<String, dynamic>))
             .toList();
       } else {
         throw Exception("Invalid objectJson format");
@@ -683,10 +707,12 @@ class OfflineDtrViewmodel extends ChangeNotifier{
 
       // Deduplicate based on optionCode
       _makeOffline = dataList.toSet().toList();
-      print("Make option codes: ${_makeOffline.map((f) => f.optionCode).toList()}");
+      print(
+          "Make option codes: ${_makeOffline.map((f) => f.optionCode).toList()}");
 
       if (_makeOffline.isNotEmpty) {
-        _selectedMakeOffline = _makeOffline.first.optionCode; // Default to first item
+        _selectedMakeOffline =
+            _makeOffline.first.optionCode; // Default to first item
       }
       print("Successfully loaded ${_makeOffline.length} makes");
     } catch (e, stackTrace) {
@@ -701,7 +727,7 @@ class OfflineDtrViewmodel extends ChangeNotifier{
   }
 
   void onListMakeOffline(String? value) {
-    _selectedMakeOffline= value;
+    _selectedMakeOffline = value;
     notifyListeners();
   }
 
@@ -709,34 +735,36 @@ class OfflineDtrViewmodel extends ChangeNotifier{
   String? _selectedDtrCapacityOffline;
   String? get selectedDtrCapacityOffline => _selectedDtrCapacityOffline;
 
-  List _dtrCapacityOffline = ["Select",
-  "2500KVA",
-  "2000KVA",
-  "1600KVA",
-  "1000KVA",
-  "800KVA",
-  "500KVA",
-  "400KVA",
-  "315KVA",
-  "250KVA",
-  "200KVA",
-  "160KVA",
-  "100KVA",
-  "75KVA",
-  "63KVA",
-  "50KVA",
-  "40KVA",
-  "3.Ph.25KVA",
-  "3.Ph.16KVA",
-  "S.Ph.25KVA",
-  "15KVALTN",
-  "15KVAAGL",
-  "10KVALTN",
-  "10KVAAGL"];
+  final List _dtrCapacityOffline = [
+    "Select",
+    "2500KVA",
+    "2000KVA",
+    "1600KVA",
+    "1000KVA",
+    "800KVA",
+    "500KVA",
+    "400KVA",
+    "315KVA",
+    "250KVA",
+    "200KVA",
+    "160KVA",
+    "100KVA",
+    "75KVA",
+    "63KVA",
+    "50KVA",
+    "40KVA",
+    "3.Ph.25KVA",
+    "3.Ph.16KVA",
+    "S.Ph.25KVA",
+    "15KVALTN",
+    "15KVAAGL",
+    "10KVALTN",
+    "10KVAAGL"
+  ];
   List get dtrCapacity => _dtrCapacityOffline;
 
   void onListDtrCapacityOffline(String? value) {
-    _selectedDtrCapacityOffline= value;
+    _selectedDtrCapacityOffline = value;
     notifyListeners();
   }
 
@@ -750,13 +778,13 @@ class OfflineDtrViewmodel extends ChangeNotifier{
   void generateYearOfMfgList() {
     _yearOfMfgOffline = List.generate(
       DateTime.now().year - 1952 + 1,
-          (index) => (1952 + index).toString(),
+      (index) => (1952 + index).toString(),
     );
     notifyListeners();
   }
 
   void onListYearOfMfgOffline(String? value) {
-    _selectedYearOfMfgOffline= value;
+    _selectedYearOfMfgOffline = value;
     notifyListeners();
   }
 
@@ -764,11 +792,11 @@ class OfflineDtrViewmodel extends ChangeNotifier{
   String? _selectedPhaseOffline;
   String? get selectedPhaseOffline => _selectedPhaseOffline;
 
-  List _phaseOffline = ["Select","Single Phase","3-Phase"];
+  final List _phaseOffline = ["Select", "Single Phase", "3-Phase"];
   List get phase => _phaseOffline;
 
   void onListPhaseOffline(String? value) {
-    _selectedPhaseOffline= value;
+    _selectedPhaseOffline = value;
     notifyListeners();
   }
 
@@ -776,11 +804,11 @@ class OfflineDtrViewmodel extends ChangeNotifier{
   String? _selectedRatioOffline;
   String? get selectedRatioOffline => _selectedRatioOffline;
 
-  List _ratioOffline = ["Select","6.6KV/240V","11KV/440V"];
+  final List _ratioOffline = ["Select", "6.6KV/240V", "11KV/440V"];
   List get ratio => _ratioOffline;
 
   void onListRatioOffline(String? value) {
-    _selectedRatioOffline= value;
+    _selectedRatioOffline = value;
     notifyListeners();
   }
 
@@ -788,11 +816,18 @@ class OfflineDtrViewmodel extends ChangeNotifier{
   String? _selectedTypeOfMeterOffline;
   String? get selectedTypeOfMeterOffline => _selectedTypeOfMeterOffline;
 
-  List _typeOfMeterOffline = ["Select","Not Available","1Ph Meter","3Ph Meter","CT Meter","HT Meter"];
+  final List _typeOfMeterOffline = [
+    "Select",
+    "Not Available",
+    "1Ph Meter",
+    "3Ph Meter",
+    "CT Meter",
+    "HT Meter"
+  ];
   List get typeOfMeter => _typeOfMeterOffline;
 
   void onListTypeOfMeterOffline(String? value) {
-    _selectedTypeOfMeterOffline= value;
+    _selectedTypeOfMeterOffline = value;
     notifyListeners();
   }
 
@@ -826,7 +861,8 @@ class OfflineDtrViewmodel extends ChangeNotifier{
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Camera permission permanently denied. Please enable it in settings.'),
+            content: const Text(
+                'Camera permission permanently denied. Please enable it in settings.'),
             action: SnackBarAction(
               label: 'Settings',
               onPressed: () async {
@@ -858,7 +894,6 @@ class OfflineDtrViewmodel extends ChangeNotifier{
       }
     }
   }
-
 
   ///Loaction of DTR -> SPM and Store
   ///physical location of DTR
@@ -910,19 +945,20 @@ class OfflineDtrViewmodel extends ChangeNotifier{
   ];
 
   List<String> get listPhysicalLocation {
-    return _selectedFilterOffline == "SPM" ? _physicalLocationSPM : _physicalLocationOther;
+    return _selectedFilterOffline == "SPM"
+        ? _physicalLocationSPM
+        : _physicalLocationOther;
   }
-
 
   void onListPhysicalLocation(String? value) {
     _physicalLocation = value;
     notifyListeners();
   }
 
-    // void onListPhysicalLocation(String? value) {
-    //   physical_loctaion = value;
-    //   notifyListeners();
-    // }
+  // void onListPhysicalLocation(String? value) {
+  //   physical_loctaion = value;
+  //   notifyListeners();
+  // }
 
   Future<void> getCurrentLocation() async {
     try {
@@ -930,7 +966,8 @@ class OfflineDtrViewmodel extends ChangeNotifier{
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {
-          AlertUtils.showSnackBar(context, "Location permission denied", isTrue);
+          AlertUtils.showSnackBar(
+              context, "Location permission denied", isTrue);
           return;
         }
       }
@@ -965,8 +1002,9 @@ class OfflineDtrViewmodel extends ChangeNotifier{
 
     try {
       final requestData = {
-        "authToken": SharedPreferenceHelper.getStringValue(
-            LoginSdkPrefs.tokenPrefKey) ?? "",
+        "authToken":
+            SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey) ??
+                "",
         "api": Apis.API_KEY,
       };
 
@@ -1020,7 +1058,6 @@ class OfflineDtrViewmodel extends ChangeNotifier{
       notifyListeners();
     }
   }
-
 }
 
 

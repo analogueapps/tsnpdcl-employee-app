@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
@@ -70,8 +69,8 @@ class ReportsView extends StatelessWidget {
                                       ],
                                     ),
                                     onTap: () {
-                                      viewModel.pickDateFromDateTimePicker(
-                                          context);
+                                      viewModel
+                                          .pickDateFromDateTimePicker(context);
                                     },
                                   ),
                                   const SizedBox(

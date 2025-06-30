@@ -10,7 +10,6 @@ import 'package:tsnpdcl_employee/utils/global_constants.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/model/dtr_feedet_distribution_model.dart';
 import 'package:tsnpdcl_employee/view/failure_dtr_inspection/viewmodel/dtr_inspection_viewmodel.dart';
 
-
 class ReportedDTRFailure extends StatelessWidget {
   static const id = Routes.failureDTRsInspectionScreen;
 
@@ -28,219 +27,217 @@ class ReportedDTRFailure extends StatelessWidget {
               title: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(GlobalConstants.reportDtrFailure.toUpperCase(),
+                    Text(
+                      GlobalConstants.reportDtrFailure.toUpperCase(),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: toolbarTitleSize,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    Text(viewModel.section, style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: doubleFifteen,
-                      fontWeight: FontWeight.w400,
-                    ),),
-                  ]
-              ),
+                    Text(
+                      viewModel.section,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: doubleFifteen,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ]),
               iconTheme: const IconThemeData(color: Colors.white),
             ),
-            body: Stack(
-                children: [
-                  SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Form(
-                        key: viewModel.formKey,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            DropdownButtonFormField<String>(
-                              value: viewModel.section,
-                              decoration: InputDecoration(
-                                labelText: "Select Section",
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 16),
-                              ),
-                              items: viewModel.section != null
-                                  ? [
-                                DropdownMenuItem<String>(
-                                  value: viewModel.section,
-                                  child: Text(viewModel.section,
-                                    style: const TextStyle(
-                                        fontSize: doubleFourteen),),
-                                ),
-                              ]
-                                  : [
-                                const DropdownMenuItem<String>(
-                                  value: null,
-                                  child: Text("No section selected"),
-                                ),
-                              ],
-                              onChanged: null,
-                              disabledHint:
-                              Text(viewModel.section ?? "No section selected"),
+            body: Stack(children: [
+              SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Form(
+                    key: viewModel.formKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        DropdownButtonFormField<String>(
+                          value: viewModel.section,
+                          decoration: InputDecoration(
+                            labelText: "Select Section",
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
                             ),
-                            Align(
-                                alignment: Alignment.topLeft,
-                                child: Text(
-                                  "${viewModel.section} | ${viewModel
-                                      .sectionCode}",
-                                  style: TextStyle(color: Colors.green),
-                                )),
-
-                            const SizedBox(height: 20),
-                            Text(
-                              'SELECT FAILED STRUCTURE CODE',
-                              style: TextStyle(color: Colors.red[800]),
-                            ),
-                            GestureDetector(
-                              onTap: viewModel.structures.isEmpty
-                                  ? null
-                                  : () =>
-                                  _showStructuresDialog(context, viewModel),
-                              child: Container(
-                                width: double.infinity,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 16),
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.grey),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment
-                                      .spaceBetween,
-                                  children: [
-                                    Text(
-                                      viewModel.selectedStructureId ??
-                                          "Select Structure Code",
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 16),
+                          ),
+                          items: viewModel.section != null
+                              ? [
+                                  DropdownMenuItem<String>(
+                                    value: viewModel.section,
+                                    child: Text(
+                                      viewModel.section,
                                       style: const TextStyle(
                                           fontSize: doubleFourteen),
-                                      overflow: TextOverflow
-                                          .ellipsis, // Added to prevent overflow
                                     ),
-                                    const Icon(Icons.arrow_drop_down),
-                                  ],
-                                ),
-                              ),
+                                  ),
+                                ]
+                              : [
+                                  const DropdownMenuItem<String>(
+                                    value: null,
+                                    child: Text("No section selected"),
+                                  ),
+                                ],
+                          onChanged: null,
+                          disabledHint:
+                              Text(viewModel.section ?? "No section selected"),
+                        ),
+                        Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              "${viewModel.section} | ${viewModel.sectionCode}",
+                              style: const TextStyle(color: Colors.green),
+                            )),
+                        const SizedBox(height: 20),
+                        Text(
+                          'SELECT FAILED STRUCTURE CODE',
+                          style: TextStyle(color: Colors.red[800]),
+                        ),
+                        GestureDetector(
+                          onTap: viewModel.structures.isEmpty
+                              ? null
+                              : () => _showStructuresDialog(context, viewModel),
+                          child: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 16),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(8),
                             ),
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                viewModel.selectedStructureId ?? "",
-                                style: const TextStyle(color: Colors.green),
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                             Text(
-                              'SELECT FAILED EQUIPMENT CODE',
-                              style: TextStyle(color: Colors.red[800]),
-                            ),
-                            DropdownButtonFormField<String>(
-                              value: viewModel.failedEquipmentCode,
-                              items: viewModel.failedEquipmentList.map((code) {
-                                return DropdownMenuItem<String>(
-                                  value: code,
-                                  child: Text(code),
-                                );
-                              }).toList(),
-                              onChanged: (value) {
-                                viewModel.setFailedEquipmentCode(value);
-                              },
-                              decoration: const InputDecoration(
-                                border: InputBorder.none,
-                              ),
-                              hint: const Text('Select Equipment Code'),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please select equipment code';
-                                }
-                                return null;
-                              },
-                            ),
-                              const  SizedBox(height: 380),
-                             Text(
-                              'ESTIMATE REQUIRED?',
-                              style: TextStyle(color: Colors.red[800],
-                                  fontWeight: FontWeight.w400),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Row(
-                                  children: [
-                                    Checkbox(
-                                      value: viewModel.estimateRequired ==
-                                          "Yes",
-                                      onChanged: (bool? value) {
-                                        viewModel.toggleEstimateRequired("Yes");
-                                      },
-                                    ),
-                                    const SizedBox(width: 5),
-                                    const Text('Yes'),
-                                  ],
+                                Text(
+                                  viewModel.selectedStructureId ??
+                                      "Select Structure Code",
+                                  style:
+                                      const TextStyle(fontSize: doubleFourteen),
+                                  overflow: TextOverflow
+                                      .ellipsis, // Added to prevent overflow
                                 ),
-                                const SizedBox(width: 20),
-                                Row(
-                                  children: [
-                                    Checkbox(
-                                      value: viewModel.estimateRequired == "No",
-                                      onChanged: (bool? value) {
-                                        viewModel.toggleEstimateRequired("No");
-                                      },
-                                    ),
-                                    const SizedBox(width: 5),
-                                    const Text('No'),
-                                  ],
-                                ),
+                                const Icon(Icons.arrow_drop_down),
                               ],
                             ),
-                            const Divider(thickness: 1, color: Colors.grey),
-                            SizedBox(
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.blue,
-                                  foregroundColor: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            viewModel.selectedStructureId ?? "",
+                            style: const TextStyle(color: Colors.green),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        Text(
+                          'SELECT FAILED EQUIPMENT CODE',
+                          style: TextStyle(color: Colors.red[800]),
+                        ),
+                        DropdownButtonFormField<String>(
+                          value: viewModel.failedEquipmentCode,
+                          items: viewModel.failedEquipmentList.map((code) {
+                            return DropdownMenuItem<String>(
+                              value: code,
+                              child: Text(code),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            viewModel.setFailedEquipmentCode(value);
+                          },
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                          ),
+                          hint: const Text('Select Equipment Code'),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please select equipment code';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 380),
+                        Text(
+                          'ESTIMATE REQUIRED?',
+                          style: TextStyle(
+                              color: Colors.red[800],
+                              fontWeight: FontWeight.w400),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Row(
+                              children: [
+                                Checkbox(
+                                  value: viewModel.estimateRequired == "Yes",
+                                  onChanged: (bool? value) {
+                                    viewModel.toggleEstimateRequired("Yes");
+                                  },
                                 ),
-                                onPressed: viewModel.save,
-                                child: const Text('SAVE'),
-                              ),
+                                const SizedBox(width: 5),
+                                const Text('Yes'),
+                              ],
+                            ),
+                            const SizedBox(width: 20),
+                            Row(
+                              children: [
+                                Checkbox(
+                                  value: viewModel.estimateRequired == "No",
+                                  onChanged: (bool? value) {
+                                    viewModel.toggleEstimateRequired("No");
+                                  },
+                                ),
+                                const SizedBox(width: 5),
+                                const Text('No'),
+                              ],
                             ),
                           ],
                         ),
-                      ),
+                        const Divider(thickness: 1, color: Colors.grey),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue,
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                            ),
+                            onPressed: viewModel.save,
+                            child: const Text('SAVE'),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  if (viewModel.isLoading ||
-                      viewModel.isLoadingStructureDetails ||
-                      viewModel.isLoadingStructures)
-                    Positioned.fill(
-                      child: Container(
-                        color: Colors.black.withOpacity(0.3),
-                        // Semi-transparent overlay
-                        child: const Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      ),
+                ),
+              ),
+              if (viewModel.isLoading ||
+                  viewModel.isLoadingStructureDetails ||
+                  viewModel.isLoadingStructures)
+                Positioned.fill(
+                  child: Container(
+                    color: Colors.black.withOpacity(0.3),
+                    // Semi-transparent overlay
+                    child: const Center(
+                      child: CircularProgressIndicator(),
                     ),
-                ]
-            ),
+                  ),
+                ),
+            ]),
           );
         },
       ),
     );
   }
 
-
-  void _showStructuresDialog(BuildContext context,
-      RepeatedDTRFailureViewModel viewModel) {
+  void _showStructuresDialog(
+      BuildContext context, RepeatedDTRFailureViewModel viewModel) {
     final TextEditingController searchController = TextEditingController();
     String searchQuery = '';
 
@@ -277,15 +274,13 @@ class ReportedDTRFailure extends StatelessWidget {
                       child: ListView.builder(
                         shrinkWrap: true,
                         itemCount: viewModel.structures
-                            .where((item) =>
-                            item.optionName!
+                            .where((item) => item.optionName
                                 .toLowerCase()
                                 .contains(searchQuery))
                             .length,
                         itemBuilder: (context, index) {
                           final filteredItems = viewModel.structures
-                              .where((item) =>
-                              item.optionName!
+                              .where((item) => item.optionName
                                   .toLowerCase()
                                   .contains(searchQuery))
                               .toList();
@@ -296,7 +291,7 @@ class ReportedDTRFailure extends StatelessWidget {
                                 filteredItems[index].optionName ?? '',
                                 style: const TextStyle(fontSize: doubleEleven),
                                 overflow:
-                                TextOverflow.ellipsis, // Handle long text
+                                    TextOverflow.ellipsis, // Handle long text
                               ),
                             ),
                             onTap: () {

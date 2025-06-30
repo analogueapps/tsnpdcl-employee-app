@@ -20,7 +20,10 @@ class PendingListFloatingButtonViewmodel extends ChangeNotifier {
   final int surId;
   final String individualStatus;
 
-  PendingListFloatingButtonViewmodel({required this.context, required this.surId, required this.individualStatus});
+  PendingListFloatingButtonViewmodel(
+      {required this.context,
+      required this.surId,
+      required this.individualStatus});
 
   void initialize() {
     _handleLocationIconClick();
@@ -34,7 +37,6 @@ class PendingListFloatingButtonViewmodel extends ChangeNotifier {
 
   String? _latitude;
   String? _longitude;
-
 
   // Cleanup
   @override
@@ -55,7 +57,8 @@ class PendingListFloatingButtonViewmodel extends ChangeNotifier {
             onWillPop: () async => false,
             child: AlertDialog(
               title: const Text("Location Service Disabled"),
-              content: const Text("Please enable location services to use this feature."),
+              content: const Text(
+                  "Please enable location services to use this feature."),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
@@ -112,7 +115,8 @@ class PendingListFloatingButtonViewmodel extends ChangeNotifier {
       }
     }
 
-    if (permission != LocationPermission.whileInUse && permission != LocationPermission.always) {
+    if (permission != LocationPermission.whileInUse &&
+        permission != LocationPermission.always) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Location permissions are still denied.")),
       );
@@ -136,9 +140,8 @@ class PendingListFloatingButtonViewmodel extends ChangeNotifier {
     }
   }
 
-
   // Photo-related state
-  String _middlePhotoPath="";
+  String _middlePhotoPath = "";
   String get middlePhotoPath => _middlePhotoPath;
   final ImageUploader _middlePoleImageUploader = ImageUploader();
 
@@ -154,7 +157,8 @@ class PendingListFloatingButtonViewmodel extends ChangeNotifier {
                 ? 'Camera permission permanently denied. Enable in settings.'
                 : 'Camera permission denied'),
             action: status.isPermanentlyDenied
-                ? SnackBarAction(label: 'Settings', onPressed: openAppSettings)
+                ? const SnackBarAction(
+                    label: 'Settings', onPressed: openAppSettings)
                 : null,
           ),
         );
@@ -178,17 +182,17 @@ class PendingListFloatingButtonViewmodel extends ChangeNotifier {
       }
 
       // Upload photo if captured
-      ProcessDialogHelper.showProcessDialog(context, message: "Uploading images...");
+      ProcessDialogHelper.showProcessDialog(context,
+          message: "Uploading images...");
       notifyListeners();
-      final imageUrl = await _middlePoleImageUploader.uploadImage(context, File(photo.path));
+      final imageUrl =
+          await _middlePoleImageUploader.uploadImage(context, File(photo.path));
       print("view workfloating $imageUrl");
       if (imageUrl != null) {
-        _middlePhotoPath=imageUrl;
-        if(_middlePhotoPath!=null) {
-          middlePoleLatController.text = _latitude!;
-          middlePoleLanController.text = _longitude!;
-          notifyListeners();
-        }
+        _middlePhotoPath = imageUrl;
+        middlePoleLatController.text = _latitude!;
+        middlePoleLanController.text = _longitude!;
+        notifyListeners();
         notifyListeners();
         print("Image uploaded successfully: $imageUrl");
         await _getCurrentLocation();
@@ -214,21 +218,22 @@ class PendingListFloatingButtonViewmodel extends ChangeNotifier {
       _getCurrentLocation();
       if (!validateForm()) {
         return;
-      }else{
+      } else {
         submitData();
         print("in else block");
       }
     }
   }
+
   bool validateForm() {
-    if (_middlePhotoPath==null||_middlePhotoPath=="") {
-      AlertUtils.showSnackBar(
-          context, "Please capture the image",
-          isTrue);
+    if (_middlePhotoPath == "") {
+      AlertUtils.showSnackBar(context, "Please capture the image", isTrue);
       return false;
     }
-    if ((_latitude==''||_latitude==null)&&(_longitude==''||_longitude==null)) {
-      AlertUtils.showSnackBar(context, "Please wait until we capture your location", isTrue);
+    if ((_latitude == '' || _latitude == null) &&
+        (_longitude == '' || _longitude == null)) {
+      AlertUtils.showSnackBar(
+          context, "Please wait until we capture your location", isTrue);
       return false;
     }
     return true;
@@ -236,22 +241,21 @@ class PendingListFloatingButtonViewmodel extends ChangeNotifier {
 
   Map<String, dynamic> viewWorkData() {
     return {
-      "middlePoleLat":middlePoleLatController.text,
+      "middlePoleLat": middlePoleLatController.text,
       "middlePoleLon": middlePoleLanController.text,
       "middlePoleImageUrl": middlePhotoPath,
-      "_id":surId,
+      "_id": surId,
     };
   }
 
   Future<void> submitData() async {
     print("${jsonEncode(viewWorkData())}:JsoonEncode data");
 
-
     final requestData = {
       "authToken":
-      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
-      "updateDataJson":jsonEncode(viewWorkData()),
+      "updateDataJson": jsonEncode(viewWorkData()),
     };
 
     final payload = {
@@ -274,10 +278,9 @@ class PendingListFloatingButtonViewmodel extends ChangeNotifier {
             if (responseData['tokenValid'] == true) {
               if (responseData['success'] == true) {
                 if (responseData['message'] != null) {
-                  showSuccessDialog(context,responseData['message'] , () {
+                  showSuccessDialog(context, responseData['message'], () {
                     Navigator.pop(context);
                   });
-
                 }
               } else {
                 showAlertDialog(

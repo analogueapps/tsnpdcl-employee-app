@@ -6,13 +6,11 @@ import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
 import 'package:tsnpdcl_employee/dialogs/process_dialog.dart';
 import 'package:tsnpdcl_employee/network/api_provider.dart';
 import 'package:tsnpdcl_employee/network/api_urls.dart';
-import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/alerts.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
-import 'package:tsnpdcl_employee/view/auth/model/npdcl_user.dart';
 
 class ChangePassViewmodel extends ChangeNotifier {
   // Current View Context
@@ -75,7 +73,8 @@ class ChangePassViewmodel extends ChangeNotifier {
         "data": jsonEncode(requestData),
       };
 
-      var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.AUTH_URL, payload);
+      var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+          .postApiCall(context, Apis.AUTH_URL, payload);
       if (context.mounted) {
         ProcessDialogHelper.closeDialog(context);
       }
@@ -86,9 +85,11 @@ class ChangePassViewmodel extends ChangeNotifier {
           }
           if (response.statusCode == successResponseCode) {
             if (response.data['success'] == isTrue) {
-              if(response.data['objectJson'] != null) {
-                final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
-                AlertUtils.showSnackBar(context, response.data['message'], isFalse);
+              if (response.data['objectJson'] != null) {
+                final List<dynamic> jsonList =
+                    jsonDecode(response.data['objectJson']);
+                AlertUtils.showSnackBar(
+                    context, response.data['message'], isFalse);
 
                 var argument = {
                   'phone': jsonList[0],
@@ -96,17 +97,18 @@ class ChangePassViewmodel extends ChangeNotifier {
                   'mode': 2,
                 };
 
-                Navigation.instance.navigateTo(Routes.otpVerificationScreen, args: argument);
+                Navigation.instance
+                    .navigateTo(Routes.otpVerificationScreen, args: argument);
               }
             } else {
-              showAlertDialog(context,response.data['message']);
+              showAlertDialog(context, response.data['message']);
             }
           } else {
-            showAlertDialog(context,response.data['message']);
+            showAlertDialog(context, response.data['message']);
           }
         }
       } catch (e) {
-        showErrorDialog(context,  "An error occurred. Please try again.");
+        showErrorDialog(context, "An error occurred. Please try again.");
         rethrow;
       }
 
@@ -118,17 +120,17 @@ class ChangePassViewmodel extends ChangeNotifier {
 
   void handleEmpValidationErrors() {
     if (empIdController.text.isEmpty && empPassController.text.isEmpty) {
-      showAlertDialog(context,"Please enter valid employee ID and password");
+      showAlertDialog(context, "Please enter valid employee ID and password");
     } else if (empIdController.text.length < 5) {
-      showAlertDialog(context,"Please enter a valid employee ID");
+      showAlertDialog(context, "Please enter a valid employee ID");
     } else if (empPassController.text.isEmpty) {
-      showAlertDialog(context,"Password cannot be left blank");
-    } else if(empConPassController.text.isEmpty) {
-      showAlertDialog(context,"Confirm Password cannot be left blank");
-    } else if(empConPassController.text != empPassController.text) {
-      showAlertDialog(context,"Password does not match");
+      showAlertDialog(context, "Password cannot be left blank");
+    } else if (empConPassController.text.isEmpty) {
+      showAlertDialog(context, "Confirm Password cannot be left blank");
+    } else if (empConPassController.text != empPassController.text) {
+      showAlertDialog(context, "Password does not match");
     } else {
-      showAlertDialog(context,"Check all fields");
+      showAlertDialog(context, "Check all fields");
     }
   }
 }

@@ -15,18 +15,19 @@ import '../model/saidi_saifi_model.dart';
 class SaidiSaifiCalculatorViewmodel extends ChangeNotifier {
   SaidiSaifiCalculatorViewmodel({required this.context});
   final BuildContext context;
-  final sectionCode = SharedPreferenceHelper.getStringValue(LoginSdkPrefs.sectionCodePrefKey);
-  final circleCode = SharedPreferenceHelper.getStringValue(LoginSdkPrefs.circleIdPrefKey);
+  final sectionCode =
+      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.sectionCodePrefKey);
+  final circleCode =
+      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.circleIdPrefKey);
   Map<String, dynamic>? _selectedMonthYear;
 
-
   List<SpinnerList> listSubStationItem = [];
-  String listSubStationSelect="";
-  String listSubStationSelectName="";
+  String listSubStationSelect = "";
+  String listSubStationSelectName = "";
   void onListSubStationItemSelect(String value, String value2) {
-    listSubStationSelect= value;
-    listSubStationSelectName=value2;
-    if(listSubStationSelect!=""|| listSubStationSelect!.isNotEmpty) {
+    listSubStationSelect = value;
+    listSubStationSelectName = value2;
+    if (listSubStationSelect != "" || listSubStationSelect.isNotEmpty) {
       loadFeedersForSaidiSaifi(listSubStationSelect);
     }
     notifyListeners();
@@ -34,7 +35,7 @@ class SaidiSaifiCalculatorViewmodel extends ChangeNotifier {
 
   List<Substation> _substations = [];
 
-  List<InterruptionDetails> _interruptionDetails = [];
+  final List<InterruptionDetails> _interruptionDetails = [];
   bool _isLoading = false;
 
   Map<String, dynamic>? get selectedMonthYear => _selectedMonthYear;
@@ -44,14 +45,13 @@ class SaidiSaifiCalculatorViewmodel extends ChangeNotifier {
   List<InterruptionDetails> get interruptionDetails => _interruptionDetails;
   bool get isLoading => _isLoading;
 
-
   // Methods
-  void setSelectedMonthYear(String month, int year, BuildContext context) async {
+  void setSelectedMonthYear(
+      String month, int year, BuildContext context) async {
     _selectedMonthYear = {'month': month, 'year': year};
     notifyListeners();
     await get33kVSsOfCircle(context); // Pass month and year here
   }
-
 
   Future<void> get33kVSsOfCircle(BuildContext context) async {
     ProcessDialogHelper.showProcessDialog(
@@ -60,7 +60,8 @@ class SaidiSaifiCalculatorViewmodel extends ChangeNotifier {
     );
 
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "circleCode": circleCode,
       "sectionCode": sectionCode
@@ -73,7 +74,8 @@ class SaidiSaifiCalculatorViewmodel extends ChangeNotifier {
       "data": jsonEncode(requestData),
     };
 
-    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -87,12 +89,16 @@ class SaidiSaifiCalculatorViewmodel extends ChangeNotifier {
           if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
               if (response.data['objectJson'] != null) {
-                final List<dynamic> jsonList = jsonDecode(response.data['objectJson']);
-                listSubStationItem = jsonList.map((json) => SpinnerList.fromJson(json)).toList();
-                _substations = listSubStationItem.map((item) => Substation(
-                  id: item.optionCode ?? '',
-                  name: item.optionName ?? '',
-                )).toList();
+                final List<dynamic> jsonList =
+                    jsonDecode(response.data['objectJson']);
+                listSubStationItem =
+                    jsonList.map((json) => SpinnerList.fromJson(json)).toList();
+                _substations = listSubStationItem
+                    .map((item) => Substation(
+                          id: item.optionCode ?? '',
+                          name: item.optionName ?? '',
+                        ))
+                    .toList();
                 notifyListeners(); // Notify after updating the lists
               }
             } else {
@@ -117,15 +123,15 @@ class SaidiSaifiCalculatorViewmodel extends ChangeNotifier {
 
   List<SubstationModel> listDistributionItem = [];
 
-  Future<void> loadFeedersForSaidiSaifi(String? subStation ) async {
+  Future<void> loadFeedersForSaidiSaifi(String? subStation) async {
     ProcessDialogHelper.showProcessDialog(
       context,
       message: "Loading...",
     );
 
-
     final requestData = {
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "ssCode": subStation,
       "ss": subStation,
@@ -139,7 +145,8 @@ class SaidiSaifiCalculatorViewmodel extends ChangeNotifier {
       "data": jsonEncode(requestData),
     };
 
-    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -153,10 +160,11 @@ class SaidiSaifiCalculatorViewmodel extends ChangeNotifier {
           if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
               if (response.data['objectJson'] != null) {
-                final List<dynamic> jsonList = jsonDecode(
-                    response.data['objectJson']);
-                final List<SubstationModel> listData = jsonList.map((json) =>
-                    SubstationModel.fromJson(json)).toList();
+                final List<dynamic> jsonList =
+                    jsonDecode(response.data['objectJson']);
+                final List<SubstationModel> listData = jsonList
+                    .map((json) => SubstationModel.fromJson(json))
+                    .toList();
                 listDistributionItem.addAll(listData);
                 for (int i = 0; i < listDistributionItem.length; i++) {
                   interruptionControllers.add(InterruptionsControllers());
@@ -179,8 +187,8 @@ class SaidiSaifiCalculatorViewmodel extends ChangeNotifier {
     } catch (e) {
       showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
-    }finally{
-      _isLoading=false;
+    } finally {
+      _isLoading = false;
       notifyListeners();
     }
   }
@@ -237,9 +245,12 @@ class SaidiSaifiCalculatorViewmodel extends ChangeNotifier {
           context: context,
           builder: (context) => AlertDialog(
             title: const Text("Missing Data"),
-            content: Text("Please specify interruption count & duration for feeder $feederCode. If zero, enter '0'."),
+            content: Text(
+                "Please specify interruption count & duration for feeder $feederCode. If zero, enter '0'."),
             actions: [
-              TextButton(onPressed: () => Navigator.pop(context), child: const Text("OK")),
+              TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text("OK")),
             ],
           ),
         );
@@ -250,19 +261,19 @@ class SaidiSaifiCalculatorViewmodel extends ChangeNotifier {
   }
 
   void addListeners(
-      String feederCode,
-      String ssCode,
-      TextEditingController elCountCtrl,
-      TextEditingController elDurCtrl,
-      TextEditingController olCountCtrl,
-      TextEditingController olDurCtrl,
-      TextEditingController elOlCountCtrl,
-      TextEditingController elOlDurCtrl,
-      TextEditingController lcCountCtrl,
-      TextEditingController lcDurCtrl,
-      TextEditingController bdCountCtrl,
-      TextEditingController bdDurCtrl,
-      ) {
+    String feederCode,
+    String ssCode,
+    TextEditingController elCountCtrl,
+    TextEditingController elDurCtrl,
+    TextEditingController olCountCtrl,
+    TextEditingController olDurCtrl,
+    TextEditingController elOlCountCtrl,
+    TextEditingController elOlDurCtrl,
+    TextEditingController lcCountCtrl,
+    TextEditingController lcDurCtrl,
+    TextEditingController bdCountCtrl,
+    TextEditingController bdDurCtrl,
+  ) {
     void update() {
       updateInterruptionsData(
         feederCode: feederCode,
@@ -297,28 +308,26 @@ class SaidiSaifiCalculatorViewmodel extends ChangeNotifier {
   }
 
   Future<void> submitForm() async {
-
     formKey.currentState!.save();
     notifyListeners();
 
     if (!isAnyFeederLeftBlank(context)) {
       return;
-    }else{
+    } else {
       calculateSidiSifi();
     }
-
   }
 
-  Future<void> calculateSidiSifi( ) async {
+  Future<void> calculateSidiSifi() async {
     ProcessDialogHelper.showProcessDialog(
       context,
       message: "Loading...",
     );
 
-
     final requestData = {
       "data": jsonEncode(interruptionsDataMap),
-      "authToken": SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      "authToken":
+          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "api": Apis.API_KEY,
       "monthYear": "${selectedMonthYear!['month']}${selectedMonthYear!['year']}"
     };
@@ -330,7 +339,8 @@ class SaidiSaifiCalculatorViewmodel extends ChangeNotifier {
       "data": jsonEncode(requestData),
     };
 
-    var response = await ApiProvider(baseUrl: Apis.ROOT_URL).postApiCall(context, Apis.NPDCL_EMP_URL, payload);
+    var response = await ApiProvider(baseUrl: Apis.ROOT_URL)
+        .postApiCall(context, Apis.NPDCL_EMP_URL, payload);
     if (context.mounted) {
       ProcessDialogHelper.closeDialog(context);
     }
@@ -344,16 +354,15 @@ class SaidiSaifiCalculatorViewmodel extends ChangeNotifier {
           if (response.data['tokenValid'] == isTrue) {
             if (response.data['success'] == isTrue) {
               if (response.data['message'] != null) {
-               showSuccessDialog(context, response.data['message'], (){
-                 Navigator.pop(context);
-               });
+                showSuccessDialog(context, response.data['message'], () {
+                  Navigator.pop(context);
+                });
               }
             } else {
               showAlertDialog(context, response.data['message']);
               interruptionsDataMap.clear();
-              listSubStationSelect="";
+              listSubStationSelect = "";
               listSubStationItem.clear();
-
             }
           } else {
             showSessionExpiredDialog(context);
@@ -365,10 +374,9 @@ class SaidiSaifiCalculatorViewmodel extends ChangeNotifier {
     } catch (e) {
       showErrorDialog(context, "An error occurred. Please try again.");
       rethrow;
-    }finally{
-      _isLoading=false;
+    } finally {
+      _isLoading = false;
       notifyListeners();
     }
   }
 }
-

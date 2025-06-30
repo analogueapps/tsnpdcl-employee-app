@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:tsnpdcl_employee/view/dashboard/model/global_list_dialog_item.dart';
 
 class CustomListDialog extends StatelessWidget {

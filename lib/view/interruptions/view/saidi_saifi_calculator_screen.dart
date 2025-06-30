@@ -38,267 +38,288 @@ class SaidiSaifiCalculatorScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(16.0),
                   child: Form(
                     key: viewmodel.formKey,
-                    child:Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          "SAIDI SAIFI CALCULATOR",
-                          style: TextStyle(fontSize: extraTitleSize),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-
-                      // Select Month
-                      const Text("Select Month",
-                          style: TextStyle(fontSize: titleSize)),
-                      const SizedBox(height: 10),
-                      SizedBox(
-                        height: 50,
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            final result = await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const MonthYearSelector(),
-                              ),
-                            );
-
-                            if (result != null && result is Map) {
-                              viewmodel.setSelectedMonthYear(
-                                result['month'] as String,
-                                result['year'] as int,
-                                context,
-                              );
-                            }
-                          },
-                          style: ButtonStyle(
-                            backgroundColor: WidgetStateProperty.all(
-                                CommonColors.textFieldColor),
-                            shape: WidgetStateProperty.all(
-                              const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.zero),
-                            ),
-                          ),
-                          child: viewmodel.selectedMonthYear != null
-                              ? Text(
-                            '${viewmodel.selectedMonthYear!['month']} ${viewmodel.selectedMonthYear!['year']}',
-                            style: const TextStyle(color: Colors.black),
-                          )
-                              : const Text(
-                            'TAP HERE',
-                            style: TextStyle(color: Colors.black),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            "SAIDI SAIFI CALCULATOR",
+                            style: TextStyle(fontSize: extraTitleSize),
                           ),
                         ),
-                      ),
+                        const SizedBox(height: 20),
 
-                      const SizedBox(height: 20),
-
-                      // Only show these if month/year is selected
-                      if (viewmodel.selectedMonthYear != null) ...[
-                        // Select Substation with Dialog Popup
-                        const Text("Select Substation",
+                        // Select Month
+                        const Text("Select Month",
                             style: TextStyle(fontSize: titleSize)),
                         const SizedBox(height: 10),
+                        SizedBox(
+                          height: 50,
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              final result = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const MonthYearSelector(),
+                                ),
+                              );
 
-                        // Substation Selection Button with Down Arrow
-                        GestureDetector(
-                          onTap: viewmodel.substations.isNotEmpty
-                              ? () {
-                            print(
-                                "Substations: ${viewmodel.substations}, ListSubStationItem: ${viewmodel.listSubStationItem}");
-                            _showSubstationDialog(context, viewmodel);
-                          }
-                              : null,
-                          child: Container(
-                            height: 50,
-                            width: double.infinity,
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                            decoration: BoxDecoration(
-                              color: CommonColors.textFieldColor,
-                              borderRadius: BorderRadius.circular(8),
+                              if (result != null && result is Map) {
+                                viewmodel.setSelectedMonthYear(
+                                  result['month'] as String,
+                                  result['year'] as int,
+                                  context,
+                                );
+                              }
+                            },
+                            style: ButtonStyle(
+                              backgroundColor: WidgetStateProperty.all(
+                                  CommonColors.textFieldColor),
+                              shape: WidgetStateProperty.all(
+                                const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.zero),
+                              ),
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  viewmodel.listSubStationSelectName ??
-                                      "Select Substation",
-                                  style: const TextStyle(color: Colors.black),
-                                ),
-                                const Icon(
-                                  Icons.arrow_drop_down,
-                                  color: Colors.black,
-                                  size: 24,
-                                ),
-                              ],
-                            ),
+                            child: viewmodel.selectedMonthYear != null
+                                ? Text(
+                                    '${viewmodel.selectedMonthYear!['month']} ${viewmodel.selectedMonthYear!['year']}',
+                                    style: const TextStyle(color: Colors.black),
+                                  )
+                                : const Text(
+                                    'TAP HERE',
+                                    style: TextStyle(color: Colors.black),
+                                  ),
                           ),
                         ),
 
                         const SizedBox(height: 20),
-                        const Text("ENTER INTERRUPTION DETAILS"),
-                        const SizedBox(height: 8),
 
-                        if (viewmodel.listDistributionItem.isNotEmpty)
-                      ListView.builder(
-                      physics:
-                      const NeverScrollableScrollPhysics(),
-                      // Use parent scroll
-                      shrinkWrap: true,
-                      // Important!
-                      itemCount: viewmodel
-                          .listDistributionItem.length,
-                      itemBuilder: (context, index) {
-                        final data = viewmodel
-                            .listDistributionItem[index];
-                        final interruptionCtrl =
-                        viewmodel.interruptionControllers[index];
-                        final durationCtrl=viewmodel.durationControllers[index];
+                        // Only show these if month/year is selected
+                        if (viewmodel.selectedMonthYear != null) ...[
+                          // Select Substation with Dialog Popup
+                          const Text("Select Substation",
+                              style: TextStyle(fontSize: titleSize)),
+                          const SizedBox(height: 10),
 
-                        void attachListeners() {
-                          void update() {
-                            viewmodel.updateInterruptionsData(
-                              feederCode: data.optionCode,
-                              ssCode: viewmodel.listSubStationSelect,
-                              elCount: interruptionCtrl.elInterruption.text,
-                              elDuration: durationCtrl.elDuration.text,
-                              olCount: interruptionCtrl.olInterruption.text,
-                              olDuration: durationCtrl.olDuration.text,
-                              elOlCount: interruptionCtrl.elOlInterruption.text,
-                              elOlDuration: durationCtrl.elOlDuration.text,
-                              lcCount: interruptionCtrl.lcInterruption.text,
-                              lcDuration: durationCtrl.lcDuration.text,
-                              bdCount: interruptionCtrl.bdInterruption.text,
-                              bdDuration: durationCtrl.bdDuration.text,
-                            );
-                          }
+                          // Substation Selection Button with Down Arrow
+                          GestureDetector(
+                            onTap: viewmodel.substations.isNotEmpty
+                                ? () {
+                                    print(
+                                        "Substations: ${viewmodel.substations}, ListSubStationItem: ${viewmodel.listSubStationItem}");
+                                    _showSubstationDialog(context, viewmodel);
+                                  }
+                                : null,
+                            child: Container(
+                              height: 50,
+                              width: double.infinity,
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 12),
+                              decoration: BoxDecoration(
+                                color: CommonColors.textFieldColor,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    viewmodel.listSubStationSelectName ??
+                                        "Select Substation",
+                                    style: const TextStyle(color: Colors.black),
+                                  ),
+                                  const Icon(
+                                    Icons.arrow_drop_down,
+                                    color: Colors.black,
+                                    size: 24,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
 
-                          for (final ctrl in [
-                            interruptionCtrl.elInterruption,
-                            interruptionCtrl.olInterruption,
-                            interruptionCtrl.elOlInterruption,
-                            interruptionCtrl.lcInterruption,
-                            interruptionCtrl.bdInterruption,
-                            durationCtrl.elDuration,
-                            durationCtrl.olDuration,
-                            durationCtrl.elOlDuration,
-                            durationCtrl.lcDuration,
-                            durationCtrl.bdDuration,
-                          ]) {
-                            ctrl.removeListener(update); // avoid duplicates
-                            ctrl.addListener(update);
-                          }
-                        }
+                          const SizedBox(height: 20),
+                          const Text("ENTER INTERRUPTION DETAILS"),
+                          const SizedBox(height: 8),
 
-                        // Attach only once
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          attachListeners();
-                        });
+                          if (viewmodel.listDistributionItem.isNotEmpty)
+                            ListView.builder(
+                                physics: const NeverScrollableScrollPhysics(),
+                                // Use parent scroll
+                                shrinkWrap: true,
+                                // Important!
+                                itemCount:
+                                    viewmodel.listDistributionItem.length,
+                                itemBuilder: (context, index) {
+                                  final data =
+                                      viewmodel.listDistributionItem[index];
+                                  final interruptionCtrl =
+                                      viewmodel.interruptionControllers[index];
+                                  final durationCtrl =
+                                      viewmodel.durationControllers[index];
 
+                                  void attachListeners() {
+                                    void update() {
+                                      viewmodel.updateInterruptionsData(
+                                        feederCode: data.optionCode,
+                                        ssCode: viewmodel.listSubStationSelect,
+                                        elCount: interruptionCtrl
+                                            .elInterruption.text,
+                                        elDuration:
+                                            durationCtrl.elDuration.text,
+                                        olCount: interruptionCtrl
+                                            .olInterruption.text,
+                                        olDuration:
+                                            durationCtrl.olDuration.text,
+                                        elOlCount: interruptionCtrl
+                                            .elOlInterruption.text,
+                                        elOlDuration:
+                                            durationCtrl.elOlDuration.text,
+                                        lcCount: interruptionCtrl
+                                            .lcInterruption.text,
+                                        lcDuration:
+                                            durationCtrl.lcDuration.text,
+                                        bdCount: interruptionCtrl
+                                            .bdInterruption.text,
+                                        bdDuration:
+                                            durationCtrl.bdDuration.text,
+                                      );
+                                    }
 
-                        return Card(
-                          color: Colors.white,
-                          margin: const EdgeInsets.symmetric(
-                              vertical: 8, horizontal: 3),
-                          child: Padding(
-                            padding:
-                            const EdgeInsets.all(12.0),
-                            child: Column(
-                              children: [
+                                    for (final ctrl in [
+                                      interruptionCtrl.elInterruption,
+                                      interruptionCtrl.olInterruption,
+                                      interruptionCtrl.elOlInterruption,
+                                      interruptionCtrl.lcInterruption,
+                                      interruptionCtrl.bdInterruption,
+                                      durationCtrl.elDuration,
+                                      durationCtrl.olDuration,
+                                      durationCtrl.elOlDuration,
+                                      durationCtrl.lcDuration,
+                                      durationCtrl.bdDuration,
+                                    ]) {
+                                      ctrl.removeListener(
+                                          update); // avoid duplicates
+                                      ctrl.addListener(update);
+                                    }
+                                  }
 
-                                Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Text(data.optionName),
-                                ),
-                                const SizedBox(height: 10),
-                                // _reusableLastRow("INTERRUPTION TYPE",
-                                //     "NO OF INTERRUPTIONS",
-                                //     "DURATION IN MINUTES"),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    const Expanded(
-                                      child:  Text(
-                                        "INTERRUPTION TYPE",
-                                        style:  TextStyle(
-                                          fontSize: 10.5,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                        textAlign: TextAlign.start,
-                                      ),
-                                    ),
-                                    Container(
-                                      width: 1,
-                                      height: 50,
-                                      margin: const EdgeInsets.all(10),
-                                      color: const Color(0xffcfcdcd),
-                                    ),
-                                    const Expanded(
-                                        child:  Text(
-                                          "NO OF\nINTERRUPTIONS",
-                                          style:  TextStyle(
-                                            fontSize: 10.5,
-                                            fontWeight: FontWeight.w500,
+                                  // Attach only once
+                                  WidgetsBinding.instance
+                                      .addPostFrameCallback((_) {
+                                    attachListeners();
+                                  });
+
+                                  return Card(
+                                    color: Colors.white,
+                                    margin: const EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 3),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(12.0),
+                                      child: Column(
+                                        children: [
+                                          Align(
+                                            alignment: Alignment.topLeft,
+                                            child: Text(data.optionName),
                                           ),
-                                          textAlign: TextAlign.start,
-                                        )
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Container(
-                                      width: 1,
-                                      height: 50,
-                                      margin: const EdgeInsets.all(10),
-                                      color: const Color(0xffcfcdcd),
-                                    ),
-                                    const Expanded(
-                                      child: Text(
-                                        "DURATION IN MINUTES",
-                                        style:  TextStyle(
-                                          fontSize: 10.5,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                        textAlign: TextAlign.start,
+                                          const SizedBox(height: 10),
+                                          // _reusableLastRow("INTERRUPTION TYPE",
+                                          //     "NO OF INTERRUPTIONS",
+                                          //     "DURATION IN MINUTES"),
+                                          Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              const Expanded(
+                                                child: Text(
+                                                  "INTERRUPTION TYPE",
+                                                  style: TextStyle(
+                                                    fontSize: 10.5,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                  textAlign: TextAlign.start,
+                                                ),
+                                              ),
+                                              Container(
+                                                width: 1,
+                                                height: 50,
+                                                margin:
+                                                    const EdgeInsets.all(10),
+                                                color: const Color(0xffcfcdcd),
+                                              ),
+                                              const Expanded(
+                                                  child: Text(
+                                                "NO OF\nINTERRUPTIONS",
+                                                style: TextStyle(
+                                                  fontSize: 10.5,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                                textAlign: TextAlign.start,
+                                              )),
+                                              const SizedBox(width: 10),
+                                              Container(
+                                                width: 1,
+                                                height: 50,
+                                                margin:
+                                                    const EdgeInsets.all(10),
+                                                color: const Color(0xffcfcdcd),
+                                              ),
+                                              const Expanded(
+                                                child: Text(
+                                                  "DURATION IN MINUTES",
+                                                  style: TextStyle(
+                                                    fontSize: 10.5,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                  textAlign: TextAlign.start,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          _reusableLastRow(
+                                              "EL",
+                                              interruptionCtrl.elInterruption,
+                                              durationCtrl.elDuration),
+                                          _reusableLastRow(
+                                              "OL",
+                                              interruptionCtrl.olInterruption,
+                                              durationCtrl.olDuration),
+                                          _reusableLastRow(
+                                              "EL & OL",
+                                              interruptionCtrl.elOlInterruption,
+                                              durationCtrl.elOlDuration),
+                                          _reusableLastRow(
+                                              "L.C",
+                                              interruptionCtrl.lcInterruption,
+                                              durationCtrl.lcDuration),
+                                          _reusableLastRow(
+                                              "Break Down",
+                                              interruptionCtrl.bdInterruption,
+                                              durationCtrl.bdDuration),
+                                        ],
                                       ),
                                     ),
-                                  ],
-                                ),
-                                  _reusableLastRow(
-                                      "EL", interruptionCtrl.elInterruption,durationCtrl.elDuration),
-                                  _reusableLastRow(
-                                      "OL",interruptionCtrl.olInterruption, durationCtrl.olDuration),
-                                  _reusableLastRow(
-                                      "EL & OL", interruptionCtrl.elOlInterruption, durationCtrl.elOlDuration),
-                                  _reusableLastRow(
-                                      "L.C",interruptionCtrl.lcInterruption, durationCtrl.lcDuration),
-                                  _reusableLastRow(
-                                      "Break Down", interruptionCtrl.bdInterruption,durationCtrl.bdDuration),
-                              ],
-                            ),
-                          ),
-                        );
-                      }
-                        ),
+                                  );
+                                }),
 
-                        const SizedBox(height: 20),
+                          const SizedBox(height: 20),
 
-                        // Calculate Button - Fixed to always provide a non-null VoidCallback
-                        PrimaryButton(
-                          text: "CALCULATE",
-                          onPressed: () {
-                            if (viewmodel.listSubStationSelect != null) {
+                          // Calculate Button - Fixed to always provide a non-null VoidCallback
+                          PrimaryButton(
+                            text: "CALCULATE",
+                            onPressed: () {
                               // Handle calculation logic here
                               print("Calculate pressed");
                               viewmodel.submitForm();
-                            }
-                          },
-                          fullWidth: true,
-                        ),
+                            },
+                            fullWidth: true,
+                          ),
+                        ],
                       ],
-                    ],
-                  ),
+                    ),
                   ),
                 ),
                 if (viewmodel.isLoading)
@@ -350,17 +371,18 @@ class SaidiSaifiCalculatorScreen extends StatelessWidget {
                         shrinkWrap: true,
                         itemCount: viewmodel.listSubStationItem
                             .where((item) => item.optionName!
-                            .toLowerCase()
-                            .contains(searchQuery))
+                                .toLowerCase()
+                                .contains(searchQuery))
                             .length,
                         itemBuilder: (context, index) {
                           final filteredItems = viewmodel.listSubStationItem
                               .where((item) => item.optionName!
-                              .toLowerCase()
-                              .contains(searchQuery))
+                                  .toLowerCase()
+                                  .contains(searchQuery))
                               .toList();
                           // Extract only the substation name (e.g., "NAKKALAGUTTA" from "0003-33KV SS-NAKKALAGUTTA")
-                          String fullName = filteredItems[index].optionName ?? '';
+                          String fullName =
+                              filteredItems[index].optionName ?? '';
                           String displayName = fullName.split('-').length > 2
                               ? fullName.split('-')[2].trim()
                               : fullName;
@@ -369,8 +391,8 @@ class SaidiSaifiCalculatorScreen extends StatelessWidget {
                             title: Text(displayName),
                             onTap: () {
                               viewmodel.onListSubStationItemSelect(
-                                filteredItems[index].optionCode ?? '', filteredItems[index].optionName ?? ''
-                              );
+                                  filteredItems[index].optionCode ?? '',
+                                  filteredItems[index].optionName ?? '');
                               Navigator.pop(context);
                             },
                           );
@@ -389,8 +411,8 @@ class SaidiSaifiCalculatorScreen extends StatelessWidget {
     });
   }
 
-  Widget _reusableLastRow(String label, TextEditingController value, TextEditingController value2) {
-
+  Widget _reusableLastRow(
+      String label, TextEditingController value, TextEditingController value2) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 2),
       child: Row(
@@ -406,34 +428,32 @@ class SaidiSaifiCalculatorScreen extends StatelessWidget {
               textAlign: TextAlign.start,
             ),
           ),
-            Container(
-              width: 1,
-              height: 50,
-              margin: const EdgeInsets.all(10),
-            ),
-          Expanded(
-            child:  TextField(
-              controller:value,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                contentPadding:
-                EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-              ),
-            )
+          Container(
+            width: 1,
+            height: 50,
+            margin: const EdgeInsets.all(10),
           ),
-          const SizedBox(width: 10),
-            Container(
-              width: 1,
-              height: 50,
-              margin: const EdgeInsets.all(10),
+          Expanded(
+              child: TextField(
+            controller: value,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(
+              contentPadding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
             ),
+          )),
+          const SizedBox(width: 10),
+          Container(
+            width: 1,
+            height: 50,
+            margin: const EdgeInsets.all(10),
+          ),
           Expanded(
             child: TextField(
-            controller: value2,
+              controller: value2,
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
                 contentPadding:
-                EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                    EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               ),
             ),
           ),
