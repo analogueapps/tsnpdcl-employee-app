@@ -231,4 +231,7 @@ class Apis {
   static const REVOKE_OF_SERVICE_REQUEST = "getRevokeOfServicesRequests";
   static const DISMANTLE_OF_SERVICE_REQUEST = "getDismantleOfServicesRequests";
   static const SAVE_APP_BILLING_COMPLAINT = "saveAppBillingComplaint";
+  static const CREATE_DISMANTLE_SERVICE= "createDismantleService";
+  static const UPDATE_DISMANTLE_SERVICE= "updateDismantleService";
+  static const GET_DISMANTLE_OF_SERVICE_REQUESTS= "getDismantleOfServicesRequests";
 }

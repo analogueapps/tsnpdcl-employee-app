@@ -97,6 +97,10 @@ class Assets {
   static const String pendingEro='assets/images/pending.png';
   static const String rejectEro='assets/images/reject.png';
 
+  //Billing Related New
+  static const String servicedInspection='assets/images/services_inspection.png';
+  static const String suppressedInspection='assets/images/suppressed_inspection.png';
+
   static OutlineInputBorder squareInputBorder(){ //return type is OutlineInputBorder
     return const OutlineInputBorder( //Outline border type for TextFiled
         borderRadius: BorderRadius.all(Radius.circular(5)),

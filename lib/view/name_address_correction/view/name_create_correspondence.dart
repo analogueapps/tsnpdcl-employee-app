@@ -481,7 +481,8 @@ class NameCreateCorrespondence extends StatelessWidget {
                       ),
                       Visibility(
                         visible: viewModel.titleOfUpload != "",
-                        child: Column(children: [
+                        child:
+                        Column(children: [
                           Row(
                             children: [
                               Radio<String>(

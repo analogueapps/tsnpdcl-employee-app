@@ -10,15 +10,15 @@ import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 
-class WrongBillingRequestListViewmodel extends ChangeNotifier {
-  WrongBillingRequestListViewmodel(
+class DismantleOfServicesListViewmodel extends ChangeNotifier {
+  DismantleOfServicesListViewmodel(
       {required this.context, required this.status}) {
     final now = DateTime.now();
     _selectedMonthYear = {
       'month': _getMonthName(now.month),
       'year': now.year,
     };
-    getDismantleOfServicesRequest(_selectedMonthYear);
+    getDismantleCorrectionRequests(_selectedMonthYear);
   }
 
   final BuildContext context;
@@ -37,7 +37,7 @@ class WrongBillingRequestListViewmodel extends ChangeNotifier {
       'month': month,
       'year': year,
     };
-    getDismantleOfServicesRequest(_selectedMonthYear);
+    getDismantleCorrectionRequests(_selectedMonthYear);
     print("selectedMonthYear: $selectedMonthYear");
     notifyListeners();
   }
@@ -60,7 +60,7 @@ class WrongBillingRequestListViewmodel extends ChangeNotifier {
     return monthNames[month - 1];
   }
 
-  Future<void> getDismantleOfServicesRequest(
+  Future<void> getDismantleCorrectionRequests(
       Map<String, dynamic>? dateMonth) async {
     _isLoading = true;
     notifyListeners();
@@ -76,7 +76,7 @@ class WrongBillingRequestListViewmodel extends ChangeNotifier {
     };
 
     var response = await ApiProvider(baseUrl: Apis.ERO_CORRESPONDENCE_URL)
-        .postApiCall(context, Apis.DISMANTLE_OF_SERVICE_REQUEST, payload);
+        .postApiCall(context, Apis.GET_DISMANTLE_OF_SERVICE_REQUESTS, payload);
     _isLoading = false;
     notifyListeners();
     try {

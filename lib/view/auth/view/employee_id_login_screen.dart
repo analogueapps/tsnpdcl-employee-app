@@ -45,7 +45,7 @@ class EmployeeIdLoginScreen extends StatelessWidget {
               builder: (context, viewModel, child) {
                 return Padding(
                   padding: const EdgeInsets.all(doubleSixteen),
-                  child: Form(
+                  child: SingleChildScrollView(child:Form(
                     key: viewModel.employeeFormKey,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -182,6 +182,7 @@ class EmployeeIdLoginScreen extends StatelessWidget {
                         ),
                       ],
                     ),
+                  ),
                   ),
                 );
               },

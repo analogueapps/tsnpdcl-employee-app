@@ -7,28 +7,28 @@ import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_assets.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
+import 'package:tsnpdcl_employee/view/dismantle_of_service/viewmodel/dismantle_of_services_list_viewmodel.dart';
 import 'package:tsnpdcl_employee/view/revoking_of_services/viewmodel/revoking_of_services_request_list_viewmodel.dart';
-import 'package:tsnpdcl_employee/view/wrong_billing/viewmodel/wrong_billing_request_list_viewmodel.dart';
 import 'package:tsnpdcl_employee/widget/month_year_selector.dart';
 
-class WrongBillingRequestList extends StatelessWidget {
-  const WrongBillingRequestList({super.key, required this.args});
+class DismantleOfServicesList extends StatelessWidget {
+  const DismantleOfServicesList({super.key, required this.args});
 
-  static const id = Routes.wrongBillingComplaintsList;
+  static const id = Routes.dismantleChangeRequestList;
   final String args;
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => WrongBillingRequestListViewmodel(
+      create: (_) => DismantleOfServicesListViewmodel(
           context: context, status: args),
-      child: Consumer<WrongBillingRequestListViewmodel>(
+      child: Consumer<DismantleOfServicesListViewmodel>(
           builder: (context, viewModel, child) {
             return Scaffold(
               appBar: AppBar(
                 backgroundColor: CommonColors.colorPrimary,
                 title: Text(
-                  "Wrong billing complaints".toUpperCase(),
+                  "Dismantle of Service".toUpperCase(),
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: titleSize,
@@ -73,7 +73,7 @@ class WrongBillingRequestList extends StatelessWidget {
                   : const SizedBox.shrink(),
               floatingActionButton: FloatingActionButton(
                 onPressed: () {
-                  Navigation.instance.navigateTo(Routes.appBillingScreen);
+                  Navigation.instance.navigateTo(Routes.revokeOfServices);
                 },
                 child: Image.asset(
                   Assets.electricMeter2,

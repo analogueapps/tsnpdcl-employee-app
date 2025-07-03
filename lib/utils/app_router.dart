@@ -7,6 +7,8 @@ import 'package:tsnpdcl_employee/view/auth/view/employee_id_login_screen.dart';
 import 'package:tsnpdcl_employee/view/auth/view/otp_verification_screen.dart';
 import 'package:tsnpdcl_employee/view/bs_udc_inspection/view/bs_udc_list.dart';
 import 'package:tsnpdcl_employee/view/daily_nil_report/view/daily_nil.dart';
+import 'package:tsnpdcl_employee/view/dismantle_of_service/view/dismantle_of_service_menu_screen.dart';
+import 'package:tsnpdcl_employee/view/dismantle_of_service/view/dismantle_of_services_list.dart';
 import 'package:tsnpdcl_employee/view/meeseva_category_pending_allotment/view/category_change_request_detail.dart';
 import 'package:tsnpdcl_employee/view/meeseva_category_pending_allotment/view/category_change_requests.dart';
 import 'package:tsnpdcl_employee/view/ccc/model/open_model.dart';
@@ -165,6 +167,7 @@ import 'package:tsnpdcl_employee/view/verify_wrong_category/view/wrong_cal_confi
 import 'package:tsnpdcl_employee/view/web_view/view/web_view_screen.dart';
 import 'package:tsnpdcl_employee/view/wrong_billing/view/app_billing_components.dart';
 import 'package:tsnpdcl_employee/view/wrong_billing/view/wrong_billing_menu_screen.dart';
+import 'package:tsnpdcl_employee/view/wrong_billing/view/wrong_billing_request_list.dart';
 import 'package:tsnpdcl_employee/widget/month_year_selector.dart';
 import 'package:tsnpdcl_employee/widget/pinch_zoom_imageview.dart';
 import 'package:tsnpdcl_employee/view/dtr_master/view/create_dtr_offline.dart';
@@ -182,6 +185,8 @@ import 'package:tsnpdcl_employee/view/gis_ids/view/gis_ids.dart';
 import 'package:tsnpdcl_employee/view/gis_ids/view/gis_individual.dart';
 import 'package:tsnpdcl_employee/view/gis_ids/view/view_work_details.dart';
 import 'package:tsnpdcl_employee/view/gis_ids/view/view_work_floating_button.dart';
+
+import '../view/dismantle_of_service/view/dismantle_create_correspondence.dart';
 
 class AppRouter {
   static Route generateRoute(RouteSettings settings) {
@@ -843,7 +848,19 @@ class AppRouter {
             builder: (_) => const WrongBillingMenuScreen());
       case AppBillingComponents.id:
         return MaterialPageRoute(builder: (_) => const AppBillingComponents());
+        case WrongBillingRequestList.id:
+        return MaterialPageRoute(builder: (_) => WrongBillingRequestList( args: settings.arguments as String));
 
+        //DISMANTLE OF SERVICE
+      case DismantleOfServiceMenuScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => const DismantleOfServiceMenuScreen());
+        case DismantleCreateCorrespondence.id:
+        return MaterialPageRoute(
+            builder: (_) => const DismantleCreateCorrespondence());
+        case DismantleOfServicesList.id:
+        return MaterialPageRoute(
+            builder: (_) =>  DismantleOfServicesList(args: settings.arguments as String));
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

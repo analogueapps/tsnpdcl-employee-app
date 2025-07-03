@@ -209,6 +209,21 @@ class GlobalConstants {
   static const String pendingAtEro = "Pending At ERO";
   static const String completed = "Completed";
   static const String rejectedByERO = "Rejected By ERO";
+  static const String demandIssued = "Demand Issued";
+  static const String duesPaid = "Dues Paid";
+  static const String noDuesCertificate = "No Dues Certificate Issued";
+
+  //Billing Related New
+  //NON KVAH SERVICES INSPECTION
+  static const String nonKVAHInspection = "NON KVAH SERVICES INSPECTION";
+  //RMD EXCEED SERVICES INSPECTION
+  static const String rmdExceedInspection = "RMD EXCEED SERVICES INSPECTION";
+
+  //CAT 2&3 UNPAID INSPECTION
+  static const String catUnpaidInspection = "CAT 2&3 UNPAID INSPECTION";
+
+  //SUPPRESSED UNITS INSPECTION
+  static const String suppressedInspection = "SUPPRESSED UNITS INSPECTION";
 
 }
 

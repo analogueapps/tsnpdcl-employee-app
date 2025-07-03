@@ -270,7 +270,12 @@ class Routes {
   //WRONG BILLING
   static const String wrongBillingMenuScreen= "WrongBillingMenuScreen";
   static const String appBillingScreen= "AppBillingComponents";
+  static const String wrongBillingComplaintsList= "WrongBillingComplaintsList";
 
+  //DISMANTLE OF SERVICE
+  static const String dismantleOfServiceMenuScreen= "DismantleOfServiceMenuScreen";
+  static const String dismantleCreateCorrespondence= "DismantleCreateCorrespondence";
+  static const String dismantleChangeRequestList= "DismantleOfServicesList";
 
 
 

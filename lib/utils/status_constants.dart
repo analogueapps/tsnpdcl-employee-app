@@ -123,6 +123,9 @@ class StatusConstants {
   static const  TYPE_PENDING_ERO = "PENDING_AT_ERO";
   static const  TYPE_REJECTED_ERO = "REJECTED";
   static const TYPE_COMPLETED=  "FINISHED";
+  static const DEMAND_RAISED=  "DEMAND_RAISED";
+  static const DUES_PAID=  "DUES_PAID";
+  static const NO_DUES=  "FINISHED";
 
   static String getNameAddressScreenTitle(String status) {
     switch (status) {

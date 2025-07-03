@@ -5,13 +5,13 @@ import 'package:tsnpdcl_employee/utils/global_constants.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/utils/status_constants.dart';
 
-class WrongBillingMenuScreenViewmodel extends ChangeNotifier {
-  final List<SubMenuGridItem> _wrongBillingMenuItems = [];
+class DismantleOfServiceMenuScreenViewmodel extends ChangeNotifier {
+  final List<SubMenuGridItem> _dismantleMenuItems = [];
 
-  List<SubMenuGridItem> get wrongBilling => _wrongBillingMenuItems;
+  List<SubMenuGridItem> get dismantleService => _dismantleMenuItems;
 
   // Constructor to initialize the items
-  WrongBillingMenuScreenViewmodel() {
+  DismantleOfServiceMenuScreenViewmodel() {
     _initializeItems();
   }
 
@@ -19,27 +19,37 @@ class WrongBillingMenuScreenViewmodel extends ChangeNotifier {
   void _initializeItems() {
     const String routeName = '';
 
-    _wrongBillingMenuItems.addAll([
+    _dismantleMenuItems.addAll([
       SubMenuGridItem(
           title: GlobalConstants.createCorrespondence,
           iconAsset: Icons.computer,
           cardColor: Colors.orange,
-          routeName: Routes.appBillingScreen),
+          routeName: Routes.dismantleCreateCorrespondence),
       SubMenuGridItem(
           title: GlobalConstants.pendingAtEro,
           iconAsset: Icons.hourglass_bottom,
           cardColor: Colors.blue,
-          routeName: Routes.wrongBillingComplaintsList),
+          routeName: Routes.dismantleChangeRequestList),
       SubMenuGridItem(
-          title: GlobalConstants.completed,
-          iconAsset: Icons.playlist_add_check,
+          title: GlobalConstants.demandIssued,
+          iconAsset: Icons.receipt_outlined,
+          cardColor: const Color(0Xffa1887f),
+          routeName: Routes.dismantleChangeRequestList),
+      SubMenuGridItem(
+          title: GlobalConstants.duesPaid,
+          iconAsset: Icons.recommend,
           cardColor: Colors.green,
-          routeName: Routes.wrongBillingComplaintsList),
+          routeName: Routes.dismantleChangeRequestList),
+      SubMenuGridItem(
+          title: GlobalConstants.noDuesCertificate,
+          iconAsset: Icons.receipt_long_outlined,
+          cardColor: Colors.green,
+          routeName: Routes.dismantleChangeRequestList),
       SubMenuGridItem(
           title: GlobalConstants.rejectedByERO,
           iconAsset: Icons.close,
           cardColor: Colors.redAccent,
-          routeName:  Routes.wrongBillingComplaintsList),
+          routeName:  Routes.dismantleChangeRequestList),
     ]);
 
     notifyListeners();
@@ -52,9 +62,13 @@ class WrongBillingMenuScreenViewmodel extends ChangeNotifier {
         status ="";
       }else if (title == GlobalConstants.pendingAtEro) { //revokeOfServices
         status = StatusConstants.TYPE_PENDING_ERO;
-      }else if (title == GlobalConstants.completed) {
-        status = StatusConstants.TYPE_COMPLETED;
-      } else if (title == GlobalConstants.rejectedByERO) {
+      }else if (title == GlobalConstants.demandIssued) {
+        status = StatusConstants.DEMAND_RAISED;
+      } else if (title == GlobalConstants.duesPaid) {
+        status = StatusConstants.DUES_PAID;
+      }else if (title == GlobalConstants.noDuesCertificate) {
+        status = StatusConstants.NO_DUES;
+      }else if (title == GlobalConstants.rejectedByERO) {
         status = StatusConstants.TYPE_REJECTED_ERO;
       }
       Navigation.instance.navigateTo(routeName, args: status);

@@ -347,7 +347,7 @@ class UniversalDashboardViewModel extends ChangeNotifier {
         ),
         GlobalListDialogItem(
           title: GlobalConstants.dismantleOfService,
-          routeName: "",
+          routeName: Routes.dismantleOfServiceMenuScreen,
           imageAsset: Assets.dismantleOfServiceIcon,
         ),
       ]);
@@ -434,6 +434,22 @@ class UniversalDashboardViewModel extends ChangeNotifier {
       List<GlobalListDialogItem> globalListDialogItem = [];
       globalListDialogItem.addAll([
         GlobalListDialogItem(
+          title: GlobalConstants.nonKVAHInspection,
+          routeName: "",
+          imageAsset: Assets.servicedInspection,
+        ), GlobalListDialogItem(
+          title: GlobalConstants.rmdExceedInspection,
+          routeName: "",
+          imageAsset: Assets.servicedInspection,
+        ), GlobalListDialogItem(
+          title: GlobalConstants.catUnpaidInspection,
+          routeName: "",
+          imageAsset: Assets.servicedInspection,
+        ), GlobalListDialogItem(
+          title: GlobalConstants.suppressedInspection,
+          routeName: "",
+          imageAsset: Assets.suppressedInspection,
+        ), GlobalListDialogItem(
           title: GlobalConstants.verifyWrongCatConfirmed,
           routeName: "",
           imageAsset: Assets.yesOrNo,
