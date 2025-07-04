@@ -1,63 +1,39 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
-import 'package:intl/intl.dart';
 import 'package:tsnpdcl_employee/dialogs/dialog_master.dart';
 import 'package:tsnpdcl_employee/network/api_provider.dart';
 import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
-import 'package:tsnpdcl_employee/view/verify_wrong_category/model/areaWiseAbstract_model.dart';
 
-class InspectServicesViewmodel extends ChangeNotifier {
-  InspectServicesViewmodel({required this.context, required this.args}) {
+class RmdExceededServicesListViewmodel extends ChangeNotifier {
+  RmdExceededServicesListViewmodel({required this.context, required this.args}) {
     print(" args: $args");
-    _loadAbstractBasedOnMonthYear(args);
+    _getCatConfirmEntities();
   }
 
   final BuildContext context;
   final Map<String, dynamic> args;
 
-  final DateTime now = DateTime.now();
-
-  Map<String, dynamic>? _selectedMonthYear;
-
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  Map<String, dynamic>? get selectedMonthYear => _selectedMonthYear;
-
-  final List<FetchAllAbstract> _inspectService = [];
-  List<FetchAllAbstract> get inspectService => _inspectService;
-
-  void setSelectedMonthYear(String month, int year, BuildContext context) {
-    _selectedMonthYear = {
-      'month': month,
-      'year': year,
-    };
-    _loadAbstractBasedOnMonthYear(_selectedMonthYear);
-    print("selectedMonthYear: $selectedMonthYear");
-    notifyListeners();
-  }
-
-  Future<void> _loadAbstractBasedOnMonthYear(
-    Map<String, dynamic>? dateMonth,
-  ) async {
+  Future<void> _getCatConfirmEntities() async {
     _isLoading = true;
     notifyListeners();
 
     final payload = {
       "token":
-          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
-      "monthYear": dateMonth != null
-          ? '${dateMonth['month']}${dateMonth['year']}'
-          : DateFormat('MMMyyyy').format(DateTime.now()),
+      "monthYear": args['monthYear'],
+      "areCode": args['areCode'] ?? ""
     };
 
     try {
-      final response = await ApiProvider(baseUrl: Apis.VERIFY_WRONG_CONFIRM_URL)
-          .postApiCall(context, Apis.GET_VERIFY_ABSTRACT, payload);
+      final response = await ApiProvider(baseUrl: Apis.RMD_EXCEEDED_INSPECTION_URL)
+          .postApiCall(context, Apis.RMD_EXCEEDED_LIST, payload);
       if (response != null) {
         if (response.data is String) {
           response.data = jsonDecode(response.data); // Parse string to JSON
@@ -66,7 +42,7 @@ class InspectServicesViewmodel extends ChangeNotifier {
         if (response.statusCode == successResponseCode) {
           if (response.data['sessionValid'] == isTrue) {
             if (response.data['taskSuccess'] == isTrue) {
-              if (response.data['dataList'] != null) {
+              if (response.data['dataList'].isNotEmpty) {
                 List<dynamic> jsonList;
 
                 if (response.data['dataList'] is String) {
@@ -76,14 +52,11 @@ class InspectServicesViewmodel extends ChangeNotifier {
                 } else {
                   jsonList = [];
                 }
-
-                final List<FetchAllAbstract> dataList = jsonList
-                    .map((json) => FetchAllAbstract.fromJson(json))
-                    .toList();
-
-                _inspectService.clear();
-                _inspectService.addAll(dataList);
-                notifyListeners();
+                //////<- Should work if response is not [] ->//////
+              } else {
+                showEmptyFolderDialog(context, response.data['message'], () {
+                  Navigator.pop(context);
+                });
               }
             } else {
               showErrorDialog(

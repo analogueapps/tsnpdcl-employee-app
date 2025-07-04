@@ -6,6 +6,8 @@ import 'package:tsnpdcl_employee/view/auth/view/corporate_login_screen.dart';
 import 'package:tsnpdcl_employee/view/auth/view/employee_id_login_screen.dart';
 import 'package:tsnpdcl_employee/view/auth/view/otp_verification_screen.dart';
 import 'package:tsnpdcl_employee/view/bs_udc_inspection/view/bs_udc_list.dart';
+import 'package:tsnpdcl_employee/view/cat_one_two_unpaid/view/cat_23_abstract.dart';
+import 'package:tsnpdcl_employee/view/cat_one_two_unpaid/view/cat_23_all_abstract.dart';
 import 'package:tsnpdcl_employee/view/daily_nil_report/view/daily_nil.dart';
 import 'package:tsnpdcl_employee/view/dismantle_of_service/view/dismantle_of_service_menu_screen.dart';
 import 'package:tsnpdcl_employee/view/dismantle_of_service/view/dismantle_of_services_list.dart';
@@ -109,6 +111,9 @@ import 'package:tsnpdcl_employee/view/middle_poles/view/view_detailed_pending_li
 import 'package:tsnpdcl_employee/view/name_address_correction/view/name_and_address_change_request_list.dart';
 import 'package:tsnpdcl_employee/view/name_address_correction/view/name_and_address_menu_screen.dart';
 import 'package:tsnpdcl_employee/view/name_address_correction/view/name_create_correspondence.dart';
+import 'package:tsnpdcl_employee/view/non_kvah_services/view/monthwise_rmd_services.dart';
+import 'package:tsnpdcl_employee/view/non_kvah_services/view/rmd_service_inspection.dart';
+import 'package:tsnpdcl_employee/view/non_kvah_services/view/rmd_service_inspection_list.dart';
 import 'package:tsnpdcl_employee/view/online_pr_menu/view/issue_duplicate_receipt.dart';
 import 'package:tsnpdcl_employee/view/online_pr_menu/view/online_collection.dart';
 import 'package:tsnpdcl_employee/view/online_pr_menu/view/online_pr_menu_screen.dart';
@@ -142,9 +147,11 @@ import 'package:tsnpdcl_employee/view/revoking_of_services/view/revoking_of_serv
 import 'package:tsnpdcl_employee/view/revoking_of_services/view/revoking_of_services_request_list.dart';
 import 'package:tsnpdcl_employee/view/rfss/view/download_structures_screen.dart';
 import 'package:tsnpdcl_employee/view/rfss/view/rfss_screen.dart';
+import 'package:tsnpdcl_employee/view/rmd_exceed_services/view/monthwise_rmd_exceeded.dart';
+import 'package:tsnpdcl_employee/view/rmd_exceed_services/view/rmd_exceeded_services.dart';
+import 'package:tsnpdcl_employee/view/rmd_exceed_services/view/rmd_exceeded_services_list.dart';
 import 'package:tsnpdcl_employee/view/routed_from_ccc/view/ccc_complaints.dart';
 import 'package:tsnpdcl_employee/view/routed_from_ccc/view/complaint_track.dart';
-import 'package:tsnpdcl_employee/view/routed_from_ccc/view/dismantle_of_services.dart';
 import 'package:tsnpdcl_employee/view/routed_from_ccc/view/revoke_of_services.dart';
 import 'package:tsnpdcl_employee/view/routed_from_ccc/view/view_detail_complaint.dart';
 import 'package:tsnpdcl_employee/view/schedules/models/view_schedule_model.dart';
@@ -164,6 +171,7 @@ import 'package:tsnpdcl_employee/view/tong_tester_readings/view/view_detailed_to
 import 'package:tsnpdcl_employee/view/verify_wrong_category/view/areaWiseAbstract.dart';
 import 'package:tsnpdcl_employee/view/verify_wrong_category/view/inspect_services.dart';
 import 'package:tsnpdcl_employee/view/verify_wrong_category/view/wrong_cal_confirmation.dart';
+import 'package:tsnpdcl_employee/view/vital_service_inspection/view/vital_service_inspection_screen.dart';
 import 'package:tsnpdcl_employee/view/web_view/view/web_view_screen.dart';
 import 'package:tsnpdcl_employee/view/wrong_billing/view/app_billing_components.dart';
 import 'package:tsnpdcl_employee/view/wrong_billing/view/wrong_billing_menu_screen.dart';
@@ -806,10 +814,6 @@ class AppRouter {
       //Routed From CCC
       case CccComplaints.id:
         return MaterialPageRoute(builder: (_) => const CccComplaints());
-      case DismantleOfServices.id:
-        return MaterialPageRoute(
-            builder: (_) => DismantleOfServices(
-                args: settings.arguments as Map<String, dynamic>));
       case RevokeOfServices.id:
         return MaterialPageRoute(
             builder: (_) => RevokeOfServices(
@@ -861,6 +865,48 @@ class AppRouter {
         case DismantleOfServicesList.id:
         return MaterialPageRoute(
             builder: (_) =>  DismantleOfServicesList(args: settings.arguments as String));
+
+        //Vital Service Inspection
+        case VitalServiceInspectionScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => const VitalServiceInspectionScreen());
+
+        //Non Kvah Services
+        case RmdServiceInspection.id:
+        return MaterialPageRoute(
+            builder: (_) => const RmdServiceInspection());
+      case MonthWiseRmdServices.id:
+        return MaterialPageRoute(
+            builder: (_) => MonthWiseRmdServices(
+                args: settings.arguments as Map<String, dynamic>));
+        case RmdServiceInspectionList.id:
+        return MaterialPageRoute(
+            builder: (_) => RmdServiceInspectionList(
+                args: settings.arguments as Map<String, dynamic>));
+
+        //RMD EXCEED SERVICES RmdServiceInspection
+      case RmdExceededServices.id:
+        return MaterialPageRoute(
+            builder: (_) => const RmdExceededServices());
+      case MonthWiseRmdExceeded.id:
+        return MaterialPageRoute(
+            builder: (_) => MonthWiseRmdExceeded(
+                args: settings.arguments as Map<String, dynamic>));
+        case RmdExceededServicesList.id:
+        return MaterialPageRoute(
+            builder: (_) => RmdExceededServicesList(
+                args: settings.arguments as Map<String, dynamic>));
+
+        //CAT 2&3 UNPAID INSPECTION
+      case Cat23AllAbstract.id:
+        return MaterialPageRoute(
+            builder: (_) => const Cat23AllAbstract());
+      case Cat23Abstract.id:
+        return MaterialPageRoute(
+            builder: (_) => Cat23Abstract(
+                args: settings.arguments as Map<String, dynamic>));
+
+
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

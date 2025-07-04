@@ -149,7 +149,8 @@ class _MonthYearSelectorState extends State<MonthYearSelector> {
                   final year = years[index];
                   final isSelected = _selectedYear == year;
 
-                  return GestureDetector(
+                  return InkWell(
+                    key: ValueKey(year),
                     onTap: () {
                       setState(() {
                         _selectedYear = year;

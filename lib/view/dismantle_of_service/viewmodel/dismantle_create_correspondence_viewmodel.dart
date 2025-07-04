@@ -63,10 +63,12 @@ class DismantleCreateCorrespondenceViewmodel extends ChangeNotifier {
   TextEditingController serialNo = TextEditingController();
   TextEditingController capacity = TextEditingController();
   TextEditingController kwh = TextEditingController();
+  TextEditingController kvah = TextEditingController();
   TextEditingController disConnectionDate = TextEditingController();
 
   void setFromDate(String date) {
     disConnectionDate.text = date;
+    print("disConnectionDate: ${disConnectionDate.text}");
     notifyListeners();
   }
 
@@ -281,7 +283,7 @@ class DismantleCreateCorrespondenceViewmodel extends ChangeNotifier {
       if (!validateForm()) {
         return;
       } else {
-        if (_consumerUSCNOData.isEmpty){
+        if (_consumerUSCNOData.isNotEmpty){
           createDismantleService();
       }else {
       updateDismantleService();
@@ -329,13 +331,13 @@ class DismantleCreateCorrespondenceViewmodel extends ChangeNotifier {
       "token":
       SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "deviceId": await getDeviceId(),
-      "consumer": jsonEncode(_consumerUSCNOData) ,
+      "consumer": jsonEncode(_consumerUSCNOData.first) ,
       "kwh": meterAvailableSwitch == isTrue ? kwh.text : "-",
-      "KvAh": meterAvailableSwitch == isTrue ? capacity.text : "",
+      "KvAh": meterAvailableSwitch == isTrue ? kvah.text : "",
       "meterCap": meterAvailableSwitch == isTrue ? capacity.text : "",
       "meterMake":meterAvailableSwitch == isTrue ? meterMakeName : "",
       "meterSlNo":serialNo.text ?? "",
-      "cccComplaintId":"",
+      "cccComplaintId":args?['cccComplaintId']?? null,
       "disconnectionDate":disConnectionDate.text,
     };
 

@@ -253,7 +253,6 @@ class Routes {
 
   //ROUTED FROM CCC
   static const String routeCCC = "CccComplaints";
-  static const String dismantleOfServices = "DismantleOfServices";
   static const String revokeOfServices = "RevokeOfServices";
   static const String viewDetailComplaint = "ViewDetailComplaint";
   static const String detailComplaintTrack = "DetailComplaintTrack";
@@ -277,7 +276,22 @@ class Routes {
   static const String dismantleCreateCorrespondence= "DismantleCreateCorrespondence";
   static const String dismantleChangeRequestList= "DismantleOfServicesList";
 
+  //VITAL SERVICE INSPECTION
+  static const String vitalServiceInspectionScreen= "VitalServiceInspectionScreen";
 
+  //NON KVAH SERVICES
+  static const String rmdServiceInspection= "RmdServiceInspection";
+  static const String monthRmdServiceInspection= "MonthWiseRmdServices";
+  static const String monthRmdServiceListInspection= "RmdServiceInspectionList";
+
+  //RMD EXCEED SERVICES
+  static const String rmdExceedService= "RmdExceededServices";
+  static const String monthRmdExceedService= "MonthWiseRmdExceeded";
+  static const String monthRmdExceedServiceList= "RmdExceededServicesList";
+
+  //CAT 2&3 UNPAID INSPECTION
+  static const String catAllAbstract= "Cat23AllAbstract";
+  static const String catAbstract= "Cat23Abstract";
 
 
 }

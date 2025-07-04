@@ -319,7 +319,7 @@ class AppBillingComponents extends StatelessWidget {
                             controlAffinity: ListTileControlAffinity.leading,
                             contentPadding: EdgeInsets.zero,
                             title: const Text(
-                              "AT S TIME BILLING",
+                              "AT A TIME BILLING",
                               style: TextStyle(
                                 fontSize: normalSize,
                                 fontWeight: FontWeight.w500,

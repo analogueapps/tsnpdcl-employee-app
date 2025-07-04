@@ -104,6 +104,10 @@ class UniversalDashboardViewModel extends ChangeNotifier {
         title: GlobalConstants.cccTitle,
         imageAsset: Assets.focc,
         routeName: Routes.cccDashboard,
+      ), UniversalDashboardItem(
+        title: GlobalConstants.vitalInspection,
+        imageAsset: Assets.vitalService,
+        routeName:Routes.vitalServiceInspectionScreen,
       ),
       UniversalDashboardItem(
         title: GlobalConstants.dailyNilReportTitle,
@@ -541,7 +545,115 @@ class UniversalDashboardViewModel extends ChangeNotifier {
                       );
 
                       if (result != null && result is Map) {
-                        setSelectedMonthYear(result['month'] as String,
+                        setSelectedMonthYear("Verify wrong category confirmed",result['month'] as String,
+                            result['year'] as int, context);
+                      }
+                    }
+                  },
+                ),
+              );
+            }else if (item.title == GlobalConstants.nonKVAHInspection) {
+              List<GlobalListDialogItem> globalListDialogItem = [];
+              globalListDialogItem.addAll([
+                GlobalListDialogItem(
+                    title: "View Area Wise Abstract",
+                    routeName: Routes.rmdServiceInspection),
+                GlobalListDialogItem(
+                    title: "Inspect services",
+                    routeName: Routes.monthYearSelector),
+              ]);
+              showCupertinoDialog(
+                context: context,
+                builder: (_) => CustomListDialog(
+                  title: "Choose Option",
+                  items: globalListDialogItem,
+                  onItemSelected: (item) async {
+                    Navigator.of(context).pop();
+
+                    if (item.routeName == Routes.rmdServiceInspection) {
+                      Navigation.instance.navigateTo(Routes.rmdServiceInspection);
+                    } else if (item.routeName == Routes.monthYearSelector) {
+                      final result = await await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const MonthYearSelector(),
+                        ),
+                      );
+
+                      if (result != null && result is Map) {
+                        setSelectedMonthYear("NON KVAH SERVICES INSPECTION",result['month'] as String,
+                            result['year'] as int, context);
+                      }
+                    }
+                  },
+                ),
+              );
+            }else if (item.title == GlobalConstants.rmdExceedInspection) { //Routes.rmdExceedService
+              List<GlobalListDialogItem> globalListDialogItem = [];
+              globalListDialogItem.addAll([
+                GlobalListDialogItem(
+                    title: "View Area Wise Abstract",
+                    routeName: Routes.rmdExceedService),
+                GlobalListDialogItem(
+                    title: "Inspect services",
+                    routeName: Routes.monthYearSelector),
+              ]);
+              showCupertinoDialog(
+                context: context,
+                builder: (_) => CustomListDialog(
+                  title: "Choose Option",
+                  items: globalListDialogItem,
+                  onItemSelected: (item) async {
+                    Navigator.of(context).pop();
+
+                    if (item.routeName == Routes.rmdExceedService) {
+                      Navigation.instance.navigateTo(Routes.rmdExceedService);
+                    } else if (item.routeName == Routes.monthYearSelector) {
+                      final result = await await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const MonthYearSelector(),
+                        ),
+                      );
+
+                      if (result != null && result is Map) {
+                        setSelectedMonthYear("RMD EXCEED SERVICES INSPECTION",result['month'] as String,
+                            result['year'] as int, context);
+                      }
+                    }
+                  },
+                ),
+              );
+            }else if (item.title == GlobalConstants.catUnpaidInspection) { //Routes.rmdExceedService
+              List<GlobalListDialogItem> globalListDialogItem = [];
+              globalListDialogItem.addAll([
+                GlobalListDialogItem(
+                    title: "View Area Wise Abstract",
+                    routeName: Routes.catAllAbstract),
+                GlobalListDialogItem(
+                    title: "Inspect services",
+                    routeName: Routes.monthYearSelector),
+              ]);
+              showCupertinoDialog(
+                context: context,
+                builder: (_) => CustomListDialog(
+                  title: "Choose Option",
+                  items: globalListDialogItem,
+                  onItemSelected: (item) async {
+                    Navigator.of(context).pop();
+
+                    if (item.routeName == Routes.catAllAbstract) {
+                      Navigation.instance.navigateTo(Routes.catAllAbstract);
+                    } else if (item.routeName == Routes.monthYearSelector) {
+                      final result = await await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const MonthYearSelector(),
+                        ),
+                      );
+
+                      if (result != null && result is Map) {
+                        setSelectedMonthYear("RMD EXCEED SERVICES INSPECTION",result['month'] as String,
                             result['year'] as int, context);
                       }
                     }
@@ -839,14 +951,20 @@ class UniversalDashboardViewModel extends ChangeNotifier {
   }
 
   Map<String, dynamic>? selectedMonthYear;
-  void setSelectedMonthYear(String month, int year, BuildContext context) {
+  void setSelectedMonthYear(String itemRoute, String month, int year, BuildContext context) {
     selectedMonthYear = {
       'month': month,
       'year': year,
     };
-    if (selectedMonthYear != null) {
+    if (itemRoute=="Verify wrong category confirmed"&&selectedMonthYear != null) {
       Navigation.instance
           .navigateTo(Routes.inspectServices, args: selectedMonthYear);
+    }else if(itemRoute=="NON KVAH SERVICES INSPECTION"&&selectedMonthYear != null){
+      Navigation.instance
+          .navigateTo(Routes.monthRmdServiceInspection, args: selectedMonthYear);
+    }else if(itemRoute=="RMD EXCEED SERVICES INSPECTION"&&selectedMonthYear != null){
+      Navigation.instance
+          .navigateTo(Routes.monthRmdExceedService, args: selectedMonthYear);
     }
     print("selectedMonthYear universal: $selectedMonthYear");
     notifyListeners();

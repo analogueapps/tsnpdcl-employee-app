@@ -135,7 +135,7 @@ class CccComplaintsViewmodel extends ChangeNotifier {
                           print("Redirected to DISMANTLE_OF_SERVICES");
                           Navigator.of(context).pop();
                           Navigation.instance.navigateTo(
-                            Routes.dismantleOfServices,
+                            Routes.dismantleCreateCorrespondence,
                             args: arguments,
                           );
                           break;

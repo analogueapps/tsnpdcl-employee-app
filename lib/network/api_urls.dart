@@ -223,7 +223,6 @@ class Apis {
       "$SERVER_IP:5656/NPFDAS/ep/eroCorrespondence/";
   static const CCC_COMPLAINTS_URL = "getCCCDivertedComplaints";
   static const GET_USCNO_SERVICE_OF_SECTION = "getUscnoServiceOfSection";
-  static const CREATE_DISMANTLE = "createDismantleService";
   static const GET_DETAILED_TICKET = "getDetailedTicket";
   static const SAVE_REVOKE_SERVICES = "saveRevokeOfService";
   static const NAME_AND_ADDRESS_CORRECTION_REQUEST =
@@ -234,4 +233,26 @@ class Apis {
   static const CREATE_DISMANTLE_SERVICE= "createDismantleService";
   static const UPDATE_DISMANTLE_SERVICE= "updateDismantleService";
   static const GET_DISMANTLE_OF_SERVICE_REQUESTS= "getDismantleOfServicesRequests";
+
+  ///VITAL SERVICE INSPECTION
+  static const VITAL_SERVICE_URL =
+        "$SERVER_IP:5656/NPFDAS/ep/vital/";
+  static const VITAL_SERVICE_OF_SELECTION =
+        "getVitalServicesOfSection";
+
+  ///NON KVAH SERVICES
+  static const NON_KVAH_INSPECTION_BASE_URL =
+      "$SERVER_IP:5656/NPFDAS/ep/nonKvah/";
+  static const RMD_GET_ABSTRACT =
+      "getAbstract";
+  static const RMD_INSPEC_LIST = "getInspecNonKvahEntities";
+
+  ///RMD EXCEED SERVICES
+  static const RMD_EXCEEDED_INSPECTION_URL=
+      "$SERVER_IP:5656/NPFDAS/ep/rmdExceeded/";
+  static const RMD_EXCEEDED_LIST = "getInspecRmdExceededEntities";
+
+  ///CAT 2&3 UNPAID INSPECTION
+  static const CAT_23_INSPECTION_URL=
+      "$SERVER_IP:5656/NPFDAS/ep/cat2And3Inspection/";
 }

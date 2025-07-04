@@ -9,8 +9,8 @@ import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
 import 'package:tsnpdcl_employee/view/verify_wrong_category/model/areaWiseAbstract_model.dart';
 
-class InspectServicesViewmodel extends ChangeNotifier {
-  InspectServicesViewmodel({required this.context, required this.args}) {
+class MonthWiseRmdServicesViewmodel extends ChangeNotifier {
+  MonthWiseRmdServicesViewmodel({required this.context, required this.args}) {
     print(" args: $args");
     _loadAbstractBasedOnMonthYear(args);
   }
@@ -41,14 +41,14 @@ class InspectServicesViewmodel extends ChangeNotifier {
   }
 
   Future<void> _loadAbstractBasedOnMonthYear(
-    Map<String, dynamic>? dateMonth,
-  ) async {
+      Map<String, dynamic>? dateMonth,
+      ) async {
     _isLoading = true;
     notifyListeners();
 
     final payload = {
       "token":
-          SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
+      SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
       "monthYear": dateMonth != null
           ? '${dateMonth['month']}${dateMonth['year']}'
@@ -56,8 +56,8 @@ class InspectServicesViewmodel extends ChangeNotifier {
     };
 
     try {
-      final response = await ApiProvider(baseUrl: Apis.VERIFY_WRONG_CONFIRM_URL)
-          .postApiCall(context, Apis.GET_VERIFY_ABSTRACT, payload);
+      final response = await ApiProvider(baseUrl: Apis.NON_KVAH_INSPECTION_BASE_URL)
+          .postApiCall(context, Apis.RMD_GET_ABSTRACT, payload);
       if (response != null) {
         if (response.data is String) {
           response.data = jsonDecode(response.data); // Parse string to JSON

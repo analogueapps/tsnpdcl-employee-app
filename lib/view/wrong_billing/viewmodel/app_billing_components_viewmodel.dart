@@ -363,6 +363,7 @@ class AppBillingComponentsViewmodel extends ChangeNotifier {
     return true;
   }
 
+  //should implement
   Future<void> saveRevokeData() async {
     ProcessDialogHelper.showProcessDialog(context, message: "Loading...");
 
@@ -371,7 +372,7 @@ class AppBillingComponentsViewmodel extends ChangeNotifier {
           SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "deviceId": await getDeviceId(),
       "consumer": jsonEncode(_consumerUSCNOData),
-      "kwh": meterAvailableSwitch == isTrue ? kwh.text : "-",
+      "kwh": meterAvailableSwitch == isTrue ? kwh.text:"",
       "KvAh": meterAvailableSwitch == isTrue ? kvah.text : "",
       "meterCap": meterAvailableSwitch == isTrue ? capacity.text : "",
       "meterMake": meterAvailableSwitch == isTrue ? meterMakeName : "",
@@ -383,9 +384,9 @@ class AppBillingComponentsViewmodel extends ChangeNotifier {
       "billRevisionFromDate": fromDate.text,
       "billRevisionToDate": toDate.text,
       "complaintType":
-          meterAvailableSwitch == isTrue ? selectedCheckboxId : "06",
+          meterAvailableSwitch == isTrue ? selectedCheckboxId : "",
       "fieldStatus": meterStatusName,
-      "cccComplaintId": ""
+      "cccComplaintId":args?['cccComplaintId']??""
     };
 
     var response = await ApiProvider(baseUrl: Apis.ERO_CORRESPONDENCE_URL)

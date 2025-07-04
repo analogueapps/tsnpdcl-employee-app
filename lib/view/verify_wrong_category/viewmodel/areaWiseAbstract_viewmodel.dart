@@ -6,6 +6,8 @@ import 'package:tsnpdcl_employee/network/api_urls.dart';
 import 'package:tsnpdcl_employee/preference/shared_preference.dart';
 import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/app_helper.dart';
+import 'package:tsnpdcl_employee/utils/general_routes.dart';
+import 'package:tsnpdcl_employee/utils/navigation_service.dart';
 import 'package:tsnpdcl_employee/view/verify_wrong_category/model/areaWiseAbstract_model.dart';
 
 class AreaWiseAbstractViewModel extends ChangeNotifier {
@@ -82,5 +84,19 @@ class AreaWiseAbstractViewModel extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  Map<String, dynamic>? selectedMonthYear;
+  void setSelectedMonthYear(String month, int year, BuildContext context) {
+    selectedMonthYear = {
+      'month': month,
+      'year': year,
+    };
+    if (selectedMonthYear != null) {
+      Navigation.instance
+          .navigateTo(Routes.inspectServices, args: selectedMonthYear);
+    }
+    print("selectedMonthYear universal: $selectedMonthYear");
+    notifyListeners();
   }
 }

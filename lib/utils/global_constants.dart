@@ -225,6 +225,8 @@ class GlobalConstants {
   //SUPPRESSED UNITS INSPECTION
   static const String suppressedInspection = "SUPPRESSED UNITS INSPECTION";
 
+  //VITAL SERVICE INSPECTION
+  static const String vitalInspection = "VITAL SERVICE INSPECTION";
 }
 
 

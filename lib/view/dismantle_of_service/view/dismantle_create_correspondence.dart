@@ -385,11 +385,63 @@ class DismantleCreateCorrespondence extends StatelessWidget {
                                               ),
                                             ),
                                           ],
-                                        )),
+                                        )
+                                    ),
                                     const SizedBox(
                                       width: doubleTen,
                                     ),
+                                    Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            const Text(
+                                              "KVAH",
+                                              style:
+                                              TextStyle(color: Color(0xff5ba55e)),
+                                            ),
+                                            TextField(
+                                              controller: viewModel.kvah,
+                                              maxLength: 20,
+                                              keyboardType: TextInputType.text,
+                                              decoration: const InputDecoration(
+                                                counterText: "",
+                                                border: OutlineInputBorder(),
+                                                contentPadding: EdgeInsets.symmetric(
+                                                    horizontal: 10, vertical: 12),
+                                              ),
+                                            ),
+                                          ],
+                                        ))
                                   ]),
+                                  const Divider(),
+                                  const Text(
+                                    "Disconnection Date",
+                                    style: TextStyle(color: Color(0xff5ba55e)),
+                                  ),
+                                  TextField(
+                                    controller: viewModel.disConnectionDate,
+                                    onTap: () async {
+                                      DateTime? pickedDate = await showDatePicker(
+                                        context: context,
+                                        initialDate: DateTime.now(),
+                                        firstDate: DateTime(2000),
+                                        lastDate: DateTime.now(),
+                                      );
+                                      if (pickedDate != null) {
+                                        final formattedDate = DateFormat('dd/MM/yyyy')
+                                            .format(pickedDate); // e.g., "14/04/2025"
+                                        viewModel.setFromDate(formattedDate);
+                                      }
+                                    },
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      hintText: "TAP HERE",
+                                      fillColor: Colors.grey[200],
+                                      border: InputBorder.none,
+                                      contentPadding: const EdgeInsets.symmetric(
+                                          vertical: 12, horizontal: 12),
+                                    ),
+                                  ),
                                 ]),
                           ),
                           const Divider(),

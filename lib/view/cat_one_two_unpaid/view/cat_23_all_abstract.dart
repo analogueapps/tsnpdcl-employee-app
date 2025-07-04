@@ -5,24 +5,35 @@ import 'package:tsnpdcl_employee/utils/app_constants.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
-import 'package:tsnpdcl_employee/view/verify_wrong_category/viewmodel/areaWiseAbstract_viewmodel.dart';
+import 'package:tsnpdcl_employee/view/cat_one_two_unpaid/viewmodel/cat_23_all_abstract_viewmodel.dart';
+import 'package:tsnpdcl_employee/view/non_kvah_services/viewmodel/rmd_service_inspection_viewmodel.dart';
 import 'package:tsnpdcl_employee/widget/month_year_selector.dart';
 
-class AreaWiseAbstractView extends StatelessWidget {
-  static const id = Routes.areaWiseAbstract;
-  const AreaWiseAbstractView({super.key});
+class Cat23AllAbstract extends StatelessWidget {
+  static const id = Routes.catAllAbstract;
+  const Cat23AllAbstract({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
           backgroundColor: CommonColors.colorPrimary,
-          title: const Text(
-            'Wrong Cat Confirmations',
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: titleSize,
-                fontWeight: FontWeight.w700),
+          title: const Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Cat2&3 unpaid Inspection',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: titleSize,
+                    fontWeight: FontWeight.w700),
+              ),
+              Text("All Months abstract",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: normalSize,
+                    fontWeight: FontWeight.w400),),
+            ],
           ),
           iconTheme: const IconThemeData(
             color: Colors.white,
@@ -33,28 +44,28 @@ class AreaWiseAbstractView extends StatelessWidget {
               },
               icon: const Icon(Icons.arrow_back))),
       body: ChangeNotifierProvider(
-          create: (_) => AreaWiseAbstractViewModel(context: context),
-          child: Consumer<AreaWiseAbstractViewModel>(
+          create: (_) => Cat23AllAbstractViewmodel(context: context),
+          child: Consumer<Cat23AllAbstractViewmodel>(
               builder: (context, viewModel, child) {
-            return Padding(
-              padding: const EdgeInsets.all(11.0),
-              child: Column(
-                children: [
-                  // TextField(
-                  //   controller: viewModel.searchController,
-                  //   decoration: const InputDecoration(
-                  //       hintText: 'Find...',
-                  //       prefixIcon: Icon(Icons.search_outlined)
-                  //   ),
-                  // ),
-                  // SizedBox(height: 11,),
-                  Expanded(
-                    child: viewModel.isLoading
-                        ? const Center(child: CircularProgressIndicator())
-                        : ListView.builder(
-                            itemCount: viewModel.verifyWrongData.length,
+                return Padding(
+                  padding: const EdgeInsets.all(11.0),
+                  child: Column(
+                    children: [
+                      // TextField(
+                      //   controller: viewModel.searchController,
+                      //   decoration: const InputDecoration(
+                      //       hintText: 'Find...',
+                      //       prefixIcon: Icon(Icons.search_outlined)
+                      //   ),
+                      // ),
+                      // SizedBox(height: 11,),
+                      Expanded(
+                        child: viewModel.isLoading
+                            ? const Center(child: CircularProgressIndicator())
+                            : ListView.builder(
+                            itemCount: viewModel.rmdServiceData.length,
                             itemBuilder: (context, index) {
-                              final item = viewModel.verifyWrongData[index];
+                              final item = viewModel.rmdServiceData[index];
                               return InkWell(
                                 onTap: ()async {
                                   // Navigation.instance.navigateTo(
@@ -84,7 +95,7 @@ class AreaWiseAbstractView extends StatelessWidget {
                                     ),
                                     Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
                                           'Total: ${item.totalCount}',
@@ -108,11 +119,11 @@ class AreaWiseAbstractView extends StatelessWidget {
                                 ),
                               );
                             }),
-                  )
-                ],
-              ),
-            );
-          })),
+                      )
+                    ],
+                  ),
+                );
+              })),
     );
   }
 }
