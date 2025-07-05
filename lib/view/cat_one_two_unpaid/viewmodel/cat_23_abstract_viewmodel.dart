@@ -51,7 +51,7 @@ class Cat23AbstractViewmodel extends ChangeNotifier {
       SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
       "monthYear": dateMonth != null
-          ? '${dateMonth['month']}${dateMonth['year']}'
+          ? '${dateMonth['month'].toUpperCase().toUpperCase()}${dateMonth['year']}'
           : DateFormat('MMMyyyy').format(DateTime.now()),
     };
 

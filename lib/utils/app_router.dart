@@ -8,6 +8,8 @@ import 'package:tsnpdcl_employee/view/auth/view/otp_verification_screen.dart';
 import 'package:tsnpdcl_employee/view/bs_udc_inspection/view/bs_udc_list.dart';
 import 'package:tsnpdcl_employee/view/cat_one_two_unpaid/view/cat_23_abstract.dart';
 import 'package:tsnpdcl_employee/view/cat_one_two_unpaid/view/cat_23_all_abstract.dart';
+import 'package:tsnpdcl_employee/view/cat_one_two_unpaid/view/cat_23_confirm_list.dart';
+import 'package:tsnpdcl_employee/view/cat_one_two_unpaid/view/cat_23_list_detail.dart';
 import 'package:tsnpdcl_employee/view/daily_nil_report/view/daily_nil.dart';
 import 'package:tsnpdcl_employee/view/dismantle_of_service/view/dismantle_of_service_menu_screen.dart';
 import 'package:tsnpdcl_employee/view/dismantle_of_service/view/dismantle_of_services_list.dart';
@@ -164,6 +166,9 @@ import 'package:tsnpdcl_employee/view/search_consumer/view/search_consumer_scree
 import 'package:tsnpdcl_employee/view/ss_maintenance/view/maintenance_due_screen.dart';
 import 'package:tsnpdcl_employee/view/ss_maintenance/view/maintenance_finished_screen.dart';
 import 'package:tsnpdcl_employee/view/ss_maintenance/view/ss_maintenance_screen.dart';
+import 'package:tsnpdcl_employee/view/suppressed_units/view/suppressed_all_abstracts.dart';
+import 'package:tsnpdcl_employee/view/suppressed_units/view/suppressed_confirm_list.dart';
+import 'package:tsnpdcl_employee/view/suppressed_units/view/suppressed_monthwise.dart';
 import 'package:tsnpdcl_employee/view/tong_tester_readings/model/overload_dtr_list_model.dart';
 import 'package:tsnpdcl_employee/view/tong_tester_readings/view/overloaded_floating_button_screen.dart';
 import 'package:tsnpdcl_employee/view/tong_tester_readings/view/overLoad_dtr_list.dart';
@@ -905,6 +910,28 @@ class AppRouter {
         return MaterialPageRoute(
             builder: (_) => Cat23Abstract(
                 args: settings.arguments as Map<String, dynamic>));
+        case Cat23ConfirmList.id:
+        return MaterialPageRoute(
+            builder: (_) => Cat23ConfirmList(
+                args: settings.arguments as Map<String, dynamic>));
+
+        case SuppressedMonthWise.id:
+        return MaterialPageRoute(
+            builder: (_) => SuppressedMonthWise(
+                args: settings.arguments as Map<String, dynamic>));
+
+        case SuppressedConfirmList.id:
+        return MaterialPageRoute(
+            builder: (_) => SuppressedConfirmList(
+                args: settings.arguments as Map<String, dynamic>));
+
+        case SuppressedAllAbstracts.id:
+        return MaterialPageRoute(
+            builder: (_) => const SuppressedAllAbstracts());
+
+        case Cat23ListDetail.id:
+        return MaterialPageRoute(
+            builder: (_) => Cat23ListDetail(args:  settings.arguments as String));
 
 
       default:

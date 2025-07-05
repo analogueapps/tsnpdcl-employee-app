@@ -292,6 +292,12 @@ class Routes {
   //CAT 2&3 UNPAID INSPECTION
   static const String catAllAbstract= "Cat23AllAbstract";
   static const String catAbstract= "Cat23Abstract";
+  static const String catConfirmList= "Cat23ConfirmList";
+  static const String catListDetail= "Cat23ListDetail";
 
+  //SUPPRESSED UNITS
+  static const String suppressedAllMon= "SuppressedAllAbstracts";
+  static const String suppressedMonthWise= "SuppressedMonthWise";
+  static const String suppressedConfirmList= "SuppressedConfirmList";
 
 }

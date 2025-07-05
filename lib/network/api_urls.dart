@@ -255,4 +255,12 @@ class Apis {
   ///CAT 2&3 UNPAID INSPECTION
   static const CAT_23_INSPECTION_URL=
       "$SERVER_IP:5656/NPFDAS/ep/cat2And3Inspection/";
+  static const CAT_CONFIRM_LIST=
+      "getInspecCat23UnpaidEntities";
+
+  ///
+  static const SUPPRESSED_INSPECTION_URL=
+      "$SERVER_IP:5656/NPFDAS/ep/suppressed_readings/";
+  // static const CAT_CONFIRM_LIST=
+  //     "getInspecCat23UnpaidEntities";
 }

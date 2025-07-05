@@ -653,7 +653,43 @@ class UniversalDashboardViewModel extends ChangeNotifier {
                       );
 
                       if (result != null && result is Map) {
-                        setSelectedMonthYear("RMD EXCEED SERVICES INSPECTION",result['month'] as String,
+                        setSelectedMonthYear("CAT 2&3 UNPAID INSPECTION",result['month'] as String,
+                            result['year'] as int, context);
+                      }
+                    }
+                  },
+                ),
+              );
+            }else if (item.title == GlobalConstants.suppressedInspection) { //Routes.rmdExceedService
+              List<GlobalListDialogItem> globalListDialogItem = [];
+              globalListDialogItem.addAll([
+                GlobalListDialogItem(
+                    title: "View Area Wise Abstract",
+                    routeName: Routes.suppressedAllMon),
+                GlobalListDialogItem(
+                    title: "Inspect services",
+                    routeName: Routes.monthYearSelector),
+              ]);
+              showCupertinoDialog(
+                context: context,
+                builder: (_) => CustomListDialog(
+                  title: "Choose Option",
+                  items: globalListDialogItem,
+                  onItemSelected: (item) async {
+                    Navigator.of(context).pop();
+
+                    if (item.routeName == Routes.suppressedAllMon) {
+                      Navigation.instance.navigateTo(Routes.suppressedAllMon);
+                    } else if (item.routeName == Routes.monthYearSelector) {
+                      final result = await await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const MonthYearSelector(),
+                        ),
+                      );
+
+                      if (result != null && result is Map) {
+                        setSelectedMonthYear("SUPPRESSED UNITS INSPECTION",result['month'] as String,
                             result['year'] as int, context);
                       }
                     }
@@ -965,6 +1001,12 @@ class UniversalDashboardViewModel extends ChangeNotifier {
     }else if(itemRoute=="RMD EXCEED SERVICES INSPECTION"&&selectedMonthYear != null){
       Navigation.instance
           .navigateTo(Routes.monthRmdExceedService, args: selectedMonthYear);
+    }else if(itemRoute=="CAT 2&3 UNPAID INSPECTION"&&selectedMonthYear != null){
+      Navigation.instance
+          .navigateTo(Routes.catAbstract, args: selectedMonthYear);
+    }else if(itemRoute=="SUPPRESSED UNITS INSPECTION"&&selectedMonthYear != null){
+      Navigation.instance
+          .navigateTo(Routes.suppressedMonthWise, args: selectedMonthYear);
     }
     print("selectedMonthYear universal: $selectedMonthYear");
     notifyListeners();

@@ -27,8 +27,8 @@ class RmdExceededServicesListViewmodel extends ChangeNotifier {
       "token":
       SharedPreferenceHelper.getStringValue(LoginSdkPrefs.tokenPrefKey),
       "appId": "in.tsnpdcl.npdclemployee",
-      "monthYear": args['monthYear'],
-      "areCode": args['areCode'] ?? ""
+      "monthYear": args['monthYear'].toUpperCase(),
+      "areCode": args['areaCode'] ?? ""
     };
 
     try {

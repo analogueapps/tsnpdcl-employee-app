@@ -4,24 +4,24 @@ import 'package:provider/provider.dart';
 import 'package:tsnpdcl_employee/utils/common_colors.dart';
 import 'package:tsnpdcl_employee/utils/general_routes.dart';
 import 'package:tsnpdcl_employee/utils/navigation_service.dart';
-import 'package:tsnpdcl_employee/view/cat_one_two_unpaid/viewmodel/cat_23_abstract_viewmodel.dart';
+import 'package:tsnpdcl_employee/view/suppressed_units/viewmodel/suppressed_monthwise_viewmodel.dart';
 import 'package:tsnpdcl_employee/widget/month_year_selector.dart';
 
-class Cat23Abstract extends StatelessWidget {
-  static const id = Routes.catAbstract;
+class SuppressedMonthWise extends StatelessWidget {
+  static const id = Routes.suppressedMonthWise;
   final Map<String, dynamic> args;
-  const Cat23Abstract({super.key, required this.args});
+  const SuppressedMonthWise({super.key, required this.args});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => Cat23AbstractViewmodel(context: context, args: args),
-      child: Consumer<Cat23AbstractViewmodel>(
+      create: (_) => SuppressedMonthWiseViewmodel(context: context, args: args),
+      child: Consumer<SuppressedMonthWiseViewmodel>(
           builder: (context, viewModel, child) {
             return Scaffold(
                 appBar: AppBar(
                   title: const Text(
-                    'Cat2&3 unpaid Inspection',
+                    'Suppressed Units Insp',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 20,
@@ -83,7 +83,7 @@ class Cat23Abstract extends StatelessWidget {
                                   : '${args['month']}${args['year']}',
                             };
                             Navigation.instance.navigateTo(
-                                Routes.catConfirmList,
+                                Routes.suppressedConfirmList,
                                 args: argument);
                           },
                           child: Column(
